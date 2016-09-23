@@ -28,6 +28,6 @@ public class LaunchActivity extends LibertVendasActivity implements LaunchContra
 
     @Override
     public void navigateToSettingsActivity() {
-        navigate().toHome();
+        navigate().toSettings();
     }
 }

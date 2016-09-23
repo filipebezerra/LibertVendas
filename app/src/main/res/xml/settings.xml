@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Servidor">
+        <EditTextPreference
+            android:key="@string/key_pref_endereco_servidor"
+            android:defaultValue="http://libertvendas.com/api/"
+            android:dialogTitle="Digite o endereço do servidor"
+            android:inputType="textUri"
+            android:persistent="false"
+            android:summary="Será usado para comunicar com o servidor para transferência de dados"
+            android:title="Endereço do servidor"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -5,5 +5,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <!-- Tela Configurações -->
+    <string name="title_activity_settings">Configurações</string>
+    <string name="key_pref_endereco_servidor" translatable="false">endereco_servidor</string>
+    <string name="action_done">Continuar</string>
 </resources>
