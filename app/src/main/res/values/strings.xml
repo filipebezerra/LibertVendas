@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Libert Vendas</string>
+    <string name="title_activity_home">Libert Vendas</string>
 </resources>
