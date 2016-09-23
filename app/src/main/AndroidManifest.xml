@@ -14,9 +14,10 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute"
         >
         <activity
-            android:name=".presentation.home.HomeActivity"
-            android:label="@string/title_activity_home"
-            android:theme="@style/Libert.Theme.NoActionBar"
+            android:name=".presentation.launch.LaunchActivity"
+            android:theme="@style/Libert.Theme.NoActionBar.FullScreen"
+            android:screenOrientation="portrait"
+            android:noHistory="true"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".presentation.home.HomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Libert.Theme.NoActionBar"
+            />
     </application>
 
 </manifest>
