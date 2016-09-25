@@ -4,4 +4,5 @@
     <color name="color_primary_dark">#1976D2</color>
     <color name="color_accent">#00BFA5</color>
     <color name="color_error">#DD2C00</color>
+    <color name="color_accent_pressed">#6a00BFA5</color>
 </resources>

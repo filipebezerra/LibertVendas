@@ -8,7 +8,7 @@
     <!-- Tela Configurações -->
     <string name="title_activity_settings">Configurações</string>
     <string name="key_pref_endereco_servidor" translatable="false">endereco_servidor</string>
-    <string name="key_pref_sincronizar_automaticamente" translatable="false">sincronizar_automaticamente</string>
+    <string name="key_pref_sincronizar_pedido_automaticamente" translatable="false">sincronizar_pedido_automaticamente</string>
     <string name="key_pref_pode_aplicar_desconto" translatable="false">pode_aplicar_desconto</string>
     <string name="key_pref_tabela_preco_padrao" translatable="false">tabela_preco_padrao</string>
     <string name="action_done">Continuar</string>
@@ -16,4 +16,7 @@
     <!-- Tela Login -->
     <string name="title_login_activity">Entrar</string>
     <string name="welcome_title">Bem-vindo</string>
+    <string name="hint_cpf">Digite seu CPF</string>
+    <string name="hint_senha">Digite sua senha</string>
+    <string name="action_login">Entrar</string>
 </resources>

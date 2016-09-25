@@ -7,9 +7,11 @@ package br.com.libertsolutions.libertvendas.app.presentation.login;
 interface LoginContract {
     interface View {
 
+        void resultAsOk(int resultCode);
     }
 
     interface Presenter {
 
+        void clickButtonEntrar();
     }
 }

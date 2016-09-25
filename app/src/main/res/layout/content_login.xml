@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    >
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:contentPadding="@dimen/activity_horizontal_margin"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.Libert.FormInputLayout"
+                android:id="@+id/input_layout_cpf"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.Libert.EditableField"
+                    android:id="@+id/edit_text_cpf"
+                    android:drawableLeft="@drawable/ic_perm_identity_black_24dp"
+                    android:drawableStart="@drawable/ic_perm_identity_black_24dp"
+                    android:drawablePadding="32dp"
+                    android:hint="@string/hint_cpf"
+                    android:inputType="numberSigned"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    tools:drawableLeft="@drawable/vector_ic_perm_identity_black_24dp"
+                    tools:drawableStart="@drawable/vector_ic_perm_identity_black_24dp"
+                    >
+
+                    <requestFocus />
+
+                </android.support.design.widget.TextInputEditText>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.Libert.FormInputLayout"
+                android:id="@+id/input_layout_senha"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.Libert.EditableField"
+                    android:id="@+id/edit_text_senha"
+                    android:drawableLeft="@drawable/ic_lock_black_24dp"
+                    android:drawableStart="@drawable/ic_lock_black_24dp"
+                    android:drawablePadding="32dp"
+                    android:hint="@string/hint_senha"
+                    android:inputType="textPassword"
+                    android:imeOptions="actionUnspecified"
+                    android:imeActionId="@integer/action_login"
+                    android:imeActionLabel="@string/action_login"
+                    android:maxLines="1"
+                    tools:drawableLeft="@drawable/vector_ic_lock_black_24dp"
+                    tools:drawableStart="@drawable/vector_ic_lock_black_24dp"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/button_entrar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_button_login"
+                android:text="@string/action_login"
+                android:textColor="@android:color/white"
+                />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</android.support.v4.widget.NestedScrollView>

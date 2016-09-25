@@ -11,7 +11,6 @@ import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVenda
 /**
  * @author Filipe Bezerra
  */
-
 public class SettingsActivity extends LibertVendasActivity implements SettingsContract.View {
     private SettingsContract.Presenter mPresenter;
 
@@ -73,6 +72,6 @@ public class SettingsActivity extends LibertVendasActivity implements SettingsCo
     @Override
     public void resultAsOk(int resultCode) {
         setResult(resultCode);
-        navigate().toHome();
+        navigate().toLogin();
     }
 }
