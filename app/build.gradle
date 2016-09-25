@@ -21,6 +21,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        mock {
+
+        }
+        prod {
+
+        }
+    }
+    android.variantFilter { variant ->
+        if (variant.buildType.name.equals('release')
+                && variant.getFlavors().get(0).name.equals('mock')) {
+            variant.setIgnore(true);
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -43,6 +57,10 @@ dependencies {
 
     // Logging
     compile 'com.jakewharton.timber:timber:4.3.0'
+
+    //Event bus
+
+    compile 'org.greenrobot:eventbus:3.0.0'
 }
 
 retrolambda {

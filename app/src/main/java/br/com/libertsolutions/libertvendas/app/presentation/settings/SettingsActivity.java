@@ -5,8 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
+import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * @author Filipe Bezerra
@@ -18,7 +20,7 @@ public class SettingsActivity extends LibertVendasActivity implements SettingsCo
     protected void onCreate(@Nullable Bundle inState) {
         super.onCreate(inState);
         setAsInitialFlowActivity();
-        mPresenter = new SettingsPresenter(this);
+        mPresenter = new SettingsPresenter(this, Injection.provideSettingsRepository(this));
 
         if (inState == null) {
             getSupportFragmentManager()
@@ -49,6 +51,12 @@ public class SettingsActivity extends LibertVendasActivity implements SettingsCo
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.initializeView();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
@@ -73,5 +81,11 @@ public class SettingsActivity extends LibertVendasActivity implements SettingsCo
     public void resultAsOk(int resultCode) {
         setResult(resultCode);
         navigate().toLogin();
+    }
+
+    @Override
+    public void enableSettingTabelaPrecoPadrao() {
+        EventBus.getDefault().post(
+                SettingsEvent.create(getString(R.string.key_pref_tabela_preco_padrao)));
     }
 }

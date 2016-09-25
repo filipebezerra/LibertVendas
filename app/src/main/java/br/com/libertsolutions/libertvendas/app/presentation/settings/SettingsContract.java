@@ -9,9 +9,13 @@ interface SettingsContract {
         void resultAsCancelled(int resultCode);
 
         void resultAsOk(int resultCode);
+
+        void enableSettingTabelaPrecoPadrao();
     }
 
     interface Presenter {
+        void initializeView();
+
         void handleClickHomeMenuItem();
 
         boolean canEnableOptionsMenu();

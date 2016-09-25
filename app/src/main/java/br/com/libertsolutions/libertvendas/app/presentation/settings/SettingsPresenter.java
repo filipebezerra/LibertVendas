@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.settings;
 
+import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.Navigator;
 
 /**
@@ -9,8 +10,19 @@ import br.com.libertsolutions.libertvendas.app.presentation.util.Navigator;
 class SettingsPresenter implements SettingsContract.Presenter {
     private final SettingsContract.View mView;
 
-    SettingsPresenter(SettingsContract.View view) {
+    private final SettingsRepository mSettingsRepository;
+
+    SettingsPresenter(
+            SettingsContract.View view, SettingsRepository settingsRepository) {
         mView = view;
+        mSettingsRepository = settingsRepository;
+    }
+
+    @Override
+    public void initializeView() {
+        if (!mSettingsRepository.isFirstTimeSettingsLaunch()) {
+            mView.enableSettingTabelaPrecoPadrao();
+        }
     }
 
     @Override
@@ -25,6 +37,7 @@ class SettingsPresenter implements SettingsContract.Presenter {
 
     @Override
     public void handleClickDoneMenuItem() {
+        mSettingsRepository.setFirstTimeSettingsLaunch();
         mView.resultAsOk(Navigator.RESULT_OK);
     }
 }

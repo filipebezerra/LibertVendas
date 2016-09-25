@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import br.com.libertsolutions.libertvendas.app.R;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompatDividers;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * @author Filipe Bezerra
@@ -36,6 +39,23 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
             setDividerPreferences(
                     DIVIDER_PADDING_CHILD | DIVIDER_CATEGORY_AFTER_LAST | DIVIDER_CATEGORY_BETWEEN);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSettingsEvent(SettingsEvent event) {
+        findPreference(event.getKey()).setEnabled(true);
     }
 
     private Preference.OnPreferenceChangeListener mOnPreferenceChangeListener
