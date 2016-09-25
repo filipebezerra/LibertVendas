@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -14,11 +15,15 @@ import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVenda
  * @author Filipe Bezerra
  */
 public class HomeActivity extends LibertVendasActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeContract.View {
+
+    private HomeContract.Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new HomePresenter(this);
+
         setAsHomeActivity();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -63,11 +68,21 @@ public class HomeActivity extends LibertVendasActivity
         } else if (id == R.id.nav_produtos) {
 
         } else if (id == R.id.nav_settings) {
-
+            mPresenter.clickNavigationMenuSettings();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void navigateToSettings() {
+        navigate().toSettings();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
