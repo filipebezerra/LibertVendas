@@ -12,10 +12,10 @@
             />
 
         <SwitchPreference
-            android:key="@string/key_pref_sincronizar_automaticamente"
+            android:key="@string/key_pref_sincronizar_pedido_automaticamente"
             android:defaultValue="true"
             android:summary="A sincronizaçao será executada automaticamente, todos dias às 9 horas"
-            android:title="Sincronizar automaticamente"
+            android:title="Sincronizar pedido automaticamente"
             />
     </PreferenceCategory>
 
@@ -35,6 +35,7 @@
             android:inputType="numberSigned"
             android:summary="Será aplicada esta tabela de preço por padrão em cada novo pedido"
             android:title="Tabela de preço padrão"
+            android:enabled="false"
             />
     </PreferenceCategory>
 </PreferenceScreen>
