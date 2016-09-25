@@ -12,4 +12,8 @@
     <string name="key_pref_pode_aplicar_desconto" translatable="false">pode_aplicar_desconto</string>
     <string name="key_pref_tabela_preco_padrao" translatable="false">tabela_preco_padrao</string>
     <string name="action_done">Continuar</string>
+
+    <!-- Tela Login -->
+    <string name="title_login_activity">Entrar</string>
+    <string name="welcome_title">Bem-vindo</string>
 </resources>

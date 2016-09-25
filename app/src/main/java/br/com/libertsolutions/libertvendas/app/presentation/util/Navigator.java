@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.login.LoginActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsActivity;
 
 /**
@@ -12,6 +13,8 @@ import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsAct
  */
 
 public class Navigator {
+    public static final int REQUEST_SETTINGS = 0x1;
+
     public static final int RESULT_OK = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
 
@@ -23,7 +26,12 @@ public class Navigator {
 
     public void toSettings() {
         final Intent settingsIntent = new Intent(mActivity, SettingsActivity.class);
-        ActivityCompat.startActivity(mActivity, settingsIntent, null);
+        ActivityCompat.startActivityForResult(mActivity, settingsIntent, REQUEST_SETTINGS, null);
+    }
+
+    public void toLogin() {
+        final Intent loginIntent = new Intent(mActivity, LoginActivity.class);
+        ActivityCompat.startActivity(mActivity, loginIntent, null);
     }
 
     public void toHome() {
