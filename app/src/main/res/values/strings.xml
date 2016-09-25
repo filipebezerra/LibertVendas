@@ -8,5 +8,8 @@
     <!-- Tela Configurações -->
     <string name="title_activity_settings">Configurações</string>
     <string name="key_pref_endereco_servidor" translatable="false">endereco_servidor</string>
+    <string name="key_pref_sincronizar_automaticamente" translatable="false">sincronizar_automaticamente</string>
+    <string name="key_pref_pode_aplicar_desconto" translatable="false">pode_aplicar_desconto</string>
+    <string name="key_pref_tabela_preco_padrao" translatable="false">tabela_preco_padrao</string>
     <string name="action_done">Continuar</string>
 </resources>

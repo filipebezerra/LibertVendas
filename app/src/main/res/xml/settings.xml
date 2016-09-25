@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Servidor">
+    <PreferenceCategory android:title="Sincronização">
         <EditTextPreference
             android:key="@string/key_pref_endereco_servidor"
             android:defaultValue="http://libertvendas.com/api/"
-            android:dialogTitle="Digite o endereço do servidor"
+            android:dialogTitle="Digite a url do servidor"
             android:inputType="textUri"
             android:persistent="false"
-            android:summary="Será usado para comunicar com o servidor para transferência de dados"
-            android:title="Endereço do servidor"
+            android:summary="Endereço web do servidor para troca de dados"
+            android:title="Url do servidor"
+            />
+
+        <SwitchPreference
+            android:key="@string/key_pref_sincronizar_automaticamente"
+            android:defaultValue="true"
+            android:summary="A sincronizaçao será executada automaticamente, todos dias às 9 horas"
+            android:title="Sincronizar automaticamente"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Permissões">
+        <SwitchPreference
+            android:key="@string/key_pref_pode_aplicar_desconto"
+            android:summary="Vendedor está autorizado à conceder desconto nos pedidos"
+            android:title="Pode aplicar desconto"
+            android:checked="true"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Permissões">
+        <EditTextPreference
+            android:key="@string/key_pref_tabela_preco_padrao"
+            android:dialogTitle="Digite o código da tabela de preço"
+            android:inputType="numberSigned"
+            android:summary="Será aplicada esta tabela de preço por padrão em cada novo pedido"
+            android:title="Tabela de preço padrão"
             />
     </PreferenceCategory>
 </PreferenceScreen>
