@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listaprodutos;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -45,9 +46,11 @@ class ProdutoAdapter extends RecyclerView.Adapter<ProdutoViewHolder> implements 
     @Override
     public void onBindViewHolder(ProdutoViewHolder holder, int position) {
         final Produto produto = mProdutoList.get(position);
+        final Resources resources = mContext.getResources();
         holder.textViewNomeProduto.setText(produto.getNome());
         holder.textViewQtdeEstoque.setText(
-                FormattingUtils.formatAsQuantidade(produto.getQuantidadeEstoque()));
+                resources.getString(R.string.template_text_qtde_estoque,
+                        FormattingUtils.formatAsQuantidade(produto.getQuantidadeEstoque())));
         holder.textViewPrecoProduto.setText(
                 FormattingUtils.formatAsDinheiro(produto.getPreco()));
     }

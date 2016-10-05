@@ -27,6 +27,7 @@
     <!-- Tela Lista de Produtos -->
     <string name="title_fragment_lista_produtos">Produtos</string>
     <string name="hint_busca_produto">Busque pela nome</string>
+    <string name="template_text_qtde_estoque">Qtd. Est. %1$s</string>
 
     <!-- Tela Lista de Pedidos -->
     <string name="title_fragment_lista_pedidos">Pedidos</string>
