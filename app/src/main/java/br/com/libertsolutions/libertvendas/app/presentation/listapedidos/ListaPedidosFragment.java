@@ -20,7 +20,7 @@ import butterknife.BindView;
 public class ListaPedidosFragment extends LibertVendasFragment
         implements ListaPedidosContract.View {
 
-    @BindView(R.id.recycler_view_produtos) protected RecyclerView mRecyclerViewProdutos;
+    @BindView(R.id.recycler_view_pedidos) protected RecyclerView mRecyclerViewPedidos;
 
     private PedidoAdapter mPedidoAdapter;
 
@@ -32,13 +32,7 @@ public class ListaPedidosFragment extends LibertVendasFragment
 
     @Override
     protected int provideContentViewResource() {
-        return R.layout.fragment_lista_produtos;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        return R.layout.fragment_lista_pedidos;
     }
 
     @Override
@@ -46,15 +40,15 @@ public class ListaPedidosFragment extends LibertVendasFragment
         super.onViewCreated(view, savedInstanceState);
         mPresenter = new ListaPedidosPresenter(this, Injection.providePedidoService(getContext()));
 
-        mRecyclerViewProdutos.setHasFixedSize(true);
-        mRecyclerViewProdutos.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerViewPedidos.setHasFixedSize(true);
+        mRecyclerViewPedidos.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mPresenter.loadListaPedidos();
     }
 
     @Override
     public void showListaPedidos(List<Pedido> pPedidoList) {
-        mRecyclerViewProdutos.setAdapter(
+        mRecyclerViewPedidos.setAdapter(
                 mPedidoAdapter = new PedidoAdapter(getContext(), pPedidoList));
     }
 }
