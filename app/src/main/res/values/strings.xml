@@ -19,4 +19,11 @@
     <string name="hint_cpf">Digite seu CPF</string>
     <string name="hint_senha">Digite sua senha</string>
     <string name="action_login">Entrar</string>
+
+    <!-- Tela Lista de Clientes -->
+    <string name="title_fragment_lista_clientes">Clientes</string>
+    <string name="hint_busca_cliente">Busque pela razão social</string>
+
+    <!-- Common strings -->
+    <string name="action_search">Pesquisar</string>
 </resources>

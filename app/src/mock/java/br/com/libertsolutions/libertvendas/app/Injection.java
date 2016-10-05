@@ -2,6 +2,9 @@ package br.com.libertsolutions.libertvendas.app;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+
+import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepositories;
+import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteService;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepositories;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 
@@ -10,7 +13,11 @@ import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
  */
 
 public class Injection {
-    public static SettingsRepository provideSettingsRepository(@NonNull Context context) {
-        return SettingsRepositories.getRepository(context);
+    public static SettingsRepository provideSettingsRepository(@NonNull Context pContext) {
+        return SettingsRepositories.getRepository(pContext);
+    }
+
+    public static ClienteService provideClienteService(@NonNull Context pContext) {
+        return ClienteRepositories.getService(pContext);
     }
 }

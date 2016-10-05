@@ -14,4 +14,9 @@ class HomePresenter implements HomeContract.Presenter {
     public void clickNavigationMenuSettings() {
         mView.navigateToSettings();
     }
+
+    @Override
+    public void clickNavigationMenuClientes() {
+        mView.navigateToClientes();
+    }
 }

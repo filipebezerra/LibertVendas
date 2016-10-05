@@ -3,8 +3,12 @@ package br.com.libertsolutions.libertvendas.app.presentation.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+
+import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoginActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsActivity;
 
@@ -38,5 +42,13 @@ public class Navigator {
         final Intent homeIntent = new Intent(mActivity, HomeActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         ActivityCompat.startActivity(mActivity, homeIntent, null);
+    }
+
+    public void toClientes(FragmentManager pSupportFragmentManager) {
+        pSupportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, ListaClientesFragment.newInstance())
+                .commit();
+        mActivity.setTitle(R.string.title_fragment_lista_clientes);
     }
 }
