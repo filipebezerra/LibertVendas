@@ -24,6 +24,10 @@
     <string name="title_fragment_lista_clientes">Clientes</string>
     <string name="hint_busca_cliente">Busque pela razão social</string>
 
+    <!-- Tela Lista de Produtos -->
+    <string name="title_fragment_lista_produtos">Produtos</string>
+    <string name="hint_busca_produto">Busque pela nome</string>
+
     <!-- Common strings -->
     <string name="action_search">Pesquisar</string>
 </resources>

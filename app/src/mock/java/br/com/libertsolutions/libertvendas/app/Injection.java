@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepositories;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteService;
+import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoRepositories;
+import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepositories;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 
@@ -19,5 +21,9 @@ public class Injection {
 
     public static ClienteService provideClienteService(@NonNull Context pContext) {
         return ClienteRepositories.getService(pContext);
+    }
+
+    public static ProdutoService provideProdutoService(@NonNull Context pContext) {
+        return ProdutoRepositories.getService(pContext);
     }
 }

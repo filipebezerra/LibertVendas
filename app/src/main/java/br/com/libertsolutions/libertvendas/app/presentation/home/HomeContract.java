@@ -8,11 +8,15 @@ interface HomeContract {
         void navigateToSettings();
 
         void navigateToClientes();
+
+        void navigateToProdutos();
     }
 
     interface Presenter {
         void clickNavigationMenuSettings();
 
         void clickNavigationMenuClientes();
+
+        void clickNavigationMenuProdutos();
     }
 }
