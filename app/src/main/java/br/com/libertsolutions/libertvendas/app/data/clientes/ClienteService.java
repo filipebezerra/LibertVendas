@@ -8,7 +8,6 @@ import rx.Observable;
 /**
  * @author Filipe Bezerra
  */
-
 public interface ClienteService {
     Observable<List<Cliente>> get();
 }

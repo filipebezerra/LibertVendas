@@ -27,6 +27,6 @@ class ListaClientesPresenter implements ListaClientesContract.Presenter {
         mClienteService.get()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pClientes -> mView.showListaClientes(pClientes));
+                .subscribe(mView::showListaClientes);
     }
 }

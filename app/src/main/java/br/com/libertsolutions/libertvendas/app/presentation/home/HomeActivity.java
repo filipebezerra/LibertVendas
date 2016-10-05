@@ -62,7 +62,7 @@ public class HomeActivity extends LibertVendasActivity
         if (id == R.id.nav_home) {
 
         } else if (id == R.id.nav_pedidos) {
-
+            mPresenter.clickNavigationMenuPedidos();
         } else if (id == R.id.nav_clientes) {
             mPresenter.clickNavigationMenuClientes();
         } else if (id == R.id.nav_produtos) {
@@ -89,6 +89,11 @@ public class HomeActivity extends LibertVendasActivity
     @Override
     public void navigateToProdutos() {
         navigate().toProdutos(getSupportFragmentManager());
+    }
+
+    @Override
+    public void navigateToPedidos() {
+        navigate().toPedidos(getSupportFragmentManager());
     }
 
     @Override

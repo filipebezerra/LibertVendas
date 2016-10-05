@@ -23,6 +23,6 @@ class ListaProdutosPresenter implements ListaProdutosContract.Presenter {
         mProdutoService.get()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pClientes -> mView.showListaProdutos(pClientes));
+                .subscribe(mView::showListaProdutos);
     }
 }

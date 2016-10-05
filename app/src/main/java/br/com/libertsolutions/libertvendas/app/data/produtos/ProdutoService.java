@@ -9,7 +9,6 @@ import rx.Observable;
 /**
  * @author Filipe Bezerra
  */
-
 public interface ProdutoService {
     Observable<List<Produto>> get();
 }

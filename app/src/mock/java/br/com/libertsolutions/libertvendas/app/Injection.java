@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepositories;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteService;
+import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepositories;
+import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoService;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepositories;
@@ -13,7 +15,6 @@ import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 /**
  * @author Filipe Bezerra
  */
-
 public class Injection {
     public static SettingsRepository provideSettingsRepository(@NonNull Context pContext) {
         return SettingsRepositories.getRepository(pContext);
@@ -25,5 +26,9 @@ public class Injection {
 
     public static ProdutoService provideProdutoService(@NonNull Context pContext) {
         return ProdutoRepositories.getService(pContext);
+    }
+
+    public static PedidoService providePedidoService(@NonNull Context pContext) {
+        return PedidoRepositories.getService(pContext);
     }
 }

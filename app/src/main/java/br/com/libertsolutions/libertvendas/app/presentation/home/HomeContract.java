@@ -10,6 +10,8 @@ interface HomeContract {
         void navigateToClientes();
 
         void navigateToProdutos();
+
+        void navigateToPedidos();
     }
 
     interface Presenter {
@@ -18,5 +20,7 @@ interface HomeContract {
         void clickNavigationMenuClientes();
 
         void clickNavigationMenuProdutos();
+
+        void clickNavigationMenuPedidos();
     }
 }
