@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "br.com.libertsolutions.libertvendas.app"
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode 24010
         versionName "0.1.0-beta"
