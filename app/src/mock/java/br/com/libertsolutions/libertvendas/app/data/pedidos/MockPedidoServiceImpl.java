@@ -16,13 +16,20 @@ class MockPedidoServiceImpl implements PedidoService {
 
     static {
         List<Pedido> list = Arrays.asList(
-                new Pedido(1, new Cliente("Gustavo Costa Alves", "(79) 8558-9351", "GustavoCcostaAlves@jourrapide.com"), 1100, 1475706128000L),
-                new Pedido(2, new Cliente("Sarah Costa Rodrigues", "(16) 6262-2691", "SarahCostaRodrigues@dayrep.com"), 3200, 1475706128000L),
-                new Pedido(3, new Cliente("Sarah Costa Rodrigues", "(16) 6262-2691", "SarahCostaRodrigues@dayrep.com"), 2500, 1475619728000L),
-                new Pedido(4, new Cliente("Rafaela Alves Almeida", "(19) 9588-2453", "RafaelaAlvesAlmeida@jourrapide.com"), 500, 1475446928000L),
-                new Pedido(5, new Cliente("Guilherme Souza Cardoso", "(84) 4498-8677", "GuilhermeSouzaCardoso@rhyta.com"), 5650, 1475446928000L),
-                new Pedido(6, new Cliente("Luis Almeida Cunha", "(11) 5863-7194", "LuisAlmeidaCunha@rhyta.com"), 2320, 1475446928000L),
-                new Pedido(7, new Cliente("Luis Almeida Cunha", "(11) 5863-7194", "LuisAlmeidaCunha@rhyta.com"), 9900, 1475360528000L)
+                new Pedido(1, new Cliente("Gustavo Costa Alves", "(79) 8558-9351", "GustavoCcostaAlves@jourrapide.com"), 1100, 1475706128000L,
+                        Pedido.PEDIDO_STATUS_ORCAMENTO),
+                new Pedido(2, new Cliente("Sarah Costa Rodrigues", "(16) 6262-2691", "SarahCostaRodrigues@dayrep.com"), 3200, 1475706128000L,
+                        Pedido.PEDIDO_STATUS_ORCAMENTO),
+                new Pedido(3, new Cliente("Sarah Costa Rodrigues", "(16) 6262-2691", "SarahCostaRodrigues@dayrep.com"), 2500, 1475619728000L,
+                        Pedido.PEDIDO_STATUS_ENVIADO),
+                new Pedido(4, new Cliente("Rafaela Alves Almeida", "(19) 9588-2453", "RafaelaAlvesAlmeida@jourrapide.com"), 500, 1475446928000L,
+                        Pedido.PEDIDO_STATUS_FATURADO),
+                new Pedido(5, new Cliente("Guilherme Souza Cardoso", "(84) 4498-8677", "GuilhermeSouzaCardoso@rhyta.com"), 5650, 1475446928000L,
+                        Pedido.PEDIDO_STATUS_FATURADO),
+                new Pedido(6, new Cliente("Luis Almeida Cunha", "(11) 5863-7194", "LuisAlmeidaCunha@rhyta.com"), 2320, 1475446928000L,
+                        Pedido.PEDIDO_STATUS_FATURADO),
+                new Pedido(7, new Cliente("Luis Almeida Cunha", "(11) 5863-7194", "LuisAlmeidaCunha@rhyta.com"), 9900, 1475360528000L,
+                        Pedido.PEDIDO_STATUS_CANCELADO)
         );
         sPedidoList = Collections.unmodifiableList(list);
     }

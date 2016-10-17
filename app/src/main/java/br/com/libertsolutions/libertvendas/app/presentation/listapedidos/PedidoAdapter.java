@@ -3,6 +3,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.listapedidos;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,13 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Filipe Bezerra
@@ -24,14 +23,19 @@ import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils
 class PedidoAdapter extends RecyclerView.Adapter<PedidoViewHolder> implements Filterable {
     private final Context mContext;
 
+    private final boolean mShowStatusIndicator;
+
     private List<Pedido> mPedidoList;
 
     private List<Pedido> mOriginalValues;
 
     private PedidoAdapterFilter mFilter;
 
-    PedidoAdapter(@NonNull Context pContext, @NonNull List<Pedido> pPedidoList) {
+    PedidoAdapter(
+            @NonNull Context pContext, boolean showStatusIndicator,
+            @NonNull List<Pedido> pPedidoList) {
         mContext = pContext;
+        mShowStatusIndicator = showStatusIndicator;
         mPedidoList = pPedidoList;
     }
 
@@ -58,6 +62,36 @@ class PedidoAdapter extends RecyclerView.Adapter<PedidoViewHolder> implements Fi
         holder.textViewDataPedido.setText(
                 resources.getString(R.string.template_text_data_pedido,
                         FormattingUtils.formatMillisecondsToDateText(pedido.getDataEmissao())));
+
+        if (mShowStatusIndicator) {
+            holder.viewStatusPedido.setVisibility(View.VISIBLE);
+
+            int colorResource = -1;
+            switch (pedido.getStatus()) {
+                case Pedido.PEDIDO_STATUS_ORCAMENTO: {
+                    colorResource = R.color.color_pedido_orcamento;
+                    break;
+                }
+                case Pedido.PEDIDO_STATUS_ENVIADO: {
+                    colorResource = R.color.color_pedido_enviado;
+                    break;
+                }
+                case Pedido.PEDIDO_STATUS_FATURADO: {
+                    colorResource = R.color.color_pedido_faturado;
+                    break;
+                }
+                case Pedido.PEDIDO_STATUS_CANCELADO: {
+                    colorResource = R.color.color_pedido_cancelado;
+                }
+            }
+
+            if (colorResource != -1) {
+                holder.viewStatusPedido.setBackgroundColor(
+                        ContextCompat.getColor(mContext, colorResource));
+            }
+        } else {
+            holder.viewStatusPedido.setVisibility(View.GONE);
+        }
     }
 
     @Override

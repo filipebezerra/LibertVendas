@@ -7,4 +7,8 @@
     <color name="color_accent_pressed">#6a00BFA5</color>
     <color name="color_accent_focused">#9600BFA5</color>
     <color name="color_tab_indicator">#0D47A1</color>
+    <color name="color_pedido_orcamento">#CDDC39</color>
+    <color name="color_pedido_enviado">#2196F3</color>
+    <color name="color_pedido_faturado">#4CAF50</color>
+    <color name="color_pedido_cancelado">#F44336</color>
 </resources>

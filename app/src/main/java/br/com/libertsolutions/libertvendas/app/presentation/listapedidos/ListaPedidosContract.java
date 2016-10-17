@@ -1,9 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listapedidos;
 
-import java.util.List;
-
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
+import java.util.List;
 
 /**
  * @author Filipe Bezerra
@@ -15,6 +13,6 @@ interface ListaPedidosContract {
     }
 
     interface Presenter {
-        void loadListaPedidos();
+        void loadListaPedidos(boolean listaPedidosNaoEnviados);
     }
 }

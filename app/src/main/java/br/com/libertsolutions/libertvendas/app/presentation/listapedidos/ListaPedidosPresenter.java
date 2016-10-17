@@ -19,7 +19,7 @@ class ListaPedidosPresenter implements ListaPedidosContract.Presenter {
     }
 
     @Override
-    public void loadListaPedidos() {
+    public void loadListaPedidos(boolean listaPedidosNaoEnviados) {
         mPedidoService.get()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

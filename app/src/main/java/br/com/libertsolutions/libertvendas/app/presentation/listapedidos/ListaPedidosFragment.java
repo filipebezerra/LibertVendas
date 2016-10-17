@@ -18,14 +18,23 @@ import java.util.List;
 public class ListaPedidosFragment extends LibertVendasFragment
         implements ListaPedidosContract.View {
 
+    private static final String ARG_LISTA_PEDIDOS_NAO_ENVIADOS
+            = ListaPedidosFragment.class.getSimpleName() + ".argListaPedidosNaoEnviados";
+
     @BindView(R.id.recycler_view_pedidos) protected RecyclerView mRecyclerViewPedidos;
 
     private PedidoAdapter mPedidoAdapter;
 
     private ListaPedidosContract.Presenter mPresenter;
 
-    public static ListaPedidosFragment newInstance() {
-        return new ListaPedidosFragment();
+    private boolean mListaPedidosNaoEnviados;
+
+    public static ListaPedidosFragment newInstance(boolean listaPedidosNaoEnviados) {
+        ListaPedidosFragment fragment = new ListaPedidosFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_LISTA_PEDIDOS_NAO_ENVIADOS, listaPedidosNaoEnviados);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -41,12 +50,18 @@ public class ListaPedidosFragment extends LibertVendasFragment
         mRecyclerViewPedidos.setHasFixedSize(true);
         mRecyclerViewPedidos.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mPresenter.loadListaPedidos();
+        Bundle arguments = getArguments();
+        if (arguments != null && arguments.containsKey(ARG_LISTA_PEDIDOS_NAO_ENVIADOS)) {
+            mListaPedidosNaoEnviados = arguments.getBoolean(ARG_LISTA_PEDIDOS_NAO_ENVIADOS);
+
+            mPresenter.loadListaPedidos(mListaPedidosNaoEnviados);
+        }
     }
 
     @Override
     public void showListaPedidos(List<Pedido> pPedidoList) {
         mRecyclerViewPedidos.setAdapter(
-                mPedidoAdapter = new PedidoAdapter(getContext(), pPedidoList));
+                mPedidoAdapter = new PedidoAdapter(
+                        getContext(), !mListaPedidosNaoEnviados, pPedidoList));
     }
 }

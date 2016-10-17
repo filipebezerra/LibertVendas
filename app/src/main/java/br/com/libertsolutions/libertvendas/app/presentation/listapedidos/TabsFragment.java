@@ -47,9 +47,9 @@ public class TabsFragment extends LibertVendasFragment {
                     .inflate(R.layout.tab_layout, mAppBarLayoutActivity, false);
 
             mTabAdapter = new TabAdapter(getChildFragmentManager());
-            mTabAdapter.addFragment(ListaPedidosFragment.newInstance(),
+            mTabAdapter.addFragment(ListaPedidosFragment.newInstance(false),
                     getString(R.string.title_fragment_todos_pedidos));
-            mTabAdapter.addFragment(ListaPedidosFragment.newInstance(),
+            mTabAdapter.addFragment(ListaPedidosFragment.newInstance(true),
                     getString(R.string.title_fragment_pedidos_nao_enviados));
             mViewPager.setAdapter(mTabAdapter);
 
