@@ -33,17 +33,29 @@
             />
         <activity
             android:name=".presentation.login.LoginActivity"
-            android:label="@string/title_login_activity"
-            android:theme="@style/Libert.Theme.NoActionBar"
-            android:noHistory="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
+            android:label="@string/title_login_activity"
+            android:noHistory="true"
+            android:theme="@style/Libert.Theme.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             />
         <activity
             android:name=".presentation.home.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/Libert.Theme.NoActionBar"
             />
+        <activity
+            android:name=".presentation.pedido.PedidoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
+            android:label="@string/title_activity_pedido"
+            android:parentActivityName=".presentation.home.HomeActivity"
+            android:theme="@style/Libert.Theme.NoActionBar"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity"
+                />
+        </activity>
     </application>
 
 </manifest>

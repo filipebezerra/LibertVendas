@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:contentPadding="16dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <LinearLayout
+                android:id="@+id/container_quantidade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                >
+
+                <ViewSwitcher
+                    android:id="@+id/view_switcher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:id="@+id/text_view_quantidade"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="@string/text_qtde_inicial_produto"
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:ellipsize="marquee"
+                        />
+
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/Widget.Libert.FormInputLayout"
+                        android:id="@+id/input_layout_edit_quantidade"
+                        >
+
+                        <android.support.design.widget.TextInputEditText
+                            style="@style/Widget.Libert.EditableField"
+                            android:id="@+id/edit_text_edit_quantidade"
+                            android:gravity="center"
+                            android:inputType="numberSigned"
+                            android:hint="@string/hint_edit_quantidade"
+                            android:imeOptions="actionDone"
+                            android:maxLines="1"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </ViewSwitcher>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageButton
+                        android:id="@+id/button_remover"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/accessibility_button_remover"
+                        android:textColor="@android:color/white"
+                        android:background="#9e9e9e"
+                        android:padding="4dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginEnd="8dp"
+                        app:srcCompat="@drawable/ic_remove"
+                        />
+
+                    <ImageButton
+                        android:id="@+id/button_adicionar"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/accessibility_button_adicionar"
+                        android:textColor="@android:color/white"
+                        android:background="?attr/colorAccent"
+                        android:padding="4dp"
+                        app:srcCompat="@drawable/ic_add"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_toLeftOf="@id/container_quantidade"
+                android:layout_toStartOf="@id/container_quantidade"
+                android:layout_centerVertical="true"
+                >
+
+                <TextView
+                    android:id="@+id/text_view_produto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    tools:text="Arroz Pacote 1 kg"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_preco"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="4dp"
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    tools:text="Preço R$12,99"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="4dp"
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:textStyle="bold"
+                    tools:text="Total R$12,99"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

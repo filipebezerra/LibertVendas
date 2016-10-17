@@ -3,4 +3,5 @@
     <item name="toolbar" type="id" />
     <item name="app_bar" type="id" />
     <item name="tabs" type="id" />
+    <item name="fragment_container" type="id" />
 </resources>

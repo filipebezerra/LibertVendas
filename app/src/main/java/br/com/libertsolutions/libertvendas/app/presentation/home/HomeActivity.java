@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import butterknife.OnClick;
 
 /**
  * @author Filipe Bezerra
@@ -99,5 +100,10 @@ public class HomeActivity extends LibertVendasActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @OnClick(R.id.fab)
+    void onFabClick() {
+        navigate().toPedido();
     }
 }

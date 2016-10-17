@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".presentation.home.HomeActivity"
+    tools:context="br.com.libertsolutions.libertvendas.app.presentation.pedido.PedidoActivity"
     >
 
     <android.support.design.widget.AppBarLayout
-        android:id="@id/app_bar"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:theme="@style/Libert.Theme.AppBarOverlay"
         >
 
@@ -30,13 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
-
-    <android.support.design.widget.FloatingActionButton
-        style="@style/Widget.Libert.FloatingActionButton"
-        android:id="@+id/fab"
-        android:layout_gravity="bottom|end"
-        app:srcCompat="@drawable/ic_add_white_24dp"
         />
 
 </android.support.design.widget.CoordinatorLayout>

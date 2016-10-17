@@ -38,6 +38,19 @@
     <string name="title_fragment_todos_pedidos">Todos Pedidos</string>
     <string name="title_fragment_pedidos_nao_enviados">Não Enviados</string>
 
+    <!-- Tela Pedido -->
+    <string name="title_activity_pedido">Novo pedido</string>
+
+    <!-- Tele Selecione os produtos -->
+    <string name="title_fragment_selecione_produtos">Selecione os produtos</string>
+    <string name="text_qtde_inicial_produto">0</string>
+    <string name="hint_edit_quantidade">Outra qtde</string>
+    <string name="accessibility_button_adicionar">Adicione mais um item</string>
+    <string name="accessibility_button_remover">Remova um item</string>
+    <string name="template_text_preco">Preço %1$s</string>
+    <string name="template_text_total">Total %1$s</string>
+
     <!-- Common strings -->
     <string name="action_search">Pesquisar</string>
+    <string name="action_save">Salvar</string>
 </resources>
