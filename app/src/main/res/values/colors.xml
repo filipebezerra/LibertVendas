@@ -6,4 +6,5 @@
     <color name="color_error">#DD2C00</color>
     <color name="color_accent_pressed">#6a00BFA5</color>
     <color name="color_accent_focused">#9600BFA5</color>
+    <color name="color_tab_indicator">#0D47A1</color>
 </resources>

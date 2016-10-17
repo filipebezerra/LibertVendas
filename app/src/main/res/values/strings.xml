@@ -35,6 +35,8 @@
     <string name="template_text_nome_cliente">Cliente %1$s</string>
     <string name="template_text_total_pedido">Total %1$s</string>
     <string name="template_text_data_pedido">Data %1$s</string>
+    <string name="title_fragment_todos_pedidos">Todos Pedidos</string>
+    <string name="title_fragment_pedidos_nao_enviados">Não Enviados</string>
 
     <!-- Common strings -->
     <string name="action_search">Pesquisar</string>
