@@ -48,4 +48,16 @@ public class PedidoActivity extends LibertVendasActivity {
             finish();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        final Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_container);
+
+        if (fragment instanceof SelecioneProdutosFragment) {
+            super.onBackPressed();
+        } else {
+            navigate().toSelecioneProdutos(getSupportFragmentManager());
+        }
+    }
 }
