@@ -11,6 +11,7 @@ import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import butterknife.BindView;
+import butterknife.OnClick;
 import java.util.List;
 import smtchahal.materialspinner.MaterialSpinner;
 
@@ -68,5 +69,15 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
     public void bindFormasPagamento(List<FormaPagamento> pFormaPagamentoList) {
         mFormaPagamentoAdapter = new FormaPagamentoAdapter(getContext(), pFormaPagamentoList);
         mSpinnerFormaPagamento.setAdapter(mFormaPagamentoAdapter);
+    }
+
+    @Override
+    public void navigateToListaClientesActivity() {
+        hostActivity().navigate().toClientes(hostActivity().getSupportFragmentManager());
+    }
+
+    @OnClick(R.id.edit_text_cliente)
+    void onClickEditTextCliente() {
+        mPresenter.clickSelectCliente();
     }
 }

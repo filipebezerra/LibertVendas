@@ -6,6 +6,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.cliente.ClienteActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFragment;
@@ -91,5 +92,11 @@ public class Navigator {
                 .replace(R.id.fragment_container, FinalizaPedidoFragment.newInstance())
                 .commit();
         mActivity.setTitle(R.string.title_fragment_finaliza_pedido);
+    }
+
+    public void toCliente(boolean fromHome) {
+        final Intent clienteIntent = new Intent(mActivity, ClienteActivity.class)
+                .putExtra(ClienteActivity.EXTRA_FROM_HOME, fromHome);
+        ActivityCompat.startActivity(mActivity, clienteIntent, null);
     }
 }

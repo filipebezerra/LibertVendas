@@ -40,4 +40,9 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
     public void clickActionSave() {
         EventBus.getDefault().post(NavigateToNextEvent.notifyEvent());
     }
+
+    @Override
+    public void clickSelectCliente() {
+        mView.navigateToListaClientesActivity();
+    }
 }

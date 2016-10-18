@@ -9,11 +9,15 @@ import java.util.List;
 interface FinalizaPedidoContract {
     interface View {
         void bindFormasPagamento(List<FormaPagamento> pFormaPagamentoList);
+
+        void navigateToListaClientesActivity();
     }
 
     interface Presenter {
         void initializeView();
 
         void clickActionSave();
+
+        void clickSelectCliente();
     }
 }

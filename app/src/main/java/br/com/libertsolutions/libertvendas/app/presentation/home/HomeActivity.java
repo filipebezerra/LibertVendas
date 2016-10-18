@@ -119,10 +119,11 @@ public class HomeActivity extends LibertVendasActivity
 
     @OnClick({ R.id.fab_sheet_item_novo_pedido, R.id.fab_sheet_item_novo_cliente })
     void onFabClick(View pView) {
+        mMaterialSheetFab.hideSheet();
         if (pView.getId() == R.id.fab_sheet_item_novo_pedido) {
             navigate().toPedido();
         } else {
-            //navigate().toCliente();
+            navigate().toCliente(true);
         }
     }
 }

@@ -58,15 +58,10 @@
         </activity>
         <activity
             android:name=".presentation.cliente.ClienteActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
             android:label="@string/title_activity_cliente"
-            android:parentActivityName=".presentation.pedido.PedidoActivity"
             android:theme="@style/Libert.Theme.NoActionBar"
-            >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.libertsolutions.libertvendas.app.presentation.pedido.PedidoActivity"
-                />
-        </activity>
+            />
     </application>
 
 </manifest>

@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">Libert Vendas</string>
-    <string name="title_activity_home">Libert Vendas</string>
 
+    <!-- Tela Home -->
+    <string name="title_activity_home">Libert Vendas</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="fab_sheet_item_novo_pedido">Novo pedido</string>
+    <string name="fab_sheet_item_novo_cliente">Novo cliente</string>
 
     <!-- Tela Configurações -->
     <string name="title_activity_settings">Configurações</string>
@@ -63,10 +66,22 @@
 
     <!-- Tela Cliente -->
     <string name="title_activity_cliente">Novo cliente</string>
+    <string name="hint_tipo_pessoa">Selecione o tipo de pessoa</string>
+    <string name="label_tipo_pessoa">Tipo de pessoa selecionado</string>
+    <string name="hint_cpf_ou_cnpj">CPF&#47;CNPJ</string>
+    <string name="hint_razao_social">Razão social</string>
+    <string name="hint_logradouro">Logradouro</string>
+    <string name="hint_numero">Número</string>
+    <string name="hint_complemento">Complemento</string>
+    <string name="hint_bairro">Bairro</string>
+    <string name="hint_cidade">Cidade</string>
+    <string name="hint_cep">CEP</string>
+    <string name="hint_telefone">Telefone</string>
+    <string name="hint_celular">Celular</string>
+    <string name="hint_estado">Selecione o estado</string>
+    <string name="label_estado">Estado selecionado</string>
 
     <!-- Common strings -->
     <string name="action_search">Pesquisar</string>
     <string name="action_save">Salvar</string>
-    <string name="fab_sheet_item_novo_pedido">Novo pedido</string>
-    <string name="fab_sheet_item_novo_cliente">Novo cliente</string>
 </resources>
