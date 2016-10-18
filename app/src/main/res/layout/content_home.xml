@@ -32,11 +32,60 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
-    <android.support.design.widget.FloatingActionButton
+    <br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton
         style="@style/Widget.Libert.FloatingActionButton"
         android:id="@+id/fab"
         android:layout_gravity="bottom|end"
         app:srcCompat="@drawable/ic_add_white_24dp"
         />
+
+    <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <io.codetail.widget.RevealLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|bottom"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            style="@style/Widget.Libert.Sheet"
+            android:id="@+id/fab_sheet"
+            >
+
+            <!-- Sheet items -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <!-- Recording -->
+                <TextView
+                    style="@style/TextAppearance.Libert.Sheet.Item"
+                    android:id="@+id/fab_sheet_item_novo_pedido"
+                    android:drawableLeft="@drawable/vector_ic_work_grey_24dp"
+                    android:drawableStart="@drawable/vector_ic_work_grey_24dp"
+                    android:text="@string/fab_sheet_item_novo_pedido"
+                    android:background="?attr/colorAccent"
+                    />
+
+                <!-- Reminder -->
+                <TextView
+                    style="@style/TextAppearance.Libert.Sheet.Item"
+                    android:id="@+id/fab_sheet_item_novo_cliente"
+                    android:drawableLeft="@drawable/vector_ic_people_grey_24dp"
+                    android:drawableStart="@drawable/vector_ic_people_grey_24dp"
+                    android:text="@string/fab_sheet_item_novo_cliente"
+                    />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </io.codetail.widget.RevealLinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

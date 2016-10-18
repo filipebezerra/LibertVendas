@@ -67,4 +67,6 @@
     <!-- Common strings -->
     <string name="action_search">Pesquisar</string>
     <string name="action_save">Salvar</string>
+    <string name="fab_sheet_item_novo_pedido">Novo pedido</string>
+    <string name="fab_sheet_item_novo_cliente">Novo cliente</string>
 </resources>
