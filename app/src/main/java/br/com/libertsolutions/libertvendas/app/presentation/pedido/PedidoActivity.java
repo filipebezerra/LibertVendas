@@ -1,8 +1,10 @@
 package br.com.libertsolutions.libertvendas.app.presentation.pedido;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.SelecioneProdutosFragment;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -37,6 +39,13 @@ public class PedidoActivity extends LibertVendasActivity {
 
     @Subscribe
     public void onNavigateToNextEvent(NavigateToNextEvent pEvent) {
-        navigate().toFinalizaPedido(getSupportFragmentManager());
+        final Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_container);
+
+        if (fragment instanceof SelecioneProdutosFragment) {
+            navigate().toFinalizaPedido(getSupportFragmentManager());
+        } else {
+            finish();
+        }
     }
 }

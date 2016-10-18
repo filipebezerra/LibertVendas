@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 /**
  * @author Filipe Bezerra
  */
-
 public class ProdutoRepositories {
     private static ProdutoService sService = null;
 

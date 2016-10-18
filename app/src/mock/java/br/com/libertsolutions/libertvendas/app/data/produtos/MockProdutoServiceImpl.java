@@ -10,7 +10,6 @@ import rx.Observable;
 /**
  * @author Filipe Bezerra
  */
-
 class MockProdutoServiceImpl implements ProdutoService {
     private static List<Produto> sProdutoList;
 
