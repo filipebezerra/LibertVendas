@@ -64,7 +64,7 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_done) {
-
+            mPresenter.clickActionDone();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

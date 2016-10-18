@@ -50,7 +50,12 @@
     <string name="template_text_preco">Preço %1$s</string>
     <string name="template_text_total">Total %1$s</string>
 
+    <!-- Tela Finaliza pedido -->
+    <string name="title_fragment_finaliza_pedido">Finalizando pedido</string>
+    <string name="hint_cliente">Selecione o cliente</string>
+
     <!-- Common strings -->
     <string name="action_search">Pesquisar</string>
     <string name="action_save">Salvar</string>
+    <string name="title_activity_cliente">Novo cliente</string>
 </resources>

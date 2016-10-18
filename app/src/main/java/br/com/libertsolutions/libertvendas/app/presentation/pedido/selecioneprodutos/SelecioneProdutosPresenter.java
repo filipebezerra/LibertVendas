@@ -4,7 +4,9 @@ import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.NavigateToNextEvent;
 import java.util.List;
+import org.greenrobot.eventbus.EventBus;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -51,6 +53,11 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
                 mView.updateViewPedidoItem(pPosition);
             }
         }
+    }
+
+    @Override
+    public void clickActionDone() {
+        EventBus.getDefault().post(NavigateToNextEvent.notifyEvent());
     }
 
     private void transformThenShowListaProdutos(List<Produto> pProdutoList) {

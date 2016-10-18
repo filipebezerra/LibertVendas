@@ -19,5 +19,7 @@ interface SelecioneProdutosContract {
         void clickAdicionaQuantidadeItem(int pPosition);
 
         void clickRemoveQuantidadeItem(int pPosition);
+
+        void clickActionDone();
     }
 }

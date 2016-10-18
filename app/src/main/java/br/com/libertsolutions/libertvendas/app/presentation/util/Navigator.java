@@ -12,6 +12,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFra
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoginActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.PedidoActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.FinalizaPedidoFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.SelecioneProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsActivity;
 
@@ -82,5 +83,13 @@ public class Navigator {
                 .replace(R.id.fragment_container, SelecioneProdutosFragment.newInstance())
                 .commit();
         mActivity.setTitle(R.string.title_fragment_selecione_produtos);
+    }
+
+    public void toFinalizaPedido(FragmentManager pSupportFragmentManager) {
+        pSupportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, FinalizaPedidoFragment.newInstance())
+                .commit();
+        mActivity.setTitle(R.string.title_fragment_finaliza_pedido);
     }
 }

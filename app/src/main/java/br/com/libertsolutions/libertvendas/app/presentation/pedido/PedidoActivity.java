@@ -3,7 +3,12 @@ package br.com.libertsolutions.libertvendas.app.presentation.pedido;
 import android.os.Bundle;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
+/**
+ * @author Filipe Bezerra
+ */
 public class PedidoActivity extends LibertVendasActivity {
 
     @Override
@@ -16,5 +21,22 @@ public class PedidoActivity extends LibertVendasActivity {
     @Override
     protected int provideContentViewResource() {
         return R.layout.activity_pedido;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onNavigateToNextEvent(NavigateToNextEvent pEvent) {
+        navigate().toFinalizaPedido(getSupportFragmentManager());
     }
 }
