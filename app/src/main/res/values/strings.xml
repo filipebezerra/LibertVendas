@@ -69,8 +69,8 @@
     <string name="hint_tipo_pessoa">Selecione o tipo de pessoa</string>
     <string name="label_tipo_pessoa">Tipo de pessoa selecionado</string>
     <string name="hint_cpf_ou_cnpj">CPF&#47;CNPJ</string>
-    <string name="hint_razao_social">Razão social</string>
-    <string name="hint_logradouro">Logradouro</string>
+    <string name="hint_nome_cliente">Nome</string>
+    <string name="hint_logradouro">Endereço</string>
     <string name="hint_numero">Número</string>
     <string name="hint_complemento">Complemento</string>
     <string name="hint_bairro">Bairro</string>
@@ -78,8 +78,9 @@
     <string name="hint_cep">CEP</string>
     <string name="hint_telefone">Telefone</string>
     <string name="hint_celular">Celular</string>
-    <string name="hint_estado">Selecione o estado</string>
-    <string name="label_estado">Estado selecionado</string>
+    <string name="hint_uf">Selecione o estado</string>
+    <string name="label_uf">Estado selecionado</string>
+    <string name="hint_email">E-mail</string>
 
     <!-- Common strings -->
     <string name="action_search">Pesquisar</string>
