@@ -1,5 +1,8 @@
 package br.com.libertsolutions.libertvendas.app.presentation.util;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -24,6 +27,10 @@ public class FormattingUtils {
     private static final DateFormat DATE_FORMATTER_AS_DD_MM_YYYY =
             new SimpleDateFormat("dd/MM/yyyy", PT_BR_DEFAULT_LOCALE);
 
+    private static final PhoneNumberUtil PHONE_UTIL = PhoneNumberUtil.getInstance();
+
+    private static final String BR_REGION_CODE = "BR";
+
     static {
         PT_BR_CURRENCY_FORMATTER.setMaximumFractionDigits(2);
         PT_BR_CURRENCY_FORMATTER.setMinimumFractionDigits(2);
@@ -43,5 +50,15 @@ public class FormattingUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliseconds);
         return DATE_FORMATTER_AS_DD_MM_YYYY.format(calendar.getTime());
+    }
+
+    public static String formatPhoneNumber(String phoneNumberText) {
+        try {
+            Phonenumber.PhoneNumber phoneNumber
+                    = PHONE_UTIL.parse(phoneNumberText, BR_REGION_CODE);
+            return PHONE_UTIL.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+        } catch (NumberParseException e) {
+            return phoneNumberText;
+        }
     }
 }

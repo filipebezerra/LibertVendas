@@ -9,12 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Filipe Bezerra
@@ -45,7 +44,25 @@ class ClienteAdapter extends RecyclerView.Adapter<ClienteViewHolder> implements 
     public void onBindViewHolder(ClienteViewHolder holder, int position) {
         final Cliente cliente = mClienteList.get(position);
         holder.textViewRazaoSocial.setText(cliente.getNome());
+
         holder.textViewTelefone.setText(cliente.getTelefone());
+
+        if (!TextUtils.isEmpty(cliente.getTelefone())
+                && !TextUtils.isEmpty(cliente.getTelefone2())) {
+            holder.textViewTelefone.setText(
+                    mContext.getString(R.string.template_text_telefones,
+                            FormattingUtils.formatPhoneNumber(cliente.getTelefone()),
+                            FormattingUtils.formatPhoneNumber(cliente.getTelefone2())));
+        } else if (!TextUtils.isEmpty(cliente.getTelefone())) {
+            holder.textViewTelefone.setText(
+                    FormattingUtils.formatPhoneNumber(cliente.getTelefone()));
+        } else if (!TextUtils.isEmpty(cliente.getTelefone2())) {
+            holder.textViewTelefone.setText(
+                    FormattingUtils.formatPhoneNumber(cliente.getTelefone2()));
+        } else {
+            holder.textViewTelefone.setText(mContext.getString(R.string.text_sem_telefone));
+        }
+
         holder.textViewEmail.setText(cliente.getEmail());
     }
 

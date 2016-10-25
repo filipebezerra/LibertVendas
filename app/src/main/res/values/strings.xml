@@ -26,6 +26,8 @@
     <!-- Tela Lista de Clientes -->
     <string name="title_fragment_lista_clientes">Clientes</string>
     <string name="hint_busca_cliente">Busque pela razão social</string>
+    <string name="template_text_telefones">%1$s &#47; %2$s</string>
+    <string name="text_sem_telefone">Sem telefone</string>
 
     <!-- Tela Lista de Produtos -->
     <string name="title_fragment_lista_produtos">Produtos</string>
