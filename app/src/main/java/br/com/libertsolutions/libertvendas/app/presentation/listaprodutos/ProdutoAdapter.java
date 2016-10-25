@@ -47,12 +47,16 @@ class ProdutoAdapter extends RecyclerView.Adapter<ProdutoViewHolder> implements 
     public void onBindViewHolder(ProdutoViewHolder holder, int position) {
         final Produto produto = mProdutoList.get(position);
         final Resources resources = mContext.getResources();
+
         holder.textViewNomeProduto.setText(produto.getNome());
+
         holder.textViewQtdeEstoque.setText(
                 resources.getString(R.string.template_text_qtde_estoque,
                         FormattingUtils.formatAsQuantidade(produto.getQuantidadeEstoque())));
+
         holder.textViewPrecoProduto.setText(
-                FormattingUtils.formatAsDinheiro(produto.getPreco()));
+                resources.getString(R.string.template_text_preco,
+                        FormattingUtils.formatAsDinheiro(produto.getPreco())));
     }
 
     @Override

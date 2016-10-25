@@ -7,11 +7,7 @@
     >
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        app:contentPadding="16dp"
+        style="@style/Widget.Libert.CardView"
         >
 
         <RelativeLayout
@@ -38,7 +34,7 @@
                         android:id="@+id/text_view_quantidade"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"
+                        android:padding="@dimen/keyline_small"
                         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                         android:textStyle="bold"
                         android:gravity="center"
@@ -48,7 +44,6 @@
                         android:maxLines="1"
                         android:ellipsize="marquee"
                         />
-
 
                     <android.support.design.widget.TextInputLayout
                         style="@style/Widget.Libert.FormInputLayout"
@@ -79,25 +74,25 @@
 
                     <ImageButton
                         android:id="@+id/button_remover"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="@dimen/keyline_button"
+                        android:layout_height="@dimen/keyline_button"
                         android:contentDescription="@string/accessibility_button_remover"
                         android:textColor="@android:color/white"
-                        android:background="#9e9e9e"
-                        android:padding="4dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginEnd="8dp"
+                        android:background="@color/material_grey_500"
+                        android:padding="@dimen/keyline_small"
+                        android:layout_marginRight="@dimen/keyline_medium"
+                        android:layout_marginEnd="@dimen/keyline_medium"
                         app:srcCompat="@drawable/ic_remove"
                         />
 
                     <ImageButton
                         android:id="@+id/button_adicionar"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="@dimen/keyline_button"
+                        android:layout_height="@dimen/keyline_button"
                         android:contentDescription="@string/accessibility_button_adicionar"
                         android:textColor="@android:color/white"
                         android:background="?attr/colorAccent"
-                        android:padding="4dp"
+                        android:padding="@dimen/keyline_small"
                         app:srcCompat="@drawable/ic_add"
                         />
 
@@ -118,25 +113,24 @@
                     android:id="@+id/text_view_produto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="@dimen/keyline_medium"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    tools:text="Arroz Pacote 1 kg"
+                    tools:text="@string/example_text_nome_produto"
                     />
 
                 <TextView
                     android:id="@+id/text_view_preco"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="@dimen/keyline_medium"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:gravity="center_vertical"
-                    android:drawablePadding="4dp"
                     android:maxLines="1"
                     android:lines="1"
                     android:ellipsize="end"
-                    tools:text="Preço R$12,99"
+                    tools:text="@string/example_text_preco_produto"
                     />
 
                 <TextView
@@ -145,12 +139,11 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:gravity="center_vertical"
-                    android:drawablePadding="4dp"
                     android:maxLines="1"
                     android:lines="1"
                     android:ellipsize="end"
                     android:textStyle="bold"
-                    tools:text="Total R$12,99"
+                    tools:text="@string/example_text_total_pedido"
                     />
 
             </LinearLayout>

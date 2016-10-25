@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,13 +7,7 @@
     >
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:clickable="true"
-        android:foreground="@drawable/list_selector"
-        app:contentPadding="16dp"
+        style="@style/Widget.Libert.CardView"
         >
 
         <LinearLayout
@@ -27,21 +20,23 @@
                 android:id="@+id/text_view_nome_produto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/keyline_medium"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                tools:text="Achocolatado 200g"
+                tools:text="@string/example_text_nome_produto"
                 />
 
             <TextView
                 android:id="@+id/text_view_qtde_estoque"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/keyline_medium"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                tools:text="Qtd. Est. 10"
+                tools:text="@string/example_text_qtde_estoque"
                 />
 
             <TextView
@@ -53,7 +48,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:textColor="?attr/colorAccent"
-                tools:text="R$ 4.49"
+                tools:text="@string/example_text_preco_produto"
                 />
 
         </LinearLayout>

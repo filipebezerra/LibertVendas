@@ -25,14 +25,20 @@
 
     <!-- Tela Lista de Clientes -->
     <string name="title_fragment_lista_clientes">Clientes</string>
-    <string name="hint_busca_cliente">Busque pela razão social</string>
+    <string name="hint_busca_cliente">Busque pelo nome</string>
     <string name="template_text_telefones">%1$s &#47; %2$s</string>
     <string name="text_sem_telefone">Sem telefone</string>
+    <string name="example_text_razao_social">Waldomiro Martins Braga</string>
+    <string name="example_text_telefone">(62) 3524 – 1936</string>
+    <string name="example_text_email">waldomiro.martins.braga@mail.com</string>
 
     <!-- Tela Lista de Produtos -->
     <string name="title_fragment_lista_produtos">Produtos</string>
     <string name="hint_busca_produto">Busque pela nome</string>
     <string name="template_text_qtde_estoque">Qtd. Est. %1$s</string>
+    <string name="example_text_qtde_estoque">Qtd. Est. 10</string>
+    <string name="example_text_preco_produto">Preço R$ 4.49</string>
+    <string name="example_text_nome_produto">Achocolatado 200g</string>
 
     <!-- Tela Lista de Pedidos -->
     <string name="title_fragment_lista_pedidos">Pedidos</string>
@@ -42,6 +48,10 @@
     <string name="template_text_data_pedido">Data %1$s</string>
     <string name="title_fragment_todos_pedidos">Todos Pedidos</string>
     <string name="title_fragment_pedidos_nao_enviados">Não Enviados</string>
+    <string name="example_text_numero_pedido">Nº 200852</string>
+    <string name="example_text_nome_cliente">Cliente Gustavo Costa Alves</string>
+    <string name="example_text_total_pedido">Total R$ 204.89</string>
+    <string name="example_text_data_pedido">Data 14/09/2016</string>
 
     <!-- Tela Pedido -->
     <string name="title_activity_pedido">Novo pedido</string>

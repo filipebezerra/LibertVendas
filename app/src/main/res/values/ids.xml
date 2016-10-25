@@ -4,4 +4,5 @@
     <item name="app_bar" type="id" />
     <item name="tabs" type="id" />
     <item name="fragment_container" type="id" />
+    <item name="card_view" type="id" />
 </resources>

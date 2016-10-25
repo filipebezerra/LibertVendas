@@ -21,4 +21,5 @@
     <dimen name="keyline_small">4dp</dimen>
 
     <dimen name="keyline_icon">24dp</dimen>
+    <dimen name="keyline_button">56dp</dimen>
 </resources>
