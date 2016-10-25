@@ -19,16 +19,14 @@
             />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Permissões">
+    <PreferenceCategory android:title="Pedido">
         <SwitchPreference
             android:key="@string/key_pref_pode_aplicar_desconto"
             android:summary="Vendedor está autorizado à conceder desconto nos pedidos"
             android:title="Pode aplicar desconto"
             android:checked="true"
             />
-    </PreferenceCategory>
 
-    <PreferenceCategory android:title="Permissões">
         <EditTextPreference
             android:key="@string/key_pref_tabela_preco_padrao"
             android:dialogTitle="Digite o código da tabela de preço"
@@ -38,4 +36,5 @@
             android:enabled="false"
             />
     </PreferenceCategory>
+
 </PreferenceScreen>
