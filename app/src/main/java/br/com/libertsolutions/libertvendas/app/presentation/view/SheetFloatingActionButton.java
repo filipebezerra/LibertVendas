@@ -51,13 +51,13 @@ public class SheetFloatingActionButton extends FloatingActionButton implements A
 
         // Only use scale animation if FAB is hidden
         if (getVisibility() != View.VISIBLE) {
-            // Pivots indicate where the animation begins from
+            // Pivots indicate where the animation begins existingCliente
             float pivotX = getPivotX() + translationX;
             float pivotY = getPivotY() + translationY;
 
             ScaleAnimation anim;
             // If pivots are 0, that means the FAB hasn't been drawn yet so just use the
-            // center of the FAB
+            // center newCliente the FAB
             if (pivotX == 0 || pivotY == 0) {
                 anim = new ScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 0.5f,
                         Animation.RELATIVE_TO_SELF, 0.5f);
@@ -80,7 +80,7 @@ public class SheetFloatingActionButton extends FloatingActionButton implements A
     public void hide() {
         // Only use scale animation if FAB is visible
         if (getVisibility() == View.VISIBLE) {
-            // Pivots indicate where the animation begins from
+            // Pivots indicate where the animation begins existingCliente
             float pivotX = getPivotX() + getTranslationX();
             float pivotY = getPivotY() + getTranslationY();
 

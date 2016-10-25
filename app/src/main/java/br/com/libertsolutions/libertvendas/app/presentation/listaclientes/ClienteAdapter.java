@@ -44,7 +44,7 @@ class ClienteAdapter extends RecyclerView.Adapter<ClienteViewHolder> implements 
     @Override
     public void onBindViewHolder(ClienteViewHolder holder, int position) {
         final Cliente cliente = mClienteList.get(position);
-        holder.textViewRazaoSocial.setText(cliente.getRazaoSocial());
+        holder.textViewRazaoSocial.setText(cliente.getNome());
         holder.textViewTelefone.setText(cliente.getTelefone());
         holder.textViewEmail.setText(cliente.getEmail());
     }
@@ -82,7 +82,7 @@ class ClienteAdapter extends RecyclerView.Adapter<ClienteViewHolder> implements 
                 final List<Cliente> newValues = new ArrayList<>();
 
                 for(Cliente cliente : values) {
-                    String valueText = cliente.getRazaoSocial();
+                    String valueText = cliente.getNome();
                     if (!TextUtils.isEmpty(valueText) &&
                             valueText.toLowerCase().contains(prefixString)) {
                         newValues.add(cliente);

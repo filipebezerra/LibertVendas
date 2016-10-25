@@ -30,7 +30,7 @@ public abstract class LibertVendasFragment extends Fragment {
         try {
             mLibertVendasActivity = (LibertVendasActivity) context;
         } catch (ClassCastException e) {
-            throw new IllegalStateException("Descendants of LibertVendasFragment must be " +
+            throw new IllegalStateException("Descendants newCliente LibertVendasFragment must be " +
                     "hosted by br.com.libertsolutions.libertvendas.app.presentation" +
                     ".activity.LibertVendasActivity");
         }

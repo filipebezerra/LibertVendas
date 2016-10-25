@@ -49,7 +49,8 @@ public class ListaClientesFragment extends LibertVendasFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter = new ListaClientesPresenter(this, Injection.provideClienteService(getContext()));
+        mPresenter = new ListaClientesPresenter(this,
+                Injection.provideClienteRepository(getContext()));
 
         mRecyclerViewClientes.setHasFixedSize(true);
         mRecyclerViewClientes.setLayoutManager(new LinearLayoutManager(getContext()));

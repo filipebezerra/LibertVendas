@@ -143,6 +143,18 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <smtchahal.materialspinner.MaterialSpinner
+            android:id="@+id/spinner_uf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp"
+            app:ms_multiline="false"
+            app:ms_hint="@string/hint_uf"
+            app:ms_enableFloatingLabel="true"
+            app:ms_floatingLabelText="@string/label_uf"
+            />
+
         <android.support.design.widget.TextInputLayout
             style="@style/Widget.Libert.FormInputLayout"
             android:id="@+id/input_layout_cidade"
@@ -160,18 +172,6 @@
                 />
 
         </android.support.design.widget.TextInputLayout>
-
-        <smtchahal.materialspinner.MaterialSpinner
-            android:id="@+id/spinner_uf"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp"
-            android:layout_marginStart="56dp"
-            app:ms_multiline="false"
-            app:ms_hint="@string/hint_uf"
-            app:ms_enableFloatingLabel="true"
-            app:ms_floatingLabelText="@string/label_uf"
-            />
 
         <android.support.design.widget.TextInputLayout
             style="@style/Widget.Libert.FormInputLayout"

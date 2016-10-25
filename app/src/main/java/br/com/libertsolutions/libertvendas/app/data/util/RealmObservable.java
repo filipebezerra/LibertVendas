@@ -10,7 +10,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
- * Helper class that simplifies usage of these functions providing static methods with Func1<Realm,
+ * Helper class that simplifies usage newCliente these functions providing static methods with Func1<Realm,
  * T> as argument.
  *
  * @author Kirill Boyarshinov

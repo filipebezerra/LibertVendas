@@ -24,8 +24,6 @@ public class ClienteEntity implements RealmModel {
     @Required
     private String cpfOuCnpj;
 
-    private String contato;
-
     private String email;
 
     private String telefone;
@@ -90,15 +88,6 @@ public class ClienteEntity implements RealmModel {
 
     public ClienteEntity setCpfOuCnpj(String pCpfOuCnpj) {
         cpfOuCnpj = pCpfOuCnpj;
-        return this;
-    }
-
-    public String getContato() {
-        return contato;
-    }
-
-    public ClienteEntity setContato(String pContato) {
-        contato = pContato;
         return this;
     }
 

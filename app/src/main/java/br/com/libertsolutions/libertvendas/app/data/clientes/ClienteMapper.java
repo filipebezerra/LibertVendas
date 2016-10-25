@@ -16,7 +16,6 @@ public class ClienteMapper extends Mapper<Cliente, ClienteEntity> {
                 .setNome(object.getNome())
                 .setTipo(object.getTipo())
                 .setCpfOuCnpj(object.getCpfOuCnpj())
-                .setContato(object.getContato())
                 .setEmail(object.getEmail())
                 .setTelefone(object.getTelefone())
                 .setTelefone2(object.getTelefone2())
@@ -36,7 +35,6 @@ public class ClienteMapper extends Mapper<Cliente, ClienteEntity> {
         final String nome = entity.getNome();
         final int tipo = entity.getTipo();
         final String cpfOuCnpj = entity.getCpfOuCnpj();
-        final String contato = entity.getContato();
         final String email = entity.getEmail();
         final String telefone = entity.getTelefone();
         final String telefone2 = entity.getTelefone2();
@@ -47,8 +45,8 @@ public class ClienteMapper extends Mapper<Cliente, ClienteEntity> {
         final String complemento = entity.getComplemento();
         final String cidade = entity.getCidade();
         final String uf = entity.getUf();
-        return new Cliente(
-                id, codigo, nome, tipo, cpfOuCnpj, contato, email, telefone, telefone2,
+        return Cliente.existingCliente(
+                id, codigo, nome, tipo, cpfOuCnpj, email, telefone, telefone2,
                 endereco, cep, bairro, numero, complemento, cidade, uf
         );
     }

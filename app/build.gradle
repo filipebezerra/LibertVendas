@@ -74,6 +74,7 @@ dependencies {
     // Material components libraries
     compile 'com.github.smtchahal:MaterialSpinner:1.1.7'
     compile 'com.gordonwong:material-sheet-fab:1.2.1'
+    compile 'com.afollestad.material-dialogs:core:0.9.0.2'
 }
 
 retrolambda {

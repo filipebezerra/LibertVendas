@@ -5,5 +5,5 @@ package br.com.libertsolutions.libertvendas.app.presentation.resources;
  */
 
 interface CommonResourcesRepository {
-
+    String obtainStringMessageFieldsRequired();
 }

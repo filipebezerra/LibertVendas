@@ -11,7 +11,6 @@ import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoService;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
-import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepositories;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 
 /**

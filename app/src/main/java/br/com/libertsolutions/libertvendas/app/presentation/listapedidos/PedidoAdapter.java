@@ -55,7 +55,7 @@ class PedidoAdapter extends RecyclerView.Adapter<PedidoViewHolder> implements Fi
                         pedido.getNumero()));
         holder.textViewNomeCliente.setText(
                 resources.getString(R.string.template_text_nome_cliente,
-                        pedido.getCliente().getRazaoSocial()));
+                        pedido.getCliente().getNome()));
         holder.textViewTotalPedido.setText(
                 resources.getString(R.string.template_text_total_pedido,
                         FormattingUtils.formatAsDinheiro(pedido.getTotal())));

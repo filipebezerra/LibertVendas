@@ -85,4 +85,14 @@
     <!-- Common strings -->
     <string name="action_search">Pesquisar</string>
     <string name="action_save">Salvar</string>
+    <string name="error_campo_requerido">Este campo é obrigatório!</string>
+    <string name="message_campos_obrigatorios_nao_preenchidos">
+        Existem campos obrigatórios não preenchidos!
+    </string>
+    <string name="retry">Tente novamente</string>
+    <string name="offline_message_title">Você está desconectado</string>
+    <string name="offline_message">
+        Não foi possível executar esta operação. Verifique a conexão de rede ou tente novamente.
+    </string>
+    <string name="exit_and_cancel_question">Confirma cancelar as alterações?</string>
 </resources>
