@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.getkeepsafe.dexcount'
-apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'realm-android'
+apply plugin: 'android-apt'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
     compileSdkVersion 24
