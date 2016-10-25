@@ -28,7 +28,8 @@ public class LibertVendasApplication extends Application {
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder()
                 .name("libertapp.realm")
-                .schemaVersion(1)
+                .schemaVersion(2)
+                .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(configuration);
     }

@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listapedidos;
 
-import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoService;
+import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -10,17 +11,19 @@ import rx.schedulers.Schedulers;
 
 class ListaPedidosPresenter implements ListaPedidosContract.Presenter {
     private final ListaPedidosContract.View mView;
-    private final PedidoService mPedidoService;
+
+    private final Repository<Pedido> mPedidoService;
 
     ListaPedidosPresenter(
-            ListaPedidosContract.View pView, PedidoService pPedidoService) {
+            ListaPedidosContract.View pView,
+            Repository<Pedido> pPedidoService) {
         mView = pView;
         mPedidoService = pPedidoService;
     }
 
     @Override
     public void loadListaPedidos(boolean listaPedidosNaoEnviados) {
-        mPedidoService.get()
+        mPedidoService.list()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mView::showListaPedidos);

@@ -45,7 +45,8 @@ public class ListaPedidosFragment extends LibertVendasFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter = new ListaPedidosPresenter(this, Injection.providePedidoService(getContext()));
+        mPresenter = new ListaPedidosPresenter(this,
+                Injection.providePedidoRepository(getContext()));
 
         mRecyclerViewPedidos.setHasFixedSize(true);
         mRecyclerViewPedidos.setLayoutManager(new LinearLayoutManager(getContext()));
