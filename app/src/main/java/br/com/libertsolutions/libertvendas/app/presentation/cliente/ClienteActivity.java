@@ -151,7 +151,7 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
     }
 
     @Override
-    public void removeFocusInCpfCnpj() {
+    public void removeFocusOnFieldCpfCnpj() {
         mEditTextCpfCnpj.setFocusable(false);
         mEditTextCpfCnpj.setFocusableInTouchMode(false);
     }
@@ -209,6 +209,11 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
     public void showExitViewQuestion() {
         FeedbackHelper.showQuestionDialog(this, R.string.exit_and_cancel_question,
                 (dialog, which) -> mPresenter.finalizeView(), null);
+    }
+
+    @Override
+    public void showFocusOnFieldCpfCnpj() {
+        mEditTextCpfCnpj.requestFocus();
     }
 
     private void displayRequiredMessageForField(MaterialSpinner pMaterialSpinner) {

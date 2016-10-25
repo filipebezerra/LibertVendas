@@ -103,8 +103,9 @@ class ClientePresenter implements ClienteContract.Presenter {
             } else {
                 mView.showViewsForPessoaJuridica(14);
             }
+            mView.showFocusOnFieldCpfCnpj();
         } else {
-            mView.removeFocusInCpfCnpj();
+            mView.removeFocusOnFieldCpfCnpj();
         }
     }
 

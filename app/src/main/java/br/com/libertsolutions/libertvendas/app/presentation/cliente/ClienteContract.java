@@ -20,7 +20,7 @@ interface ClienteContract {
 
         void showViewsForPessoaJuridica(int pCnpjLenght);
 
-        void removeFocusInCpfCnpj();
+        void removeFocusOnFieldCpfCnpj();
 
         void hideRequiredMessages();
 
@@ -39,6 +39,8 @@ interface ClienteContract {
         void resultNewCliente(Cliente newCliente);
 
         void showExitViewQuestion();
+
+        void showFocusOnFieldCpfCnpj();
     }
 
     interface Presenter {
