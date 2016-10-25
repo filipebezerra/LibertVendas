@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listaprodutos;
 
-import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
+import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -10,17 +11,18 @@ import rx.schedulers.Schedulers;
 
 class ListaProdutosPresenter implements ListaProdutosContract.Presenter {
     private final ListaProdutosContract.View mView;
-    private final ProdutoService mProdutoService;
+
+    private final Repository<Produto> mProdutoRepository;
 
     ListaProdutosPresenter(
-            ListaProdutosContract.View pView, ProdutoService pProdutoService) {
+            ListaProdutosContract.View pView, Repository<Produto> pProdutoRepository) {
         mView = pView;
-        mProdutoService = pProdutoService;
+        mProdutoRepository = pProdutoRepository;
     }
 
     @Override
     public void loadListaProdutos() {
-        mProdutoService.get()
+        mProdutoRepository.list()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mView::showListaProdutos);

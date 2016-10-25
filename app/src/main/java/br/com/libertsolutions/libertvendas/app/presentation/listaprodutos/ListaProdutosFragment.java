@@ -49,7 +49,8 @@ public class ListaProdutosFragment extends LibertVendasFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter = new ListaProdutosPresenter(this, Injection.provideProdutoService(getContext()));
+        mPresenter = new ListaProdutosPresenter(this,
+                Injection.provideProdutoRepository(getContext()));
 
         mRecyclerViewProdutos.setHasFixedSize(true);
         mRecyclerViewProdutos.setLayoutManager(new LinearLayoutManager(getContext()));

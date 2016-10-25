@@ -37,7 +37,7 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new SelecioneProdutosPresenter(this,
-                Injection.provideProdutoService(getContext()));
+                Injection.provideProdutoRepository(getContext()));
         setHasOptionsMenu(true);
     }
 

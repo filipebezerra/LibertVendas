@@ -1,6 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos;
 
-import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
+import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
@@ -16,21 +16,21 @@ import rx.schedulers.Schedulers;
 class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter {
     private final SelecioneProdutosContract.View mView;
 
-    private final ProdutoService mProdutoService;
+    private final Repository<Produto> mProdutoRepository;
 
     private List<Produto> mProdutoList;
 
     private List<ProdutoVo> mProdutoVos;
 
     SelecioneProdutosPresenter(
-            SelecioneProdutosContract.View pView, ProdutoService pProdutoService) {
+            SelecioneProdutosContract.View pView, Repository<Produto> pProdutoRepository) {
         mView = pView;
-        mProdutoService = pProdutoService;
+        mProdutoRepository = pProdutoRepository;
     }
 
     @Override
     public void loadListaProdutos() {
-        mProdutoService.get()
+        mProdutoRepository.list()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::transformThenShowListaProdutos);
