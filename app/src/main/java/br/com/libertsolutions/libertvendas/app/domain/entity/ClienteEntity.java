@@ -12,7 +12,7 @@ import io.realm.annotations.Required;
 @RealmClass
 public class ClienteEntity implements RealmModel {
     @PrimaryKey
-    private long id = RealmAutoIncrement.getInstance(ClienteEntity.class).getNextIdFromModel();
+    private long id = RealmAutoIncrement.getInstance(this.getClass()).getNextIdFromModel();
 
     private String codigo;
 
@@ -51,7 +51,9 @@ public class ClienteEntity implements RealmModel {
     }
 
     public ClienteEntity setId(long pId) {
-        id = pId;
+        if (pId > 0) {
+            id = pId;
+        }
         return this;
     }
 

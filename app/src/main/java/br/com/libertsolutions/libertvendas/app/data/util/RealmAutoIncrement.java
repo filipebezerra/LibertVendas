@@ -9,27 +9,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author Filipe Bezerra
  */
-public class RealmAutoIncrement {
-    private static final String PRIMARY_KEY_COLUMN_NAME = "id";
+public final class RealmAutoIncrement {
+    private Map<Class<? extends RealmModel>, AtomicInteger> modelMap = new HashMap<>();
 
-    private static RealmAutoIncrement sAutoIncrement;
+    private static RealmAutoIncrement autoIncrementMap;
 
-    private Map<Class<? extends RealmModel>, AtomicInteger> mModelMap = new HashMap<>();
-    private Class<? extends RealmModel> mEntityClass;
+    private Class<? extends RealmModel> mObj;
 
-    private RealmAutoIncrement(Class<? extends RealmModel> entityClass) {
-        mEntityClass = entityClass;
-        mModelMap.put(entityClass, new AtomicInteger(getLastIdFromModel(mEntityClass)));
+    private RealmAutoIncrement(Class<? extends RealmModel> obj) {
+        mObj = obj;
+        modelMap.put(obj, new AtomicInteger(getLastIdFromModel(mObj)));
     }
 
     private int getLastIdFromModel(Class<? extends RealmModel> clazz) {
-        Number lastId = Realm.getDefaultInstance().where(clazz).max(PRIMARY_KEY_COLUMN_NAME);
+        String primaryKeyColumnName = "id";
+        Number lastId = Realm.getDefaultInstance().where(clazz).max(primaryKeyColumnName);
         return lastId == null ? 0 : lastId.intValue();
     }
 
     public Integer getNextIdFromModel() {
         if (isValidMethodCall()) {
-            AtomicInteger modelId = mModelMap.get(mEntityClass);
+            AtomicInteger modelId = modelMap.get(mObj);
 
             if (modelId == null) {
                 return 0;
@@ -50,10 +50,10 @@ public class RealmAutoIncrement {
         return true;
     }
 
-    public static RealmAutoIncrement getInstance(Class<? extends RealmModel> entityClass) {
-        if (sAutoIncrement == null) {
-            sAutoIncrement = new RealmAutoIncrement(entityClass);
+    public static RealmAutoIncrement getInstance(Class<? extends RealmModel> obj) {
+        if (autoIncrementMap == null) {
+            autoIncrementMap = new RealmAutoIncrement(obj);
         }
-        return sAutoIncrement;
+        return autoIncrementMap;
     }
 }
