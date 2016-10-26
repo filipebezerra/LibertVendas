@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Versão 0.3.1 Beta 2 - *(26/10/2016)*
+-------------------------------------------
+* **CORREÇÃO** Corrigido bug no RecyclerView,
+* **MELHORIA** Reduzido 1.5 Mb do apk,
+* **MELHORIA** Novo cliente cadastrado é inserido dinamicamente na tela da lista de clientes.
+
+Versão 0.3.0 Beta 2 - *(25/10/2016)*
+-------------------------------------------
+* **MELHORIA** Design aprimorado,
+* **NOVO** Inclusão de clientes sem sincronia com servidor.
+
 Versão 0.2.0 Beta 2 - *(18/10/2016)*
 -------------------------------------------
 
