@@ -73,7 +73,7 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
 
     @Override
     public void navigateToListaClientesActivity() {
-        hostActivity().navigate().toClientes(hostActivity().getSupportFragmentManager());
+        hostActivity().navigate().toClientes();
     }
 
     @OnClick(R.id.edit_text_cliente)

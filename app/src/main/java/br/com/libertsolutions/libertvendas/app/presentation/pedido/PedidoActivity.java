@@ -17,7 +17,7 @@ public class PedidoActivity extends LibertVendasActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAsInitialFlowActivity();
-        navigate().toSelecioneProdutos(getSupportFragmentManager());
+        navigate().toSelecioneProdutos();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class PedidoActivity extends LibertVendasActivity {
                 .findFragmentById(R.id.fragment_container);
 
         if (fragment instanceof SelecioneProdutosFragment) {
-            navigate().toFinalizaPedido(getSupportFragmentManager());
+            navigate().toFinalizaPedido();
         } else {
             finish();
         }
@@ -57,7 +57,7 @@ public class PedidoActivity extends LibertVendasActivity {
         if (fragment instanceof SelecioneProdutosFragment) {
             super.onBackPressed();
         } else {
-            navigate().toSelecioneProdutos(getSupportFragmentManager());
+            navigate().toSelecioneProdutos();
         }
     }
 }

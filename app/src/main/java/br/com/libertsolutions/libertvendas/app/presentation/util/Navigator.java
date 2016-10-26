@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.presentation.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.cliente.ClienteActivity;
@@ -49,24 +48,24 @@ public class Navigator {
         ActivityCompat.startActivity(mActivity, homeIntent, null);
     }
 
-    public void toClientes(FragmentManager pSupportFragmentManager) {
-        pSupportFragmentManager
+    public void toClientes() {
+        mActivity.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, ListaClientesFragment.newInstance())
                 .commit();
         mActivity.setTitle(R.string.title_fragment_lista_clientes);
     }
 
-    public void toProdutos(FragmentManager pSupportFragmentManager) {
-        pSupportFragmentManager
+    public void toProdutos() {
+        mActivity.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, ListaProdutosFragment.newInstance())
                 .commit();
         mActivity.setTitle(R.string.title_fragment_lista_produtos);
     }
 
-    public void toPedidos(FragmentManager pSupportFragmentManager) {
-        pSupportFragmentManager
+    public void toPedidos() {
+        mActivity.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, TabsFragment.newInstance())
                 .commit();
@@ -78,16 +77,16 @@ public class Navigator {
         ActivityCompat.startActivity(mActivity, pedidoIntent, null);
     }
 
-    public void toSelecioneProdutos(FragmentManager pSupportFragmentManager) {
-        pSupportFragmentManager
+    public void toSelecioneProdutos() {
+        mActivity.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, SelecioneProdutosFragment.newInstance())
                 .commit();
         mActivity.setTitle(R.string.title_fragment_selecione_produtos);
     }
 
-    public void toFinalizaPedido(FragmentManager pSupportFragmentManager) {
-        pSupportFragmentManager
+    public void toFinalizaPedido() {
+        mActivity.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, FinalizaPedidoFragment.newInstance())
                 .commit();

@@ -104,17 +104,17 @@ public class HomeActivity extends LibertVendasActivity
 
     @Override
     public void navigateToClientes() {
-        navigate().toClientes(getSupportFragmentManager());
+        navigate().toClientes();
     }
 
     @Override
     public void navigateToProdutos() {
-        navigate().toProdutos(getSupportFragmentManager());
+        navigate().toProdutos();
     }
 
     @Override
     public void navigateToPedidos() {
-        navigate().toPedidos(getSupportFragmentManager());
+        navigate().toPedidos();
     }
 
     @OnClick({ R.id.fab_sheet_item_novo_pedido, R.id.fab_sheet_item_novo_cliente })
