@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.util.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -125,5 +127,18 @@ public class HomeActivity extends LibertVendasActivity
         } else {
             navigate().toCliente(true);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case Navigator.REQUEST_NEW_CLIENTE: {
+                    mPresenter.getClienteFromResult(new ClienteExtrasExtractor(data));
+                    break;
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

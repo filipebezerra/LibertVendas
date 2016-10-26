@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import br.com.libertsolutions.libertvendas.app.presentation.home.NewClienteCadastradoEvent;
 import java.util.List;
 
 import br.com.libertsolutions.libertvendas.app.Injection;
@@ -18,6 +19,9 @@ import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import butterknife.BindView;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * @author Filipe Bezerra.
@@ -82,5 +86,28 @@ public class ListaClientesFragment extends LibertVendasFragment
     public void showListaClientes(List<Cliente> pClienteList) {
         mRecyclerViewClientes.setAdapter(
                 mClienteAdapter = new ClienteAdapter(getContext(), pClienteList));
+    }
+
+    @Override
+    public void updateListaClientes(int pPosition) {
+        mClienteAdapter.notifyItemInserted(pPosition);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onNewClienteCadastrado(NewClienteCadastradoEvent pEvent) {
+        mPresenter.addNewClienteCadastrado(pEvent.getCliente());
+        EventBus.getDefault().removeStickyEvent(pEvent);
     }
 }

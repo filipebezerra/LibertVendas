@@ -19,9 +19,9 @@ import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsAct
 /**
  * @author Filipe Bezerra
  */
-
 public class Navigator {
     public static final int REQUEST_SETTINGS = 0x1;
+    public static final int REQUEST_NEW_CLIENTE = 0x2;
 
     public static final int RESULT_OK = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
@@ -96,6 +96,6 @@ public class Navigator {
     public void toCliente(boolean fromHome) {
         final Intent clienteIntent = new Intent(mActivity, ClienteActivity.class)
                 .putExtra(ClienteActivity.EXTRA_FROM_HOME, fromHome);
-        ActivityCompat.startActivity(mActivity, clienteIntent, null);
+        ActivityCompat.startActivityForResult(mActivity, clienteIntent, REQUEST_NEW_CLIENTE, null);
     }
 }
