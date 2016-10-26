@@ -31,6 +31,7 @@
     <string name="example_text_razao_social">Waldomiro Martins Braga</string>
     <string name="example_text_telefone">(62) 3524 – 1936</string>
     <string name="example_text_email">waldomiro.martins.braga@mail.com</string>
+    <string name="text_sem_email">Sem e-mail</string>
 
     <!-- Tela Lista de Produtos -->
     <string name="title_fragment_lista_produtos">Produtos</string>

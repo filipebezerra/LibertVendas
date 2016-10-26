@@ -63,7 +63,11 @@ class ClienteAdapter extends RecyclerView.Adapter<ClienteViewHolder> implements 
             holder.textViewTelefone.setText(mContext.getString(R.string.text_sem_telefone));
         }
 
-        holder.textViewEmail.setText(cliente.getEmail());
+        if (!TextUtils.isEmpty(cliente.getEmail())) {
+            holder.textViewEmail.setText(cliente.getEmail());
+        } else {
+            holder.textViewEmail.setText(mContext.getString(R.string.text_sem_email));
+        }
     }
 
     @Override
