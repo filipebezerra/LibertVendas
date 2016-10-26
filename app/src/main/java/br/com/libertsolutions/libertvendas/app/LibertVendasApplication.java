@@ -25,8 +25,7 @@ public class LibertVendasApplication extends Application {
     }
 
     private void initializeDataStorageWithRealm() {
-        Realm.init(this);
-        RealmConfiguration configuration = new RealmConfiguration.Builder()
+        RealmConfiguration configuration = new RealmConfiguration.Builder(this)
                 .name("libertapp.realm")
                 .schemaVersion(2)
                 .deleteRealmIfMigrationNeeded()
