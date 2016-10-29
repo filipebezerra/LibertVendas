@@ -5,6 +5,9 @@ import android.os.Handler;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 
+/**
+ * @author Filipe Bezerra
+ */
 public class LaunchActivity extends LibertVendasActivity implements LaunchContract.View {
 
     private LaunchContract.Presenter mPresenter;

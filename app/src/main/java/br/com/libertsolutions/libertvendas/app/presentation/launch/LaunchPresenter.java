@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.presentation.launch;
 /**
  * @author Filipe Bezerra
  */
-
 class LaunchPresenter implements LaunchContract.Presenter {
     private static final int SPLASH_TIME = 3000;
 
