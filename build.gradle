@@ -25,6 +25,6 @@ task clean(type: Delete) {
 }
 
 ext {
-    supportLibraryVersion = '24.2.1'
+    supportLibraryVersion = '25.0.0'
     butterKnifeVersion = '8.4.0'
 }

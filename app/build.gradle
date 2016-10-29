@@ -5,14 +5,14 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25"
 
     defaultConfig {
         applicationId "br.com.libertsolutions.libertvendas.app"
         minSdkVersion 16
-        targetSdkVersion 24
-        versionCode 24031
+        targetSdkVersion 25
+        versionCode 25031
         versionName "0.3.1-beta"
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "LibertVendas-$versionName")
