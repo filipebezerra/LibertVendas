@@ -45,6 +45,7 @@ android {
 
 repositories {
     maven { url "https://jitpack.io" }
+    maven { url "http://dl.bintray.com/jlmd/maven" }
 }
 
 dependencies {
@@ -78,6 +79,9 @@ dependencies {
 
     // Phone number formatting library
     compile 'com.googlecode.libphonenumber:libphonenumber:7.7.2'
+
+    // Progress Indicator/Loading libraries
+    compile 'com.github.jlmd:AnimatedCircleLoadingView:1.1.5@aar'
 }
 
 retrolambda {
