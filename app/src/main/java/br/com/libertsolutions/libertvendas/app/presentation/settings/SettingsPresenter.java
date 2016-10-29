@@ -6,7 +6,6 @@ import br.com.libertsolutions.libertvendas.app.presentation.util.Navigator;
 /**
  * @author Filipe Bezerra
  */
-
 class SettingsPresenter implements SettingsContract.Presenter {
     private final SettingsContract.View mView;
 
@@ -18,25 +17,21 @@ class SettingsPresenter implements SettingsContract.Presenter {
         mSettingsRepository = settingsRepository;
     }
 
-    @Override
-    public void initializeView() {
+    @Override public void initializeView() {
         if (!mSettingsRepository.isFirstTimeSettingsLaunch()) {
             mView.enableSettingTabelaPrecoPadrao();
         }
     }
 
-    @Override
-    public void handleClickHomeMenuItem() {
+    @Override public void handleClickHomeMenuItem() {
         mView.resultAsCancelled(Navigator.RESULT_CANCELED);
     }
 
-    @Override
-    public boolean canEnableOptionsMenu() {
+    @Override public boolean canEnableOptionsMenu() {
         return true;
     }
 
-    @Override
-    public void handleClickDoneMenuItem() {
+    @Override public void handleClickDoneMenuItem() {
         mSettingsRepository.setFirstTimeSettingsLaunch();
         mView.resultAsOk(Navigator.RESULT_OK);
     }

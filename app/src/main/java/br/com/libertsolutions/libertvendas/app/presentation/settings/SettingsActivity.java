@@ -16,8 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 public class SettingsActivity extends LibertVendasActivity implements SettingsContract.View {
     private SettingsContract.Presenter mPresenter;
 
-    @Override
-    protected void onCreate(@Nullable Bundle inState) {
+    @Override protected void onCreate(@Nullable Bundle inState) {
         super.onCreate(inState);
         setAsInitialFlowActivity();
         mPresenter = new SettingsPresenter(this, Injection.provideSettingsRepository(this));
@@ -31,33 +30,28 @@ public class SettingsActivity extends LibertVendasActivity implements SettingsCo
         }
     }
 
-    @Override
-    protected int provideContentViewResource() {
+    @Override protected int provideContentViewResource() {
         return R.layout.activity_settings;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_settings, menu);
         return true;
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    @Override public boolean onPrepareOptionsMenu(Menu menu) {
         final boolean canEnableOptionsMenu = mPresenter.canEnableOptionsMenu();
         menu.findItem(R.id.action_done).setEnabled(canEnableOptionsMenu);
         menu.findItem(R.id.action_done).setVisible(canEnableOptionsMenu);
         return true;
     }
 
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
         mPresenter.initializeView();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
                 mPresenter.handleClickHomeMenuItem();
@@ -71,20 +65,17 @@ public class SettingsActivity extends LibertVendasActivity implements SettingsCo
         }
     }
 
-    @Override
-    public void resultAsCancelled(int resultCode) {
+    @Override public void resultAsCancelled(int resultCode) {
         setResult(resultCode);
         finish();
     }
 
-    @Override
-    public void resultAsOk(int resultCode) {
+    @Override public void resultAsOk(int resultCode) {
         setResult(resultCode);
         navigate().toLogin();
     }
 
-    @Override
-    public void enableSettingTabelaPrecoPadrao() {
+    @Override public void enableSettingTabelaPrecoPadrao() {
         EventBus.getDefault().post(
                 SettingsEvent.create(getString(R.string.key_pref_tabela_preco_padrao)));
     }

@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.presentation.settings;
 /**
  * @author Filipe Bezerra
  */
-
 interface SettingsContract {
     interface View {
         void resultAsCancelled(int resultCode);

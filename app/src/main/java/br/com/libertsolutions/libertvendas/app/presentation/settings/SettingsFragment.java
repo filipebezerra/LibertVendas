@@ -14,24 +14,30 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_chave_autenticacao;
+import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_endereco_servidor;
+import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_tabela_preco_padrao;
+
 /**
  * @author Filipe Bezerra
  */
-
 public class SettingsFragment extends PreferenceFragmentCompatDividers {
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
 
-    @Override
-    public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
+    @Override public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
-        bindSettingValueToSummary(findPreference(getString(R.string.key_pref_endereco_servidor)));
+        bindSettingValueToSummary(
+                findPreference(getString(key_pref_endereco_servidor)));
+        bindSettingValueToSummary(
+                findPreference(getString(key_pref_chave_autenticacao)));
+        bindSettingValueToSummary(
+                findPreference(getString(key_pref_tabela_preco_padrao)));
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         try {
             return super.onCreateView(inflater, container, savedInstanceState);
@@ -41,20 +47,17 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
         }
     }
 
-    @Override
-    public void onStart() {
+    @Override public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
     }
 
-    @Override
-    public void onStop() {
+    @Override public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSettingsEvent(SettingsEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onSettingsEvent(SettingsEvent event) {
         findPreference(event.getKey()).setEnabled(true);
     }
 

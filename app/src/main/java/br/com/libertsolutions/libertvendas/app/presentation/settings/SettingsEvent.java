@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.presentation.settings;
 /**
  * @author Filipe Bezerra
  */
-
 class SettingsEvent {
     private final String key;
 
