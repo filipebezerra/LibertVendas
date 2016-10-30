@@ -3,8 +3,13 @@ package br.com.libertsolutions.libertvendas.app.data.settings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
-import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
+
+import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_chave_autenticacao;
+import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_endereco_servidor;
+import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_pode_aplicar_desconto;
+import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_sincronizar_pedido_automaticamente;
+import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_tabela_preco_padrao;
 
 /**
  * @author Filipe Bezerra
@@ -39,21 +44,28 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
 
     @Override
     public boolean hasAllSettingsFields() {
-        return mPreferences.contains(mContext.getString(R.string.key_pref_endereco_servidor))
-                && mPreferences.contains(mContext.getString(R.string.key_pref_sincronizar_pedido_automaticamente))
-                && mPreferences.contains(mContext.getString(R.string.key_pref_pode_aplicar_desconto));
+        return mPreferences.contains(mContext.getString(key_pref_endereco_servidor))
+                && mPreferences.contains(mContext.getString(key_pref_chave_autenticacao))
+                && mPreferences.contains(mContext.getString(key_pref_sincronizar_pedido_automaticamente))
+                && mPreferences.contains(mContext.getString(key_pref_pode_aplicar_desconto));
     }
 
     @Override
     public Settings loadSettings() {
-        final String enderecoServidor = mPreferences.getString(
-                mContext.getString(R.string.key_pref_endereco_servidor), null);
-        final boolean sincronizarPedidoAutomaticamente = mPreferences.getBoolean(
-                mContext.getString(R.string.key_pref_sincronizar_pedido_automaticamente), true);
-        final boolean podeAplicatDesconto = mPreferences.getBoolean(
-                mContext.getString(R.string.key_pref_pode_aplicar_desconto), false);
+        final String urlServidor = mPreferences
+                .getString(mContext.getString(key_pref_endereco_servidor), "");
+        final String chaveAutenticacao = mPreferences
+                .getString(mContext.getString(key_pref_chave_autenticacao), "");
+        final boolean sincronizaPedidoAutomaticamente = mPreferences
+                .getBoolean(mContext.getString(key_pref_sincronizar_pedido_automaticamente), true);
+        final boolean podeAplicarDesconto = mPreferences
+                .getBoolean(mContext.getString(key_pref_pode_aplicar_desconto), false);
+        final int tabelaPrecoPadrao = mPreferences
+                .getInt(mContext.getString(key_pref_tabela_preco_padrao), 0);
 
         return Settings.create(
-                enderecoServidor, sincronizarPedidoAutomaticamente, podeAplicatDesconto);
+                urlServidor, chaveAutenticacao, sincronizaPedidoAutomaticamente,
+                podeAplicarDesconto, tabelaPrecoPadrao
+        );
     }
 }

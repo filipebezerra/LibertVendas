@@ -6,33 +6,49 @@ package br.com.libertsolutions.libertvendas.app.domain.pojo;
 public class Settings {
     private final String urlServidor;
 
-    private final boolean sincronizarPedidoAutomaticamente;
+    private final String chaveAutenticacao;
 
-    private final boolean podeAplicatDesconto;
+    private final boolean sincronizaPedidoAutomaticamente;
+
+    private final boolean podeAplicarDesconto;
+
+    private final int tabelaPrecoPadrao;
 
     private Settings(
-            String urlServidor, boolean sincronizarPedidoAutomaticamente,
-            boolean podeAplicatDesconto) {
-        this.urlServidor = urlServidor;
-        this.sincronizarPedidoAutomaticamente = sincronizarPedidoAutomaticamente;
-        this.podeAplicatDesconto = podeAplicatDesconto;
+            String pUrlServidor, String pChaveAutenticacao, boolean pSincronizaPedidoAutomaticamente,
+            boolean pPodeAplicarDesconto, int pTabelaPrecoPadrao) {
+        urlServidor = pUrlServidor;
+        chaveAutenticacao = pChaveAutenticacao;
+        sincronizaPedidoAutomaticamente = pSincronizaPedidoAutomaticamente;
+        podeAplicarDesconto = pPodeAplicarDesconto;
+        tabelaPrecoPadrao = pTabelaPrecoPadrao;
     }
 
     public static Settings create(
-            String urlServidor, boolean sincronizarPedidoAutomaticamente,
-            boolean podeAplicatDesconto) {
-        return new Settings(urlServidor, sincronizarPedidoAutomaticamente, podeAplicatDesconto);
+            String pUrlServidor, String pChaveAutenticacao, boolean pSincronizaPedidoAutomaticamente,
+            boolean pPodeAplicarDesconto, int pTabelaPrecoPadrao) {
+        return new Settings(
+                pUrlServidor, pChaveAutenticacao, pSincronizaPedidoAutomaticamente,
+                pPodeAplicarDesconto, pTabelaPrecoPadrao);
     }
 
     public String getUrlServidor() {
         return urlServidor;
     }
 
-    public boolean isSincronizarPedidoAutomaticamente() {
-        return sincronizarPedidoAutomaticamente;
+    public String getChaveAutenticacao() {
+        return chaveAutenticacao;
     }
 
-    public boolean isPodeAplicatDesconto() {
-        return podeAplicatDesconto;
+    public boolean isSincronizaPedidoAutomaticamente() {
+        return sincronizaPedidoAutomaticamente;
+    }
+
+    public boolean isPodeAplicarDesconto() {
+        return podeAplicarDesconto;
+    }
+
+    public int getTabelaPrecoPadrao() {
+        return tabelaPrecoPadrao;
     }
 }
