@@ -11,13 +11,6 @@
             android:summary="@string/summary_pref_endereco_servidor"
             />
 
-        <SwitchPreference
-            android:key="@string/key_pref_sincronizar_pedido_automaticamente"
-            android:title="@string/title_pref_sincronizar_pedido_automaticamente"
-            android:defaultValue="true"
-            android:summary="@string/summary_pref_sincronizar_pedido_automaticamente"
-            />
-
         <EditTextPreference
             android:key="@string/key_pref_chave_autenticacao"
             android:title="@string/title_pref_chave_autenticacao"
@@ -28,12 +21,20 @@
             android:dialogMessage="@string/dialog_message_pref_chave_autenticacao"
             android:summary="@string/summary_pref_chave_autenticacao"
             />
+
+        <SwitchPreference
+            android:key="@string/key_pref_sincronizar_pedido_automaticamente"
+            android:title="@string/title_pref_sincronizar_pedido_automaticamente"
+            android:defaultValue="true"
+            android:summary="@string/summary_pref_sincronizar_pedido_automaticamente"
+            />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_pref_category_pedido">
         <SwitchPreference
             android:key="@string/key_pref_pode_aplicar_desconto"
             android:title="@string/title_pref_pode_aplicar_desconto"
+            android:defaultValue="false"
             android:summary="@string/summary_pref_pode_aplicar_desconto"
             />
 
