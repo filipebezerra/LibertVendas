@@ -3,6 +3,7 @@ package br.com.libertsolutions.libertvendas.app;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepositories;
+import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoRepositories;
@@ -10,6 +11,7 @@ import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepositories;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ClienteResourcesRepository;
@@ -19,6 +21,19 @@ import br.com.libertsolutions.libertvendas.app.presentation.resources.ResourcesR
  * @author Filipe Bezerra
  */
 public class Injection {
+    public static SettingsRepository provideSettingsRepository(@NonNull Context pContext) {
+        return SettingsRepositories.getRepository(pContext);
+    }
+
+    public static FormaPagamentoService provideFormaPagamentoService(@NonNull Context pContext) {
+        return FormaPagamentoRepositories.getService(pContext);
+    }
+
+    public static Repository<FormaPagamento> provideFormaPagamentoRepository(
+            @NonNull Context pContext) {
+        return FormaPagamentoRepositories.getRepository(pContext);
+    }
+
     public static Repository<Cliente> provideClienteRepository(@NonNull Context pContext) {
         return ClienteRepositories.getRepository(pContext);
     }
@@ -34,13 +49,5 @@ public class Injection {
 
     public static Repository<Produto> provideProdutoRepository(@NonNull Context pContext) {
         return ProdutoRepositories.getRepository(pContext);
-    }
-
-    public static FormaPagamentoService provideFormaPagamentoService(@NonNull Context pContext) {
-        return null;
-    }
-
-    public static SettingsRepository provideSettingsRepository(@NonNull Context pContext) {
-        return SettingsRepositories.getRepository(pContext);
     }
 }
