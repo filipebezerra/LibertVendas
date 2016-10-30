@@ -51,24 +51,24 @@ repositories {
 dependencies {
     testCompile 'junit:junit:4.12'
 
-    // Support
+    // Support library
     compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
     compile "com.android.support:design:${supportLibraryVersion}"
     compile "com.android.support:recyclerview-v7:${supportLibraryVersion}"
     compile "com.android.support:cardview-v7:${supportLibraryVersion}"
     compile "com.takisoft.fix:preference-v7:${supportLibraryVersion}.0"
 
-    // View injection
+    // View injection library
     compile "com.jakewharton:butterknife:${butterKnifeVersion}"
     apt "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
 
-    // Logging
+    // Logging library
     compile 'com.jakewharton.timber:timber:4.3.0'
 
-    //Event bus
+    //Event Bus library
     compile 'org.greenrobot:eventbus:3.0.0'
 
-    //Reactive Extensions
+    //Reactive Extensions library
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
 
@@ -80,8 +80,17 @@ dependencies {
     // Phone number formatting library
     compile 'com.googlecode.libphonenumber:libphonenumber:7.7.2'
 
-    // Progress Indicator/Loading libraries
+    // Progress Indicator/Loading library
     compile 'com.github.jlmd:AnimatedCircleLoadingView:1.1.5@aar'
+
+    // Http libraries
+    compile ("com.squareup.retrofit2:retrofit:${retrofitVersion}", {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    })
+    compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
+    compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+    compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
+    compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
 }
 
 retrolambda {
