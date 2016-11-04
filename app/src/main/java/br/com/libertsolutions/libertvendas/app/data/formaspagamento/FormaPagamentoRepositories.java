@@ -12,6 +12,8 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
  * @author Filipe Bezerra
  */
 public class FormaPagamentoRepositories {
+    private FormaPagamentoRepositories() {/* No instances */}
+
     private static FormaPagamentoService sService = null;
 
     private static Repository<FormaPagamento> sRepository = null;

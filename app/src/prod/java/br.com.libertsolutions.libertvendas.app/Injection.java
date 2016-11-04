@@ -2,6 +2,8 @@ package br.com.libertsolutions.libertvendas.app;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeRepositories;
+import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeService;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepositories;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
@@ -10,6 +12,7 @@ import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoRepositories
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepositories;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
@@ -32,6 +35,14 @@ public class Injection {
     public static Repository<FormaPagamento> provideFormaPagamentoRepository(
             @NonNull Context pContext) {
         return FormaPagamentoRepositories.getRepository(pContext);
+    }
+
+    public static CidadeService provideCidadeService(@NonNull Context pContext) {
+        return CidadeRepositories.getService(pContext);
+    }
+
+    public static Repository<Cidade> provideCidadeRepository(@NonNull Context pContext) {
+        return CidadeRepositories.getRepository(pContext);
     }
 
     public static Repository<Cliente> provideClienteRepository(@NonNull Context pContext) {

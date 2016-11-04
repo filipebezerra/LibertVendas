@@ -34,7 +34,9 @@ public class ImportacaoActivity extends LibertVendasActivity
         setAsSubActivity();
         mPresenter = new ImportacaoPresenter(this,
                 Injection.provideFormaPagamentoService(this),
-                Injection.provideFormaPagamentoRepository(this));
+                Injection.provideFormaPagamentoRepository(this),
+                Injection.provideCidadeService(this),
+                Injection.provideCidadeRepository(this));
         mLoadingView.setAnimationListener(this);
     }
 

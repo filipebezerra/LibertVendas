@@ -1,11 +1,16 @@
 package br.com.libertsolutions.libertvendas.app.presentation.importacao;
 
+import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeService;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.domain.factory.CidadeFactory;
 import br.com.libertsolutions.libertvendas.app.domain.factory.FormaPagamentoFactory;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import java.io.IOException;
+import java.util.List;
 import retrofit2.adapter.rxjava.HttpException;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
 
@@ -19,6 +24,10 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
     private final Repository<FormaPagamento> mFormaPagamentoRepository;
 
+    private final CidadeService mCidadeService;
+
+    private final Repository<Cidade> mCidadeRepository;
+
     private boolean mIsDoingInitialDataSync = false;
 
     private Throwable mErrorMakingNetworkCall;
@@ -26,10 +35,14 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
     ImportacaoPresenter(
             ImportacaoContract.View pView,
             FormaPagamentoService pFormaPagamentoService,
-            Repository<FormaPagamento> pFormaPagamentoRepository) {
+            Repository<FormaPagamento> pFormaPagamentoRepository,
+            CidadeService pCidadeService,
+            Repository<Cidade> pCidadeRepository) {
         mView = pView;
         mFormaPagamentoService = pFormaPagamentoService;
         mFormaPagamentoRepository = pFormaPagamentoRepository;
+        mCidadeService = pCidadeService;
+        mCidadeRepository = pCidadeRepository;
     }
 
     @Override public void startSync(boolean deviceConnected) {
@@ -44,11 +57,20 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
     private void requestImportacao() {
         mIsDoingInitialDataSync = true;
 
-        mFormaPagamentoService
+        Observable<List<FormaPagamento>> getFormasPagamento = mFormaPagamentoService
                 .get("18285835000109")
                 .filter(list -> !list.isEmpty())
                 .flatMap(data -> mFormaPagamentoRepository
-                        .saveAll(FormaPagamentoFactory.createListFormaPagamento(data)))
+                        .saveAll(FormaPagamentoFactory.createListFormaPagamento(data)));
+
+        Observable<List<Cidade>> getCidades = mCidadeService
+                .get()
+                .filter(list -> !list.isEmpty())
+                .flatMap(data -> mCidadeRepository.saveAll(CidadeFactory.createListCidade(data)));
+
+        Observable
+                .merge(
+                        getFormasPagamento, getCidades)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pResult -> {
