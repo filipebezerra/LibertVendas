@@ -48,15 +48,15 @@ class ProdutoAdapter extends RecyclerView.Adapter<ProdutoViewHolder> implements 
         final Produto produto = mProdutoList.get(position);
         final Resources resources = mContext.getResources();
 
-        holder.textViewNomeProduto.setText(produto.getNome());
+        holder.textViewNomeProduto.setText(produto.getDescricao());
 
         holder.textViewQtdeEstoque.setText(
                 resources.getString(R.string.template_text_qtde_estoque,
-                        FormattingUtils.formatAsQuantidade(produto.getQuantidadeEstoque())));
+                        FormattingUtils.formatAsQuantidade(produto.getQuantidade())));
 
         holder.textViewPrecoProduto.setText(
                 resources.getString(R.string.template_text_preco,
-                        FormattingUtils.formatAsDinheiro(produto.getPreco())));
+                        FormattingUtils.formatAsDinheiro(produto.getPrecoVenda())));
     }
 
     @Override
@@ -92,7 +92,7 @@ class ProdutoAdapter extends RecyclerView.Adapter<ProdutoViewHolder> implements 
                 final List<Produto> newValues = new ArrayList<>();
 
                 for(Produto produto : values) {
-                    String valueText = produto.getNome();
+                    String valueText = produto.getDescricao();
                     if (!TextUtils.isEmpty(valueText) &&
                             valueText.toLowerCase().contains(prefixString)) {
                         newValues.add(produto);

@@ -2,11 +2,14 @@ package br.com.libertsolutions.libertvendas.app.presentation.importacao;
 
 import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeService;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
+import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.domain.factory.CidadeFactory;
 import br.com.libertsolutions.libertvendas.app.domain.factory.FormaPagamentoFactory;
+import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import java.io.IOException;
 import java.util.List;
 import retrofit2.adapter.rxjava.HttpException;
@@ -28,6 +31,10 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
     private final Repository<Cidade> mCidadeRepository;
 
+    private final ProdutoService mProdutoService;
+
+    private final Repository<Produto> mProdutoRepository;
+
     private boolean mIsDoingInitialDataSync = false;
 
     private Throwable mErrorMakingNetworkCall;
@@ -37,12 +44,16 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
             FormaPagamentoService pFormaPagamentoService,
             Repository<FormaPagamento> pFormaPagamentoRepository,
             CidadeService pCidadeService,
-            Repository<Cidade> pCidadeRepository) {
+            Repository<Cidade> pCidadeRepository,
+            ProdutoService pProdutoService,
+            Repository<Produto> pProdutoRepository) {
         mView = pView;
         mFormaPagamentoService = pFormaPagamentoService;
         mFormaPagamentoRepository = pFormaPagamentoRepository;
         mCidadeService = pCidadeService;
         mCidadeRepository = pCidadeRepository;
+        mProdutoService = pProdutoService;
+        mProdutoRepository = pProdutoRepository;
     }
 
     @Override public void startSync(boolean deviceConnected) {
@@ -66,11 +77,18 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         Observable<List<Cidade>> getCidades = mCidadeService
                 .get()
                 .filter(list -> !list.isEmpty())
-                .flatMap(data -> mCidadeRepository.saveAll(CidadeFactory.createListCidade(data)));
+                .flatMap(data -> mCidadeRepository
+                        .saveAll(CidadeFactory.createListCidade(data)));
+
+        Observable<List<Produto>> getProdutos = mProdutoService
+                .get("18285835000109")
+                .filter(list -> !list.isEmpty())
+                .flatMap(data -> mProdutoRepository
+                        .saveAll(ProdutoFactories.createListProduto(data)));
 
         Observable
                 .merge(
-                        getFormasPagamento, getCidades)
+                        getFormasPagamento, getCidades, getProdutos)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pResult -> {

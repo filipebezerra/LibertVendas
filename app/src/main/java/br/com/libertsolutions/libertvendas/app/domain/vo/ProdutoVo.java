@@ -17,11 +17,11 @@ public class ProdutoVo {
     }
 
     public String getNome() {
-        return produto.getNome();
+        return produto.getDescricao();
     }
 
     public double getPreco() {
-        return produto.getPreco();
+        return produto.getPrecoVenda();
     }
 
     public double getTotalProdutos() {
@@ -51,6 +51,6 @@ public class ProdutoVo {
     }
 
     private void calcularTotalProdutos() {
-        totalProdutos = quantidadeAdicionada * produto.getPreco();
+        totalProdutos = quantidadeAdicionada * produto.getPrecoVenda();
     }
 }

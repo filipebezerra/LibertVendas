@@ -9,7 +9,6 @@ import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamen
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoService;
-import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 
