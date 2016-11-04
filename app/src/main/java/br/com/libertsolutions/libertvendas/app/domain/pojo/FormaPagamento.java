@@ -4,15 +4,13 @@ package br.com.libertsolutions.libertvendas.app.domain.pojo;
  * @author Filipe Bezerra
  */
 public class FormaPagamento {
-    private final int id;
-
     private final int idFormaPagamento;
 
     private final String codigo;
 
     private final String descricao;
 
-    private final double percentualDesconto;
+    private final float percentualDesconto;
 
     private final int idEmpresa;
 
@@ -21,9 +19,8 @@ public class FormaPagamento {
     private final boolean ativo;
 
     public FormaPagamento(
-            int pId, int pIdFormaPagamento, String pCodigo, String pDescricao,
-            double pPercentualDesconto, int pIdEmpresa, String pUltimaAlteracao, boolean pAtivo) {
-        id = pId;
+            int pIdFormaPagamento, String pCodigo, String pDescricao,
+            float pPercentualDesconto, int pIdEmpresa, String pUltimaAlteracao, boolean pAtivo) {
         idFormaPagamento = pIdFormaPagamento;
         codigo = pCodigo;
         descricao = pDescricao;
@@ -31,10 +28,6 @@ public class FormaPagamento {
         idEmpresa = pIdEmpresa;
         ultimaAlteracao = pUltimaAlteracao;
         ativo = pAtivo;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public int getIdFormaPagamento() {
@@ -49,7 +42,7 @@ public class FormaPagamento {
         return descricao;
     }
 
-    public double getPercentualDesconto() {
+    public float getPercentualDesconto() {
         return percentualDesconto;
     }
 

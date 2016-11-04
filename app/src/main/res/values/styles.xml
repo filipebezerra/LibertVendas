@@ -5,6 +5,7 @@
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="textColorError">@color/color_error</item>
     </style>
 
     <style name="Libert.Theme.NoActionBar">

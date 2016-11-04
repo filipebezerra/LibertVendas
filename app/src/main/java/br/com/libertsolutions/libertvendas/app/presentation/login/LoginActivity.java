@@ -28,6 +28,6 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
     @Override
     public void resultAsOk(int resultCode) {
         setResult(resultCode);
-        navigate().toHome();
+        navigate().toImportacao();
     }
 }

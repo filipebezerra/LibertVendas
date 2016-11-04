@@ -7,6 +7,7 @@ import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.cliente.ClienteActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.importacao.ImportacaoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
@@ -97,5 +98,10 @@ public class Navigator {
         final Intent clienteIntent = new Intent(mActivity, ClienteActivity.class)
                 .putExtra(ClienteActivity.EXTRA_FROM_HOME, fromHome);
         ActivityCompat.startActivityForResult(mActivity, clienteIntent, REQUEST_NEW_CLIENTE, null);
+    }
+
+    public void toImportacao() {
+        final Intent importacaoIntent = new Intent(mActivity, ImportacaoActivity.class);
+        ActivityCompat.startActivity(mActivity, importacaoIntent, null);
     }
 }

@@ -10,5 +10,5 @@ import rx.Observable;
  * @author Filipe Bezerra
  */
 public interface FormaPagamentoService {
-    @GET("api/formggto/get") Observable<List<FormaPagamentoDto>> get(@Query("cnpj") String cnpj);
+    @GET("api/formpgto/get") Observable<List<FormaPagamentoDto>> get(@Query("cnpj") String cnpj);
 }

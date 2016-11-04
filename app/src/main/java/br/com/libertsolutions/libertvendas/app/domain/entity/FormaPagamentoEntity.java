@@ -1,6 +1,5 @@
 package br.com.libertsolutions.libertvendas.app.domain.entity;
 
-import br.com.libertsolutions.libertvendas.app.data.util.RealmAutoIncrement;
 import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
@@ -11,9 +10,6 @@ import io.realm.annotations.Required;
  */
 @RealmClass public class FormaPagamentoEntity implements RealmModel {
     @PrimaryKey
-    private Integer id = RealmAutoIncrement.getInstance(getClass()).getNextIdFromModel();
-
-    @Required
     private Integer idFormaPagamento;
 
     private String codigo;
@@ -21,24 +17,13 @@ import io.realm.annotations.Required;
     @Required
     private String descricao;
 
-    private Double percentualDesconto;
+    private Float percentualDesconto;
 
     private Integer idEmpresa;
 
     private String ultimaAlteracao;
 
     private Boolean ativo;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public FormaPagamentoEntity setId(Integer pId) {
-        if (pId > 0) {
-            id = pId;
-        }
-        return this;
-    }
 
     public Integer getIdFormaPagamento() {
         return idFormaPagamento;
@@ -67,11 +52,11 @@ import io.realm.annotations.Required;
         return this;
     }
 
-    public Double getPercentualDesconto() {
+    public Float getPercentualDesconto() {
         return percentualDesconto;
     }
 
-    public FormaPagamentoEntity setPercentualDesconto(Double pPercentualDesconto) {
+    public FormaPagamentoEntity setPercentualDesconto(Float pPercentualDesconto) {
         percentualDesconto = pPercentualDesconto;
         return this;
     }

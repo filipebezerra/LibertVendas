@@ -35,7 +35,7 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new FinalizaPedidoPresenter(this,
-                Injection.provideFormaPagamentoService(getContext()));
+                Injection.provideFormaPagamentoRepository(getContext()));
         setHasOptionsMenu(true);
     }
 

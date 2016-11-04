@@ -4,6 +4,9 @@
     package="br.com.libertsolutions.libertvendas.app"
     >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name=".LibertVendasApplication"
         android:allowBackup="true"
@@ -62,6 +65,11 @@
             android:label="@string/title_activity_cliente"
             android:theme="@style/Libert.Theme.NoActionBar"
             />
+        <activity
+            android:name=".presentation.importacao.ImportacaoActivity"
+            android:label="@string/title_activity_importacao"
+            android:theme="@style/Libert.Theme.NoActionBar"
+            ></activity>
     </application>
 
 </manifest>

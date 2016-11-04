@@ -1,6 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido;
 
-import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
+import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.NavigateToNextEvent;
 import java.util.List;
@@ -13,20 +13,21 @@ import rx.android.schedulers.AndroidSchedulers;
 class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
     private final FinalizaPedidoContract.View mView;
 
-    private final FormaPagamentoService mFormaPagamentoService;
+    private final Repository<FormaPagamento> mFormaPagamentoRepository;
 
     private List<FormaPagamento> mFormaPagamentoList;
 
     FinalizaPedidoPresenter(
-            FinalizaPedidoContract.View pView, FormaPagamentoService pFormaPagamentoService) {
+            FinalizaPedidoContract.View pView,
+            Repository<FormaPagamento> pFormaPagamentoRepository) {
         mView = pView;
-        mFormaPagamentoService = pFormaPagamentoService;
+        mFormaPagamentoRepository = pFormaPagamentoRepository;
     }
 
     @Override
     public void initializeView() {
-        mFormaPagamentoService
-                .get()
+        mFormaPagamentoRepository
+                .list()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pFormaPagamentos -> {

@@ -127,4 +127,22 @@
         Não foi possível executar esta operação. Verifique a conexão de rede ou tente novamente.
     </string>
     <string name="exit_and_cancel_question">Confirma cancelar as alterações?</string>
+        <string name="message_unavailable_server">
+        O servidor não respondeu à requisição e a %1$s não pôde ser completada.
+    </string>
+    <string name="message_server_error">
+        O servidor apresentou um erro e não pôde processar a %1$s.
+    </string>
+    <string name="message_network_error">
+        Houve um erro de rede e a %1$s não foi realizada.
+    </string>
+    <string name="message_unknown_error">
+        Houve um erro desconhecido e a %1$s não foi realizada.
+    </string>
+
+    <!-- Tela Importação -->
+    <string name="title_activity_importacao">Importação</string>
+    <string name="importacao">Importação</string>
+    <string name="message_importacao_completada">Importação completada com sucesso!</string>
+    <string name="error_importando_dados">Falha ao tentar importar os dados do servidor!</string>
 </resources>

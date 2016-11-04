@@ -13,7 +13,7 @@ public class FormaPagamentoDto {
 
     @SerializedName("descricao") @Expose public String descricao;
 
-    @SerializedName("perDesc") @Expose public int perDesc;
+    @SerializedName("perDesc") @Expose public float perDesc;
 
     @SerializedName("id_empresa") @Expose public int idEmpresa;
 
