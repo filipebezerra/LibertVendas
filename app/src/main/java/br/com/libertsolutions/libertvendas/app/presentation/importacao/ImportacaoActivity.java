@@ -38,7 +38,9 @@ public class ImportacaoActivity extends LibertVendasActivity
                 Injection.provideCidadeService(this),
                 Injection.provideCidadeRepository(this),
                 Injection.provideProdutoService(this),
-                Injection.provideProdutoRepository(this));
+                Injection.provideProdutoRepository(this),
+                Injection.provideClienteService(this),
+                Injection.provideClienteRepository(this));
         mLoadingView.setAnimationListener(this);
     }
 

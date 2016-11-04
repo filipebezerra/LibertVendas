@@ -39,5 +39,5 @@ public class ClienteDto {
 
     @SerializedName("ultimaAlteracao") @Expose public String ultimaAlteracao;
 
-    @SerializedName("ativo") @Expose public int ativo;
+    @SerializedName("ativo") @Expose public boolean ativo;
 }

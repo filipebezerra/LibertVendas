@@ -28,7 +28,7 @@ public class CidadeFactory {
         return cidadeList;
     }
 
-    private static Cidade createCidade(CidadeDto pDto) {
+    public static Cidade createCidade(CidadeDto pDto) {
         Preconditions.checkNotNull(
                 pDto, "CidadeDto can't be null");
         Preconditions.checkState(

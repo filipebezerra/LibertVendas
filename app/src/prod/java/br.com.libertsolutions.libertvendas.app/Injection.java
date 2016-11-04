@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeRepositories;
 import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeService;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepositories;
+import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteService;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepositories;
@@ -52,6 +53,10 @@ public class Injection {
 
     public static Repository<Produto> provideProdutoRepository(@NonNull Context pContext) {
         return ProdutoRepositories.getRepository(pContext);
+    }
+
+    public static ClienteService provideClienteService(@NonNull Context pContext) {
+        return ClienteRepositories.getService(pContext);
     }
 
     public static Repository<Cliente> provideClienteRepository(@NonNull Context pContext) {

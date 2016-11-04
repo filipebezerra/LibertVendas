@@ -10,6 +10,6 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
  */
 public class PedidoRepository extends AbstractRealmRepository<Pedido, PedidoEntity> {
     public PedidoRepository(Context context) {
-        super(context, PedidoEntity.class, PedidoRepositories.getMapper());
+        super(context, PedidoEntity.class, PedidoRepositories.getEntityMapper());
     }
 }

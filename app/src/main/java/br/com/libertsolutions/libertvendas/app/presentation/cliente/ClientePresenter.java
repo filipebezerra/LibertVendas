@@ -69,20 +69,20 @@ class ClientePresenter implements ClienteContract.Presenter {
         }
 
         if (!hasEmptyRequiredFields) {
-            Cliente newCliente = Cliente.newCliente(
+            Cliente newCliente = new Cliente(
                     viewModel.nome,
                     viewModel.tipoPessoa,
                     viewModel.cpfCnpj,
+                    null, //viewModel.contato,
                     viewModel.email,
                     viewModel.telefone,
                     viewModel.celular,
                     viewModel.endereco,
                     viewModel.cep,
+                    null, //viewModel.cidade,
                     viewModel.bairro,
                     viewModel.numero,
-                    viewModel.complemento,
-                    viewModel.cidade,
-                    getValue(mEstadosList, viewModel.estado)
+                    viewModel.complemento
             );
 
             mClienteRepository

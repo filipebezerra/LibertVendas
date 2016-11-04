@@ -9,20 +9,21 @@ import io.realm.annotations.Required;
 /**
  * @author Filipe Bezerra
  */
-@RealmClass
-public class ClienteEntity implements RealmModel {
-    @PrimaryKey
-    private long id = RealmAutoIncrement.getInstance(this.getClass()).getNextIdFromModel();
+@RealmClass public class ClienteEntity implements RealmModel {
+    @PrimaryKey private Integer id
+            = RealmAutoIncrement.getInstance(this.getClass()).getNextIdFromModel();
+
+    @Required private Integer idCliente;
 
     private String codigo;
 
-    @Required
-    private String nome;
+    @Required private String nome;
 
-    private int tipo;
+    private Integer tipo;
 
-    @Required
-    private String cpfOuCnpj;
+    @Required private String cpfCnpj;
+
+    private String contato;
 
     private String email;
 
@@ -34,26 +35,35 @@ public class ClienteEntity implements RealmModel {
 
     private String cep;
 
+    private CidadeEntity cidade;
+
     private String bairro;
 
     private String numero;
 
     private String complemento;
 
-    @Required
-    private String cidade;
+    private String ultimaAlteracao;
 
-    @Required
-    private String uf;
+    private Boolean ativo;
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public ClienteEntity setId(long pId) {
+    public ClienteEntity setId(Integer pId) {
         if (pId > 0) {
             id = pId;
         }
+        return this;
+    }
+
+    public Integer getIdCliente() {
+        return idCliente;
+    }
+
+    public ClienteEntity setIdCliente(Integer pIdCliente) {
+        idCliente = pIdCliente;
         return this;
     }
 
@@ -75,21 +85,30 @@ public class ClienteEntity implements RealmModel {
         return this;
     }
 
-    public int getTipo() {
+    public Integer getTipo() {
         return tipo;
     }
 
-    public ClienteEntity setTipo(int pTipo) {
+    public ClienteEntity setTipo(Integer pTipo) {
         tipo = pTipo;
         return this;
     }
 
-    public String getCpfOuCnpj() {
-        return cpfOuCnpj;
+    public String getCpfCnpj() {
+        return cpfCnpj;
     }
 
-    public ClienteEntity setCpfOuCnpj(String pCpfOuCnpj) {
-        cpfOuCnpj = pCpfOuCnpj;
+    public ClienteEntity setCpfCnpj(String pCpfCnpj) {
+        cpfCnpj = pCpfCnpj;
+        return this;
+    }
+
+    public String getContato() {
+        return contato;
+    }
+
+    public ClienteEntity setContato(String pContato) {
+        contato = pContato;
         return this;
     }
 
@@ -138,6 +157,15 @@ public class ClienteEntity implements RealmModel {
         return this;
     }
 
+    public CidadeEntity getCidade() {
+        return cidade;
+    }
+
+    public ClienteEntity setCidade(CidadeEntity pCidade) {
+        cidade = pCidade;
+        return this;
+    }
+
     public String getBairro() {
         return bairro;
     }
@@ -165,21 +193,21 @@ public class ClienteEntity implements RealmModel {
         return this;
     }
 
-    public String getCidade() {
-        return cidade;
+    public String getUltimaAlteracao() {
+        return ultimaAlteracao;
     }
 
-    public ClienteEntity setCidade(String pCidade) {
-        cidade = pCidade;
+    public ClienteEntity setUltimaAlteracao(String pUltimaAlteracao) {
+        ultimaAlteracao = pUltimaAlteracao;
         return this;
     }
 
-    public String getUf() {
-        return uf;
+    public Boolean isAtivo() {
+        return ativo;
     }
 
-    public ClienteEntity setUf(String pUf) {
-        uf = pUf;
+    public ClienteEntity setAtivo(Boolean pAtivo) {
+        ativo = pAtivo;
         return this;
     }
 }

@@ -4,6 +4,7 @@ import br.com.libertsolutions.libertvendas.app.domain.dto.ProdutoDto;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.domain.util.Preconditions;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
+import br.com.libertsolutions.libertvendas.app.presentation.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class ProdutoFactories {
         Preconditions.checkState(
                 pDto.idProduto != 0, "ProdutoDto.idProduto can't be 0");
         Preconditions.checkState(
-                pDto.descricao != null, "ProdutoDto.descricao can't be null");
+                !StringUtils.isEmpty(pDto.descricao), "ProdutoDto.descricao can't be empty");
 
         return new Produto(
                 pDto.idProduto, pDto.codigo, pDto.codigoBarras, pDto.descricao, pDto.un,

@@ -1,13 +1,14 @@
 package br.com.libertsolutions.libertvendas.app.data.clientes;
 
+import br.com.libertsolutions.libertvendas.app.domain.dto.ClienteDto;
 import java.util.List;
-
-import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
  * @author Filipe Bezerra
  */
 public interface ClienteService {
-    Observable<List<Cliente>> get();
+    @GET("api/cliente/get") Observable<List<ClienteDto>> get(@Query("cnpj") String cnpj);
 }

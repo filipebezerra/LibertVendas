@@ -8,10 +8,13 @@ import android.os.Parcelable;
  */
 public class Cliente implements Parcelable {
     private static final int SEM_ID = 0;
+    private static final String SEM_CODIGO = null;
+    private static final boolean ATIVO = true;
+    private static final String NAO_FOI_ALTERADO = null;
 
-    private static final String SEM_CODIGO = "";
+    private final int id;
 
-    private final long id;
+    private final int idCliente;
 
     private final String codigo;
 
@@ -19,7 +22,9 @@ public class Cliente implements Parcelable {
 
     private final int tipo;
 
-    private final String cpfOuCnpj;
+    private final String cpfCnpj;
+
+    private final String contato;
 
     private final String email;
 
@@ -31,89 +36,99 @@ public class Cliente implements Parcelable {
 
     private final String cep;
 
+    private final Cidade cidade;
+
     private final String bairro;
 
     private final String numero;
 
     private final String complemento;
 
-    private final String cidade;
+    private final String ultimaAlteracao;
 
-    private final String uf;
-
-    public static final Creator<Cliente> CREATOR = new Creator<Cliente>() {
-        @Override
-        public Cliente createFromParcel(Parcel in) {
-            return new Cliente(in);
-        }
-
-        @Override
-        public Cliente[] newArray(int size) {
-            return new Cliente[size];
-        }
-    };
+    private final boolean ativo;
 
     protected Cliente(Parcel in) {
-        id = in.readLong();
+        id = in.readInt();
+        idCliente = in.readInt();
         codigo = in.readString();
         nome = in.readString();
         tipo = in.readInt();
-        cpfOuCnpj = in.readString();
+        cpfCnpj = in.readString();
+        contato = in.readString();
         email = in.readString();
         telefone = in.readString();
         telefone2 = in.readString();
         endereco = in.readString();
         cep = in.readString();
+        cidade = in.readParcelable(Cidade.class.getClassLoader());
         bairro = in.readString();
         numero = in.readString();
         complemento = in.readString();
-        cidade = in.readString();
-        uf = in.readString();
+        ultimaAlteracao = in.readString();
+        ativo = in.readByte() == 1;
     }
 
-    public static Cliente newCliente(
-            String pNome, int pTipo, String pCpfOuCnpj, String pEmail,
-            String pTelefone, String pTelefone2, String pEndereco, String pCep,
-            String pBairro, String pNumero, String pComplemento, String pCidade, String pUf) {
-        return new Cliente(
-                SEM_ID, SEM_CODIGO, pNome, pTipo, pCpfOuCnpj, pEmail, pTelefone,
-                pTelefone2, pEndereco, pCep, pBairro, pNumero, pComplemento, pCidade, pUf);
+    public static final Creator<Cliente> CREATOR = new Creator<Cliente>() {
+        @Override public Cliente createFromParcel(Parcel in) {
+            return new Cliente(in);
+        }
+
+        @Override public Cliente[] newArray(int size) {
+            return new Cliente[size];
+        }
+    };
+
+    public Cliente(String pNome, int pTipo, String pCpfCnpj,
+            String pContato, String pEmail, String pTelefone, String pTelefone2,
+            String pEndereco, String pCep, Cidade pCidade, String pBairro, String pNumero,
+            String pComplemento) {
+        this(SEM_ID, SEM_CODIGO, pNome, pTipo, pCpfCnpj, pContato, pEmail,
+                pTelefone, pTelefone2, pEndereco, pCep, pCidade, pBairro, pNumero,
+                pComplemento, NAO_FOI_ALTERADO, ATIVO);
     }
 
-    public static Cliente existingCliente(
-            long pId, String pCodigo, String pNome, int pTipo, String pCpfOuCnpj,
-            String pEmail, String pTelefone, String pTelefone2, String pEndereco,
-            String pCep, String pBairro, String pNumero, String pComplemento,
-            String pCidade, String pUf) {
-        return new Cliente(
-                pId, pCodigo, pNome, pTipo, pCpfOuCnpj, pEmail, pTelefone,
-                pTelefone2, pEndereco, pCep, pBairro, pNumero, pComplemento, pCidade, pUf);
+    public Cliente(
+            int pIdCliente, String pCodigo, String pNome, int pTipo, String pCpfCnpj,
+            String pContato, String pEmail, String pTelefone, String pTelefone2,
+            String pEndereco, String pCep, Cidade pCidade, String pBairro, String pNumero,
+            String pComplemento, String pUltimaAlteracao, boolean pAtivo) {
+        this(pIdCliente, pIdCliente, pCodigo, pNome, pTipo, pCpfCnpj, pContato, pEmail,
+                pTelefone, pTelefone2, pEndereco, pCep, pCidade, pBairro, pNumero,
+                pComplemento, pUltimaAlteracao, pAtivo);
     }
 
-    private Cliente(
-            long pId, String pCodigo, String pNome, int pTipo, String pCpfOuCnpj,
-            String pEmail, String pTelefone, String pTelefone2, String pEndereco,
-            String pCep, String pBairro, String pNumero, String pComplemento,
-            String pCidade, String pUf) {
+    public Cliente(
+            int pId, int pIdCliente, String pCodigo, String pNome, int pTipo, String pCpfCnpj,
+            String pContato, String pEmail, String pTelefone, String pTelefone2,
+            String pEndereco, String pCep, Cidade pCidade, String pBairro, String pNumero,
+            String pComplemento, String pUltimaAlteracao, boolean pAtivo) {
         id = pId;
+        idCliente = pIdCliente;
         codigo = pCodigo;
         nome = pNome;
         tipo = pTipo;
-        cpfOuCnpj = pCpfOuCnpj;
+        cpfCnpj = pCpfCnpj;
+        contato = pContato;
         email = pEmail;
         telefone = pTelefone;
         telefone2 = pTelefone2;
         endereco = pEndereco;
         cep = pCep;
+        cidade = pCidade;
         bairro = pBairro;
         numero = pNumero;
         complemento = pComplemento;
-        cidade = pCidade;
-        uf = pUf;
+        ultimaAlteracao = pUltimaAlteracao;
+        ativo = pAtivo;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
+    }
+
+    public int getIdCliente() {
+        return idCliente;
     }
 
     public String getCodigo() {
@@ -128,8 +143,12 @@ public class Cliente implements Parcelable {
         return tipo;
     }
 
-    public String getCpfOuCnpj() {
-        return cpfOuCnpj;
+    public String getCpfCnpj() {
+        return cpfCnpj;
+    }
+
+    public String getContato() {
+        return contato;
     }
 
     public String getEmail() {
@@ -152,6 +171,10 @@ public class Cliente implements Parcelable {
         return cep;
     }
 
+    public Cidade getCidade() {
+        return cidade;
+    }
+
     public String getBairro() {
         return bairro;
     }
@@ -164,54 +187,53 @@ public class Cliente implements Parcelable {
         return complemento;
     }
 
-    public String getCidade() {
-        return cidade;
+    public String getUltimaAlteracao() {
+        return ultimaAlteracao;
     }
 
-    public String getUf() {
-        return uf;
+    public boolean isAtivo() {
+        return ativo;
     }
 
-    @Override
-    public boolean equals(Object pO) {
-        if (this == pO) {
+    @Override public boolean equals(Object pAnotherCliente) {
+        if (this == pAnotherCliente) {
             return true;
         }
-        if (pO == null || getClass() != pO.getClass()) {
+        if (pAnotherCliente == null || getClass() != pAnotherCliente.getClass()) {
             return false;
         }
 
-        Cliente cliente = (Cliente) pO;
+        Cliente cliente = (Cliente) pAnotherCliente;
 
-        return getCpfOuCnpj().equals(cliente.getCpfOuCnpj());
+        return getIdCliente() == cliente.getIdCliente();
     }
 
-    @Override
-    public int hashCode() {
-        return getCpfOuCnpj().hashCode();
+    @Override public int hashCode() {
+        return getIdCliente();
     }
 
-    @Override
-    public int describeContents() {
+    @Override public int describeContents() {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(codigo);
-        dest.writeString(nome);
-        dest.writeInt(tipo);
-        dest.writeString(cpfOuCnpj);
-        dest.writeString(email);
-        dest.writeString(telefone);
-        dest.writeString(telefone2);
-        dest.writeString(endereco);
-        dest.writeString(cep);
-        dest.writeString(bairro);
-        dest.writeString(numero);
-        dest.writeString(complemento);
-        dest.writeString(cidade);
-        dest.writeString(uf);
+    @Override public void writeToParcel(Parcel pOut, int pFlags) {
+        pOut.writeInt(id);
+        pOut.writeInt(idCliente);
+        pOut.writeString(codigo);
+        pOut.writeString(nome);
+        pOut.writeInt(tipo);
+        pOut.writeString(cpfCnpj);
+        pOut.writeString(contato);
+        pOut.writeString(email);
+        pOut.writeString(telefone);
+        pOut.writeString(telefone2);
+        pOut.writeString(endereco);
+        pOut.writeString(cep);
+        pOut.writeString(bairro);
+        pOut.writeString(numero);
+        pOut.writeString(complemento);
+        pOut.writeParcelable(cidade, pFlags);
+        pOut.writeString(ultimaAlteracao);
+        pOut.writeByte((byte) (ativo ? 1 : 0));
     }
 }

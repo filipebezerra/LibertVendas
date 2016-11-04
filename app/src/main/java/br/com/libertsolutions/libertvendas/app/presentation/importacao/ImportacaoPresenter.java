@@ -1,13 +1,16 @@
 package br.com.libertsolutions.libertvendas.app.presentation.importacao;
 
 import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeService;
+import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteService;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.domain.factory.CidadeFactory;
+import br.com.libertsolutions.libertvendas.app.domain.factory.ClienteFactories;
 import br.com.libertsolutions.libertvendas.app.domain.factory.FormaPagamentoFactory;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import java.io.IOException;
@@ -35,6 +38,10 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
     private final Repository<Produto> mProdutoRepository;
 
+    private final ClienteService mClienteService;
+
+    private final Repository<Cliente> mClienteRepository;
+
     private boolean mIsDoingInitialDataSync = false;
 
     private Throwable mErrorMakingNetworkCall;
@@ -46,7 +53,9 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
             CidadeService pCidadeService,
             Repository<Cidade> pCidadeRepository,
             ProdutoService pProdutoService,
-            Repository<Produto> pProdutoRepository) {
+            Repository<Produto> pProdutoRepository,
+            ClienteService pClienteService,
+            Repository<Cliente> pClienteRepository) {
         mView = pView;
         mFormaPagamentoService = pFormaPagamentoService;
         mFormaPagamentoRepository = pFormaPagamentoRepository;
@@ -54,6 +63,8 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         mCidadeRepository = pCidadeRepository;
         mProdutoService = pProdutoService;
         mProdutoRepository = pProdutoRepository;
+        mClienteService = pClienteService;
+        mClienteRepository = pClienteRepository;
     }
 
     @Override public void startSync(boolean deviceConnected) {
@@ -86,9 +97,15 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
                 .flatMap(data -> mProdutoRepository
                         .saveAll(ProdutoFactories.createListProduto(data)));
 
+        Observable<List<Cliente>> getClientes = mClienteService
+                .get("18285835000109")
+                .filter(list -> !list.isEmpty())
+                .flatMap(data -> mClienteRepository
+                        .saveAll(ClienteFactories.createListCliente(data)));
+
         Observable
                 .merge(
-                        getFormasPagamento, getCidades, getProdutos)
+                        getFormasPagamento, getCidades, getProdutos, getClientes)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pResult -> {

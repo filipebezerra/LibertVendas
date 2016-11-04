@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.data.pedidos;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeRepositories;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepositories;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
@@ -25,9 +26,11 @@ public class PedidoRepositories {
         return sRepository;
     }
 
-    public synchronized static Mapper<Pedido, PedidoEntity> getMapper() {
+    public synchronized static Mapper<Pedido, PedidoEntity> getEntityMapper() {
         if (sMapper == null) {
-            sMapper = new PedidoMapper(ClienteRepositories.getMapper());
+            sMapper = new PedidoMapper(
+                    ClienteRepositories.getEntityMapper(
+                            CidadeRepositories.getEntityMapper()));
         }
         return sMapper;
     }

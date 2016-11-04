@@ -33,12 +33,12 @@ public class CidadeRepositories {
 
     public static synchronized Repository<Cidade> getRepository(@NonNull Context pContext) {
         if (sRepository == null) {
-            sRepository = new CidadeRepository(pContext, getMapper());
+            sRepository = new CidadeRepository(pContext, getEntityMapper());
         }
         return sRepository;
     }
 
-    private static Mapper<Cidade, CidadeEntity> getMapper() {
+    public static Mapper<Cidade, CidadeEntity> getEntityMapper() {
         if (sMapper == null) {
             sMapper = new CidadeMapper(getEstadoMapper());
         }
