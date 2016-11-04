@@ -9,7 +9,7 @@ import io.realm.annotations.Required;
  * @author Filipe Bezerra
  */
 @RealmClass public class CidadeEntity implements RealmModel {
-    @PrimaryKey private int idCidade;
+    @PrimaryKey private Integer idCidade;
 
     private String codMunicipio;
 
@@ -17,11 +17,11 @@ import io.realm.annotations.Required;
 
     private EstadoEntity estado;
 
-    public int getIdCidade() {
+    public Integer getIdCidade() {
         return idCidade;
     }
 
-    public CidadeEntity setIdCidade(int pIdCidade) {
+    public CidadeEntity setIdCidade(Integer pIdCidade) {
         idCidade = pIdCidade;
         return this;
     }

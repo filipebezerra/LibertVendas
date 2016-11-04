@@ -9,17 +9,17 @@ import io.realm.annotations.Required;
  * @author Filipe Bezerra
  */
 @RealmClass public class EstadoEntity implements RealmModel {
-    @PrimaryKey private int idEstado;
+    @PrimaryKey private Integer idEstado;
 
     @Required private String uf;
 
     @Required private String nome;
 
-    public int getIdEstado() {
+    public Integer getIdEstado() {
         return idEstado;
     }
 
-    public EstadoEntity setIdEstado(int pIdEstado) {
+    public EstadoEntity setIdEstado(Integer pIdEstado) {
         idEstado = pIdEstado;
         return this;
     }
