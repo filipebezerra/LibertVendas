@@ -12,7 +12,7 @@ public class NewClienteCadastradoEvent {
         mCliente = pCliente;
     }
 
-    public static NewClienteCadastradoEvent notifyEvent(Cliente pCliente) {
+    static NewClienteCadastradoEvent notifyEvent(Cliente pCliente) {
         return new NewClienteCadastradoEvent(pCliente);
     }
 

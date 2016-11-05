@@ -9,10 +9,10 @@ import static br.com.libertsolutions.libertvendas.app.presentation.cliente.Clien
 /**
  * @author Filipe Bezerra
  */
-public class ClienteExtrasExtractor implements ExtrasExtractor<Cliente> {
+class ClienteExtrasExtractor implements ExtrasExtractor<Cliente> {
     private final Intent mData;
 
-    public ClienteExtrasExtractor(Intent pData) {
+    ClienteExtrasExtractor(Intent pData) {
         mData = pData;
     }
 
