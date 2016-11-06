@@ -31,8 +31,6 @@ public class FeedbackHelper {
     private static final int NO_DIALOG_TITLE = -1;
     private static final DialogCallback NO_DIALOG_CALLBACK = null;
 
-    private static Snackbar sSnackbarInstance = null;
-
     private static Context applicationContext(Context context) {
         return context.getApplicationContext();
     }
@@ -93,34 +91,33 @@ public class FeedbackHelper {
     private static Snackbar makeSnackbar(
             @NonNull View inView, @NonNull String message, boolean showQuickly,
             @Nullable SnackbarAction action, @Nullable Callback callback) {
-        if (sSnackbarInstance == null) {
-            sSnackbarInstance = Snackbar.make(inView, message,
-                    showQuickly ? Snackbar.LENGTH_SHORT : Snackbar.LENGTH_LONG);
-            final View snackbarView = sSnackbarInstance.getView();
 
-            snackbarView.setBackgroundColor(
-                    ContextCompat.getColor(inView.getContext(), R.color.color_accent));
+        Snackbar snackbar = Snackbar.make(inView, message,
+                showQuickly ? Snackbar.LENGTH_SHORT : Snackbar.LENGTH_LONG);
+        final View snackbarView = snackbar.getView();
 
-            final TextView snackbarText = (TextView) snackbarView
-                    .findViewById(android.support.design.R.id.snackbar_text);
+        snackbarView.setBackgroundColor(
+                ContextCompat.getColor(inView.getContext(), R.color.color_accent));
 
-            snackbarText.setTextColor(
-                    ContextCompat.getColor(inView.getContext(), android.R.color.white));
-        }
+        final TextView snackbarText = (TextView) snackbarView
+                .findViewById(android.support.design.R.id.snackbar_text);
+
+        snackbarText.setTextColor(
+                ContextCompat.getColor(inView.getContext(), android.R.color.white));
 
         if (action != NO_SNACKBAR_ACTION) {
-            sSnackbarInstance.setAction(action.actionText(), action.actionListener());
+            snackbar.setAction(action.actionText(), action.actionListener());
         } else {
-            sSnackbarInstance.setAction(NO_SNACKBAR_ACTION_TEXT, NO_SNACKBAR_ACTION_LISTENER);
+            snackbar.setAction(NO_SNACKBAR_ACTION_TEXT, NO_SNACKBAR_ACTION_LISTENER);
         }
 
         if (callback != NO_SNACKBAR_CALLBACK) {
-            sSnackbarInstance.setCallback(callback);
+            snackbar.setCallback(callback);
         } else {
-            sSnackbarInstance.setCallback(NO_SNACKBAR_CALLBACK);
+            snackbar.setCallback(NO_SNACKBAR_CALLBACK);
         }
 
-        return sSnackbarInstance;
+        return snackbar;
     }
 
     public static void toast(
