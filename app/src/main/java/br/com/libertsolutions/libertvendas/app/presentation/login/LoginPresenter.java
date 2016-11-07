@@ -9,7 +9,6 @@ import br.com.libertsolutions.libertvendas.app.presentation.util.ValidationError
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * @author Filipe Bezerra
@@ -59,14 +58,7 @@ class LoginPresenter implements LoginContract.Presenter {
                                         .save(VendedorFactory.createVendedor(pVendedorDto));
                             }
                         })
-                        .doOnError(
-                                new Action1<Throwable>() {
-                                    @Override
-                                    public void call(Throwable pThrowable) {
-                                        mFailed = true;
-                                    }
-                                }
-                        )
+                        .doOnError(pThrowable -> mFailed = true)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(LoginSubscriber.newLoginSubscriber(mView));
             } else {
