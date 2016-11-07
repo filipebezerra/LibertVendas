@@ -60,38 +60,10 @@ class ClientePresenter implements ClienteContract.Presenter {
 
     @Override public void clickActionSave() {
         mView.hideRequiredMessages();
-        boolean hasEmptyRequiredFields = false;
 
         final ClienteViewModel viewModel = mView.extractViewModel();
 
-        final Cidade cidade = getValue(mCidadeList, viewModel.cidade);
-
-        if (cidade == null) {
-            mView.displayRequiredMessageForFieldCidade();
-            hasEmptyRequiredFields = true;
-        } else {
-            final Estado estadoSelecionado = getValue(mEstadoList, viewModel.estado);
-
-            if (estadoSelecionado == null) {
-                mView.displayRequiredMessageForFieldEstado();
-                hasEmptyRequiredFields = true;
-            }
-        }
-
-        if (StringUtils.isEmpty(viewModel.nome)) {
-            mView.displayRequiredMessageForFieldNome();
-            hasEmptyRequiredFields = true;
-        }
-
-        if (StringUtils.isEmpty(getValue(mTiposPessoaList, viewModel.tipoPessoa))) {
-            mView.displayRequiredMessageForFieldTipoPessoa();
-            hasEmptyRequiredFields = true;
-        } else if (StringUtils.isEmpty(viewModel.cpfCnpj)) {
-            mView.displayRequiredMessageForFieldCpfCnpj();
-            hasEmptyRequiredFields = true;
-        }
-
-        if (!hasEmptyRequiredFields) {
+        if (!shownViewModelErrors(viewModel)) {
             Cliente newCliente = new Cliente(
                     viewModel.nome,
                     viewModel.tipoPessoa,
@@ -102,7 +74,7 @@ class ClientePresenter implements ClienteContract.Presenter {
                     viewModel.celular,
                     viewModel.endereco,
                     viewModel.cep,
-                    cidade,
+                    mCidadeList.get(viewModel.cidade),
                     viewModel.bairro,
                     viewModel.numero,
                     viewModel.complemento
@@ -112,8 +84,31 @@ class ClientePresenter implements ClienteContract.Presenter {
                     .save(newCliente)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(mView::resultNewCliente);
-        } else {
+        }
+    }
+
+    private boolean shownViewModelErrors(ClienteViewModel pViewModel) {
+        if (!pViewModel.hasRequiredValues()) {
+            if (!pViewModel.hasCidade()) {
+                mView.displayRequiredMessageForFieldCidade();
+            } else if (!pViewModel.hasEstado()) {
+                mView.displayRequiredMessageForFieldEstado();
+            }
+
+            if (!pViewModel.hasNome()) {
+                mView.displayRequiredMessageForFieldNome();
+            }
+
+            if (!pViewModel.hasTipoPessoa()) {
+                mView.displayRequiredMessageForFieldTipoPessoa();
+            } else if (!pViewModel.hasCpfCnpj()) {
+                mView.displayRequiredMessageForFieldCpfCnpj();
+            }
+
             mView.showFeedbackMessage(mResourcesRepository.obtainStringMessageFieldsRequired());
+            return true;
+        } else {
+            return false;
         }
     }
 
