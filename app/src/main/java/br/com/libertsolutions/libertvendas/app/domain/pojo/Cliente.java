@@ -229,10 +229,10 @@ public class Cliente implements Parcelable {
         pOut.writeString(telefone2);
         pOut.writeString(endereco);
         pOut.writeString(cep);
+        pOut.writeParcelable(cidade, pFlags);
         pOut.writeString(bairro);
         pOut.writeString(numero);
         pOut.writeString(complemento);
-        pOut.writeParcelable(cidade, pFlags);
         pOut.writeString(ultimaAlteracao);
         pOut.writeByte((byte) (ativo ? 1 : 0));
     }
