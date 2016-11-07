@@ -17,6 +17,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
@@ -124,6 +125,7 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
                 .merge(
                         getFormasPagamento, getCidades, getProdutos, getClientes, getTabelasPreco)
                 .observeOn(AndroidSchedulers.mainThread())
+                .lastOrDefault(Collections.emptyList())
                 .subscribe(
                         pResult -> {
                             mView.hideLoadingWithSuccess();
