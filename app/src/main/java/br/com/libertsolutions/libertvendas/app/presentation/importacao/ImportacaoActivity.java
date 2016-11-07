@@ -40,7 +40,9 @@ public class ImportacaoActivity extends LibertVendasActivity
                 Injection.provideProdutoService(this),
                 Injection.provideProdutoRepository(this),
                 Injection.provideClienteService(this),
-                Injection.provideClienteRepository(this));
+                Injection.provideClienteRepository(this),
+                Injection.provideTabelaPrecoService(this),
+                Injection.provideTabelaPrecoRepository(this));
         mLoadingView.setAnimationListener(this);
     }
 
@@ -102,8 +104,8 @@ public class ImportacaoActivity extends LibertVendasActivity
 
     @Override public void showDeviceNotConnectedError() {
         FeedbackHelper.showOfflineMessage(this,
-                (dialog, which) -> requestSyncToPresenter(),
-                (dialog, which) -> finishActivity());
+                (dialog, which) -> finishActivity(),
+                (dialog, which) -> requestSyncToPresenter());
     }
 
     @Override public void showServerError() {

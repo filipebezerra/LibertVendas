@@ -14,6 +14,8 @@ import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepositories;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
+import br.com.libertsolutions.libertvendas.app.data.tabelaspreco.TabelaPrecoRepositories;
+import br.com.libertsolutions.libertvendas.app.data.tabelaspreco.TabelaPrecoService;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepositories;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
@@ -21,6 +23,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ClienteResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
@@ -87,5 +90,13 @@ public class Injection {
 
     public static Repository<Vendedor> provideVendedorRepository(@NonNull Context pContext) {
         return VendedorRepositories.getRepository(pContext);
+    }
+
+    public static TabelaPrecoService provideTabelaPrecoService(@NonNull Context pContext) {
+        return TabelaPrecoRepositories.getService(pContext);
+    }
+
+    public static Repository<TabelaPreco> provideTabelaPrecoRepository(@NonNull Context pContext) {
+        return TabelaPrecoRepositories.getRepository(pContext);
     }
 }

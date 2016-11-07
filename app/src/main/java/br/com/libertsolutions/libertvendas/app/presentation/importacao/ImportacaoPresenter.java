@@ -5,14 +5,17 @@ import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteService;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.data.tabelaspreco.TabelaPrecoService;
 import br.com.libertsolutions.libertvendas.app.domain.factory.CidadeFactory;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ClienteFactories;
 import br.com.libertsolutions.libertvendas.app.domain.factory.FormaPagamentoFactory;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
+import br.com.libertsolutions.libertvendas.app.domain.factory.TabelaPrecoFactory;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import java.io.IOException;
 import java.util.List;
 import retrofit2.adapter.rxjava.HttpException;
@@ -42,6 +45,10 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
     private final Repository<Cliente> mClienteRepository;
 
+    private final TabelaPrecoService mTabelaPrecoService;
+
+    private final Repository<TabelaPreco> mTabelaPrecoRepository;
+
     private boolean mIsDoingInitialDataSync = false;
 
     private Throwable mErrorMakingNetworkCall;
@@ -55,7 +62,9 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
             ProdutoService pProdutoService,
             Repository<Produto> pProdutoRepository,
             ClienteService pClienteService,
-            Repository<Cliente> pClienteRepository) {
+            Repository<Cliente> pClienteRepository,
+            TabelaPrecoService pTabelaPrecoService,
+            Repository<TabelaPreco> pTabelaPrecoRepository) {
         mView = pView;
         mFormaPagamentoService = pFormaPagamentoService;
         mFormaPagamentoRepository = pFormaPagamentoRepository;
@@ -65,6 +74,8 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         mProdutoRepository = pProdutoRepository;
         mClienteService = pClienteService;
         mClienteRepository = pClienteRepository;
+        mTabelaPrecoService = pTabelaPrecoService;
+        mTabelaPrecoRepository = pTabelaPrecoRepository;
     }
 
     @Override public void startSync(boolean deviceConnected) {
@@ -103,9 +114,15 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
                 .flatMap(data -> mClienteRepository
                         .saveAll(ClienteFactories.createListCliente(data)));
 
+        Observable<List<TabelaPreco>> getTabelasPreco = mTabelaPrecoService
+                .get("18285835000109")
+                .filter(list -> !list.isEmpty())
+                .flatMap(data -> mTabelaPrecoRepository
+                        .saveAll(TabelaPrecoFactory.createListTabelaPreco(data)));
+
         Observable
                 .merge(
-                        getFormasPagamento, getCidades, getProdutos, getClientes)
+                        getFormasPagamento, getCidades, getProdutos, getClientes, getTabelasPreco)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pResult -> {
