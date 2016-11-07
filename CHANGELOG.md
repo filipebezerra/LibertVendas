@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Versão 0.4.0 Beta 1 - *(07/11/2016)*
+* **MELHORIA** Tela de inclusão de cliente sem sincronização ( #8),
+* **NOVO** Tela de login do vendedor ( #15 ),
+* **NOVO** Tela de importação dos dados ( #14 ).
+
 Versão 0.3.1 Beta 2 - *(26/10/2016)*
 -------------------------------------------
 * **CORREÇÃO** Corrigido bug no RecyclerView,
