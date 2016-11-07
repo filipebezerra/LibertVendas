@@ -109,7 +109,8 @@
     <string name="hint_numero">Número</string>
     <string name="hint_complemento">Complemento</string>
     <string name="hint_bairro">Bairro</string>
-    <string name="hint_cidade">Cidade</string>
+    <string name="hint_cidade">Selecione a cidade</string>
+    <string name="label_cidade">Cidade selecionada</string>
     <string name="hint_cep">CEP</string>
     <string name="hint_telefone">Telefone</string>
     <string name="hint_celular">Celular</string>

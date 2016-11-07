@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface ClienteResourcesRepository extends CommonResourcesRepository {
     List<String> loadTiposPessoa();
-
-    List<String> loadEstados();
 }

@@ -64,13 +64,9 @@ public class Estado implements Parcelable {
         return getIdEstado();
     }
 
-    @SuppressWarnings("StringBufferReplaceableByString") @Override public String toString() {
-        final StringBuilder sb = new StringBuilder("Estado{");
-        sb.append("idEstado=").append(idEstado);
-        sb.append(", uf='").append(uf).append('\'');
-        sb.append(", nome='").append(nome).append('\'');
-        sb.append('}');
-        return sb.toString();
+    @Override
+    public String toString() {
+        return getNome();
     }
 
     @Override public int describeContents() {

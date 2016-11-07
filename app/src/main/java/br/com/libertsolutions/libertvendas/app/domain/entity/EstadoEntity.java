@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.domain.entity;
 
 import io.realm.RealmModel;
+import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 import io.realm.annotations.Required;
@@ -9,11 +10,13 @@ import io.realm.annotations.Required;
  * @author Filipe Bezerra
  */
 @RealmClass public class EstadoEntity implements RealmModel {
+    public static final String FIELD_NAME_NOME = "nome";
+
     @PrimaryKey private Integer idEstado;
 
     @Required private String uf;
 
-    @Required private String nome;
+    @Required @Index private String nome;
 
     public Integer getIdEstado() {
         return idEstado;

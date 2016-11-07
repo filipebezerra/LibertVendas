@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeRepositories;
 import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeService;
+import br.com.libertsolutions.libertvendas.app.data.cidades.EstadoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepositories;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteService;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepositories;
@@ -20,6 +21,7 @@ import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepositorie
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
@@ -52,6 +54,10 @@ public class Injection {
 
     public static Repository<Cidade> provideCidadeRepository(@NonNull Context pContext) {
         return CidadeRepositories.getRepository(pContext);
+    }
+
+    public static Repository<Estado> provideEstadoRepository(@NonNull Context pContext) {
+        return EstadoRepositories.getRepository(pContext);
     }
 
     public static ProdutoService provideProdutoService(@NonNull Context pContext) {

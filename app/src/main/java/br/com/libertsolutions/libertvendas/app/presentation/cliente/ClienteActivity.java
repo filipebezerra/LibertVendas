@@ -13,7 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FeedbackHelper;
 import butterknife.BindView;
@@ -35,6 +37,7 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
     @BindView(R.id.container_cliente) protected CoordinatorLayout mContainerCliente;
     @BindView(R.id.spinner_tipo_pessoa) protected MaterialSpinner mSpinnerTipoPessoa;
     @BindView(R.id.spinner_uf) protected MaterialSpinner mSpinnerEstado;
+    @BindView(R.id.spinner_cidade) protected MaterialSpinner mSpinnerCidade;
     @BindView(R.id.input_layout_cpf_ou_cnpj) protected TextInputLayout mInputLayoutCpfCnpj;
     @BindView(R.id.edit_text_cpf_ou_cnpj) protected EditText mEditTextCpfCnpj;
     @BindView(R.id.input_layout_nome_cliente) protected TextInputLayout mInputLayoutNome;
@@ -43,8 +46,6 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
     @BindView(R.id.edit_text_logradouro) protected EditText mEditTextLogradouro;
     @BindView(R.id.edit_text_numero) protected EditText mEditTextNumero;
     @BindView(R.id.edit_text_bairro) protected EditText mEditTextBairro;
-    @BindView(R.id.input_layout_cidade) protected TextInputLayout mInputLayoutCidade;
-    @BindView(R.id.edit_text_cidade) protected EditText mEditTextCidade;
     @BindView(R.id.edit_text_cep) protected EditText mEditTextCep;
     @BindView(R.id.edit_text_complemento) protected EditText mEditTextComplemento;
     @BindView(R.id.edit_text_telefone) protected EditText mEditTextTelefone;
@@ -57,7 +58,9 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
         super.onCreate(savedInstanceState);
         mPresenter = new ClientePresenter(this,
                 Injection.provideClienteRepository(this),
-                Injection.provideClienteResourcesRepository(this));
+                Injection.provideClienteResourcesRepository(this),
+                Injection.provideEstadoRepository(this),
+                Injection.provideCidadeRepository(this));
         mPresenter.initializeView();
         extractExtras();
     }
@@ -108,11 +111,15 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
     }
 
     @Override
-    public void showEstados(List<String> pEstados) {
-        ArrayAdapter<String> adapterEstados = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, pEstados);
-        adapterEstados.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinnerEstado.setAdapter(adapterEstados);
+    public void showEstados(List<Estado> pEstadoList) {
+        EstadoAdapter estadoAdapter = new EstadoAdapter(this, pEstadoList);
+        mSpinnerEstado.setAdapter(estadoAdapter);
+    }
+
+    @Override
+    public void showCidades(List<Cidade> pCidadeList) {
+        CidadeAdapter cidadeAdapter = new CidadeAdapter(this, pCidadeList);
+        mSpinnerCidade.setAdapter(cidadeAdapter);
     }
 
     @Override
@@ -125,8 +132,8 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
                 .setEndereco(mEditTextLogradouro.getText().toString())
                 .setNumero(mEditTextNumero.getText().toString())
                 .setBairro(mEditTextBairro.getText().toString())
-                .setCidade(mEditTextCidade.getText().toString())
                 .setEstado(mSpinnerEstado.getSelectedItemPosition())
+                .setCidade(mSpinnerCidade.getSelectedItemPosition())
                 .setCep(mEditTextCep.getText().toString())
                 .setComplemento(mEditTextComplemento.getText().toString())
                 .setTelefone(mEditTextTelefone.getText().toString())
@@ -162,12 +169,12 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
         mInputLayoutCpfCnpj.setError(null);
         mInputLayoutNome.setError(null);
         mSpinnerEstado.setError(null);
-        mInputLayoutCidade.setError(null);
+        mSpinnerCidade.setError(null);
     }
 
     @Override
     public void displayRequiredMessageForFieldCidade() {
-        displayRequiredMessageForField(mInputLayoutCidade, mEditTextCidade);
+        displayRequiredMessageForField(mSpinnerCidade);
     }
 
     @Override
@@ -228,6 +235,10 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
 
     @OnItemSelected(R.id.spinner_tipo_pessoa) void onItemSelectedSpinnerTipoPessoa(int position) {
         mPresenter.clickSelectTipoPessoa();
+    }
+
+    @OnItemSelected(R.id.spinner_uf) void onItemSelectedSpinnerEstado(int position) {
+        mPresenter.clickSelectEstado();
     }
 
     @Override

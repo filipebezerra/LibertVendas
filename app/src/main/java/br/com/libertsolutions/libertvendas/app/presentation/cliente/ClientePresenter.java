@@ -1,7 +1,10 @@
 package br.com.libertsolutions.libertvendas.app.presentation.cliente;
 
+import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeRepository;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ClienteResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.StringUtils;
 import java.util.List;
@@ -17,42 +20,62 @@ class ClientePresenter implements ClienteContract.Presenter {
 
     private final ClienteResourcesRepository mResourcesRepository;
 
+    private final Repository<Estado> mEstadoRepository;
+
+    private final Repository<Cidade> mCidadeRepository;
+
     private List<String> mTiposPessoaList;
 
-    private List<String> mEstadosList;
+    private List<Estado> mEstadoList;
+
+    private List<Cidade> mCidadeList;
 
     ClientePresenter(
             ClienteContract.View pView,
             Repository<Cliente> pClienteRepository,
-            ClienteResourcesRepository pResourcesRepository) {
+            ClienteResourcesRepository pResourcesRepository,
+            Repository<Estado> pEstadoRepository,
+            Repository<Cidade> pCidadeRepository) {
         mView = pView;
         mClienteRepository = pClienteRepository;
         mResourcesRepository = pResourcesRepository;
+        mEstadoRepository = pEstadoRepository;
+        mCidadeRepository = pCidadeRepository;
     }
 
-    @Override
-    public void initializeView() {
+    @Override public void initializeView() {
         mTiposPessoaList = mResourcesRepository.loadTiposPessoa();
         mView.showTiposPessoa(mTiposPessoaList);
-        mEstadosList = mResourcesRepository.loadEstados();
-        mView.showEstados(mEstadosList);
+
+        mEstadoRepository
+                .list()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        pEstados -> {
+                            mEstadoList = pEstados;
+                            mView.showEstados(mEstadoList);
+                        }
+                );
     }
 
-    @Override
-    public void clickActionSave() {
+    @Override public void clickActionSave() {
         mView.hideRequiredMessages();
         boolean hasEmptyRequiredFields = false;
 
         final ClienteViewModel viewModel = mView.extractViewModel();
 
-        if (StringUtils.isEmpty(viewModel.cidade)) {
+        final Cidade cidade = getValue(mCidadeList, viewModel.cidade);
+
+        if (cidade == null) {
             mView.displayRequiredMessageForFieldCidade();
             hasEmptyRequiredFields = true;
-        }
+        } else {
+            final Estado estadoSelecionado = getValue(mEstadoList, viewModel.estado);
 
-        if (StringUtils.isEmpty(getValue(mEstadosList, viewModel.estado))) {
-            mView.displayRequiredMessageForFieldEstado();
-            hasEmptyRequiredFields = true;
+            if (estadoSelecionado == null) {
+                mView.displayRequiredMessageForFieldEstado();
+                hasEmptyRequiredFields = true;
+            }
         }
 
         if (StringUtils.isEmpty(viewModel.nome)) {
@@ -79,7 +102,7 @@ class ClientePresenter implements ClienteContract.Presenter {
                     viewModel.celular,
                     viewModel.endereco,
                     viewModel.cep,
-                    null, //viewModel.cidade,
+                    cidade,
                     viewModel.bairro,
                     viewModel.numero,
                     viewModel.complemento
@@ -94,8 +117,7 @@ class ClientePresenter implements ClienteContract.Presenter {
         }
     }
 
-    @Override
-    public void clickSelectTipoPessoa() {
+    @Override public void clickSelectTipoPessoa() {
         final String tipoPessoa = getValue(mTiposPessoaList, mView.extractViewModel().tipoPessoa);
         if (!StringUtils.isEmpty(tipoPessoa)) {
             if (tipoPessoa.equalsIgnoreCase("Pessoa Física")) {
@@ -109,8 +131,22 @@ class ClientePresenter implements ClienteContract.Presenter {
         }
     }
 
-    @Override
-    public void handleBackPressed() {
+    @Override public void clickSelectEstado() {
+        Estado estado = getValue(mEstadoList, mView.extractViewModel().estado);
+        if (estado != null) {
+            ((CidadeRepository)mCidadeRepository)
+                    .list(estado.getIdEstado())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            pCidades -> {
+                                mCidadeList = pCidades;
+                                mView.showCidades(mCidadeList);
+                            }
+                    );
+        }
+    }
+
+    @Override public void handleBackPressed() {
         if (canGoBack()) {
             mView.finishView();
         } else {
@@ -118,8 +154,7 @@ class ClientePresenter implements ClienteContract.Presenter {
         }
     }
 
-    @Override
-    public void finalizeView() {
+    @Override public void finalizeView() {
         mView.finishView();
     }
 

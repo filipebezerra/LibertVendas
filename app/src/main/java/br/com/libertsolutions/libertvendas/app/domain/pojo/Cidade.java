@@ -72,14 +72,9 @@ public class Cidade implements Parcelable {
         return getIdCidade();
     }
 
-    @SuppressWarnings("StringBufferReplaceableByString") @Override public String toString() {
-        final StringBuilder sb = new StringBuilder("Cidade{");
-        sb.append("idCidade=").append(idCidade);
-        sb.append(", codMunicipio='").append(codMunicipio).append('\'');
-        sb.append(", nome='").append(nome).append('\'');
-        sb.append(", estado=").append(estado);
-        sb.append('}');
-        return sb.toString();
+    @Override
+    public String toString() {
+        return getNome();
     }
 
     @Override public int describeContents() {

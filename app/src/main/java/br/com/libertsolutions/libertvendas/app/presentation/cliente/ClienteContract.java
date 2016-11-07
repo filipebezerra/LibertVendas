@@ -1,6 +1,8 @@
 package br.com.libertsolutions.libertvendas.app.presentation.cliente;
 
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 import java.util.List;
 
 /**
@@ -12,7 +14,9 @@ interface ClienteContract {
 
         void showTiposPessoa(List<String> pTiposPessoa);
 
-        void showEstados(List<String> pEstados);
+        void showEstados(List<Estado> pEstadoList);
+
+        void showCidades(List<Cidade> pCidadeList);
 
         ClienteViewModel extractViewModel();
 
@@ -49,6 +53,8 @@ interface ClienteContract {
         void clickActionSave();
 
         void clickSelectTipoPessoa();
+
+        void clickSelectEstado();
 
         void handleBackPressed();
 

@@ -4,34 +4,37 @@ import android.content.Context;
 import br.com.libertsolutions.libertvendas.app.data.repository.AbstractRealmRepository;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
 import br.com.libertsolutions.libertvendas.app.data.util.RealmObservable;
-import br.com.libertsolutions.libertvendas.app.domain.entity.CidadeEntity;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
+import br.com.libertsolutions.libertvendas.app.domain.entity.EstadoEntity;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 import io.realm.RealmResults;
 import java.util.List;
 import rx.Observable;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.domain.entity.EstadoEntity.FIELD_NAME_NOME;
+
 /**
  * @author Filipe Bezerra
  */
-public class CidadeRepository extends AbstractRealmRepository<Cidade, CidadeEntity> {
-    public CidadeRepository(Context context, Mapper<Cidade, CidadeEntity> mapper) {
-        super(context, CidadeEntity.class, mapper);
+public class EstadoRepository extends AbstractRealmRepository<Estado, EstadoEntity> {
+    public EstadoRepository(Context context, Mapper<Estado, EstadoEntity> mapper) {
+        super(context, EstadoEntity.class, mapper);
     }
 
-    public Observable<List<Cidade>> list(int pIdEstado) {
+    @Override
+    public Observable<List<Estado>> list() {
         return RealmObservable
                 .results(mContext,
                         realm -> {
-                            RealmResults<CidadeEntity> list = realm
+                            RealmResults<EstadoEntity> list = realm
                                     .where(mEntityClass)
-                                    .equalTo("estado.idEstado", pIdEstado)
-                                    .findAll();
+                                    .distinct(FIELD_NAME_NOME)
+                                    .sort(FIELD_NAME_NOME);
                             Timber.i("%s.list() results %s",
                                     mEntityClass.getSimpleName(), list.size());
                             return list;
                         })
                 .map(
-                        entities -> mMapper.toViewObjectList(entities));
+                        mMapper::toViewObjectList);
     }
 }

@@ -13,7 +13,7 @@ class ClienteViewModel {
     String endereco = null;
     String numero = null;
     String bairro = null;
-    String cidade = null;
+    int cidade = -1;
     int estado = -1;
     String cep = null;
     String complemento = null;
@@ -55,7 +55,7 @@ class ClienteViewModel {
         return this;
     }
 
-    public ClienteViewModel setCidade(String pCidade) {
+    public ClienteViewModel setCidade(int pCidade) {
         cidade = pCidade;
         return this;
     }
@@ -93,7 +93,7 @@ class ClienteViewModel {
                 && StringUtils.isEmpty(endereco)
                 && StringUtils.isEmpty(numero)
                 && StringUtils.isEmpty(bairro)
-                && StringUtils.isEmpty(cidade)
+                && (cidade == -1)
                 && (estado == -1)
                 && StringUtils.isEmpty(cep)
                 && StringUtils.isEmpty(complemento)

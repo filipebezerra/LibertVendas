@@ -19,9 +19,4 @@ public class ClienteResourcesRepositoryImpl extends CommonResourcesRepositoryImp
     public List<String> loadTiposPessoa() {
         return Arrays.asList(getResources().getStringArray(R.array.tipos_pessoa));
     }
-
-    @Override
-    public List<String> loadEstados() {
-        return Arrays.asList(getResources().getStringArray(R.array.estados));
-    }
 }

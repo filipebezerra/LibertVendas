@@ -6,9 +6,7 @@ import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.util.ServiceFactory;
 import br.com.libertsolutions.libertvendas.app.domain.entity.CidadeEntity;
-import br.com.libertsolutions.libertvendas.app.domain.entity.EstadoEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 
 /**
  * @author Filipe Bezerra
@@ -21,8 +19,6 @@ public class CidadeRepositories {
     private static Repository<Cidade> sRepository = null;
 
     private static Mapper<Cidade, CidadeEntity> sMapper = null;
-
-    private static Mapper<Estado, EstadoEntity> sEstadoMapper = null;
 
     public static synchronized CidadeService getService(@NonNull Context pContext) {
         if (sService == null) {
@@ -40,15 +36,10 @@ public class CidadeRepositories {
 
     public static Mapper<Cidade, CidadeEntity> getEntityMapper() {
         if (sMapper == null) {
-            sMapper = new CidadeMapper(getEstadoMapper());
+            sMapper = new CidadeMapper(EstadoRepositories.getEstadoMapper());
         }
         return sMapper;
     }
 
-    private static Mapper<Estado, EstadoEntity> getEstadoMapper() {
-        if (sEstadoMapper == null) {
-            sEstadoMapper = new EstadoMapper();
-        }
-        return sEstadoMapper;
-    }
+
 }
