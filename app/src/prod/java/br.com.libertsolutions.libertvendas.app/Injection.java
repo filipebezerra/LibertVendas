@@ -14,12 +14,16 @@ import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepositories;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
+import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepositories;
+import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ClienteResourcesRepository;
+import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ResourcesRepositories;
 
 /**
@@ -63,6 +67,11 @@ public class Injection {
         return ClienteRepositories.getRepository(pContext);
     }
 
+    public static CommonResourcesRepository provideCommonResourcesRepository(
+            @NonNull Context pContext) {
+        return ResourcesRepositories.getCommonResources(pContext);
+    }
+
     public static ClienteResourcesRepository provideClienteResourcesRepository(
             @NonNull Context context) {
         return ResourcesRepositories.getClienteResources(context);
@@ -70,5 +79,13 @@ public class Injection {
 
     public static Repository<Pedido> providePedidoRepository(@NonNull Context pContext) {
         return PedidoRepositories.getRepository(pContext);
+    }
+
+    public static VendedorService provideVendedorService(@NonNull Context pContext) {
+        return VendedorRepositories.getService(pContext);
+    }
+
+    public static Repository<Vendedor> provideVendedorRepository(@NonNull Context pContext) {
+        return VendedorRepositories.getRepository(pContext);
     }
 }

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_primary">#4ea8f3</color>
+    <color name="color_primary_pressed">#6a4ea8f3</color>
+    <color name="color_primary_focused">#964ea8f3</color>
+
     <color name="color_primary_dark">#1976D2</color>
+    <color name="color_primary_dark_pressed">#6a1976D2</color>
+    <color name="color_primary_dark_focused">#961976D2</color>
+
     <color name="color_accent">#00BFA5</color>
-    <color name="color_error">#DD2C00</color>
     <color name="color_accent_pressed">#6a00BFA5</color>
     <color name="color_accent_focused">#9600BFA5</color>
+
+    <color name="color_error">#DD2C00</color>
+    <color name="color_error_pressed">#6aDD2C00</color>
+    <color name="color_error_focused">#96DD2C00</color>
+
     <color name="color_tab_indicator">#0D47A1</color>
     <color name="color_pedido_orcamento">#CDDC39</color>
     <color name="color_pedido_enviado">#2196F3</color>

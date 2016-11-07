@@ -1,0 +1,43 @@
+package br.com.libertsolutions.libertvendas.app.data.vendedor;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
+import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.data.util.ServiceFactory;
+import br.com.libertsolutions.libertvendas.app.domain.entity.VendedorEntity;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
+
+/**
+ * @author Filipe Bezerra
+ */
+public class VendedorRepositories {
+    private VendedorRepositories() {/* No instances */}
+
+    private static VendedorService sService = null;
+
+    private static Repository<Vendedor> sRepository = null;
+
+    private static Mapper<Vendedor, VendedorEntity> sMapper = null;
+
+    public static synchronized VendedorService getService(@NonNull Context pContext) {
+        if (sService == null) {
+            sService = ServiceFactory.createService(pContext, VendedorService.class);
+        }
+        return sService;
+    }
+
+    public static synchronized Repository<Vendedor> getRepository(@NonNull Context pContext) {
+        if (sRepository == null) {
+            sRepository = new VendedorRepository(pContext, getMapper());
+        }
+        return sRepository;
+    }
+
+    private static Mapper<Vendedor, VendedorEntity> getMapper() {
+        if (sMapper == null) {
+            sMapper = new VendedorMapper();
+        }
+        return sMapper;
+    }
+}

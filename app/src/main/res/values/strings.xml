@@ -38,9 +38,12 @@
     <!-- Tela Login -->
     <string name="title_login_activity">Entrar</string>
     <string name="welcome_title">Bem-vindo</string>
-    <string name="hint_cpf">Digite seu CPF</string>
+    <string name="hint_cpf">Digite seu CPF ou CNPJ</string>
     <string name="hint_senha">Digite sua senha</string>
-    <string name="action_login">Entrar</string>
+    <string name="text_login">Entrar</string>
+    <string name="text_login_error">Falhou</string>
+    <string name="text_login_complete">Sucesso</string>
+    <string name="text_login_progress">Logando…</string>
 
     <!-- Tela Lista de Clientes -->
     <string name="title_fragment_lista_clientes">Clientes</string>

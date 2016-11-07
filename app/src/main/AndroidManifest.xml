@@ -40,7 +40,7 @@
             android:label="@string/title_login_activity"
             android:noHistory="true"
             android:theme="@style/Libert.Theme.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             />
         <activity
             android:name=".presentation.home.HomeActivity"
