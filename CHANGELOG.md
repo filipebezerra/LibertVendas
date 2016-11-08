@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Beta 4.1 - Versão 0.4.1 *(07/11/2016)*
+* **CORREÇÃO** Corrigido cadastro de cliente com vínculo à estado/cidade ( 83e4ee70834322a05d94b748b91d9b184ac0346c ),
+* **CORREÇÃO** Corrigido cadastro de cliente após salvar e retornar os dados salvos ( 652d6bc8be2816a0b1b2c69a12d99a9d88d871a0 ),
+* **CORREÇÃO** Corrigido importação incompleta dos dados obtidos do servidor ( bc94cc1338ecd995fe9f6d33d4627e3cee51bf87 ).
+
 Versão 0.4.0 Beta 1 - *(07/11/2016)*
 * **MELHORIA** Tela de inclusão de cliente sem sincronização ( #8),
 * **NOVO** Tela de login do vendedor ( #15 ),
