@@ -4,7 +4,8 @@ import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.NavigateToNextEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.resources.SelecioneProdutosResourcesRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 import rx.android.schedulers.AndroidSchedulers;
@@ -18,14 +19,18 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
 
     private final Repository<Produto> mProdutoRepository;
 
+    private final SelecioneProdutosResourcesRepository mResourcesRepository;
+
     private List<Produto> mProdutoList;
 
     private List<ProdutoVo> mProdutoVos;
 
     SelecioneProdutosPresenter(
-            SelecioneProdutosContract.View pView, Repository<Produto> pProdutoRepository) {
+            SelecioneProdutosContract.View pView, Repository<Produto> pProdutoRepository,
+            SelecioneProdutosResourcesRepository pResourcesRepository) {
         mView = pView;
         mProdutoRepository = pProdutoRepository;
+        mResourcesRepository = pResourcesRepository;
     }
 
     @Override public void loadListaProdutos() {
@@ -67,6 +72,19 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
     }
 
     @Override public void clickActionDone() {
-        EventBus.getDefault().post(NavigateToNextEvent.notifyEvent());
+        List<ProdutoVo> produtosSelecionados = new ArrayList<>();
+        for (ProdutoVo vo : mProdutoVos) {
+            if (vo.getQuantidadeAdicionada() > 0) {
+                produtosSelecionados.add(vo);
+            }
+        }
+
+        if (produtosSelecionados.isEmpty()) {
+            mView.showFeedbackMessage(mResourcesRepository
+                    .obtainStringMessageNenhumProdutoFoiSelecionado());
+            return;
+        }
+
+        EventBus.getDefault().post(ProdutosSelecionadosEvent.newEvent(produtosSelecionados));
     }
 }

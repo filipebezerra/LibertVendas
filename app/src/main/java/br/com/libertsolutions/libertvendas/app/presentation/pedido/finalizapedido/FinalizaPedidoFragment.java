@@ -11,11 +11,13 @@ import android.widget.EditText;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
+import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import smtchahal.materialspinner.MaterialSpinner;
@@ -26,6 +28,9 @@ import smtchahal.materialspinner.MaterialSpinner;
 public class FinalizaPedidoFragment extends LibertVendasFragment
         implements FinalizaPedidoContract.View {
 
+    public static final String ARG_PRODUTOS_SELECIONADOS
+            = FinalizaPedidoFragment.class.getSimpleName() + ".argProdutosSelecionados";
+
     @BindView(R.id.edit_text_data_emissao) protected EditText mEditTextDataEmissao;
     @BindView(R.id.spinner_forma_pagamento) protected MaterialSpinner mSpinnerFormaPagamento;
 
@@ -33,14 +38,20 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
 
     private FormaPagamentoAdapter mFormaPagamentoAdapter;
 
-    public static FinalizaPedidoFragment newInstance() {
-        return new FinalizaPedidoFragment();
+    public static FinalizaPedidoFragment newInstance(List<ProdutoVo> pProdutosSelecionados) {
+        FinalizaPedidoFragment fragment = new FinalizaPedidoFragment();
+        Bundle arguments = new Bundle();
+        arguments.putParcelableArrayList(ARG_PRODUTOS_SELECIONADOS,
+                new ArrayList<>(pProdutosSelecionados));
+        fragment.setArguments(arguments);
+        return fragment;
     }
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new FinalizaPedidoPresenter(this,
-                Injection.provideFormaPagamentoRepository(getContext()));
+                Injection.provideFormaPagamentoRepository(getContext()),
+                new ProdutosSelecionadosArgumentExtractor(getArguments()));
         setHasOptionsMenu(true);
     }
 

@@ -88,6 +88,7 @@
     <string name="accessibility_button_remover">Remova um item</string>
     <string name="template_text_preco">Preço %1$s</string>
     <string name="template_text_total">Total %1$s</string>
+    <string name="message_nenhum_produto_foi_selecionado">Nenhum produto foi selecionado!</string>
 
     <!-- Tela Finaliza pedido -->
     <string name="title_fragment_finaliza_pedido">Finalizando pedido</string>

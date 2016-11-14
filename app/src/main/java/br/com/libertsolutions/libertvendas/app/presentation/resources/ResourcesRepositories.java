@@ -9,9 +9,11 @@ import android.support.annotation.NonNull;
 public class ResourcesRepositories {
     private ResourcesRepositories() {/* No instances */}
 
+    private static CommonResourcesRepository sCommonResourcesRepository = null;
+
     private static ClienteResourcesRepository sClienteResources = null;
 
-    private static CommonResourcesRepository sCommonResourcesRepository = null;
+    private static SelecioneProdutosResourcesRepository sSelecioneProdutosResourcesRepository = null;
 
     public synchronized static ClienteResourcesRepository getClienteResources(
             @NonNull Context context) {
@@ -28,4 +30,14 @@ public class ResourcesRepositories {
         }
         return sCommonResourcesRepository;
     }
+
+    public synchronized static SelecioneProdutosResourcesRepository getSelecioneProdutosResourcesRepository(
+            @NonNull Context pContext) {
+        if (sSelecioneProdutosResourcesRepository == null) {
+            sSelecioneProdutosResourcesRepository
+                    = new SelecioneProdutosResourcesRepositoryImpl(pContext.getResources());
+        }
+        return sSelecioneProdutosResourcesRepository;
+    }
+
 }

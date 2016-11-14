@@ -32,6 +32,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ClienteResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ResourcesRepositories;
+import br.com.libertsolutions.libertvendas.app.presentation.resources.SelecioneProdutosResourcesRepository;
 
 /**
  * @author Filipe Bezerra
@@ -110,5 +111,10 @@ public class Injection {
 
     public static Repository<TabelaPreco> provideTabelaPrecoRepository(@NonNull Context pContext) {
         return TabelaPrecoRepositories.getRepository(pContext);
+    }
+
+    public static SelecioneProdutosResourcesRepository provideSelecioneProdutosResourcesRepository(
+            @NonNull Context context) {
+        return ResourcesRepositories.getSelecioneProdutosResourcesRepository(context);
     }
 }

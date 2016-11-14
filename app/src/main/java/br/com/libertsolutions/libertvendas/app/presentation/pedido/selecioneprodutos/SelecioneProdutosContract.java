@@ -11,6 +11,8 @@ interface SelecioneProdutosContract {
         void showListaProdutos(List<ProdutoVo> pProdutoList);
 
         void updateViewPedidoItem(int position);
+
+        void showFeedbackMessage(String pMessage);
     }
 
     interface Presenter {

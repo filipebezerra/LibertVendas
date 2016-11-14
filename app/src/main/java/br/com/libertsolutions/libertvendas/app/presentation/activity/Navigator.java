@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.cliente.ClienteActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.importacao.ImportacaoActivity;
@@ -15,6 +16,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.pedido.PedidoActivit
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.FinalizaPedidoFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.SelecioneProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsActivity;
+import java.util.List;
 
 /**
  * @author Filipe Bezerra
@@ -86,10 +88,11 @@ public class Navigator {
         mActivity.setTitle(R.string.title_fragment_selecione_produtos);
     }
 
-    public void toFinalizaPedido() {
+    public void toFinalizaPedido(List<ProdutoVo> pProdutosSelecionados) {
         mActivity.getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, FinalizaPedidoFragment.newInstance())
+                .replace(R.id.fragment_container, FinalizaPedidoFragment
+                        .newInstance(pProdutosSelecionados))
                 .commit();
         mActivity.setTitle(R.string.title_fragment_finaliza_pedido);
     }

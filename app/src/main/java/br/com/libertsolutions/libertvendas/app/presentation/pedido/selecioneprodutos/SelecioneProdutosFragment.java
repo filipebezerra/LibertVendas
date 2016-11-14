@@ -4,14 +4,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.util.FeedbackHelper;
 import butterknife.BindView;
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
         implements SelecioneProdutosContract.View,
         ProdutoSelecionadoAdapter.ProdutoSelecionadoAdapterCallbacks {
 
+    @BindView(R.id.container_selecione_produtos) protected FrameLayout mContainerSelecioneProdutos;
     @BindView(R.id.recycler_view_produtos) protected RecyclerView mRecyclerViewProdutos;
 
     private SelecioneProdutosContract.Presenter mPresenter;
@@ -35,7 +39,8 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new SelecioneProdutosPresenter(this,
-                Injection.provideProdutoRepository(getContext()));
+                Injection.provideProdutoRepository(getContext()),
+                Injection.provideSelecioneProdutosResourcesRepository(getContext()));
         setHasOptionsMenu(true);
     }
 
@@ -85,5 +90,11 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
 
     @Override public void updateViewPedidoItem(int position) {
         mProdutoSelecionadoAdapter.notifyItemChanged(position);
+    }
+
+    @Override public void showFeedbackMessage(String pMessage) {
+        if (!TextUtils.isEmpty(pMessage)) {
+            FeedbackHelper.snackbar(mContainerSelecioneProdutos, pMessage);
+        }
     }
 }

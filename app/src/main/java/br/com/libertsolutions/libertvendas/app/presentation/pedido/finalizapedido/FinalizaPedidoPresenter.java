@@ -17,15 +17,19 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
 
     private final Repository<FormaPagamento> mFormaPagamentoRepository;
 
+    private final ProdutosSelecionadosArgumentExtractor mProdutosSelecionadosExtractor;
+
     private List<FormaPagamento> mFormaPagamentoList;
 
     private Calendar mDataEmissao = Calendar.getInstance();
 
     FinalizaPedidoPresenter(
             FinalizaPedidoContract.View pView,
-            Repository<FormaPagamento> pFormaPagamentoRepository) {
+            Repository<FormaPagamento> pFormaPagamentoRepository,
+            ProdutosSelecionadosArgumentExtractor pProdutosSelecionadosExtractor) {
         mView = pView;
         mFormaPagamentoRepository = pFormaPagamentoRepository;
+        mProdutosSelecionadosExtractor = pProdutosSelecionadosExtractor;
     }
 
     @Override public void initializeView() {
