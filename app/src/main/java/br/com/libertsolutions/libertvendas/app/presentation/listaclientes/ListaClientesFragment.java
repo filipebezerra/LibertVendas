@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import br.com.libertsolutions.libertvendas.app.presentation.home.NewClienteCadastradoEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemClickListener;
+import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemTouchListener;
 import java.util.List;
 
 import br.com.libertsolutions.libertvendas.app.Injection;
@@ -27,7 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * @author Filipe Bezerra.
  */
 public class ListaClientesFragment extends LibertVendasFragment
-        implements ListaClientesContract.View {
+        implements ListaClientesContract.View, OnItemClickListener {
 
     @BindView(R.id.recycler_view_clientes) protected RecyclerView mRecyclerViewClientes;
 
@@ -82,10 +84,11 @@ public class ListaClientesFragment extends LibertVendasFragment
         });
     }
 
-    @Override
-    public void showListaClientes(List<Cliente> pClienteList) {
+    @Override public void showListaClientes(List<Cliente> pClienteList) {
         mRecyclerViewClientes.setAdapter(
                 mClienteAdapter = new ClienteAdapter(getContext(), pClienteList));
+        mRecyclerViewClientes.addOnItemTouchListener(
+                new OnItemTouchListener(getContext(), mRecyclerViewClientes, this));
     }
 
     @Override
@@ -109,5 +112,13 @@ public class ListaClientesFragment extends LibertVendasFragment
     public void onNewClienteCadastrado(NewClienteCadastradoEvent pEvent) {
         mPresenter.addNewClienteCadastrado(pEvent.getCliente());
         EventBus.getDefault().removeStickyEvent(pEvent);
+    }
+
+    @Override public void onSingleTapUp(View view, int position) {
+        mPresenter.handleSingleTapUp(position);
+    }
+
+    @Override public void onLongPress(View view, int position) {
+
     }
 }

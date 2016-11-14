@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido;
 
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import java.util.Calendar;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Calendar;
  */
 interface FinalizaPedidoContract {
     interface View {
-        void navigateToListaClientesActivity();
+        void navigateToListaClientes();
 
         void showCalendarPicker(Calendar pDataEmissao);
     }
@@ -23,5 +24,7 @@ interface FinalizaPedidoContract {
         void clickSelectDataEmissao();
 
         void setDataEmissao(int pYear, int pMonthOfYear, int pDayOfMonth);
+
+        void handleClienteSelecionadoEvent(Cliente pCliente);
     }
 }

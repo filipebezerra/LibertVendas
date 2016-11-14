@@ -19,12 +19,16 @@ class FinalizaPedidoViewModel {
 
     private final EditText mEditTextTotalProdutos;
 
+    private final EditText mEditTextCliente;
+
     FinalizaPedidoViewModel(Context pContext, EditText pEditTextDataEmissao,
-            MaterialSpinner pSpinnerFormaPagamento, EditText pEditTextTotalProdutos) {
+            MaterialSpinner pSpinnerFormaPagamento, EditText pEditTextTotalProdutos,
+            EditText pEditTextCliente) {
         mContext = pContext;
         mEditTextDataEmissao = pEditTextDataEmissao;
         mSpinnerFormaPagamento = pSpinnerFormaPagamento;
         mEditTextTotalProdutos = pEditTextTotalProdutos;
+        mEditTextCliente = pEditTextCliente;
     }
 
     FinalizaPedidoViewModel dataEmissao(String pDataEmissao) {
@@ -40,6 +44,11 @@ class FinalizaPedidoViewModel {
 
     FinalizaPedidoViewModel totalProdutos(String pTotalProdutos) {
         mEditTextTotalProdutos.setText(pTotalProdutos);
+        return this;
+    }
+
+    FinalizaPedidoViewModel cliente(String nomeCliente) {
+        mEditTextCliente.setText(nomeCliente);
         return this;
     }
 }

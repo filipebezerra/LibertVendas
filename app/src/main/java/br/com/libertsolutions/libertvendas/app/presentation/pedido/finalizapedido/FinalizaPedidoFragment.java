@@ -11,6 +11,7 @@ import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTouch;
@@ -18,6 +19,9 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * @author Filipe Bezerra
@@ -61,7 +65,8 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
         mFinalizaPedidoViewModel = new FinalizaPedidoViewModel(getContext(),
                 ButterKnife.findById(view, R.id.edit_text_data_emissao),
                 ButterKnife.findById(view, R.id.spinner_forma_pagamento),
-                ButterKnife.findById(view, R.id.edit_text_total_produtos)
+                ButterKnife.findById(view, R.id.edit_text_total_produtos),
+                ButterKnife.findById(view, R.id.edit_text_cliente)
         );
         mPresenter.initializeView(mFinalizaPedidoViewModel,
                 new ProdutosSelecionadosArgumentExtractor(getArguments()));
@@ -76,7 +81,7 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
         }
     }
 
-    @Override public void navigateToListaClientesActivity() {
+    @Override public void navigateToListaClientes() {
         hostActivity().navigate().toClientes();
     }
 
@@ -104,5 +109,21 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
             return true;
         }
         return false;
+    }
+
+    @Override public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true) public void onClienteSelecionadoEvent(
+            ClienteSelecionadoEvent pEvent) {
+        mPresenter.handleClienteSelecionadoEvent(pEvent.getCliente());
+        EventBus.getDefault().removeStickyEvent(pEvent);
     }
 }

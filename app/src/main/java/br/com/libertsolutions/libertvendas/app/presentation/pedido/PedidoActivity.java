@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.ProdutosSelecionadosEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.SelecioneProdutosFragment;
 import org.greenrobot.eventbus.EventBus;
@@ -38,6 +39,12 @@ public class PedidoActivity extends LibertVendasActivity {
     @Subscribe(threadMode = ThreadMode.MAIN) public void onProdutosSelecionadosEvent(
             ProdutosSelecionadosEvent pEvent) {
         navigate().toFinalizaPedido(pEvent.getProdutoVoList());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onClienteSelecionadoEvent(
+            ClienteSelecionadoEvent pEvent) {
+        getSupportFragmentManager().popBackStack();
+        setTitle(R.string.title_fragment_finaliza_pedido);
     }
 
     @Override public void onBackPressed() {

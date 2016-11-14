@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido;
 
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.NavigateToNextEvent;
@@ -23,6 +24,8 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
     private List<FormaPagamento> mFormaPagamentoList;
 
     private Calendar mDataEmissao = Calendar.getInstance();
+
+    private Cliente mClienteSelecionado;
 
     FinalizaPedidoPresenter(
             FinalizaPedidoContract.View pView,
@@ -60,7 +63,7 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
     }
 
     @Override public void clickSelectCliente() {
-        mView.navigateToListaClientesActivity();
+        mView.navigateToListaClientes();
     }
 
     @Override public void clickSelectDataEmissao() {
@@ -72,6 +75,11 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
         mDataEmissao.set(Calendar.MONTH, pMonthOfYear);
         mDataEmissao.set(Calendar.DAY_OF_MONTH, pDayOfMonth);
         mViewModel.dataEmissao(formatDataEmissao());
+    }
+
+    @Override public void handleClienteSelecionadoEvent(Cliente pCliente) {
+        mClienteSelecionado = pCliente;
+        mViewModel.cliente(mClienteSelecionado.getNome());
     }
 
     private String formatDataEmissao() {

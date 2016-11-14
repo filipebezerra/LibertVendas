@@ -19,5 +19,7 @@ interface ListaClientesContract {
         void loadListaClientes();
 
         void addNewClienteCadastrado(Cliente pCliente);
+
+        void handleSingleTapUp(int pPosition);
     }
 }

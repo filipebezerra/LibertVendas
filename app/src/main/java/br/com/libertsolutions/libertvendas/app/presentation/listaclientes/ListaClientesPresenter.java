@@ -5,6 +5,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ObservableUtils;
 import java.util.Collections;
 import java.util.List;
+import org.greenrobot.eventbus.EventBus;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -25,8 +26,7 @@ class ListaClientesPresenter implements ListaClientesContract.Presenter {
         mClienteRepository = pClienteRepository;
     }
 
-    @Override
-    public void loadListaClientes() {
+    @Override public void loadListaClientes() {
         Observable<List<Cliente>> clientesFromMemoryCache = ObservableUtils
                 .toObservable(mClienteList);
 
@@ -45,10 +45,16 @@ class ListaClientesPresenter implements ListaClientesContract.Presenter {
         mClienteList = pClienteList;
     }
 
-    @Override
-    public void addNewClienteCadastrado(Cliente pCliente) {
+    @Override public void addNewClienteCadastrado(Cliente pCliente) {
         final int lastPosition = mClienteList.size();
         mClienteList.add(pCliente);
         mView.updateListaClientes(lastPosition);
+    }
+
+    @Override public void handleSingleTapUp(int pPosition) {
+        if (pPosition >= 0 && pPosition < mClienteList.size()) {
+            final Cliente cliente = mClienteList.get(pPosition);
+            EventBus.getDefault().postSticky(ClienteSelecionadoEvent.newEvent(cliente));
+        }
     }
 }
