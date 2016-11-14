@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedi
 
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
+import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.NavigateToNextEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
 import java.util.Calendar;
@@ -17,7 +18,7 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
 
     private final Repository<FormaPagamento> mFormaPagamentoRepository;
 
-    private final ProdutosSelecionadosArgumentExtractor mProdutosSelecionadosExtractor;
+    private FinalizaPedidoViewModel mViewModel;
 
     private List<FormaPagamento> mFormaPagamentoList;
 
@@ -25,21 +26,29 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
 
     FinalizaPedidoPresenter(
             FinalizaPedidoContract.View pView,
-            Repository<FormaPagamento> pFormaPagamentoRepository,
-            ProdutosSelecionadosArgumentExtractor pProdutosSelecionadosExtractor) {
+            Repository<FormaPagamento> pFormaPagamentoRepository) {
         mView = pView;
         mFormaPagamentoRepository = pFormaPagamentoRepository;
-        mProdutosSelecionadosExtractor = pProdutosSelecionadosExtractor;
     }
 
-    @Override public void initializeView() {
+    @Override public void initializeView(FinalizaPedidoViewModel pViewModel,
+            ProdutosSelecionadosArgumentExtractor pProdutosSelecionadosExtractor) {
+        mViewModel = pViewModel;
+        mViewModel.dataEmissao(formatDataEmissao());
+
+        List<ProdutoVo> produtoVos = pProdutosSelecionadosExtractor.extractExtra();
+        double totalProdutos = 0;
+        for (ProdutoVo vo : produtoVos) {
+            totalProdutos += vo.getTotalProdutos();
+        }
+
         mFormaPagamentoRepository
                 .list()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pFormaPagamentos -> {
                             mFormaPagamentoList = pFormaPagamentos;
-                            mView.bindFormasPagamento(mFormaPagamentoList);
+                            mViewModel.formasPagamento(pFormaPagamentos);
                         }
                 );
     }
@@ -60,7 +69,7 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
         mDataEmissao.set(Calendar.YEAR, pYear);
         mDataEmissao.set(Calendar.MONTH, pMonthOfYear);
         mDataEmissao.set(Calendar.DAY_OF_MONTH, pDayOfMonth);
-        mView.bindDataEmissao(formatDataEmissao());
+        mViewModel.dataEmissao(formatDataEmissao());
     }
 
     private String formatDataEmissao() {

@@ -7,20 +7,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
-import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import smtchahal.materialspinner.MaterialSpinner;
 
 /**
  * @author Filipe Bezerra
@@ -31,12 +28,9 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
     public static final String ARG_PRODUTOS_SELECIONADOS
             = FinalizaPedidoFragment.class.getSimpleName() + ".argProdutosSelecionados";
 
-    @BindView(R.id.edit_text_data_emissao) protected EditText mEditTextDataEmissao;
-    @BindView(R.id.spinner_forma_pagamento) protected MaterialSpinner mSpinnerFormaPagamento;
-
     private FinalizaPedidoContract.Presenter mPresenter;
 
-    private FormaPagamentoAdapter mFormaPagamentoAdapter;
+    private FinalizaPedidoViewModel mFinalizaPedidoViewModel;
 
     public static FinalizaPedidoFragment newInstance(List<ProdutoVo> pProdutosSelecionados) {
         FinalizaPedidoFragment fragment = new FinalizaPedidoFragment();
@@ -50,8 +44,7 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new FinalizaPedidoPresenter(this,
-                Injection.provideFormaPagamentoRepository(getContext()),
-                new ProdutosSelecionadosArgumentExtractor(getArguments()));
+                Injection.provideFormaPagamentoRepository(getContext()));
         setHasOptionsMenu(true);
     }
 
@@ -65,7 +58,11 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter.initializeView();
+        mFinalizaPedidoViewModel = new FinalizaPedidoViewModel(getContext(),
+                ButterKnife.findById(view, R.id.edit_text_data_emissao),
+                ButterKnife.findById(view, R.id.spinner_forma_pagamento));
+        mPresenter.initializeView(mFinalizaPedidoViewModel,
+                new ProdutosSelecionadosArgumentExtractor(getArguments()));
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -75,11 +72,6 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
         } else {
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override public void bindFormasPagamento(List<FormaPagamento> pFormaPagamentoList) {
-        mFormaPagamentoAdapter = new FormaPagamentoAdapter(getContext(), pFormaPagamentoList);
-        mSpinnerFormaPagamento.setAdapter(mFormaPagamentoAdapter);
     }
 
     @Override public void navigateToListaClientesActivity() {
@@ -98,10 +90,6 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
                 )
                 .setThemeCustom(R.style.Widget_Libert_BetterPickersDialogs)
                 .show(getChildFragmentManager(), "DatePickerDialog");
-    }
-
-    @Override public void bindDataEmissao(String pDataEmissao) {
-        mEditTextDataEmissao.setText(pDataEmissao);
     }
 
     @OnClick(R.id.edit_text_cliente) void onClickEditTextCliente() {
