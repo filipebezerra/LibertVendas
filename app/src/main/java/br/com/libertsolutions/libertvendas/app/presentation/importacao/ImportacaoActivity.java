@@ -7,9 +7,12 @@ import android.view.View;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FeedbackHelper;
 import butterknife.BindView;
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import static br.com.libertsolutions.libertvendas.app.R.string.error_importando_dados;
 import static br.com.libertsolutions.libertvendas.app.R.string.importacao;
@@ -18,6 +21,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.message_network_e
 import static br.com.libertsolutions.libertvendas.app.R.string.message_unavailable_server;
 import static br.com.libertsolutions.libertvendas.app.R.string.message_unknown_error;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils.isDeviceConnected;
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
@@ -68,6 +72,21 @@ public class ImportacaoActivity extends LibertVendasActivity
             }
             default: return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = MAIN, sticky = true) public void onUsuarioLogadoEvent(
+            UsuarioLogadoEvent pEvent) {
+        mPresenter.handleUsuarioLogadoEvent(pEvent.getVendedor());
     }
 
     @Override protected void onResume() {

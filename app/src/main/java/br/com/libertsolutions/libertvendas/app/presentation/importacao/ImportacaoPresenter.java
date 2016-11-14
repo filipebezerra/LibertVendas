@@ -17,6 +17,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -55,6 +56,8 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
     private boolean mIsDoingInitialDataSync = false;
 
+    private Vendedor mUsuarioLogado;
+
     private Throwable mErrorMakingNetworkCall;
 
     ImportacaoPresenter(
@@ -85,6 +88,10 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         }
     }
 
+    @Override public void handleUsuarioLogadoEvent(Vendedor pVendedor) {
+        mUsuarioLogado = pVendedor;
+    }
+
     @Override public void startSync(boolean deviceConnected) {
         if (deviceConnected) {
             mView.showLoading();
@@ -98,7 +105,7 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         mIsDoingInitialDataSync = true;
 
         Observable<List<FormaPagamento>> getFormasPagamento = mFormaPagamentoService
-                .get("18285835000109")
+                .get(mUsuarioLogado.getCpfCnpj())
                 .filter(list -> !list.isEmpty())
                 .flatMap(data -> mFormaPagamentoRepository
                         .saveAll(FormaPagamentoFactory.createListFormaPagamento(data)));
@@ -110,19 +117,19 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
                         .saveAll(CidadeFactory.createListCidade(data)));
 
         Observable<List<Produto>> getProdutos = mProdutoService
-                .get("18285835000109")
+                .get(mUsuarioLogado.getCpfCnpj())
                 .filter(list -> !list.isEmpty())
                 .flatMap(data -> mProdutoRepository
                         .saveAll(ProdutoFactories.createListProduto(data)));
 
         Observable<List<Cliente>> getClientes = mClienteService
-                .get("18285835000109")
+                .get(mUsuarioLogado.getCpfCnpj())
                 .filter(list -> !list.isEmpty())
                 .flatMap(data -> mClienteRepository
                         .saveAll(ClienteFactories.createListCliente(data)));
 
         Observable<List<TabelaPreco>> getTabelasPreco = mTabelaPrecoService
-                .get("18285835000109")
+                .get(mUsuarioLogado.getCpfCnpj())
                 .filter(list -> !list.isEmpty())
                 .flatMap(data -> mTabelaPrecoRepository
                         .saveAll(TabelaPrecoFactory.createListTabelaPreco(data)));
