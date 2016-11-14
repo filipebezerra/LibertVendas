@@ -16,6 +16,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_tabela_p
  */
 public class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
     private static final String KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH = "first-time-settings-launch";
+    private static final String KEY_PREF_USUARIO_LOGADO = "usuario-logado";
 
     private final Context mContext;
 
@@ -26,15 +27,13 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
         mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
-    @Override
-    public boolean isFirstTimeSettingsLaunch() {
+    @Override public boolean isFirstTimeSettingsLaunch() {
         return PreferenceManager
                 .getDefaultSharedPreferences(mContext)
                 .getBoolean(KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH, true);
     }
 
-    @Override
-    public void setFirstTimeSettingsLaunch() {
+    @Override public void setFirstTimeSettingsLaunch() {
         PreferenceManager
                 .getDefaultSharedPreferences(mContext)
                 .edit()
@@ -42,16 +41,14 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
                 .apply();
     }
 
-    @Override
-    public boolean hasAllSettingsFields() {
+    @Override public boolean hasAllSettingsFields() {
         return mPreferences.contains(mContext.getString(key_pref_endereco_servidor))
                 && mPreferences.contains(mContext.getString(key_pref_chave_autenticacao))
                 && mPreferences.contains(mContext.getString(key_pref_sincronizar_pedido_automaticamente))
                 && mPreferences.contains(mContext.getString(key_pref_pode_aplicar_desconto));
     }
 
-    @Override
-    public Settings loadSettings() {
+    @Override public Settings loadSettings() {
         final String urlServidor = mPreferences
                 .getString(mContext.getString(key_pref_endereco_servidor), "");
         final String chaveAutenticacao = mPreferences
@@ -67,5 +64,21 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
                 urlServidor, chaveAutenticacao, sincronizaPedidoAutomaticamente,
                 podeAplicarDesconto, tabelaPrecoPadrao
         );
+    }
+
+    @Override public boolean hasUsuarioLogado() {
+        return mPreferences.contains(KEY_PREF_USUARIO_LOGADO);
+    }
+
+    @Override public void setUsuarioLogado(int idVendedor) {
+        PreferenceManager
+                .getDefaultSharedPreferences(mContext)
+                .edit()
+                .putInt(KEY_PREF_USUARIO_LOGADO, idVendedor)
+                .apply();
+    }
+
+    @Override public int getUsuarioLogado() {
+        return mPreferences.getInt(KEY_PREF_USUARIO_LOGADO, -1);
     }
 }

@@ -31,11 +31,13 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
     private LoginContract.Presenter mPresenter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mPresenter = new LoginPresenter(this,
                 Injection.provideCommonResourcesRepository(this),
                 Injection.provideVendedorService(this),
-                Injection.provideVendedorRepository(this));
+                Injection.provideVendedorRepository(this),
+                Injection.provideSettingsRepository(this));
+
+        super.onCreate(savedInstanceState);
 
         mButtonEntrar.setIndeterminateProgressMode(true);
     }

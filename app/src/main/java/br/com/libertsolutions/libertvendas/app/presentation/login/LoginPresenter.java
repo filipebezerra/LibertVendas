@@ -1,9 +1,11 @@
 package br.com.libertsolutions.libertvendas.app.presentation.login;
 
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
 import br.com.libertsolutions.libertvendas.app.domain.factory.VendedorFactory;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
+import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ValidationError;
 import rx.Observable;
@@ -22,17 +24,24 @@ class LoginPresenter implements LoginContract.Presenter {
 
     private final Repository<Vendedor> mVendedorRepository;
 
+    private final SettingsRepository mSettingsRepository;
+
     private Subscription mSubscription;
 
     private boolean mFailed = false;
 
     LoginPresenter(
             LoginContract.View view, CommonResourcesRepository pCommonResourcesRepository,
-            VendedorService pVendedorService, Repository<Vendedor> pVendedorRepository) {
+            VendedorService pVendedorService, Repository<Vendedor> pVendedorRepository,
+            SettingsRepository pSettingsRepository) {
         mView = view;
         mResourcesRepository = pCommonResourcesRepository;
         mVendedorService = pVendedorService;
         mVendedorRepository = pVendedorRepository;
+        mSettingsRepository = pSettingsRepository;
+        if (mSettingsRepository.hasUsuarioLogado()) {
+            mView.resultAsOk(Navigator.RESULT_OK);
+        }
     }
 
     @Override public void initializeView() {
@@ -55,7 +64,9 @@ class LoginPresenter implements LoginContract.Presenter {
                                         .error(ValidationError.newError(pVendedorDto.mensagem));
                             } else {
                                 return mVendedorRepository
-                                        .save(VendedorFactory.createVendedor(pVendedorDto));
+                                        .save(VendedorFactory.createVendedor(pVendedorDto))
+                                        .doOnNext(pVendedor -> mSettingsRepository
+                                                .setUsuarioLogado(pVendedor.getIdVendedor()));
                             }
                         })
                         .doOnError(pThrowable -> mFailed = true)

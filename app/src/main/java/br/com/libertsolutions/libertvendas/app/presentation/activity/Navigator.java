@@ -1,10 +1,9 @@
-package br.com.libertsolutions.libertvendas.app.presentation.util;
+package br.com.libertsolutions.libertvendas.app.presentation.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import br.com.libertsolutions.libertvendas.app.R;
-import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.cliente.ClienteActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.importacao.ImportacaoActivity;

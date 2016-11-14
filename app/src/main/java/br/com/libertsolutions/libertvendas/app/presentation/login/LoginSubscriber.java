@@ -2,8 +2,8 @@ package br.com.libertsolutions.libertvendas.app.presentation.login;
 
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
-import br.com.libertsolutions.libertvendas.app.presentation.events.VendedorLogadoEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.util.Navigator;
+import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ValidationError;
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
@@ -24,14 +24,12 @@ class LoginSubscriber extends Subscriber<Vendedor> {
         return new LoginSubscriber(pView);
     }
 
-    @Override
-    public void onStart() {
+    @Override public void onStart() {
         mView.showLoading();
         mView.blockEditEntries();
     }
 
-    @Override
-    public void onError(Throwable pError) {
+    @Override public void onError(Throwable pError) {
         mView.showErrorIndicator();
         mView.unblockEditEntries();
         if (pError instanceof HttpException) {
@@ -46,13 +44,11 @@ class LoginSubscriber extends Subscriber<Vendedor> {
         }
     }
 
-    @Override
-    public void onNext(Vendedor pVendedor) {
-        EventBus.getDefault().postSticky(VendedorLogadoEvent.newEvent(pVendedor));
+    @Override public void onNext(Vendedor pVendedor) {
+        EventBus.getDefault().postSticky(UsuarioLogadoEvent.newEvent(pVendedor));
     }
 
-    @Override
-    public void onCompleted() {
+    @Override public void onCompleted() {
         mView.showCompletedIndicator();
         mView.resultAsOk(Navigator.RESULT_OK);
     }

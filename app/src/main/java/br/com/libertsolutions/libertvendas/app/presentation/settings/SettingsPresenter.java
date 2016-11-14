@@ -1,7 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.settings;
 
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
-import br.com.libertsolutions.libertvendas.app.presentation.util.Navigator;
+import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 
 /**
  * @author Filipe Bezerra

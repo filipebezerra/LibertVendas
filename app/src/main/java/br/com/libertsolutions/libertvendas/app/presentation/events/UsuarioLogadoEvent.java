@@ -5,15 +5,15 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 /**
  * @author Filipe Bezerra
  */
-public class VendedorLogadoEvent {
+public class UsuarioLogadoEvent {
     private final Vendedor mVendedor;
 
-    private VendedorLogadoEvent(Vendedor pVendedor) {/* No constructor*/
+    private UsuarioLogadoEvent(Vendedor pVendedor) {/* No constructor*/
         mVendedor = pVendedor;
     }
 
-    public static VendedorLogadoEvent newEvent(Vendedor pVendedor) {
-        return new VendedorLogadoEvent(pVendedor);
+    public static UsuarioLogadoEvent newEvent(Vendedor pVendedor) {
+        return new UsuarioLogadoEvent(pVendedor);
     }
 
     public Vendedor getVendedor() {

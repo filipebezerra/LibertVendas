@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import br.com.libertsolutions.libertvendas.app.R;
-import br.com.libertsolutions.libertvendas.app.presentation.util.Navigator;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

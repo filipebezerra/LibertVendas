@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
-import br.com.libertsolutions.libertvendas.app.presentation.util.Navigator;
+import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
 import butterknife.BindView;

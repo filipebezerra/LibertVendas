@@ -13,4 +13,10 @@ public interface SettingsRepository {
     boolean hasAllSettingsFields();
 
     Settings loadSettings();
+
+    boolean hasUsuarioLogado();
+
+    void setUsuarioLogado(int idVendedor);
+
+    int getUsuarioLogado();
 }
