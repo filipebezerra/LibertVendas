@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
 import java.util.ArrayList;
@@ -56,9 +57,16 @@ class PedidoAdapter extends RecyclerView.Adapter<PedidoViewHolder> implements Fi
         holder.textViewNomeCliente.setText(
                 resources.getString(R.string.template_text_nome_cliente,
                         pedido.getCliente().getNome()));
+
+        double totalItens = 0;
+        for (ItemPedido item : pedido.getItens()) {
+            totalItens += item.getSubTotal();
+        }
+        totalItens -= pedido.getDesconto();
+
         holder.textViewTotalPedido.setText(
                 resources.getString(R.string.template_text_total_pedido,
-                        FormattingUtils.formatAsDinheiro(pedido.getTotal())));
+                        FormattingUtils.formatAsDinheiro(totalItens)));
         holder.textViewDataPedido.setText(
                 resources.getString(R.string.template_text_data_pedido,
                         FormattingUtils.formatMillisecondsToDateText(pedido.getDataEmissao())));
@@ -68,19 +76,19 @@ class PedidoAdapter extends RecyclerView.Adapter<PedidoViewHolder> implements Fi
 
             int colorResource = -1;
             switch (pedido.getStatus()) {
-                case Pedido.PEDIDO_STATUS_ORCAMENTO: {
-                    colorResource = R.color.color_pedido_orcamento;
+                case Pedido.STATUS_EM_DIGITACAO: {
+                    colorResource = R.color.color_pedido_em_digitacao;
                     break;
                 }
-                case Pedido.PEDIDO_STATUS_ENVIADO: {
+                case Pedido.STATUS_PENDENTE: {
+                    colorResource = R.color.color_pedido_pendente;
+                    break;
+                }
+                case Pedido.STATUS_ENVIADO: {
                     colorResource = R.color.color_pedido_enviado;
                     break;
                 }
-                case Pedido.PEDIDO_STATUS_FATURADO: {
-                    colorResource = R.color.color_pedido_faturado;
-                    break;
-                }
-                case Pedido.PEDIDO_STATUS_CANCELADO: {
+                case Pedido.STATUS_CANCELADO: {
                     colorResource = R.color.color_pedido_cancelado;
                 }
             }

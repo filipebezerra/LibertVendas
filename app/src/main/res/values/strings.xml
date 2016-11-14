@@ -66,7 +66,7 @@
 
     <!-- Tela Lista de Pedidos -->
     <string name="title_fragment_lista_pedidos">Pedidos</string>
-    <string name="template_text_numero_pedido">Nº %1$d</string>
+    <string name="template_text_numero_pedido">Nº %1$s</string>
     <string name="template_text_nome_cliente">Cliente %1$s</string>
     <string name="template_text_total_pedido">Total %1$s</string>
     <string name="template_text_data_pedido">Data %1$s</string>

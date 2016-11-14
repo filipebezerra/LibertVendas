@@ -27,7 +27,7 @@
                 android:layout_alignParentRight="true"
                 android:visibility="gone"
                 tools:visibility="visible"
-                tools:background="@color/color_pedido_faturado"
+                tools:background="@color/color_pedido_enviado"
                 />
 
             <TextView

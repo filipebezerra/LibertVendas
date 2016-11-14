@@ -29,12 +29,12 @@ public class FormaPagamentoRepositories {
 
     public static synchronized Repository<FormaPagamento> getRepository(@NonNull Context pContext) {
         if (sRepository == null) {
-            sRepository = new FormaPagamentoRepository(pContext, getMapper());
+            sRepository = new FormaPagamentoRepository(pContext, getEntityMapper());
         }
         return sRepository;
     }
 
-    private static Mapper<FormaPagamento, FormaPagamentoEntity> getMapper() {
+    public static Mapper<FormaPagamento, FormaPagamentoEntity> getEntityMapper() {
         if (sMapper == null) {
             sMapper = new FormaPagamentoMapper();
         }

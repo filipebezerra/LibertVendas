@@ -3,12 +3,13 @@ package br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedi
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.NavigateToNextEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import org.greenrobot.eventbus.EventBus;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -19,19 +20,25 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
 
     private final Repository<FormaPagamento> mFormaPagamentoRepository;
 
+    private final Repository<Pedido> mPedidoRepository;
+
     private FinalizaPedidoViewModel mViewModel;
 
     private List<FormaPagamento> mFormaPagamentoList;
 
     private Calendar mDataEmissao = Calendar.getInstance();
 
+    private List<ProdutoVo> mProdutosSelecionados;
+
     private Cliente mClienteSelecionado;
 
     FinalizaPedidoPresenter(
             FinalizaPedidoContract.View pView,
-            Repository<FormaPagamento> pFormaPagamentoRepository) {
+            Repository<FormaPagamento> pFormaPagamentoRepository,
+            Repository<Pedido> pPedidoRepository) {
         mView = pView;
         mFormaPagamentoRepository = pFormaPagamentoRepository;
+        mPedidoRepository = pPedidoRepository;
     }
 
     @Override public void initializeView(FinalizaPedidoViewModel pViewModel,
@@ -39,9 +46,9 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
         mViewModel = pViewModel;
         mViewModel.dataEmissao(formatDataEmissao());
 
-        List<ProdutoVo> produtoVos = pProdutosSelecionadosExtractor.extractExtra();
+        mProdutosSelecionados = pProdutosSelecionadosExtractor.extractExtra();
         double totalProdutos = 0;
-        for (ProdutoVo vo : produtoVos) {
+        for (ProdutoVo vo : mProdutosSelecionados) {
             totalProdutos += vo.getTotalProdutos();
         }
 
@@ -59,7 +66,33 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
     }
 
     @Override public void clickActionSave() {
-        EventBus.getDefault().post(NavigateToNextEvent.notifyEvent());
+        List<ItemPedido> itensPedido = new ArrayList<>();
+        for (ProdutoVo vo : mProdutosSelecionados) {
+            itensPedido.add(
+                    ItemPedido.novoItem(
+                            vo.getPreco(),
+                            vo.getQuantidadeAdicionada(),
+                            vo.getTotalProdutos(),
+                            vo.getProduto()
+                    )
+            );
+        }
+
+        Pedido novoPedido = Pedido.novoPedido(
+                mDataEmissao.getTimeInMillis(),
+                0, //desconto
+                0, //percentualDesconto
+                "", // observacao
+                mClienteSelecionado,
+                null, //forma pagamento selecionada,
+                null, // tabela
+                itensPedido
+        );
+
+        mPedidoRepository
+                .save(novoPedido)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mView::resultNovoPedido);
     }
 
     @Override public void clickSelectCliente() {

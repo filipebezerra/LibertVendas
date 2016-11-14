@@ -34,7 +34,7 @@ public class ProdutoRepositories {
         return sRepository;
     }
 
-    public synchronized static Mapper<Produto, ProdutoEntity> getMapper() {
+    public synchronized static Mapper<Produto, ProdutoEntity> getEntityMapper() {
         if (sMapper == null) {
             sMapper = new ProdutoMapper();
         }

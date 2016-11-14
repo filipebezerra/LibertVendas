@@ -13,7 +13,7 @@ import timber.log.Timber;
  */
 public class ProdutoRepository extends AbstractRealmRepository<Produto, ProdutoEntity> {
     public ProdutoRepository(Context context) {
-        super(context, ProdutoEntity.class, ProdutoRepositories.getMapper());
+        super(context, ProdutoEntity.class, ProdutoRepositories.getEntityMapper());
     }
 
     public Observable<Produto> findById(int idVendedor) {

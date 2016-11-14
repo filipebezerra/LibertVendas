@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
@@ -48,7 +49,8 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new FinalizaPedidoPresenter(this,
-                Injection.provideFormaPagamentoRepository(getContext()));
+                Injection.provideFormaPagamentoRepository(getContext()),
+                Injection.providePedidoRepository(getContext()));
         setHasOptionsMenu(true);
     }
 
@@ -125,5 +127,9 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
             ClienteSelecionadoEvent pEvent) {
         mPresenter.handleClienteSelecionadoEvent(pEvent.getCliente());
         EventBus.getDefault().removeStickyEvent(pEvent);
+    }
+
+    @Override public void resultNovoPedido(Pedido pPedido) {
+        EventBus.getDefault().post(NovoPedidoEvent.newEvent(pPedido));
     }
 }
