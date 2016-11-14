@@ -81,6 +81,7 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
         if (mImportacaoRepository.isImportacaoInicialFeita()) {
             mView.navigateToMainActivity();
+            mView.finishActivity();
         }
     }
 

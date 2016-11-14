@@ -43,6 +43,13 @@
             android:windowSoftInputMode="stateHidden|adjustResize"
             />
         <activity
+            android:name=".presentation.importacao.ImportacaoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
+            android:label="@string/title_activity_importacao"
+            android:theme="@style/Libert.Theme.NoActionBar"
+            android:noHistory="true"
+            />
+        <activity
             android:name=".presentation.home.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/Libert.Theme.NoActionBar"
@@ -65,11 +72,6 @@
             android:label="@string/title_activity_cliente"
             android:theme="@style/Libert.Theme.NoActionBar"
             />
-        <activity
-            android:name=".presentation.importacao.ImportacaoActivity"
-            android:label="@string/title_activity_importacao"
-            android:theme="@style/Libert.Theme.NoActionBar"
-            ></activity>
     </application>
 
 </manifest>
