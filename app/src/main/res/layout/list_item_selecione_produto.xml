@@ -54,7 +54,7 @@
                             style="@style/Widget.Libert.EditableField"
                             android:id="@+id/edit_text_edit_quantidade"
                             android:gravity="center"
-                            android:inputType="numberDecimal"
+                            android:inputType="numberSigned"
                             android:hint="@string/hint_edit_quantidade"
                             android:imeOptions="actionDone"
                             android:maxLines="1"
