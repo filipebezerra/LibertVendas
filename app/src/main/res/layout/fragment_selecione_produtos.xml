@@ -8,7 +8,7 @@
 
     <android.support.v7.widget.RecyclerView
         style="@style/Widget.Libert.RecyclerView"
-        android:id="@+id/recycler_view_selecione_produtos"
+        android:id="@id/recycler_view_produtos"
         tools:listitem="@layout/list_item_selecione_produto"
         />
 

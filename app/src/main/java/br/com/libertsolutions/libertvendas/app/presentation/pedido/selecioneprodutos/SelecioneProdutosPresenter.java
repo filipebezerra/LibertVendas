@@ -28,16 +28,20 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
         mProdutoRepository = pProdutoRepository;
     }
 
-    @Override
-    public void loadListaProdutos() {
+    @Override public void loadListaProdutos() {
         mProdutoRepository.list()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::transformThenShowListaProdutos);
     }
 
-    @Override
-    public void clickAdicionaQuantidadeItem(int pPosition) {
+    private void transformThenShowListaProdutos(List<Produto> pProdutoList) {
+        mProdutoList = pProdutoList;
+        mProdutoVos = ProdutoFactories.createListProdutoVo(mProdutoList);
+        mView.showListaProdutos(mProdutoVos);
+    }
+
+    @Override public void clickAdicionaQuantidadeItem(int pPosition) {
         if (pPosition >= 0 && pPosition < mProdutoVos.size()) {
             ProdutoVo produtoVo = mProdutoVos.get(pPosition);
             produtoVo.addQuantidade();
@@ -45,8 +49,7 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
         }
     }
 
-    @Override
-    public void clickRemoveQuantidadeItem(int pPosition) {
+    @Override public void clickRemoveQuantidadeItem(int pPosition) {
         if (pPosition >= 0 && pPosition < mProdutoVos.size()) {
             ProdutoVo produtoVo = mProdutoVos.get(pPosition);
             if (produtoVo.removeQuantidade()) {
@@ -55,14 +58,15 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
         }
     }
 
-    @Override
-    public void clickActionDone() {
-        EventBus.getDefault().post(NavigateToNextEvent.notifyEvent());
+    @Override public void handleQuantidadeModificada(int pPosition, float pQuantidade) {
+        if (pPosition >= 0 && pPosition < mProdutoVos.size()) {
+            ProdutoVo produtoVo = mProdutoVos.get(pPosition);
+            produtoVo.setQuantidade(pQuantidade);
+            mView.updateViewPedidoItem(pPosition);
+        }
     }
 
-    private void transformThenShowListaProdutos(List<Produto> pProdutoList) {
-        mProdutoList = pProdutoList;
-        mProdutoVos = ProdutoFactories.createListProdutoVo(mProdutoList);
-        mView.showListaProdutos(mProdutoVos);
+    @Override public void clickActionDone() {
+        EventBus.getDefault().post(NavigateToNextEvent.notifyEvent());
     }
 }

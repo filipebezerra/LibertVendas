@@ -54,12 +54,10 @@
                             style="@style/Widget.Libert.EditableField"
                             android:id="@+id/edit_text_edit_quantidade"
                             android:gravity="center"
-                            android:inputType="numberSigned"
+                            android:inputType="numberDecimal"
                             android:hint="@string/hint_edit_quantidade"
                             android:imeOptions="actionDone"
                             android:maxLines="1"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
                             />
 
                     </android.support.design.widget.TextInputLayout>

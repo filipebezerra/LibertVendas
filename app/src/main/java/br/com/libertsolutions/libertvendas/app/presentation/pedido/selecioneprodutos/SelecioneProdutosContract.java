@@ -20,6 +20,8 @@ interface SelecioneProdutosContract {
 
         void clickRemoveQuantidadeItem(int pPosition);
 
+        void handleQuantidadeModificada(int pPosition, float pQuantidade);
+
         void clickActionDone();
     }
 }

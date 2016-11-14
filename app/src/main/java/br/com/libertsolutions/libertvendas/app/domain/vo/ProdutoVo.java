@@ -41,6 +41,11 @@ public class ProdutoVo {
         calcularTotalProdutos();
     }
 
+    public synchronized void setQuantidade(float pQuantidade) {
+        quantidadeAdicionada = pQuantidade;
+        calcularTotalProdutos();
+    }
+
     public synchronized boolean removeQuantidade() {
         if (quantidadeAdicionada > 0) {
             quantidadeAdicionada--;

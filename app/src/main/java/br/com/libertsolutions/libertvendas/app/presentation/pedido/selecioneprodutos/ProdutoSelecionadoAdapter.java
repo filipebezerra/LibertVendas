@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Filter;
 import android.widget.Filterable;
 import br.com.libertsolutions.libertvendas.app.R;
@@ -39,15 +40,13 @@ class ProdutoSelecionadoAdapter extends RecyclerView.Adapter<ProdutoSelecionadoV
         mProdutoList = pProdutoList;
     }
 
-    @Override
-    public ProdutoSelecionadoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public ProdutoSelecionadoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View itemView = LayoutInflater.from(mContext)
                 .inflate(R.layout.list_item_selecione_produto, parent, false);
         return new ProdutoSelecionadoViewHolder(itemView);
     }
 
-    @Override
-    public void onBindViewHolder(ProdutoSelecionadoViewHolder holder, int position) {
+    @Override public void onBindViewHolder(ProdutoSelecionadoViewHolder holder, int position) {
         final ProdutoVo produto = mProdutoList.get(position);
 
         holder.textViewProduto.setText(produto.getNome());
@@ -61,21 +60,37 @@ class ProdutoSelecionadoAdapter extends RecyclerView.Adapter<ProdutoSelecionadoV
                         FormattingUtils.formatAsDinheiro(produto.getTotalProdutos())));
 
         holder.textViewQuantidade.setText(String.valueOf(produto.getQuantidadeAdicionada()));
+        holder.editTextOutraQuantidade.setText(String.valueOf(produto.getQuantidadeAdicionada()));
 
         holder.buttonAdicionar.setOnClickListener(
                 view -> mCallbacks.onQuantidadeAdicionada(holder.getAdapterPosition()));
 
         holder.buttonRemover.setOnClickListener(
                 view -> mCallbacks.onQuantidadeRemovida(holder.getAdapterPosition()));
+
+        holder.textViewQuantidade.setOnClickListener(pView -> holder.viewSwitcher.showNext());
+
+        holder.editTextOutraQuantidade.setOnEditorActionListener(
+                (pTextView, pActionId, pEvent) -> {
+                    if (pActionId == EditorInfo.IME_ACTION_DONE) {
+                        if (!TextUtils.isEmpty(holder.editTextOutraQuantidade.getText())) {
+                            float outraQuantidade = Float.valueOf(
+                                    holder.editTextOutraQuantidade.getText().toString());
+                            mCallbacks.onQuantidadeModificada(holder.getAdapterPosition(),
+                                    outraQuantidade);
+                        }
+                        holder.viewSwitcher.showPrevious();
+                        return true;
+                    }
+                    return false;
+                });
     }
 
-    @Override
-    public int getItemCount() {
+    @Override public int getItemCount() {
         return mProdutoList.size();
     }
 
-    @Override
-    public Filter getFilter() {
+    @Override public Filter getFilter() {
         if (mFilter == null) {
             mFilter = new ProdutoAdapterFilter();
         }
@@ -128,5 +143,7 @@ class ProdutoSelecionadoAdapter extends RecyclerView.Adapter<ProdutoSelecionadoV
         void onQuantidadeAdicionada(int position);
 
         void onQuantidadeRemovida(int position);
+
+        void onQuantidadeModificada(int position, float quantidade);
     }
 }

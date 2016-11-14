@@ -5,4 +5,5 @@
     <item name="tabs" type="id" />
     <item name="fragment_container" type="id" />
     <item name="card_view" type="id" />
+    <item name="recycler_view_produtos" type="id" />
 </resources>

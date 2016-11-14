@@ -22,8 +22,7 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
         implements SelecioneProdutosContract.View,
         ProdutoSelecionadoAdapter.ProdutoSelecionadoAdapterCallbacks {
 
-    @BindView(R.id.recycler_view_selecione_produtos)
-    protected RecyclerView mRecyclerViewSelecioneProdutos;
+    @BindView(R.id.recycler_view_produtos) protected RecyclerView mRecyclerViewProdutos;
 
     private SelecioneProdutosContract.Presenter mPresenter;
 
@@ -33,36 +32,31 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
         return new SelecioneProdutosFragment();
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new SelecioneProdutosPresenter(this,
                 Injection.provideProdutoRepository(getContext()));
         setHasOptionsMenu(true);
     }
 
-    @Override
-    protected int provideContentViewResource() {
+    @Override protected int provideContentViewResource() {
         return R.layout.fragment_selecione_produtos;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mRecyclerViewSelecioneProdutos.setHasFixedSize(true);
-        mRecyclerViewSelecioneProdutos.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerViewProdutos.setHasFixedSize(true);
+        mRecyclerViewProdutos.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mPresenter.loadListaProdutos();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_selecione_produtos, menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_done) {
             mPresenter.clickActionDone();
             return true;
@@ -71,25 +65,25 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
         }
     }
 
-    @Override
-    public void showListaProdutos(List<ProdutoVo> pProdutoList) {
-        mRecyclerViewSelecioneProdutos.setAdapter(
+    @Override public void showListaProdutos(List<ProdutoVo> pProdutoList) {
+        mRecyclerViewProdutos.setAdapter(
                 mProdutoSelecionadoAdapter =
                         new ProdutoSelecionadoAdapter(getContext(), this, pProdutoList));
     }
 
-    @Override
-    public void onQuantidadeAdicionada(int position) {
+    @Override public void onQuantidadeAdicionada(int position) {
         mPresenter.clickAdicionaQuantidadeItem(position);
     }
 
-    @Override
-    public void onQuantidadeRemovida(int position) {
+    @Override public void onQuantidadeRemovida(int position) {
         mPresenter.clickRemoveQuantidadeItem(position);
     }
 
-    @Override
-    public void updateViewPedidoItem(int position) {
+    @Override public void onQuantidadeModificada(int position, float quantidade) {
+        mPresenter.handleQuantidadeModificada(position, quantidade);
+    }
+
+    @Override public void updateViewPedidoItem(int position) {
         mProdutoSelecionadoAdapter.notifyItemChanged(position);
     }
 }
