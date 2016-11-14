@@ -6,8 +6,10 @@ import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
 import br.com.libertsolutions.libertvendas.app.domain.factory.VendedorFactory;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
+import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ValidationError;
+import org.greenrobot.eventbus.EventBus;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -40,7 +42,14 @@ class LoginPresenter implements LoginContract.Presenter {
         mVendedorRepository = pVendedorRepository;
         mSettingsRepository = pSettingsRepository;
         if (mSettingsRepository.hasUsuarioLogado()) {
-            mView.resultAsOk(Navigator.RESULT_OK);
+            mVendedorRepository
+                    .findById(mSettingsRepository.getUsuarioLogado())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext(pVendedor -> {
+                        EventBus.getDefault().postSticky(UsuarioLogadoEvent.newEvent(pVendedor));
+                        mView.resultAsOk(Navigator.RESULT_OK);
+                    })
+                    .subscribe();
         }
     }
 
