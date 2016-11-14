@@ -1,10 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos;
 
 import android.support.v4.util.Pair;
-import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoRepository;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
-import br.com.libertsolutions.libertvendas.app.data.tabelaspreco.TabelaPrecoRepository;
-import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepository;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemTabela;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
@@ -53,13 +50,13 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
 
     @Override
     public void loadListaProdutos() {
-        ((VendedorRepository) mVendedorRepository)
+        mVendedorRepository
                 .findById(3)
                 .flatMap(
                         new Func1<Vendedor, Observable<TabelaPreco>>() {
                             @Override
                             public Observable<TabelaPreco> call(Vendedor pVendedor) {
-                                return ((TabelaPrecoRepository) mTabelaPrecoRepository)
+                                return mTabelaPrecoRepository
                                         .findById(pVendedor.getIdTabela());
                             }
                         })
@@ -84,7 +81,7 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
 
     private void findProdutos(List<ItemTabela> pItemTabelas) {
         for (ItemTabela item : pItemTabelas) {
-            ((ProdutoRepository) mProdutoRepository)
+            mProdutoRepository
                     .findById(item.getIdProduto())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(

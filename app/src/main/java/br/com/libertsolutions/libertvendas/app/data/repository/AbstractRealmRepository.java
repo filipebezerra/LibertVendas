@@ -15,6 +15,8 @@ import timber.log.Timber;
  */
 @SuppressWarnings("Convert2MethodRef")
 public abstract class AbstractRealmRepository<T, E extends RealmModel> implements Repository<T> {
+    private static final String ID_FIELD_NAME = "id";
+
     protected final Context mContext;
 
     protected final Class<E> mEntityClass;
@@ -27,8 +29,7 @@ public abstract class AbstractRealmRepository<T, E extends RealmModel> implement
         mMapper = mapper;
     }
 
-    @Override
-    public Observable<T> save(T object) {
+    @Override public Observable<T> save(T object) {
         return RealmObservable
                 .object(mContext,
                         realm -> {
@@ -41,8 +42,7 @@ public abstract class AbstractRealmRepository<T, E extends RealmModel> implement
                         entity -> mMapper.toViewObject(entity));
     }
 
-    @Override
-    public Observable<List<T>> saveAll(List<T> objects) {
+    @Override public Observable<List<T>> saveAll(List<T> objects) {
         return RealmObservable
                 .list(mContext,
                         realm -> {
@@ -68,8 +68,7 @@ public abstract class AbstractRealmRepository<T, E extends RealmModel> implement
                         entities -> mMapper.toViewObjectList(entities));
     }
 
-    @Override
-    public Observable<List<T>> list() {
+    @Override public Observable<List<T>> list() {
         return RealmObservable
                 .results(mContext,
                         realm -> {
@@ -82,17 +81,23 @@ public abstract class AbstractRealmRepository<T, E extends RealmModel> implement
                         entities -> mMapper.toViewObjectList(entities));
     }
 
-    @Override
-    public Observable<T> findFirst() {
+    @Override public Observable<T> findById(int id) {
         return RealmObservable
                 .object(mContext,
                         realm -> {
-                            E first = realm.where(mEntityClass).findFirst();
-                            Timber.i("%s.findFirst() results %s",
+                            E first = realm
+                                    .where(mEntityClass)
+                                    .equalTo(idFieldName(), id)
+                                    .findFirst();
+                            Timber.i("%s.findById() results %s",
                                     mEntityClass.getSimpleName(), first);
                             return first;
                         })
                 .map(
                         entity -> mMapper.toViewObject(entity));
+    }
+
+    @Override public String idFieldName() {
+        return ID_FIELD_NAME;
     }
 }
