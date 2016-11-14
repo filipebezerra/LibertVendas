@@ -12,7 +12,6 @@ import java.util.Locale;
 /**
  * @author Filipe Bezerra
  */
-
 public class FormattingUtils {
     private FormattingUtils() {/* No constructor */}
 
@@ -60,5 +59,11 @@ public class FormattingUtils {
         } catch (NumberParseException e) {
             return phoneNumberText;
         }
+    }
+
+    public static String convertMillisecondsToDateAsString(long milliseconds) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliseconds);
+        return DATE_FORMATTER_AS_DD_MM_YYYY.format(calendar.getTime());
     }
 }

@@ -114,4 +114,14 @@
         <item name="android:foreground">@drawable/list_selector</item>
         <item name="contentPadding">@dimen/keyline_large</item>
     </style>
+
+    <style name="Widget.Libert.BetterPickersDialogs" parent="BetterPickersRadialTimePickerDialog.PrimaryColor">
+        <item name="bpHeaderBackgroundColor">?attr/colorAccent</item>
+        <item name="bpBodySelectedTextColor">?attr/colorAccent</item>
+        <item name="bpButtonsTextColor">?attr/colorAccent</item>
+        <item name="bpRadialTextColor">?attr/colorAccent</item>
+        <item name="bpRadialPointerColor">?attr/colorAccent</item>
+
+        <item name="bpAmPmCircleColor">?attr/colorAccent</item>
+    </style>
 </resources>
