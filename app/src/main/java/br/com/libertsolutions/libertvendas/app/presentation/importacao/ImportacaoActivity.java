@@ -30,8 +30,6 @@ public class ImportacaoActivity extends LibertVendasActivity
     private ImportacaoPresenter mPresenter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setAsSubActivity();
         mPresenter = new ImportacaoPresenter(this,
                 Injection.provideImportacaoRepository(this),
                 Injection.provideFormaPagamentoService(this),
@@ -44,6 +42,8 @@ public class ImportacaoActivity extends LibertVendasActivity
                 Injection.provideClienteRepository(this),
                 Injection.provideTabelaPrecoService(this),
                 Injection.provideTabelaPrecoRepository(this));
+        super.onCreate(savedInstanceState);
+        setAsSubActivity();
         mLoadingView.setAnimationListener(this);
     }
 

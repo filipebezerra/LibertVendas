@@ -78,14 +78,13 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         mClienteRepository = pClienteRepository;
         mTabelaPrecoService = pTabelaPrecoService;
         mTabelaPrecoRepository = pTabelaPrecoRepository;
+
+        if (mImportacaoRepository.isImportacaoInicialFeita()) {
+            mView.navigateToMainActivity();
+        }
     }
 
     @Override public void startSync(boolean deviceConnected) {
-        if (mImportacaoRepository.isImportacaoInicialFeita()) {
-            mView.navigateToMainActivity();
-            return;
-        }
-
         if (deviceConnected) {
             mView.showLoading();
             requestImportacao();
