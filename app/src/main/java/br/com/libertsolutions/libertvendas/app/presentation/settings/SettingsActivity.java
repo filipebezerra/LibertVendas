@@ -8,18 +8,24 @@ import android.view.MenuItem;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import com.afollestad.materialdialogs.MaterialDialog;
 import org.greenrobot.eventbus.EventBus;
 
 /**
  * @author Filipe Bezerra
  */
 public class SettingsActivity extends LibertVendasActivity implements SettingsContract.View {
+    public static final String EXTRA_FROM_LAUNCH
+            = SettingsActivity.class.getSimpleName() + ".extraFromLaunch";
+
     private SettingsContract.Presenter mPresenter;
 
     @Override protected void onCreate(@Nullable Bundle inState) {
         super.onCreate(inState);
         setAsInitialFlowActivity();
-        mPresenter = new SettingsPresenter(this, Injection.provideSettingsRepository(this));
+        mPresenter = new SettingsPresenter(this,
+                Injection.provideSettingsRepository(this),
+                getIntent().getExtras().getBoolean(EXTRA_FROM_LAUNCH));
 
         if (inState == null) {
             getSupportFragmentManager()
@@ -44,11 +50,6 @@ public class SettingsActivity extends LibertVendasActivity implements SettingsCo
         menu.findItem(R.id.action_done).setEnabled(canEnableOptionsMenu);
         menu.findItem(R.id.action_done).setVisible(canEnableOptionsMenu);
         return true;
-    }
-
-    @Override protected void onResume() {
-        super.onResume();
-        mPresenter.initializeView();
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -78,5 +79,12 @@ public class SettingsActivity extends LibertVendasActivity implements SettingsCo
     @Override public void enableSettingTabelaPrecoPadrao() {
         EventBus.getDefault().post(
                 SettingsEvent.create(getString(R.string.key_pref_tabela_preco_padrao)));
+    }
+
+    @Override public void showRequiredMessage() {
+        new MaterialDialog.Builder(this)
+                .content(getString(R.string.message_settings_required))
+                .positiveText(android.R.string.ok)
+                .show();
     }
 }

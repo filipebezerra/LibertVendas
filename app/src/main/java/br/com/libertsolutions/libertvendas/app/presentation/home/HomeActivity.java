@@ -99,9 +99,8 @@ public class HomeActivity extends LibertVendasActivity
         return true;
     }
 
-    @Override
-    public void navigateToSettings() {
-        navigate().toSettings();
+    @Override public void navigateToSettings() {
+        navigate().toSettings(false);
     }
 
     @Override

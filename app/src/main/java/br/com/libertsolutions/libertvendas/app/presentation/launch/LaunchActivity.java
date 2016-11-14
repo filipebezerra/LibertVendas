@@ -12,25 +12,21 @@ public class LaunchActivity extends LibertVendasActivity implements LaunchContra
 
     private LaunchContract.Presenter mPresenter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new LaunchPresenter(this);
         mPresenter.startSplascreenTimeout();
     }
 
-    @Override
-    protected int provideContentViewResource() {
+    @Override protected int provideContentViewResource() {
         return R.layout.activity_launch;
     }
 
-    @Override
-    public void startHandler(Runnable runnable, int splashTime) {
+    @Override public void startHandler(Runnable runnable, int splashTime) {
         new Handler().postDelayed(runnable, splashTime);
     }
 
-    @Override
-    public void navigateToSettingsActivity() {
-        navigate().toSettings();
+    @Override public void navigateToSettingsActivity() {
+        navigate().toSettings(true);
     }
 }

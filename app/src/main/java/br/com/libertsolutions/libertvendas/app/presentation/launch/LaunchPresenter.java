@@ -12,13 +12,11 @@ class LaunchPresenter implements LaunchContract.Presenter {
         mView = view;
     }
 
-    @Override
-    public void startSplascreenTimeout() {
+    @Override public void startSplascreenTimeout() {
         mView.startHandler(this::dispatchNavigationToSettingsActivity, SPLASH_TIME);
     }
 
-    @Override
-    public void dispatchNavigationToSettingsActivity() {
+    @Override public void dispatchNavigationToSettingsActivity() {
         mView.navigateToSettingsActivity();
     }
 }

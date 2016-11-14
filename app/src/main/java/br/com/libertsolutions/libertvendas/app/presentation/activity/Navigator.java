@@ -32,8 +32,9 @@ public class Navigator {
         mActivity = activity;
     }
 
-    public void toSettings() {
-        final Intent settingsIntent = new Intent(mActivity, SettingsActivity.class);
+    public void toSettings(boolean isFromLaunch) {
+        final Intent settingsIntent = new Intent(mActivity, SettingsActivity.class)
+                .putExtra(SettingsActivity.EXTRA_FROM_LAUNCH, isFromLaunch);
         ActivityCompat.startActivityForResult(mActivity, settingsIntent, REQUEST_SETTINGS, null);
     }
 

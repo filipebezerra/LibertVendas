@@ -12,14 +12,16 @@ class SettingsPresenter implements SettingsContract.Presenter {
     private final SettingsRepository mSettingsRepository;
 
     SettingsPresenter(
-            SettingsContract.View view, SettingsRepository settingsRepository) {
+            SettingsContract.View view, SettingsRepository settingsRepository,
+            boolean pIsFromLaunch) {
         mView = view;
         mSettingsRepository = settingsRepository;
-    }
 
-    @Override public void initializeView() {
-        if (!mSettingsRepository.isFirstTimeSettingsLaunch()) {
-            mView.enableSettingTabelaPrecoPadrao();
+        if (pIsFromLaunch) {
+            if (!mSettingsRepository.isFirstTimeSettingsLaunch() &&
+                    mSettingsRepository.hasAllSettingsFields()) {
+                mView.resultAsOk(Navigator.RESULT_OK);
+            }
         }
     }
 
@@ -32,6 +34,11 @@ class SettingsPresenter implements SettingsContract.Presenter {
     }
 
     @Override public void handleClickDoneMenuItem() {
+        if (!mSettingsRepository.hasAllSettingsFields()) {
+            mView.showRequiredMessage();
+            return;
+        }
+
         mSettingsRepository.setFirstTimeSettingsLaunch();
         mView.resultAsOk(Navigator.RESULT_OK);
     }

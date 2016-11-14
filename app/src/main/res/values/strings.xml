@@ -34,6 +34,7 @@
     <string name="dialog_title_pref_tabela_preco_padrao">Digite o código da tabela de preço</string>
     <string name="summary_pref_tabela_preco_padrao">Será aplicada esta tabela de preço por padrão em cada novo pedido</string>
     <string name="action_done">Continuar</string>
+    <string name="message_settings_required">É necessário preencher todas configurações!</string>
 
     <!-- Tela Login -->
     <string name="title_login_activity">Entrar</string>

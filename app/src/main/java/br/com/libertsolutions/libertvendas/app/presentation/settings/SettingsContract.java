@@ -10,11 +10,11 @@ interface SettingsContract {
         void resultAsOk(int resultCode);
 
         void enableSettingTabelaPrecoPadrao();
+
+        void showRequiredMessage();
     }
 
     interface Presenter {
-        void initializeView();
-
         void handleClickHomeMenuItem();
 
         boolean canEnableOptionsMenu();
