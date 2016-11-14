@@ -42,6 +42,8 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
             totalProdutos += vo.getTotalProdutos();
         }
 
+        mViewModel.totalProdutos(FormattingUtils.formatAsQuantidade(totalProdutos));
+
         mFormaPagamentoRepository
                 .list()
                 .observeOn(AndroidSchedulers.mainThread())

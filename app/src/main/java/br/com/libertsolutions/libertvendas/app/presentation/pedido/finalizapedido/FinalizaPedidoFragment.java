@@ -60,7 +60,9 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
         super.onViewCreated(view, savedInstanceState);
         mFinalizaPedidoViewModel = new FinalizaPedidoViewModel(getContext(),
                 ButterKnife.findById(view, R.id.edit_text_data_emissao),
-                ButterKnife.findById(view, R.id.spinner_forma_pagamento));
+                ButterKnife.findById(view, R.id.spinner_forma_pagamento),
+                ButterKnife.findById(view, R.id.edit_text_total_produtos)
+        );
         mPresenter.initializeView(mFinalizaPedidoViewModel,
                 new ProdutosSelecionadosArgumentExtractor(getArguments()));
     }

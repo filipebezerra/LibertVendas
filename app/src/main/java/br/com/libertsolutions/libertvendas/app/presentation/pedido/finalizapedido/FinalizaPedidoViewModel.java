@@ -17,11 +17,14 @@ class FinalizaPedidoViewModel {
     private FormaPagamentoAdapter mFormaPagamentoAdapter;
     private final MaterialSpinner mSpinnerFormaPagamento;
 
+    private final EditText mEditTextTotalProdutos;
+
     FinalizaPedidoViewModel(Context pContext, EditText pEditTextDataEmissao,
-            MaterialSpinner pSpinnerFormaPagamento) {
+            MaterialSpinner pSpinnerFormaPagamento, EditText pEditTextTotalProdutos) {
         mContext = pContext;
         mEditTextDataEmissao = pEditTextDataEmissao;
         mSpinnerFormaPagamento = pSpinnerFormaPagamento;
+        mEditTextTotalProdutos = pEditTextTotalProdutos;
     }
 
     FinalizaPedidoViewModel dataEmissao(String pDataEmissao) {
@@ -32,6 +35,11 @@ class FinalizaPedidoViewModel {
     FinalizaPedidoViewModel formasPagamento(List<FormaPagamento> pFormaPagamentoList) {
         mFormaPagamentoAdapter = new FormaPagamentoAdapter(mContext, pFormaPagamentoList);
         mSpinnerFormaPagamento.setAdapter(mFormaPagamentoAdapter);
+        return this;
+    }
+
+    FinalizaPedidoViewModel totalProdutos(String pTotalProdutos) {
+        mEditTextTotalProdutos.setText(pTotalProdutos);
         return this;
     }
 }
