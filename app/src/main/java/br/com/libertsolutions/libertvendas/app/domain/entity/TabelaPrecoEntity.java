@@ -10,6 +10,8 @@ import io.realm.annotations.Required;
  * @author Filipe Bezerra
  */
 @RealmClass public class TabelaPrecoEntity implements RealmModel {
+    public static final String ID_FIELD_NAME = "idTabela";
+
     @PrimaryKey private Integer idTabela;
 
     private String codigo;

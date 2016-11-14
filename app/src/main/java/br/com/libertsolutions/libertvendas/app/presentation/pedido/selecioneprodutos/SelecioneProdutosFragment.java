@@ -40,7 +40,9 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
         super.onCreate(savedInstanceState);
         mPresenter = new SelecioneProdutosPresenter(this,
                 Injection.provideProdutoRepository(getContext()),
-                Injection.provideSelecioneProdutosResourcesRepository(getContext()));
+                Injection.provideSelecioneProdutosResourcesRepository(getContext()),
+                Injection.provideVendedorRepository(getContext()),
+                Injection.provideTabelaPrecoRepository(getContext()));
         setHasOptionsMenu(true);
     }
 

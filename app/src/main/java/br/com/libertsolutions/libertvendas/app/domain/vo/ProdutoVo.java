@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.domain.vo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemTabela;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 
 /**
@@ -10,16 +11,20 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 public class ProdutoVo implements Parcelable {
     private final Produto produto;
 
+    private final ItemTabela itemTabela;
+
     private double totalProdutos = 0;
 
     private float quantidadeAdicionada = 0;
 
-    public ProdutoVo(Produto pProduto) {
+    public ProdutoVo(Produto pProduto, ItemTabela pItemTabela) {
         produto = pProduto;
+        itemTabela = pItemTabela;
     }
 
     protected ProdutoVo(Parcel in) {
         produto = in.readParcelable(Produto.class.getClassLoader());
+        itemTabela = in.readParcelable(ItemTabela.class.getClassLoader());
         totalProdutos = in.readDouble();
         quantidadeAdicionada = in.readFloat();
     }
@@ -39,7 +44,7 @@ public class ProdutoVo implements Parcelable {
     }
 
     public double getPreco() {
-        return produto.getPrecoVenda();
+        return itemTabela.getPrecoVenda();
     }
 
     public double getTotalProdutos() {
@@ -74,7 +79,7 @@ public class ProdutoVo implements Parcelable {
     }
 
     private void calcularTotalProdutos() {
-        totalProdutos = quantidadeAdicionada * produto.getPrecoVenda();
+        totalProdutos = quantidadeAdicionada * itemTabela.getPrecoVenda();
     }
 
     @Override public int describeContents() {
@@ -83,6 +88,7 @@ public class ProdutoVo implements Parcelable {
 
     @Override public void writeToParcel(Parcel pOut, int pFlags) {
         pOut.writeParcelable(produto, pFlags);
+        pOut.writeParcelable(itemTabela, pFlags);
         pOut.writeDouble(totalProdutos);
         pOut.writeFloat(quantidadeAdicionada);
     }

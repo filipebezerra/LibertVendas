@@ -9,6 +9,8 @@ import io.realm.annotations.Required;
  * @author Filipe Bezerra
  */
 @RealmClass public class VendedorEntity implements RealmModel {
+    public static final String ID_FIELD_NAME = "idVendedor";
+
     @PrimaryKey private Integer idVendedor;
 
     private String codigo;

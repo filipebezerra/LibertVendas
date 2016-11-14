@@ -10,6 +10,8 @@ import io.realm.annotations.Required;
  */
 
 @RealmClass public class ProdutoEntity implements RealmModel {
+    public static final String ID_FIELD_NAME = "idProduto";
+
     @PrimaryKey private Integer idProduto;
 
     private String codigo;
