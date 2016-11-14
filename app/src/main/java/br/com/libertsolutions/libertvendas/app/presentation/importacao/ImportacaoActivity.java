@@ -33,6 +33,7 @@ public class ImportacaoActivity extends LibertVendasActivity
         super.onCreate(savedInstanceState);
         setAsSubActivity();
         mPresenter = new ImportacaoPresenter(this,
+                Injection.provideImportacaoRepository(this),
                 Injection.provideFormaPagamentoService(this),
                 Injection.provideFormaPagamentoRepository(this),
                 Injection.provideCidadeService(this),

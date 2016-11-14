@@ -3,6 +3,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.importacao;
 import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeService;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteService;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
+import br.com.libertsolutions.libertvendas.app.data.importacao.ImportacaoRepository;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.tabelaspreco.TabelaPrecoService;
@@ -30,6 +31,8 @@ import timber.log.Timber;
 class ImportacaoPresenter implements ImportacaoContract.Presenter {
     private final ImportacaoContract.View mView;
 
+    private final ImportacaoRepository mImportacaoRepository;
+
     private final FormaPagamentoService mFormaPagamentoService;
 
     private final Repository<FormaPagamento> mFormaPagamentoRepository;
@@ -55,18 +58,16 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
     private Throwable mErrorMakingNetworkCall;
 
     ImportacaoPresenter(
-            ImportacaoContract.View pView,
+            ImportacaoContract.View pView, ImportacaoRepository pImportacaoRepository,
             FormaPagamentoService pFormaPagamentoService,
             Repository<FormaPagamento> pFormaPagamentoRepository,
-            CidadeService pCidadeService,
-            Repository<Cidade> pCidadeRepository,
-            ProdutoService pProdutoService,
-            Repository<Produto> pProdutoRepository,
-            ClienteService pClienteService,
-            Repository<Cliente> pClienteRepository,
+            CidadeService pCidadeService, Repository<Cidade> pCidadeRepository,
+            ProdutoService pProdutoService, Repository<Produto> pProdutoRepository,
+            ClienteService pClienteService, Repository<Cliente> pClienteRepository,
             TabelaPrecoService pTabelaPrecoService,
             Repository<TabelaPreco> pTabelaPrecoRepository) {
         mView = pView;
+        mImportacaoRepository = pImportacaoRepository;
         mFormaPagamentoService = pFormaPagamentoService;
         mFormaPagamentoRepository = pFormaPagamentoRepository;
         mCidadeService = pCidadeService;
@@ -80,6 +81,11 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
     }
 
     @Override public void startSync(boolean deviceConnected) {
+        if (mImportacaoRepository.isImportacaoInicialFeita()) {
+            mView.navigateToMainActivity();
+            return;
+        }
+
         if (deviceConnected) {
             mView.showLoading();
             requestImportacao();
@@ -123,11 +129,16 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
         Observable
                 .merge(
-                        getFormasPagamento, getCidades, getProdutos, getClientes, getTabelasPreco)
+                        getFormasPagamento,
+                        getCidades,
+                        getProdutos,
+                        getClientes,
+                        getTabelasPreco)
                 .observeOn(AndroidSchedulers.mainThread())
                 .lastOrDefault(Collections.emptyList())
                 .subscribe(
                         pResult -> {
+                            mImportacaoRepository.setImportacaoInicialComoFeita();
                             mView.hideLoadingWithSuccess();
                         },
 
@@ -148,8 +159,7 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
     }
 
     @Override public boolean isSyncDone() {
-        return true;
-        //return mDataSyncRepository.isInitialDataSynced();
+        return mImportacaoRepository.isImportacaoInicialFeita();
     }
 
     @Override public void handleCancelOnSyncError() {
