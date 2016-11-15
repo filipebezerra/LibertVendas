@@ -50,11 +50,11 @@ public class FeedbackHelper {
             return new SnackbarAction(actionText, actionListener);
         }
 
-        public String actionText() {
+        String actionText() {
             return mAction.first;
         }
 
-        public OnClickListener actionListener() {
+        OnClickListener actionListener() {
             return mAction.second;
         }
     }
@@ -139,24 +139,35 @@ public class FeedbackHelper {
 
     public static void showRetryDialogMessage(
             @NonNull Context context, @StringRes int messageRes,
-            @Nullable SingleButtonCallback cancelCallback,
-            @Nullable SingleButtonCallback retryCallback) {
+            @Nullable SingleButtonCallback retryCallback,
+            @Nullable SingleButtonCallback cancelCallback) {
         makeDialog(context, NO_DIALOG_TITLE, stringResource(context, messageRes),
                 DialogCallback.withoutCallback(),
                 DialogCallback.cancelCallback(cancelCallback),
-                DialogCallback.retryCallback(retryCallback))
-                .show();
+                DialogCallback.retryCallback(retryCallback)
+        ).show();
+    }
+
+    public static void showRetryDialogMessage(
+            @NonNull Context context, @NonNull String message,
+            @Nullable SingleButtonCallback retryCallback,
+            @Nullable SingleButtonCallback cancelCallback) {
+        makeDialog(context, NO_DIALOG_TITLE, message,
+                DialogCallback.withoutCallback(),
+                DialogCallback.cancelCallback(cancelCallback),
+                DialogCallback.retryCallback(retryCallback)
+        ).show();
     }
 
     public static void showOfflineMessage(@NonNull Context context,
-            @Nullable SingleButtonCallback cancelCallback,
-            @Nullable SingleButtonCallback retryCallback) {
+            @Nullable SingleButtonCallback retryCallback,
+            @Nullable SingleButtonCallback cancelCallback) {
         makeDialog(context, R.string.offline_message_title,
                 stringResource(context, R.string.offline_message),
                 DialogCallback.withoutCallback(),
                 DialogCallback.cancelCallback(cancelCallback),
-                DialogCallback.retryCallback(retryCallback))
-                .show();
+                DialogCallback.retryCallback(retryCallback)
+        ).show();
     }
 
     public static void showQuestionDialog(
@@ -166,24 +177,24 @@ public class FeedbackHelper {
         makeDialog(context, NO_DIALOG_TITLE, stringResource(context, questionRes),
                 DialogCallback.yesCallback(yesCallback),
                 DialogCallback.noCallback(noCallback),
-                DialogCallback.withoutCallback())
-                .show();
+                DialogCallback.withoutCallback()
+        ).show();
     }
 
     public static void showMessageDialog(@NonNull Context context, @StringRes int questionRes) {
         makeDialog(context, NO_DIALOG_TITLE, stringResource(context, questionRes),
                 DialogCallback.withoutCallback(),
                 DialogCallback.withoutCallback(),
-                DialogCallback.withoutCallback())
-                .show();
+                DialogCallback.withoutCallback()
+        ).show();
     }
 
     public static void showMessageDialog(@NonNull Context context, @NonNull String questionRes) {
         makeDialog(context, NO_DIALOG_TITLE, questionRes,
                 DialogCallback.withoutCallback(),
                 DialogCallback.withoutCallback(),
-                DialogCallback.withoutCallback())
-                .show();
+                DialogCallback.withoutCallback()
+        ).show();
     }
 
     private static class DialogCallback {
@@ -193,23 +204,23 @@ public class FeedbackHelper {
             mCallback = Pair.create(buttonText, buttonCallback);
         }
 
-        public static DialogCallback withoutCallback() {
+        static DialogCallback withoutCallback() {
             return NO_DIALOG_CALLBACK;
         }
 
-        public static DialogCallback cancelCallback(SingleButtonCallback cancelCallback) {
+        static DialogCallback cancelCallback(SingleButtonCallback cancelCallback) {
             return from(android.R.string.cancel, cancelCallback);
         }
 
-        public static DialogCallback retryCallback(SingleButtonCallback retryCallback) {
+        static DialogCallback retryCallback(SingleButtonCallback retryCallback) {
             return from(R.string.retry, retryCallback);
         }
 
-        public static DialogCallback yesCallback(SingleButtonCallback yesCallback) {
+        static DialogCallback yesCallback(SingleButtonCallback yesCallback) {
             return from(android.R.string.yes, yesCallback);
         }
 
-        public static DialogCallback noCallback(SingleButtonCallback noCallback) {
+        static DialogCallback noCallback(SingleButtonCallback noCallback) {
             return from(android.R.string.no, noCallback);
         }
 
@@ -218,12 +229,11 @@ public class FeedbackHelper {
             return new DialogCallback(buttonText, buttonCallback);
         }
 
-        @StringRes
-        public int buttonText() {
+        @StringRes int buttonText() {
             return mCallback.first;
         }
 
-        public SingleButtonCallback buttonCallback() {
+        SingleButtonCallback buttonCallback() {
             return mCallback.second;
         }
     }
