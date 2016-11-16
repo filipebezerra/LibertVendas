@@ -31,6 +31,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ClienteResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
+import br.com.libertsolutions.libertvendas.app.presentation.resources.ImportacaoResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ResourcesRepositories;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.SelecioneProdutosResourcesRepository;
 
@@ -40,6 +41,11 @@ import br.com.libertsolutions.libertvendas.app.presentation.resources.SelecioneP
 public class Injection {
     public static ImportacaoRepository provideImportacaoRepository(@NonNull Context pContext) {
         return ImportacaoRepositories.getImportacaoRepository(pContext);
+    }
+
+    public static ImportacaoResourcesRepository provideImportacaoResourcesRepository(
+            @NonNull Context pContext) {
+        return ResourcesRepositories.getImportacaoResourcesRepository(pContext);
     }
 
     public static SettingsRepository provideSettingsRepository(@NonNull Context pContext) {

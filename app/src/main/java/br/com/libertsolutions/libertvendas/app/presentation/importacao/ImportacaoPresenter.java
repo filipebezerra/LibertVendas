@@ -18,6 +18,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
+import br.com.libertsolutions.libertvendas.app.presentation.resources.ImportacaoResourcesRepository;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,8 @@ import timber.log.Timber;
  * @author Filipe Bezerra
  */
 class ImportacaoPresenter implements ImportacaoContract.Presenter {
+    private static final int PRIMEIRO_ITEM = 0;
+
     private final ImportacaoContract.View mView;
 
     private final ImportacaoRepository mImportacaoRepository;
@@ -54,6 +57,8 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
     private final Repository<TabelaPreco> mTabelaPrecoRepository;
 
+    private final ImportacaoResourcesRepository mResourcesRepository;
+
     private boolean mIsDoingInitialDataSync = false;
 
     private Vendedor mUsuarioLogado;
@@ -68,7 +73,8 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
             ProdutoService pProdutoService, Repository<Produto> pProdutoRepository,
             ClienteService pClienteService, Repository<Cliente> pClienteRepository,
             TabelaPrecoService pTabelaPrecoService,
-            Repository<TabelaPreco> pTabelaPrecoRepository) {
+            Repository<TabelaPreco> pTabelaPrecoRepository,
+            ImportacaoResourcesRepository pResourcesRepository) {
         mView = pView;
         mImportacaoRepository = pImportacaoRepository;
         mFormaPagamentoService = pFormaPagamentoService;
@@ -81,6 +87,7 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         mClienteRepository = pClienteRepository;
         mTabelaPrecoService = pTabelaPrecoService;
         mTabelaPrecoRepository = pTabelaPrecoRepository;
+        mResourcesRepository = pResourcesRepository;
 
         if (mImportacaoRepository.isImportacaoInicialFeita()) {
             mView.navigateToMainActivity();
@@ -92,8 +99,8 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         mUsuarioLogado = pVendedor;
     }
 
-    @Override public void startSync(boolean deviceConnected) {
-        if (deviceConnected) {
+    @Override public void startSync(boolean pDeviceConnected) {
+        if (pDeviceConnected) {
             mView.showLoading();
             requestImportacao();
         } else {
@@ -104,8 +111,19 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
     private void requestImportacao() {
         mIsDoingInitialDataSync = true;
 
+        if (mUsuarioLogado.getEmpresas().isEmpty()) {
+            mView.showMessageDialog(
+                    mResourcesRepository.obtainStringMessageVendedorSemEmpresasVinculadas());
+            return;
+        }
+
+        String cnpjEmpresa = mUsuarioLogado
+                .getEmpresas()
+                .get(PRIMEIRO_ITEM)
+                .getCnpj();
+
         Observable<List<FormaPagamento>> getFormasPagamento = mFormaPagamentoService
-                .get(mUsuarioLogado.getCpfCnpj())
+                .get(cnpjEmpresa)
                 .filter(list -> !list.isEmpty())
                 .flatMap(data -> mFormaPagamentoRepository
                         .saveAll(FormaPagamentoFactory.createListFormaPagamento(data)));
@@ -117,19 +135,19 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
                         .saveAll(CidadeFactory.createListCidade(data)));
 
         Observable<List<Produto>> getProdutos = mProdutoService
-                .get(mUsuarioLogado.getCpfCnpj())
+                .get(cnpjEmpresa)
                 .filter(list -> !list.isEmpty())
                 .flatMap(data -> mProdutoRepository
                         .saveAll(ProdutoFactories.createListProduto(data)));
 
         Observable<List<Cliente>> getClientes = mClienteService
-                .get(mUsuarioLogado.getCpfCnpj())
+                .get(cnpjEmpresa)
                 .filter(list -> !list.isEmpty())
                 .flatMap(data -> mClienteRepository
                         .saveAll(ClienteFactories.createListCliente(data)));
 
         Observable<List<TabelaPreco>> getTabelasPreco = mTabelaPrecoService
-                .get(mUsuarioLogado.getCpfCnpj())
+                .get(cnpjEmpresa)
                 .filter(list -> !list.isEmpty())
                 .flatMap(data -> mTabelaPrecoRepository
                         .saveAll(TabelaPrecoFactory.createListTabelaPreco(data)));
@@ -173,8 +191,8 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         mView.finishActivity();
     }
 
-    @Override public void handleAnimationEnd(boolean success) {
-        if (success) {
+    @Override public void handleAnimationEnd(boolean pSuccess) {
+        if (pSuccess) {
             mView.showSuccessMessage();
             mView.invalidateMenu();
         } else {

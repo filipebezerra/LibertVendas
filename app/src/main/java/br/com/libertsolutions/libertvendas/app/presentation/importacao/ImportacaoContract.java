@@ -15,7 +15,7 @@ interface ImportacaoContract {
 
         void hideLoadingWithFail();
 
-        void showErrorMessage(Throwable error);
+        void showMessageDialog(String pMessage);
 
         void showDeviceNotConnectedError();
 
@@ -24,8 +24,6 @@ interface ImportacaoContract {
         void showNetworkError();
 
         void showUnknownError();
-
-        void showUnavailableServerError();
 
         void invalidateMenu();
 
@@ -38,7 +36,7 @@ interface ImportacaoContract {
     interface Presenter {
         void handleUsuarioLogadoEvent(Vendedor pVendedor);
 
-        void startSync(boolean deviceConnected);
+        void startSync(boolean pDeviceConnected);
 
         void handleClickDoneMenuItem();
 
@@ -46,6 +44,6 @@ interface ImportacaoContract {
 
         void handleCancelOnSyncError();
 
-        void handleAnimationEnd(boolean success);
+        void handleAnimationEnd(boolean pSuccess);
     }
 }

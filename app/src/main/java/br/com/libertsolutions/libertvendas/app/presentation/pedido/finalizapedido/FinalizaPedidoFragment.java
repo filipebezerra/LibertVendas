@@ -11,6 +11,7 @@ import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
+import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
 import butterknife.ButterKnife;
@@ -22,7 +23,8 @@ import java.util.Calendar;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
@@ -123,10 +125,15 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true) public void onClienteSelecionadoEvent(
+    @Subscribe(threadMode = MAIN, sticky = true) public void onClienteSelecionadoEvent(
             ClienteSelecionadoEvent pEvent) {
         mPresenter.handleClienteSelecionadoEvent(pEvent.getCliente());
         EventBus.getDefault().removeStickyEvent(pEvent);
+    }
+
+    @Subscribe(threadMode = MAIN, sticky = true) public void onUsuarioLogadoEvent(
+            UsuarioLogadoEvent pEvent) {
+        mPresenter.handleUsuarioLogadoEvent(pEvent.getVendedor());
     }
 
     @Override public void resultNovoPedido(Pedido pPedido) {

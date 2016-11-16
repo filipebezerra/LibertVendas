@@ -15,6 +15,8 @@ public class ResourcesRepositories {
 
     private static SelecioneProdutosResourcesRepository sSelecioneProdutosResourcesRepository = null;
 
+    private static ImportacaoResourcesRepository sImportacaoResourcesRepository = null;
+
     public synchronized static ClienteResourcesRepository getClienteResources(
             @NonNull Context context) {
         if (sClienteResources == null) {
@@ -40,4 +42,12 @@ public class ResourcesRepositories {
         return sSelecioneProdutosResourcesRepository;
     }
 
+    public synchronized static ImportacaoResourcesRepository getImportacaoResourcesRepository(
+            @NonNull Context pContext) {
+        if (sImportacaoResourcesRepository == null) {
+            sImportacaoResourcesRepository =
+                    new ImportacaoResourcesRepositoryImpl(pContext.getResources());
+        }
+        return sImportacaoResourcesRepository;
+    }
 }

@@ -1,13 +1,22 @@
 package br.com.libertsolutions.libertvendas.app.data.vendedor;
 
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
+import br.com.libertsolutions.libertvendas.app.domain.entity.EmpresaEntity;
 import br.com.libertsolutions.libertvendas.app.domain.entity.VendedorEntity;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
+import java.util.List;
 
 /**
  * @author Filipe Bezerra
  */
 class VendedorMapper extends Mapper<Vendedor,VendedorEntity> {
+    private final Mapper<Empresa, EmpresaEntity> mEmpresaEntityMapper;
+
+    public VendedorMapper(Mapper<Empresa, EmpresaEntity> pEmpresaEntityMapper) {
+        mEmpresaEntityMapper = pEmpresaEntityMapper;
+    }
+
     @Override
     public VendedorEntity toEntity(Vendedor object) {
         return new VendedorEntity()
@@ -19,7 +28,8 @@ class VendedorMapper extends Mapper<Vendedor,VendedorEntity> {
                 .setEmail(object.getEmail())
                 .setAtivo(object.isAtivo())
                 .setIdTabela(object.getIdTabela())
-                .setUltimaAlteracao(object.getUltimaAlteracao());
+                .setUltimaAlteracao(object.getUltimaAlteracao())
+                .setEmpresas(mEmpresaEntityMapper.toEntityList(object.getEmpresas()));
     }
 
     @Override
@@ -33,9 +43,11 @@ class VendedorMapper extends Mapper<Vendedor,VendedorEntity> {
         Boolean ativo = entity.isAtivo();
         Integer idTabela = entity.getIdTabela();
         String ultimaAlteracao = entity.getUltimaAlteracao();
+        List<Empresa> empresas = mEmpresaEntityMapper.toViewObjectList(entity.getEmpresas());
 
         return new Vendedor(
-                idVendedor, codigo, nome, cpfCnpj, telefone, email, ativo, idTabela, ultimaAlteracao
+                idVendedor, codigo, nome, cpfCnpj, telefone, email, ativo, idTabela,
+                ultimaAlteracao, empresas
         );
     }
 }

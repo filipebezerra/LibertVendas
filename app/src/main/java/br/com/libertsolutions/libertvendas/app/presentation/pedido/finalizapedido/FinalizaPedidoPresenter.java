@@ -5,6 +5,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
     private List<ProdutoVo> mProdutosSelecionados;
 
     private Cliente mClienteSelecionado;
+
+    private Vendedor mUsuarioLogado;
 
     FinalizaPedidoPresenter(
             FinalizaPedidoContract.View pView,
@@ -113,6 +116,10 @@ class FinalizaPedidoPresenter implements FinalizaPedidoContract.Presenter {
     @Override public void handleClienteSelecionadoEvent(Cliente pCliente) {
         mClienteSelecionado = pCliente;
         mViewModel.cliente(mClienteSelecionado.getNome());
+    }
+
+    @Override public void handleUsuarioLogadoEvent(Vendedor pVendedor) {
+        mUsuarioLogado = pVendedor;
     }
 
     private String formatDataEmissao() {

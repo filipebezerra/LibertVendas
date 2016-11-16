@@ -140,8 +140,8 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
 
     @Override public void showDeviceNotConnectedError() {
         FeedbackHelper.showOfflineMessage(this,
-                (dialog, which) -> mPresenter.finalizeView(),
-                (dialog, which) -> requestLoginToPresenter());
+                (dialog, which) -> requestLoginToPresenter(), (dialog, which) -> mPresenter.finalizeView()
+        );
     }
 
     private void requestLoginToPresenter() {

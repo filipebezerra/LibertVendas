@@ -151,4 +151,5 @@
     <string name="importacao">Importação</string>
     <string name="message_importacao_completada">Importação completada com sucesso!</string>
     <string name="error_importando_dados">Falha ao tentar importar os dados do servidor!</string>
+    <string name="message_vendedor_sem_empresas_vinculadas">Vendedor sem empresas vinculadas!</string>
 </resources>

@@ -1,5 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.domain.pojo;
 
+import java.util.List;
+
 /**
  * @author Filipe Bezerra
  */
@@ -22,10 +24,12 @@ public class Vendedor {
 
     private final String ultimaAlteracao;
 
+    private final List<Empresa> empresas;
+
     public Vendedor(
             int pIdVendedor, String pCodigo, String pNome, String pCpfCnpj,
             String pTelefone, String pEmail, boolean pAtivo, int pIdTabela,
-            String pUltimaAlteracao) {
+            String pUltimaAlteracao, List<Empresa> pEmpresas) {
         idVendedor = pIdVendedor;
         codigo = pCodigo;
         nome = pNome;
@@ -35,6 +39,7 @@ public class Vendedor {
         ativo = pAtivo;
         idTabela = pIdTabela;
         ultimaAlteracao = pUltimaAlteracao;
+        empresas = pEmpresas;
     }
 
     public int getIdVendedor() {
@@ -71,6 +76,10 @@ public class Vendedor {
 
     public String getUltimaAlteracao() {
         return ultimaAlteracao;
+    }
+
+    public List<Empresa> getEmpresas() {
+        return empresas;
     }
 
     @SuppressWarnings("StringBufferReplaceableByString") @Override public String toString() {

@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.domain.entity;
 
+import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
@@ -28,6 +29,8 @@ import io.realm.annotations.Required;
     private Integer idTabela;
 
     private String ultimaAlteracao;
+
+    private RealmList<EmpresaEntity> empresas;
 
     public Integer getIdVendedor() {
         return idVendedor;
@@ -107,6 +110,15 @@ import io.realm.annotations.Required;
 
     public VendedorEntity setUltimaAlteracao(String pUltimaAlteracao) {
         ultimaAlteracao = pUltimaAlteracao;
+        return this;
+    }
+
+    public RealmList<EmpresaEntity> getEmpresas() {
+        return empresas;
+    }
+
+    public VendedorEntity setEmpresas(RealmList<EmpresaEntity> pEmpresas) {
+        empresas = pEmpresas;
         return this;
     }
 }

@@ -14,11 +14,9 @@ import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import static br.com.libertsolutions.libertvendas.app.R.string.error_importando_dados;
 import static br.com.libertsolutions.libertvendas.app.R.string.importacao;
 import static br.com.libertsolutions.libertvendas.app.R.string.message_importacao_completada;
 import static br.com.libertsolutions.libertvendas.app.R.string.message_network_error;
-import static br.com.libertsolutions.libertvendas.app.R.string.message_unavailable_server;
 import static br.com.libertsolutions.libertvendas.app.R.string.message_unknown_error;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils.isDeviceConnected;
 import static org.greenrobot.eventbus.ThreadMode.MAIN;
@@ -45,7 +43,8 @@ public class ImportacaoActivity extends LibertVendasActivity
                 Injection.provideClienteService(this),
                 Injection.provideClienteRepository(this),
                 Injection.provideTabelaPrecoService(this),
-                Injection.provideTabelaPrecoRepository(this));
+                Injection.provideTabelaPrecoRepository(this),
+                Injection.provideImportacaoResourcesRepository(this));
         super.onCreate(savedInstanceState);
         setAsSubActivity();
         mLoadingView.setAnimationListener(this);
@@ -112,40 +111,39 @@ public class ImportacaoActivity extends LibertVendasActivity
         mLoadingView.stopFailure();
     }
 
-    @Override public void showErrorMessage(Throwable error) {
-        FeedbackHelper.showRetryDialogMessage(this, error_importando_dados,
-                (dialog, which) -> mPresenter.handleCancelOnSyncError(),
-                (dialog, which) -> requestSyncToPresenter());
-    }
-
-    private void requestSyncToPresenter() {
-        mPresenter.startSync(isDeviceConnected(this));
+    @Override public void showMessageDialog(String pMessage) {
+        FeedbackHelper.showMessageDialog(this, pMessage);
     }
 
     @Override public void showDeviceNotConnectedError() {
         FeedbackHelper.showOfflineMessage(this,
-                (dialog, which) -> finishActivity(),
-                (dialog, which) -> requestSyncToPresenter());
+                (dialog, which) -> requestSyncToPresenter(),
+                (dialog, which) -> mPresenter.handleCancelOnSyncError());
     }
 
     @Override public void showServerError() {
-        FeedbackHelper.showMessageDialog(this,
-                getString(R.string.message_server_error, getString(importacao)));
+        FeedbackHelper.showRetryDialogMessage(this,
+                getString(R.string.message_server_error, getString(importacao)),
+                (dialog, which) -> requestSyncToPresenter(),
+                (dialog, which) -> mPresenter.handleCancelOnSyncError());
     }
 
     @Override public void showNetworkError() {
-        FeedbackHelper.showMessageDialog(this,
-                getString(message_network_error, getString(importacao)));
+        FeedbackHelper.showRetryDialogMessage(this,
+                getString(message_network_error, getString(importacao)),
+                (dialog, which) -> requestSyncToPresenter(),
+                (dialog, which) -> mPresenter.handleCancelOnSyncError());
     }
 
     @Override public void showUnknownError() {
-        FeedbackHelper.showMessageDialog(this,
-                getString(message_unknown_error, getString(importacao)));
+        FeedbackHelper.showRetryDialogMessage(this,
+                getString(message_unknown_error, getString(importacao)),
+                (dialog, which) -> requestSyncToPresenter(),
+                (dialog, which) -> mPresenter.handleCancelOnSyncError());
     }
 
-    @Override public void showUnavailableServerError() {
-        FeedbackHelper.showMessageDialog(this,
-                getString(message_unavailable_server, getString(importacao)));
+    private void requestSyncToPresenter() {
+        mPresenter.startSync(isDeviceConnected(this));
     }
 
     @Override public void invalidateMenu() {
