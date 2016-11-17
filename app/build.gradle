@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply plugin: 'android-apt'
 apply plugin: 'me.tatarka.retrolambda'
