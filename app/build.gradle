@@ -46,6 +46,7 @@ android {
 repositories {
     maven { url "https://jitpack.io" }
     maven { url "http://dl.bintray.com/jlmd/maven" }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
@@ -95,6 +96,11 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
     compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
     compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
+
+    // Crash reporting library
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
 }
 
 retrolambda {
