@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Beta 5,1 - Versão 0.5.1 *(17/11/2016)*
+--------------------------------------
+* **CORREÇÃO** Corrigido crash do app por falta de plugin da integração com Crashlytics.
+
+Beta 5 - Versão 0.5.0 *(17/11/2016)*
+--------------------------------------
+* **MELHORIA** Configuração somente na primeira execução ( #18),
+* **MELHORIA** Login do vendedor somente na primeira execução ( #17),
+* **MELHORIA** Importação inicial somente na primeira execução ( #16),
+* **NOVO** Inclusão de pedidos sem sincronização com servidor ( #9 ),
+
 Beta 4,1 - Versão 0.4.1 *(07/11/2016)*
 --------------------------------------
 * **CORREÇÃO** Corrigido cadastro de cliente com vínculo à estado/cidade,
