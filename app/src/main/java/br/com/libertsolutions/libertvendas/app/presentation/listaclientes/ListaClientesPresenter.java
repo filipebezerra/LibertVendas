@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import timber.log.Timber;
 
 /**
  * @author Filipe Bezerra
@@ -38,7 +40,22 @@ class ListaClientesPresenter implements ListaClientesContract.Presenter {
                 .concat(clientesFromMemoryCache, clientesFromDiskCache)
                 .firstOrDefault(Collections.emptyList())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mView::showListaClientes);
+                .subscribe(new Subscriber<List<Cliente>>() {
+                    @Override public void onStart() {
+                        mView.showLoading();
+                    }
+
+                    @Override public void onError(Throwable e) {
+                        Timber.e(e);
+                        mView.hideLoading();
+                    }
+
+                    @Override public void onNext(List<Cliente> pClienteList) {
+                        mView.showListaClientes(mClienteList);
+                    }
+
+                    @Override public void onCompleted() {}
+                });
     }
 
     private void saveClientesToMemoryCache(List<Cliente> pClienteList) {

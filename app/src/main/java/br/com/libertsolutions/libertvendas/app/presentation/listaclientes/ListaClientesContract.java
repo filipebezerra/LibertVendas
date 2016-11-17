@@ -10,6 +10,10 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 
 interface ListaClientesContract {
     interface View {
+        void showLoading();
+
+        void hideLoading();
+
         void showListaClientes(List<Cliente> pClienteList);
 
         void updateListaClientes(int pPosition);

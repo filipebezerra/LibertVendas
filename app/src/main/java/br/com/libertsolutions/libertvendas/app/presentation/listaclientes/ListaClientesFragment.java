@@ -10,17 +10,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-
-import br.com.libertsolutions.libertvendas.app.presentation.home.NewClienteCadastradoEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemClickListener;
-import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemTouchListener;
-import java.util.List;
-
+import android.view.ViewTreeObserver;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.home.NewClienteCadastradoEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemClickListener;
+import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemTouchListener;
 import butterknife.BindView;
+import com.afollestad.materialdialogs.MaterialDialog;
+import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -36,6 +36,8 @@ public class ListaClientesFragment extends LibertVendasFragment
     private ClienteAdapter mClienteAdapter;
 
     private ListaClientesContract.Presenter mPresenter;
+
+    private MaterialDialog mProgressDialog;
 
     public static ListaClientesFragment newInstance() {
         return new ListaClientesFragment();
@@ -84,11 +86,37 @@ public class ListaClientesFragment extends LibertVendasFragment
         });
     }
 
+    @Override public void showLoading() {
+        mProgressDialog = new MaterialDialog.Builder(getContext())
+                .content(getString(R.string.loading_clientes))
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
+    }
+
+    @Override public void hideLoading() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
     @Override public void showListaClientes(List<Cliente> pClienteList) {
         mRecyclerViewClientes.setAdapter(
                 mClienteAdapter = new ClienteAdapter(getContext(), pClienteList));
         mRecyclerViewClientes.addOnItemTouchListener(
                 new OnItemTouchListener(getContext(), mRecyclerViewClientes, this));
+        mRecyclerViewClientes
+                .getViewTreeObserver()
+                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mRecyclerViewClientes
+                                .getViewTreeObserver()
+                                .removeOnGlobalLayoutListener(this);
+                        hideLoading();
+                    }
+                });
+
     }
 
     @Override
