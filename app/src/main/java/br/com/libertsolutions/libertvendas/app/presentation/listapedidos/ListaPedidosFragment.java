@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
@@ -69,6 +70,17 @@ public class ListaPedidosFragment extends LibertVendasFragment
         mRecyclerViewPedidos.setAdapter(
                 mPedidoAdapter = new PedidoAdapter(
                         getContext(), !mListaPedidosNaoEnviados, pPedidoList));
+        mRecyclerViewPedidos
+                .getViewTreeObserver()
+                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mRecyclerViewPedidos
+                                .getViewTreeObserver()
+                                .removeOnGlobalLayoutListener(this);
+                        hideLoading();
+                    }
+                });
     }
 
     @Override public void showLoading() {
