@@ -16,6 +16,7 @@ import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FeedbackHelper;
 import butterknife.BindView;
+import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.List;
 
 /**
@@ -32,6 +33,8 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
 
     private ProdutoSelecionadoAdapter mProdutoSelecionadoAdapter;
 
+    private MaterialDialog mProgressDialog;
+
     public static SelecioneProdutosFragment newInstance() {
         return new SelecioneProdutosFragment();
     }
@@ -42,7 +45,8 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
                 Injection.provideProdutoRepository(getContext()),
                 Injection.provideSelecioneProdutosResourcesRepository(getContext()),
                 Injection.provideVendedorRepository(getContext()),
-                Injection.provideTabelaPrecoRepository(getContext()));
+                Injection.provideTabelaPrecoRepository(getContext()),
+                Injection.provideSettingsRepository(getContext()));
         setHasOptionsMenu(true);
     }
 
@@ -97,6 +101,20 @@ public class SelecioneProdutosFragment extends LibertVendasFragment
     @Override public void showFeedbackMessage(String pMessage) {
         if (!TextUtils.isEmpty(pMessage)) {
             FeedbackHelper.snackbar(mContainerSelecioneProdutos, pMessage);
+        }
+    }
+
+    @Override public void showLoading() {
+        mProgressDialog = new MaterialDialog.Builder(getContext())
+                .content(getString(R.string.loading_produtos))
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
+    }
+
+    @Override public void hideLoading() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 }

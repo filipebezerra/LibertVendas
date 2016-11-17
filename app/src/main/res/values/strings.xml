@@ -100,6 +100,9 @@
     <string name="text_total_produtos">0,00</string>
     <string name="hint_desconto">Desconto</string>
     <string name="hint_observacao">Observação</string>
+    <string name="message_vendedor_nao_permitido_aplicar_desconto">Vendedor não habilitado para aplicar desconto!</string>
+    <string name="message_valor_desconto_nao_permitido">Valor de desconto acima do permitido!</string>
+    <string name="loading_produtos">Carregando lista de produtos, por favor aguarde…</string>
 
     <!-- Tela Cliente -->
     <string name="title_activity_cliente">Novo cliente</string>

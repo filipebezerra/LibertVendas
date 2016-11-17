@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.pedido.selecionepro
 
 import android.support.v4.util.Pair;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemTabela;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
@@ -32,6 +33,8 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
 
     private final Repository<TabelaPreco> mTabelaPrecoRepository;
 
+    private final SettingsRepository mSettingsRepository;
+
     private List<Pair<Produto, ItemTabela>> mProdutoList = new ArrayList<>();
 
     private List<ProdutoVo> mProdutoVos;
@@ -40,18 +43,19 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
             SelecioneProdutosContract.View pView, Repository<Produto> pProdutoRepository,
             SelecioneProdutosResourcesRepository pResourcesRepository,
             Repository<Vendedor> pVendedorRepository,
-            Repository<TabelaPreco> pTabelaPrecoRepository) {
+            Repository<TabelaPreco> pTabelaPrecoRepository, SettingsRepository pSettingsRepository) {
         mView = pView;
         mProdutoRepository = pProdutoRepository;
         mResourcesRepository = pResourcesRepository;
         mVendedorRepository = pVendedorRepository;
         mTabelaPrecoRepository = pTabelaPrecoRepository;
+        mSettingsRepository = pSettingsRepository;
     }
 
     @Override
     public void loadListaProdutos() {
         mVendedorRepository
-                .findById(3)
+                .findById(mSettingsRepository.getUsuarioLogado())
                 .flatMap(
                         new Func1<Vendedor, Observable<TabelaPreco>>() {
                             @Override
@@ -63,17 +67,21 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         new Subscriber<TabelaPreco>() {
-                            @Override
-                            public void onCompleted() {}
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Timber.e(e);
+                            @Override public void onStart() {
+                                mView.showLoading();
                             }
 
-                            @Override
-                            public void onNext(TabelaPreco pTabelaPreco) {
+                            @Override public void onError(Throwable e) {
+                                Timber.e(e);
+                                mView.hideLoading();
+                            }
+
+                            @Override public void onNext(TabelaPreco pTabelaPreco) {
                                 findProdutos(pTabelaPreco.getItensTabela());
+                            }
+
+                            @Override public void onCompleted() {
+                                mView.hideLoading();
                             }
                         }
                 );
@@ -94,6 +102,7 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
                                 @Override
                                 public void onError(Throwable e) {
                                     Timber.e(e);
+                                    mView.hideLoading();
                                 }
 
                                 @Override

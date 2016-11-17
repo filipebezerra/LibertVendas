@@ -13,6 +13,10 @@ interface SelecioneProdutosContract {
         void updateViewPedidoItem(int position);
 
         void showFeedbackMessage(String pMessage);
+
+        void showLoading();
+
+        void hideLoading();
     }
 
     interface Presenter {
