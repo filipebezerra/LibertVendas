@@ -19,8 +19,8 @@ android {
         applicationId "br.com.libertsolutions.libertvendas.app"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 25050
-        versionName "0.5.0-beta"
+        versionCode 25051
+        versionName "0.5.1-beta"
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "LibertVendas-$versionName")
     }
