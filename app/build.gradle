@@ -4,6 +4,12 @@ apply plugin: 'android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 
+//noinspection GroovyAssignabilityCheck
+if (project.hasProperty("LibertVendas.signing")
+        && new File(project.property("LibertVendas.signing") + ".gradle").exists()) {
+    apply from: project.property("LibertVendas.signing") + ".gradle";
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25"
@@ -12,8 +18,8 @@ android {
         applicationId "br.com.libertsolutions.libertvendas.app"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 25041
-        versionName "0.4.1-beta"
+        versionCode 25050
+        versionName "0.5.0-beta"
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "LibertVendas-$versionName")
     }
