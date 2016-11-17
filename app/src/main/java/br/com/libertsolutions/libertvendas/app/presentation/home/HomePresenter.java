@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.home;
 
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ExtrasExtractor;
 import org.greenrobot.eventbus.EventBus;
 
@@ -34,11 +35,17 @@ class HomePresenter implements HomeContract.Presenter {
         mView.navigateToPedidos();
     }
 
-    @Override
-    public void getClienteFromResult(ExtrasExtractor<Cliente> pClienteExtrasExtractor) {
+    @Override public void getClienteFromResult(ExtrasExtractor<Cliente> pClienteExtrasExtractor) {
         final Cliente cliente = pClienteExtrasExtractor.extractExtra();
         if (cliente != null) {
             EventBus.getDefault().postSticky(NewClienteCadastradoEvent.notifyEvent(cliente));
+        }
+    }
+
+    @Override public void getPedidoFromResult(ExtrasExtractor<Pedido> pPedidoExtrasExtractor) {
+        final Pedido pedido = pPedidoExtrasExtractor.extractExtra();
+        if (pedido != null) {
+            EventBus.getDefault().postSticky(NewPedidoCadastradoEvent.notifyEvent(pedido));
         }
     }
 }

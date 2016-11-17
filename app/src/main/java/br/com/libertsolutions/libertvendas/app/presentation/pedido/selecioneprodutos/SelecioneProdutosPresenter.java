@@ -39,6 +39,8 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
 
     private List<ProdutoVo> mProdutoVos;
 
+    private TabelaPreco mTabelaPrecoPadrao;
+
     SelecioneProdutosPresenter(
             SelecioneProdutosContract.View pView, Repository<Produto> pProdutoRepository,
             SelecioneProdutosResourcesRepository pResourcesRepository,
@@ -77,6 +79,7 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
                             }
 
                             @Override public void onNext(TabelaPreco pTabelaPreco) {
+                                mTabelaPrecoPadrao = pTabelaPreco;
                                 findProdutos(pTabelaPreco.getItensTabela());
                             }
 
@@ -162,6 +165,7 @@ class SelecioneProdutosPresenter implements SelecioneProdutosContract.Presenter 
             return;
         }
 
-        EventBus.getDefault().post(ProdutosSelecionadosEvent.newEvent(produtosSelecionados));
+        EventBus.getDefault().post(
+                ProdutosSelecionadosEvent.newEvent(produtosSelecionados, mTabelaPrecoPadrao));
     }
 }

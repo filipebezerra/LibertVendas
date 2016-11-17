@@ -1,9 +1,12 @@
 package br.com.libertsolutions.libertvendas.app.domain.pojo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author Filipe Bezerra
  */
-public class FormaPagamento {
+public class FormaPagamento implements Parcelable {
     private final int idFormaPagamento;
 
     private final String codigo;
@@ -29,6 +32,26 @@ public class FormaPagamento {
         ultimaAlteracao = pUltimaAlteracao;
         ativo = pAtivo;
     }
+
+    protected FormaPagamento(Parcel in) {
+        idFormaPagamento = in.readInt();
+        codigo = in.readString();
+        descricao = in.readString();
+        percentualDesconto = in.readFloat();
+        idEmpresa = in.readInt();
+        ultimaAlteracao = in.readString();
+        ativo = in.readByte() == 1;
+    }
+
+    public static final Creator<FormaPagamento> CREATOR = new Creator<FormaPagamento>() {
+        @Override public FormaPagamento createFromParcel(Parcel in) {
+            return new FormaPagamento(in);
+        }
+
+        @Override public FormaPagamento[] newArray(int size) {
+            return new FormaPagamento[size];
+        }
+    };
 
     public int getIdFormaPagamento() {
         return idFormaPagamento;
@@ -80,5 +103,19 @@ public class FormaPagamento {
     @Override
     public int hashCode() {
         return getIdFormaPagamento();
+    }
+
+    @Override public int describeContents() {
+        return 0;
+    }
+
+    @Override public void writeToParcel(Parcel pOut, int pFlags) {
+        pOut.writeInt(idFormaPagamento);
+        pOut.writeString(codigo);
+        pOut.writeString(descricao);
+        pOut.writeFloat(percentualDesconto);
+        pOut.writeInt(idEmpresa);
+        pOut.writeString(ultimaAlteracao);
+        pOut.writeByte((byte) (ativo ? 1 : 0));
     }
 }

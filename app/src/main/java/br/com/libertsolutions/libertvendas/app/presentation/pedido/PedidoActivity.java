@@ -1,20 +1,26 @@
 package br.com.libertsolutions.libertvendas.app.presentation.pedido;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.NovoPedidoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.ProdutosSelecionadosEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.SelecioneProdutosFragment;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
  */
 public class PedidoActivity extends LibertVendasActivity {
+
+    public static final String EXTRA_RESULT_NEW_PEDIDO
+            = PedidoActivity.class.getSimpleName() + ".extraResultNewPedido";
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,15 +42,21 @@ public class PedidoActivity extends LibertVendasActivity {
         super.onStop();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onProdutosSelecionadosEvent(
+    @Subscribe(threadMode = MAIN) public void onProdutosSelecionadosEvent(
             ProdutosSelecionadosEvent pEvent) {
-        navigate().toFinalizaPedido(pEvent.getProdutoVoList());
+        navigate().toFinalizaPedido(pEvent.getProdutoVoList(), pEvent.getTabelaPreco());
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onClienteSelecionadoEvent(
+    @Subscribe(threadMode = MAIN) public void onClienteSelecionadoEvent(
             ClienteSelecionadoEvent pEvent) {
         getSupportFragmentManager().popBackStack();
         setTitle(R.string.title_fragment_finaliza_pedido);
+    }
+
+    @Subscribe(threadMode = MAIN) public void onNovoPedidoEvent(NovoPedidoEvent pEvent) {
+        Intent extras = new Intent().putExtra(EXTRA_RESULT_NEW_PEDIDO, pEvent.getPedido());
+        setResult(RESULT_OK, extras);
+        finish();
     }
 
     @Override public void onBackPressed() {

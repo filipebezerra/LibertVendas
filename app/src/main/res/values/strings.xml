@@ -77,6 +77,7 @@
     <string name="example_text_nome_cliente">Cliente Gustavo Costa Alves</string>
     <string name="example_text_total_pedido">Total R$ 204.89</string>
     <string name="example_text_data_pedido">Data 14/09/2016</string>
+    <string name="loading_pedidos">Carregando lista de pedidos, por favor aguarde…</string>
 
     <!-- Tela Pedido -->
     <string name="title_activity_pedido">Novo pedido</string>

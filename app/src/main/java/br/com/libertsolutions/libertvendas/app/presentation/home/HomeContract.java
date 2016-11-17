@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.home;
 
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ExtrasExtractor;
 
 /**
@@ -27,5 +28,7 @@ interface HomeContract {
         void clickNavigationMenuPedidos();
 
         void getClienteFromResult(ExtrasExtractor<Cliente> pClienteExtrasExtractor);
+
+        void getPedidoFromResult(ExtrasExtractor<Pedido> pPedidoExtrasExtractor);
     }
 }

@@ -14,12 +14,23 @@ interface FinalizaPedidoContract {
 
         void showCalendarPicker(Calendar pDataEmissao);
 
+        void hideRequiredMessages();
+
+        void displayRequiredMessageForDataEmissao();
+
+        void displayRequiredMessageForFormaPagamento();
+
+        void displayRequiredMessageForCliente();
+
+        void showFeedbackMessage(String pMessage);
+
         void resultNovoPedido(Pedido pPedido);
     }
 
     interface Presenter {
         void initializeView(FinalizaPedidoViewModel pFinalizaPedidoViewModel,
-                ProdutosSelecionadosArgumentExtractor pProdutosSelecionadosArgumentExtractor);
+                ProdutosSelecionadosArgumentExtractor pProdutosSelecionadosArgumentExtractor,
+                TabelaPrecoPadraoArgumentExtractor pTabelaPrecoPadraoArgumentExtractor);
 
         void clickActionSave();
 

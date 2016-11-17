@@ -10,7 +10,7 @@ import static br.com.libertsolutions.libertvendas.app.presentation.pedido.finali
 /**
  * @author Filipe Bezerra
  */
-public class ProdutosSelecionadosArgumentExtractor implements ExtrasExtractor<List<ProdutoVo>> {
+class ProdutosSelecionadosArgumentExtractor implements ExtrasExtractor<List<ProdutoVo>> {
     private final Bundle mData;
 
     ProdutosSelecionadosArgumentExtractor(Bundle pData) {

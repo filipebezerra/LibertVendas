@@ -1,11 +1,13 @@
 package br.com.libertsolutions.libertvendas.app.domain.pojo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import java.util.List;
 
 /**
  * @author Filipe Bezerra
  */
-public class Pedido {
+public class Pedido implements Parcelable {
     private static final int SEM_ID = 0;
     private static final int SEM_ID_PEDIDO = 0;
     private static final String SEM_NUMERO = "";
@@ -67,6 +69,35 @@ public class Pedido {
         itens = pItens;
         ultimaAlteracao = pUltimaAlteracao;
     }
+
+    protected Pedido(Parcel in) {
+        id = in.readInt();
+        idPedido = in.readInt();
+        tipo = in.readInt();
+        numero = in.readString();
+        status = in.readInt();
+        dataEmissao = in.readLong();
+        desconto = in.readDouble();
+        percentualDesconto = in.readFloat();
+        observacao = in.readString();
+        cliente = in.readParcelable(Cliente.class.getClassLoader());
+        formaPagamento = in.readParcelable(FormaPagamento.class.getClassLoader());
+        tabelaPreco = in.readParcelable(TabelaPreco.class.getClassLoader());
+        itens = in.createTypedArrayList(ItemPedido.CREATOR);
+        ultimaAlteracao = in.readString();
+    }
+
+    public static final Creator<Pedido> CREATOR = new Creator<Pedido>() {
+        @Override
+        public Pedido createFromParcel(Parcel in) {
+            return new Pedido(in);
+        }
+
+        @Override
+        public Pedido[] newArray(int size) {
+            return new Pedido[size];
+        }
+    };
 
     public static Pedido novoPedido(
             long pDataEmissao,
@@ -155,5 +186,26 @@ public class Pedido {
         int result = getId();
         result = 31 * result + (int) (getDataEmissao() ^ (getDataEmissao() >>> 32));
         return result;
+    }
+
+    @Override public int describeContents() {
+        return 0;
+    }
+
+    @Override public void writeToParcel(Parcel pOut, int pFlags) {
+        pOut.writeInt(id);
+        pOut.writeInt(idPedido);
+        pOut.writeInt(tipo);
+        pOut.writeString(numero);
+        pOut.writeInt(status);
+        pOut.writeLong(dataEmissao);
+        pOut.writeDouble(desconto);
+        pOut.writeFloat(percentualDesconto);
+        pOut.writeString(observacao);
+        pOut.writeParcelable(cliente, pFlags);
+        pOut.writeParcelable(formaPagamento, pFlags);
+        pOut.writeParcelable(tabelaPreco, pFlags);
+        pOut.writeTypedList(itens);
+        pOut.writeString(ultimaAlteracao);
     }
 }

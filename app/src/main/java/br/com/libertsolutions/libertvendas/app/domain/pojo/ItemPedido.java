@@ -1,9 +1,12 @@
 package br.com.libertsolutions.libertvendas.app.domain.pojo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author Filipe Bezerra
  */
-public class ItemPedido {
+public class ItemPedido implements Parcelable {
     private static final int SEM_ID = 0;
     private static final int SEM_ID_ITEM = 0;
     private static final double SEM_DESCONTO = 0;
@@ -41,6 +44,28 @@ public class ItemPedido {
         produto = pProduto;
         ultimaAlteracao = pUltimaAlteracao;
     }
+
+    protected ItemPedido(Parcel in) {
+        id = in.readInt();
+        idItem = in.readInt();
+        precoVenda = in.readDouble();
+        quantidade = in.readFloat();
+        desconto = in.readDouble();
+        subTotal = in.readDouble();
+        observacao = in.readString();
+        produto = in.readParcelable(Produto.class.getClassLoader());
+        ultimaAlteracao = in.readString();
+    }
+
+    public static final Creator<ItemPedido> CREATOR = new Creator<ItemPedido>() {
+        @Override public ItemPedido createFromParcel(Parcel in) {
+            return new ItemPedido(in);
+        }
+
+        @Override public ItemPedido[] newArray(int size) {
+            return new ItemPedido[size];
+        }
+    };
 
     public static ItemPedido novoItem(
             double pPrecoVenda, float pQuantidade, double pSubTotal, Produto pProduto) {
@@ -99,5 +124,21 @@ public class ItemPedido {
 
     @Override public int hashCode() {
         return getId();
+    }
+
+    @Override public int describeContents() {
+        return 0;
+    }
+
+    @Override public void writeToParcel(Parcel pOut, int pFlags) {
+        pOut.writeInt(id);
+        pOut.writeInt(idItem);
+        pOut.writeDouble(precoVenda);
+        pOut.writeFloat(quantidade);
+        pOut.writeDouble(desconto);
+        pOut.writeDouble(subTotal);
+        pOut.writeString(observacao);
+        pOut.writeParcelable(produto, pFlags);
+        pOut.writeString(ultimaAlteracao);
     }
 }

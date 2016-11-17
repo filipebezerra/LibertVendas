@@ -136,6 +136,10 @@ public class HomeActivity extends LibertVendasActivity
                     mPresenter.getClienteFromResult(new ClienteExtrasExtractor(data));
                     break;
                 }
+                case Navigator.REQUEST_NEW_PEDIDO: {
+                    mPresenter.getPedidoFromResult(new PedidoExtrasExtractor(data));
+                    break;
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
