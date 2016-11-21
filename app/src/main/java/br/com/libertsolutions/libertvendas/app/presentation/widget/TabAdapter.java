@@ -24,22 +24,25 @@ public class TabAdapter extends FragmentPagerAdapter {
         notifyDataSetChanged();
     }
 
-    public List<Fragment> getFragments() {
-        return mFragments;
+    public boolean hasPosition(int position) {
+        return getItem(position) != null;
     }
 
-    @Override
-    public Fragment getItem(int position) {
-        return mFragments.get(position);
+    @Override public Fragment getItem(int position) {
+        if (position >= 0 && position < mFragments.size()) {
+            return mFragments.get(position);
+        }
+        return null;
     }
 
-    @Override
-    public int getCount() {
+    @Override public int getCount() {
         return mFragments.size();
     }
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return mFragmentTitles.get(position);
+    @Override public CharSequence getPageTitle(int position) {
+        if (position >= 0 && position < mFragmentTitles.size()) {
+            return mFragmentTitles.get(position);
+        }
+        return null;
     }
 }

@@ -119,7 +119,7 @@ class ListaClientesAdapter extends RecyclerView.Adapter<ListaClientesViewHolder>
         protected void publishResults(CharSequence prefix, FilterResults results) {
             mClienteList.clear();
             //noinspection unchecked
-            mClienteList.addAll(((List<Cliente>) results.values));
+            mClienteList.addAll((List<Cliente>) results.values);
             notifyDataSetChanged();
         }
     }

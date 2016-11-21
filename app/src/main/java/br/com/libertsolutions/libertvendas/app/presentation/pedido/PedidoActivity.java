@@ -3,12 +3,16 @@ package br.com.libertsolutions.libertvendas.app.presentation.pedido;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
+import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizando.FinalizandoPedidoFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.listaclientes.ListaClientesFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.widget.TabAdapter;
 import butterknife.BindView;
+import java.util.List;
 
 import static br.com.libertsolutions.libertvendas.app.R.string.title_fragment_finalizando_pedido;
 import static br.com.libertsolutions.libertvendas.app.R.string.title_fragment_selecione_cliente;
@@ -18,6 +22,10 @@ import static br.com.libertsolutions.libertvendas.app.R.string.title_fragment_se
  * @author Filipe Bezerra
  */
 public class PedidoActivity extends LibertVendasActivity implements PedidoContract.View {
+
+    private static final int PAGE_LISTA_PRODUTOS = 0;
+    private static final int PAGE_LISTA_CLIENTES = 1;
+    private static final int PAGE_FINALIZANDO_PEDIDO = 2;
 
     @BindView(R.id.fragment_container) protected ViewPager mViewPager;
 
@@ -34,10 +42,9 @@ public class PedidoActivity extends LibertVendasActivity implements PedidoContra
         mTabAdapter = new TabAdapter(getSupportFragmentManager());
         mTabAdapter.addFragment(ListaProdutosFragment.newInstance(),
                 getString(title_fragment_selecione_produtos));
-        mTabAdapter.addFragment(ListaClientesFragment.newInstance(),
-                getString(title_fragment_selecione_cliente));
 
         mViewPager.setAdapter(mTabAdapter);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset,
@@ -59,17 +66,29 @@ public class PedidoActivity extends LibertVendasActivity implements PedidoContra
         return R.layout.activity_pedido;
     }
 
+    @Override public void goToListaClientesStep() {
+        if (!mTabAdapter.hasPosition(PAGE_LISTA_CLIENTES)) {
+            mTabAdapter.addFragment(ListaClientesFragment.newInstance(),
+                    getString(title_fragment_selecione_cliente));
+        }
+
+        mViewPager.setCurrentItem(PAGE_LISTA_CLIENTES, true);
+    }
+
+    @Override public void goToFinalizandoPedidoStep(List<ProdutoVo> pProdutosSelecionados,
+            TabelaPreco pTabelaPrecoPadrao, Cliente pClienteSelecionado) {
+        if (!mTabAdapter.hasPosition(PAGE_FINALIZANDO_PEDIDO)) {
+            FinalizandoPedidoFragment fragment = FinalizandoPedidoFragment
+                    .newInstance(pProdutosSelecionados, pTabelaPrecoPadrao, pClienteSelecionado);
+            mTabAdapter.addFragment(fragment, getString(title_fragment_finalizando_pedido));
+        }
+
+        mViewPager.setCurrentItem(PAGE_FINALIZANDO_PEDIDO, true);
+    }
+
     @Override protected void onDestroy() {
         super.onDestroy();
         mPresenter.detach();
     }
 
-    @Override public void goToFinalizandoPedidoStep() {
-        if (mTabAdapter.getCount() == 2) {
-            mTabAdapter.addFragment(FinalizandoPedidoFragment.newInstance(),
-                    getString(title_fragment_finalizando_pedido));
-        }
-
-        mViewPager.setCurrentItem(3, true);
-    }
 }
