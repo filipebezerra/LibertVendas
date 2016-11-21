@@ -4,7 +4,7 @@ import android.content.Intent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ExtrasExtractor;
 
-import static br.com.libertsolutions.libertvendas.app.presentation.pedido.PedidoActivity.EXTRA_RESULT_NEW_PEDIDO;
+import static br.com.libertsolutions.libertvendas.app.presentation.pedido.OldPedidoActivity.EXTRA_RESULT_NEW_PEDIDO;
 
 /**
  * @author Filipe Bezerra

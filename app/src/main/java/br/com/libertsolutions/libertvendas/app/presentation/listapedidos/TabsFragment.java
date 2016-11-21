@@ -8,7 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
-import br.com.libertsolutions.libertvendas.app.presentation.util.TabAdapter;
+import br.com.libertsolutions.libertvendas.app.presentation.widget.TabAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

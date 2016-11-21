@@ -1,4 +1,4 @@
-package br.com.libertsolutions.libertvendas.app.presentation.util;
+package br.com.libertsolutions.libertvendas.app.presentation.widget;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +21,7 @@ public class TabAdapter extends FragmentPagerAdapter {
     public void addFragment(Fragment fragment, String title) {
         mFragments.add(fragment);
         mFragmentTitles.add(title);
+        notifyDataSetChanged();
     }
 
     public List<Fragment> getFragments() {

@@ -28,6 +28,21 @@
                 />
 
             <TextView
+                android:id="@+id/text_view_cpf_ou_cnpj"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/vector_ic_business_grey_24dp"
+                android:drawableStart="@drawable/vector_ic_business_grey_24dp"
+                android:paddingBottom="@dimen/keyline_medium"
+                android:drawablePadding="@dimen/keyline_large"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                tools:text="@string/example_text_cpf_ou_cnpj"
+                />
+
+            <TextView
                 android:id="@+id/text_view_telefone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,8 +54,6 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                tools:drawableLeft="@drawable/ic_phone_grey_24dp"
-                tools:drawableStart="@drawable/ic_phone_grey_24dp"
                 tools:text="@string/example_text_telefone"
                 />
 
@@ -55,8 +68,6 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                tools:drawableLeft="@drawable/ic_email_grey_24dp"
-                tools:drawableStart="@drawable/ic_email_grey_24dp"
                 tools:text="@string/example_text_email"
                 />
 

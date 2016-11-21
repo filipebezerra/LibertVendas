@@ -1,14 +1,7 @@
 <resources>
     <string name="app_name">Libert Vendas</string>
 
-    <!-- Tela Home -->
-    <string name="title_activity_home">Libert Vendas</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="fab_sheet_item_novo_pedido">Novo pedido</string>
-    <string name="fab_sheet_item_novo_cliente">Novo cliente</string>
-
-    <!-- Tela Configurações -->
+    <!-- Screen Configurações -->
     <string name="title_activity_settings">Configurações</string>
     <string name="title_pref_category_sincronizacao">Sincronização</string>
     <string name="key_pref_endereco_servidor" translatable="false">endereco_servidor</string>
@@ -36,7 +29,7 @@
     <string name="action_done">Continuar</string>
     <string name="message_settings_required">É necessário preencher todas configurações!</string>
 
-    <!-- Tela Login -->
+    <!-- Screen Login -->
     <string name="title_login_activity">Entrar</string>
     <string name="welcome_title">Bem-vindo</string>
     <string name="hint_cpf">Digite seu CPF ou CNPJ</string>
@@ -46,26 +39,21 @@
     <string name="text_login_complete">Sucesso</string>
     <string name="text_login_progress">Logando…</string>
 
-    <!-- Tela Lista de Clientes -->
-    <string name="title_fragment_lista_clientes">Clientes</string>
-    <string name="hint_busca_cliente">Busque pelo nome</string>
-    <string name="template_text_telefones">%1$s &#47; %2$s</string>
-    <string name="text_sem_telefone">Sem telefone</string>
-    <string name="example_text_razao_social">Waldomiro Martins Braga</string>
-    <string name="example_text_telefone">(62) 3524 – 1936</string>
-    <string name="example_text_email">waldomiro.martins.braga@mail.com</string>
-    <string name="text_sem_email">Sem e-mail</string>
-    <string name="loading_clientes">Carregando lista de clientes, por favor aguarde…</string>
+    <!-- Screen Importação -->
+    <string name="title_activity_importacao">Importação</string>
+    <string name="importacao">Importação</string>
+    <string name="message_importacao_completada">Importação completada com sucesso!</string>
+    <string name="error_importando_dados">Falha ao tentar importar os dados do servidor!</string>
+    <string name="message_vendedor_sem_empresas_vinculadas">Vendedor sem empresas vinculadas!</string>
 
-    <!-- Tela Lista de Produtos -->
-    <string name="title_fragment_lista_produtos">Produtos</string>
-    <string name="hint_busca_produto">Busque pela nome</string>
-    <string name="template_text_qtde_estoque">Qtd. Est. %1$s</string>
-    <string name="example_text_qtde_estoque">Qtd. Est. 10</string>
-    <string name="example_text_preco_produto">Preço R$ 4.49</string>
-    <string name="example_text_nome_produto">Achocolatado 200g</string>
+    <!-- Screen Home -->
+    <string name="title_activity_home">Libert Vendas</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="fab_sheet_item_novo_pedido">Novo pedido</string>
+    <string name="fab_sheet_item_novo_cliente">Novo cliente</string>
 
-    <!-- Tela Lista de Pedidos -->
+    <!-- Screen Lista de Pedidos -->
     <string name="title_fragment_lista_pedidos">Pedidos</string>
     <string name="template_text_numero_pedido">Nº %1$s</string>
     <string name="template_text_nome_cliente">Cliente %1$s</string>
@@ -79,10 +67,30 @@
     <string name="example_text_data_pedido">Data 14/09/2016</string>
     <string name="loading_pedidos">Carregando lista de pedidos, por favor aguarde…</string>
 
-    <!-- Tela Pedido -->
+    <!-- Screen Lista de Clientes -->
+    <string name="title_fragment_lista_clientes">Clientes</string>
+    <string name="hint_busca_cliente">Busque pelo nome</string>
+    <string name="template_text_telefones">%1$s &#47; %2$s</string>
+    <string name="text_sem_telefone">Sem telefone</string>
+    <string name="example_text_razao_social">Waldomiro Martins Braga</string>
+    <string name="example_text_telefone">(62) 3524 – 1936</string>
+    <string name="example_text_cpf_ou_cnpj">04561366000190</string>
+    <string name="example_text_email">waldomiro.martins.braga@mail.com</string>
+    <string name="text_sem_email">Sem e-mail</string>
+    <string name="loading_clientes">Carregando lista de clientes, por favor aguarde…</string>
+
+    <!-- Screen Lista de Produtos -->
+    <string name="title_fragment_lista_produtos">Produtos</string>
+    <string name="hint_busca_produto">Busque pela nome</string>
+    <string name="template_text_qtde_estoque">Qtd. Est. %1$s</string>
+    <string name="example_text_qtde_estoque">Qtd. Est. 10</string>
+    <string name="example_text_preco_produto">Preço R$ 4.49</string>
+    <string name="example_text_nome_produto">Achocolatado 200g</string>
+
+    <!-- Screen Pedido -->
     <string name="title_activity_pedido">Novo pedido</string>
 
-    <!-- Tele Selecione os produtos -->
+    <!-- Screen Selecione os produtos -->
     <string name="title_fragment_selecione_produtos">Selecione os produtos</string>
     <string name="text_qtde_inicial_produto">0</string>
     <string name="hint_edit_quantidade">Outra qtde</string>
@@ -92,8 +100,11 @@
     <string name="template_text_total">Total %1$s</string>
     <string name="message_nenhum_produto_foi_selecionado">Nenhum produto foi selecionado!</string>
 
-    <!-- Tela Finaliza pedido -->
-    <string name="title_fragment_finaliza_pedido">Finalizando pedido</string>
+    <!-- Screen Selecione o cliente -->
+    <string name="title_fragment_selecione_cliente">Selecione o cliente</string>
+
+    <!-- Screen Finalizando pedido -->
+    <string name="title_fragment_finalizando_pedido">Finalizando pedido</string>
     <string name="hint_cliente">Selecione o cliente</string>
     <string name="hint_forma_pagamento">Selecione a forma de pagamento</string>
     <string name="label_forma_pagamento">Forma de pagamento</string>
@@ -106,7 +117,7 @@
     <string name="message_valor_desconto_nao_permitido">Valor de desconto acima do permitido!</string>
     <string name="loading_produtos">Carregando lista de produtos, por favor aguarde…</string>
 
-    <!-- Tela Cliente -->
+    <!-- Screen Cliente -->
     <string name="title_activity_cliente">Novo cliente</string>
     <string name="hint_tipo_pessoa">Selecione o tipo de pessoa</string>
     <string name="label_tipo_pessoa">Tipo de pessoa selecionado</string>
@@ -151,10 +162,4 @@
         Houve um erro desconhecido e a %1$s não foi realizada.
     </string>
 
-    <!-- Tela Importação -->
-    <string name="title_activity_importacao">Importação</string>
-    <string name="importacao">Importação</string>
-    <string name="message_importacao_completada">Importação completada com sucesso!</string>
-    <string name="error_importando_dados">Falha ao tentar importar os dados do servidor!</string>
-    <string name="message_vendedor_sem_empresas_vinculadas">Vendedor sem empresas vinculadas!</string>
 </resources>

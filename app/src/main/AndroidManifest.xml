@@ -16,6 +16,7 @@
         android:theme="@style/Libert.Theme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute"
         >
+
         <activity
             android:name=".presentation.launch.LaunchActivity"
             android:noHistory="true"
@@ -28,12 +29,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".presentation.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:noHistory="true"
             android:theme="@style/Libert.Theme.NoActionBar.Settings"
             />
+
         <activity
             android:name=".presentation.login.LoginActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
@@ -42,20 +45,36 @@
             android:theme="@style/Libert.Theme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize"
             />
+
         <activity
             android:name=".presentation.importacao.ImportacaoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
             android:label="@string/title_activity_importacao"
-            android:theme="@style/Libert.Theme.NoActionBar"
             android:noHistory="true"
+            android:theme="@style/Libert.Theme.NoActionBar"
             />
+
         <activity
             android:name=".presentation.home.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/Libert.Theme.NoActionBar"
             />
+
         <activity
             android:name=".presentation.pedido.PedidoActivity"
+            android:label="@string/title_activity_pedido"
+            android:theme="@style/Libert.Theme.NoActionBar"
+            android:parentActivityName=".presentation.home.HomeActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".presentation.home.HomeActivity"
+                />
+        </activity>
+
+        <activity
+            android:name=".presentation.pedido.OldPedidoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
             android:label="@string/title_activity_pedido"
             android:parentActivityName=".presentation.home.HomeActivity"
@@ -66,12 +85,14 @@
                 android:value="br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity"
                 />
         </activity>
+
         <activity
             android:name=".presentation.cliente.ClienteActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
             android:label="@string/title_activity_cliente"
             android:theme="@style/Libert.Theme.NoActionBar"
             />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="88453d956cd483a917c0c313a6a47582a0853bcf"

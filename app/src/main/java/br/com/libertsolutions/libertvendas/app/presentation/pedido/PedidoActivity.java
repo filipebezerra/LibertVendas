@@ -1,72 +1,75 @@
 package br.com.libertsolutions.libertvendas.app.presentation.pedido;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
-import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.NovoPedidoEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.ProdutosSelecionadosEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.SelecioneProdutosFragment;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizando.FinalizandoPedidoFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.listaclientes.ListaClientesFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.listaprodutos.ListaProdutosFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.widget.TabAdapter;
+import butterknife.BindView;
 
-import static org.greenrobot.eventbus.ThreadMode.MAIN;
+import static br.com.libertsolutions.libertvendas.app.R.string.title_fragment_finalizando_pedido;
+import static br.com.libertsolutions.libertvendas.app.R.string.title_fragment_selecione_cliente;
+import static br.com.libertsolutions.libertvendas.app.R.string.title_fragment_selecione_produtos;
 
 /**
  * @author Filipe Bezerra
  */
-public class PedidoActivity extends LibertVendasActivity {
+public class PedidoActivity extends LibertVendasActivity implements PedidoContract.View {
 
-    public static final String EXTRA_RESULT_NEW_PEDIDO
-            = PedidoActivity.class.getSimpleName() + ".extraResultNewPedido";
+    @BindView(R.id.fragment_container) protected ViewPager mViewPager;
+
+    private PedidoContract.Presenter mPresenter;
+
+    private TabAdapter mTabAdapter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAsInitialFlowActivity();
-        navigate().toSelecioneProdutos();
+        mPresenter = new PedidoPresenter();
+        mPresenter.attachView(this);
+
+        mTabAdapter = new TabAdapter(getSupportFragmentManager());
+        mTabAdapter.addFragment(ListaProdutosFragment.newInstance(),
+                getString(title_fragment_selecione_produtos));
+        mTabAdapter.addFragment(ListaClientesFragment.newInstance(),
+                getString(title_fragment_selecione_cliente));
+
+        mViewPager.setAdapter(mTabAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset,
+                    int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(int position) {
+                getSupportActionBar().setSubtitle(mTabAdapter.getPageTitle(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
+
+        getSupportActionBar().setSubtitle(mTabAdapter.getPageTitle(mViewPager.getCurrentItem()));
     }
 
     @Override protected int provideContentViewResource() {
         return R.layout.activity_pedido;
     }
 
-    @Override protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detach();
     }
 
-    @Override protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Subscribe(threadMode = MAIN) public void onProdutosSelecionadosEvent(
-            ProdutosSelecionadosEvent pEvent) {
-        navigate().toFinalizaPedido(pEvent.getProdutoVoList(), pEvent.getTabelaPreco());
-    }
-
-    @Subscribe(threadMode = MAIN) public void onClienteSelecionadoEvent(
-            ClienteSelecionadoEvent pEvent) {
-        getSupportFragmentManager().popBackStack();
-        setTitle(R.string.title_fragment_finaliza_pedido);
-    }
-
-    @Subscribe(threadMode = MAIN) public void onNovoPedidoEvent(NovoPedidoEvent pEvent) {
-        Intent extras = new Intent().putExtra(EXTRA_RESULT_NEW_PEDIDO, pEvent.getPedido());
-        setResult(RESULT_OK, extras);
-        finish();
-    }
-
-    @Override public void onBackPressed() {
-        final Fragment fragment = getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_container);
-
-        if (fragment instanceof SelecioneProdutosFragment) {
-            super.onBackPressed();
-        } else {
-            navigate().toSelecioneProdutos();
+    @Override public void goToFinalizandoPedidoStep() {
+        if (mTabAdapter.getCount() == 2) {
+            mTabAdapter.addFragment(FinalizandoPedidoFragment.newInstance(),
+                    getString(title_fragment_finalizando_pedido));
         }
+
+        mViewPager.setCurrentItem(3, true);
     }
 }

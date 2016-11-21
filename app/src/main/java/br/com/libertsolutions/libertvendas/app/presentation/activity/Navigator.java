@@ -97,7 +97,7 @@ public class Navigator {
                 .replace(R.id.fragment_container, FinalizaPedidoFragment
                         .newInstance(pProdutosSelecionados, pTabelaPreco))
                 .commit();
-        mActivity.setTitle(R.string.title_fragment_finaliza_pedido);
+        mActivity.setTitle(R.string.title_fragment_finalizando_pedido);
     }
 
     public void toCliente(boolean fromHome) {
