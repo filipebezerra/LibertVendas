@@ -19,8 +19,12 @@ android {
         applicationId "br.com.libertsolutions.libertvendas.app"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 25051
-        versionName "0.5.1-beta"
+        // 25 + 060 + 1
+        // 25   = Major Android version
+        // 060  = Production version (Semantic versioning)
+        // 1    = Pre-release version (Internal versioning)
+        versionCode 250601
+        versionName "0.6.0.1-pre_release"
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "LibertVendas-$versionName")
     }
