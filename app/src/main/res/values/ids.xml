@@ -6,4 +6,5 @@
     <item name="fragment_container" type="id" />
     <item name="card_view" type="id" />
     <item name="recycler_view_produtos" type="id" />
+    <item name="choose" type="id">Escolher</item>
 </resources>

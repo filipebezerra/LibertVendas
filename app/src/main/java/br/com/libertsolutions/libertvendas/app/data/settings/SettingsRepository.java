@@ -19,4 +19,8 @@ public interface SettingsRepository {
     void setUsuarioLogado(int idVendedor);
 
     int getUsuarioLogado();
+
+    void setEmpresaLogada(int idEmpresa);
+
+    int getEmpresaLogada();
 }

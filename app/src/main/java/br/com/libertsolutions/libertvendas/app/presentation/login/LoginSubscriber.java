@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.presentation.login;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ValidationError;
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
@@ -50,6 +49,5 @@ class LoginSubscriber extends Subscriber<Vendedor> {
 
     @Override public void onCompleted() {
         mView.showCompletedIndicator();
-        mView.resultAsOk(Navigator.RESULT_OK);
     }
 }

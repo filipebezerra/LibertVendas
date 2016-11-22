@@ -17,6 +17,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_tabela_p
 public class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
     private static final String KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH = "first-time-settings-launch";
     private static final String KEY_PREF_USUARIO_LOGADO = "usuario-logado";
+    private static final String KEY_PREF_EMPRESA_LOGADA = "empresa-logada";
 
     private final Context mContext;
 
@@ -80,5 +81,17 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
 
     @Override public int getUsuarioLogado() {
         return mPreferences.getInt(KEY_PREF_USUARIO_LOGADO, -1);
+    }
+
+    @Override public void setEmpresaLogada(int idEmpresa) {
+        PreferenceManager
+                .getDefaultSharedPreferences(mContext)
+                .edit()
+                .putInt(KEY_PREF_EMPRESA_LOGADA, idEmpresa)
+                .apply();
+    }
+
+    @Override public int getEmpresaLogada() {
+        return mPreferences.getInt(KEY_PREF_EMPRESA_LOGADA, -1);
     }
 }

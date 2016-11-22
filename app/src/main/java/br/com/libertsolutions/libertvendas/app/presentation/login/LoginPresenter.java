@@ -4,6 +4,7 @@ import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
 import br.com.libertsolutions.libertvendas.app.domain.factory.VendedorFactory;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
@@ -29,6 +30,8 @@ class LoginPresenter implements LoginContract.Presenter {
     private final SettingsRepository mSettingsRepository;
 
     private Subscription mSubscription;
+
+    private Vendedor mVendedor;
 
     private boolean mFailed = false;
 
@@ -72,14 +75,18 @@ class LoginPresenter implements LoginContract.Presenter {
                                 return Observable
                                         .error(ValidationError.newError(pVendedorDto.mensagem));
                             } else {
-                                return mVendedorRepository
-                                        .save(VendedorFactory.createVendedor(pVendedorDto))
-                                        .doOnNext(pVendedor -> mSettingsRepository
-                                                .setUsuarioLogado(pVendedor.getIdVendedor()));
+                                mVendedor = VendedorFactory.createVendedor(pVendedorDto);
+                                return mVendedorRepository.save(mVendedor);
                             }
                         })
-                        .doOnError(pThrowable -> mFailed = true)
                         .observeOn(AndroidSchedulers.mainThread())
+                        .doOnError(pThrowable -> mFailed = true)
+                        .doOnNext(pVendedor -> {
+                            if (pVendedor.getEmpresas() != null &&
+                                    !pVendedor.getEmpresas().isEmpty()) {
+                                mView.showChooseEmpresaParaLogar(pVendedor.getEmpresas());
+                            }
+                        })
                         .subscribe(LoginSubscriber.newLoginSubscriber(mView));
             } else {
                 mView.showDeviceNotConnectedError();
@@ -108,6 +115,12 @@ class LoginPresenter implements LoginContract.Presenter {
         if (mFailed) {
             mView.showIdle();
         }
+    }
+
+    @Override public void clickChooseEmpresaParaLogar(Empresa pEmpresa) {
+        mSettingsRepository.setUsuarioLogado(mVendedor.getIdVendedor());
+        mSettingsRepository.setEmpresaLogada(pEmpresa.getIdEmpresa());
+        mView.resultAsOk(Navigator.RESULT_OK);
     }
 
     @Override public void stopWork() {

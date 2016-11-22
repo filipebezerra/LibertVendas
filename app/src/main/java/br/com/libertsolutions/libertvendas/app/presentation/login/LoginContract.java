@@ -1,5 +1,8 @@
 package br.com.libertsolutions.libertvendas.app.presentation.login;
 
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
+import java.util.List;
+
 /**
  * @author Filipe Bezerra
  */
@@ -37,6 +40,8 @@ interface LoginContract {
 
         void showCompletedIndicator();
 
+        void showChooseEmpresaParaLogar(List<Empresa> pEmpresas);
+
         void resultAsOk(int resultCode);
 
         void finishActivity();
@@ -48,6 +53,8 @@ interface LoginContract {
         void clickButtonEntrar(boolean pDeviceConnected);
 
         void handleEditEntriesTextChanged();
+
+        void clickChooseEmpresaParaLogar(Empresa pEmpresa);
 
         void stopWork();
 

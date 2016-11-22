@@ -163,5 +163,6 @@
     </string>
     <string name="default_text_nome_vendedor">Libert Vendas</string>
     <string name="default_text_nome_empresa">Libert Solutions</string>
+    <string name="title_dialog_choose_empresa_para_logar">Selecione a empresa para logar.</string>
 
 </resources>

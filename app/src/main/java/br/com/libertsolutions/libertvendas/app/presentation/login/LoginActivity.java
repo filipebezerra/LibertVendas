@@ -6,12 +6,15 @@ import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FeedbackHelper;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.dd.CircularProgressButton;
+import java.util.List;
 
 import static br.com.libertsolutions.libertvendas.app.R.string.importacao;
 import static br.com.libertsolutions.libertvendas.app.R.string.message_network_error;
@@ -150,6 +153,18 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
 
     @Override public void showCompletedIndicator() {
         mButtonEntrar.setProgress(CircularProgressButton.SUCCESS_STATE_PROGRESS);
+    }
+
+    @Override public void showChooseEmpresaParaLogar(List<Empresa> pEmpresas) {
+        new MaterialDialog.Builder(this)
+                .title(R.string.title_dialog_choose_empresa_para_logar)
+                .items(pEmpresas)
+                .itemsCallbackSingleChoice(0, (dialog, itemView, which, text) -> {
+                    mPresenter.clickChooseEmpresaParaLogar(pEmpresas.get(which));
+                    return true;
+                })
+                .alwaysCallSingleChoiceCallback()
+                .show();
     }
 
     @OnTextChanged({ R.id.edit_text_cpf_cnpj, R.id.edit_text_senha }) void onTextChanged() {

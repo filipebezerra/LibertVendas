@@ -14,6 +14,7 @@ import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
 import br.com.libertsolutions.libertvendas.app.domain.factory.TabelaPrecoFactory;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
@@ -111,14 +112,15 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
     private void requestImportacao() {
         mIsDoingInitialDataSync = true;
 
-        if (mUsuarioLogado.getEmpresas().isEmpty()) {
+        final List<Empresa> empresas = mUsuarioLogado.getEmpresas();
+
+        if (empresas == null || empresas.isEmpty()) {
             mView.showMessageDialog(
                     mResourcesRepository.obtainStringMessageVendedorSemEmpresasVinculadas());
             return;
         }
 
-        String cnpjEmpresa = mUsuarioLogado
-                .getEmpresas()
+        String cnpjEmpresa = empresas
                 .get(PRIMEIRO_ITEM)
                 .getCnpj();
 

@@ -49,4 +49,8 @@ public class Empresa {
         result = 31 * result + getCnpj().hashCode();
         return result;
     }
+
+    @Override public String toString() {
+        return getNome();
+    }
 }
