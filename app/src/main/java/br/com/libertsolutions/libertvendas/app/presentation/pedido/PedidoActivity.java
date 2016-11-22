@@ -86,6 +86,10 @@ public class PedidoActivity extends LibertVendasActivity implements PedidoContra
         mViewPager.setCurrentItem(PAGE_FINALIZANDO_PEDIDO, true);
     }
 
+    @Override public void finishView() {
+        finish();
+    }
+
     @Override protected void onDestroy() {
         super.onDestroy();
         mPresenter.detach();

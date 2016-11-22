@@ -5,9 +5,12 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.NovoPedidoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.ProdutosSelecionadosEvent;
 import java.util.List;
 import org.greenrobot.eventbus.Subscribe;
+
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
@@ -45,4 +48,13 @@ class PedidoPresenter extends BasePresenter<PedidoContract.View>
         }
     }
 
+    @Subscribe(threadMode = MAIN, sticky = true, priority = 1) public void onNovoPedidoEvent(
+            NovoPedidoEvent pEvent) {
+        getView().finishView();
+    }
+
+    @Override public void detach() {
+        super.detach();
+        unregisterForEvents();
+    }
 }

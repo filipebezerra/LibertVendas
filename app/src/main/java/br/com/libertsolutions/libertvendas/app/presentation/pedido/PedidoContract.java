@@ -17,6 +17,8 @@ interface PedidoContract {
 
         void goToFinalizandoPedidoStep(List<ProdutoVo> pProdutosSelecionados,
                 TabelaPreco pTabelaPrecoPadrao, Cliente pClienteSelecionado);
+
+        void finishView();
     }
 
     interface Presenter extends MvpPresenter<View> {

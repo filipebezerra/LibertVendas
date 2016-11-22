@@ -130,4 +130,10 @@ public class ListaProdutosFragment extends LibertVendasFragment
     @Override public void onQuantidadeModificada(int pPosition, float pQuantidade) {
         mPresenter.handleQuantidadeModificada(pPosition, pQuantidade);
     }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        mPresenter.detach();
+    }
+
 }

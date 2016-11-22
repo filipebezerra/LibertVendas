@@ -1,16 +1,17 @@
-package br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido;
+package br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizando;
 
 import android.content.Context;
 import android.text.TextUtils;
 import android.widget.EditText;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.FormaPagamentoAdapter;
 import java.util.List;
 import smtchahal.materialspinner.MaterialSpinner;
 
 /**
  * @author Filipe Bezerra
  */
-public class FinalizaPedidoViewModel {
+class FinalizandoPedidoViewModel {
     private final Context mContext;
 
     private final EditText mEditTextDataEmissao;
@@ -26,7 +27,7 @@ public class FinalizaPedidoViewModel {
 
     private final EditText mEditTextObservacao;
 
-    FinalizaPedidoViewModel(Context pContext, EditText pEditTextDataEmissao,
+    FinalizandoPedidoViewModel(Context pContext, EditText pEditTextDataEmissao,
             EditText pEditTextCliente, EditText pEditTextTotalProdutos,
             EditText pEditTextValorDesconto, MaterialSpinner pSpinnerFormaPagamento,
             EditText pEditTextObservacao) {

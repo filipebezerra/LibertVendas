@@ -105,7 +105,7 @@
 
     <!-- Screen Finalizando pedido -->
     <string name="title_fragment_finalizando_pedido">Finalizando pedido</string>
-    <string name="hint_cliente">Selecione o cliente</string>
+    <string name="hint_cliente">Cliente selecionado</string>
     <string name="hint_forma_pagamento">Selecione a forma de pagamento</string>
     <string name="label_forma_pagamento">Forma de pagamento</string>
     <string name="hint_data_emissao">Data de emissão</string>

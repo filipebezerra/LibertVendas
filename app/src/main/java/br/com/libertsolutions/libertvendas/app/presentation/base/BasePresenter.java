@@ -57,4 +57,5 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                     + "requesting data to the Presenter");
         }
     }
+
 }

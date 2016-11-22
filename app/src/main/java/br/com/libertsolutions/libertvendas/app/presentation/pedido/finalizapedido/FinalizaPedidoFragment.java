@@ -48,7 +48,7 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
 
     private FinalizaPedidoContract.Presenter mPresenter;
 
-    @BindView(R.id.content_pedido) protected NestedScrollView mContainerFinalizaPedido;
+    @BindView(R.id.container_finalizando_pedido) protected NestedScrollView mContainerFinalizaPedido;
     @BindView(R.id.input_layout_data_emissao) protected TextInputLayout mInputLayoutDataEmissao;
     @BindView(R.id.edit_text_data_emissao) protected EditText mEditTextDataEmissao;
     @BindView(R.id.input_layout_cliente) protected TextInputLayout mInputLayoutCliente;
@@ -82,11 +82,11 @@ public class FinalizaPedidoFragment extends LibertVendasFragment
     }
 
     @Override protected int provideContentViewResource() {
-        return R.layout.fragment_finaliza_pedido;
+        return R.layout.fragment_finalizando_pedido;
     }
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_finaliza_pedido, menu);
+        inflater.inflate(R.menu.menu_finalizando_pedido, menu);
     }
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
