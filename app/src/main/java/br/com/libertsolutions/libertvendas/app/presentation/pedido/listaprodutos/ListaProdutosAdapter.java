@@ -12,6 +12,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
+import br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,11 +69,15 @@ class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosViewHolder>
         holder.buttonRemover.setOnClickListener(
                 view -> mCallbacks.onQuantidadeRemovida(holder.getAdapterPosition()));
 
-        holder.textViewQuantidade.setOnClickListener(pView -> holder.viewSwitcher.showNext());
+        holder.textViewQuantidade.setOnClickListener(pView -> {
+            holder.viewSwitcher.showNext();
+            AndroidUtils.focusThenShowKeyboard(mContext, holder.editTextOutraQuantidade);
+        });
 
         holder.editTextOutraQuantidade.setOnEditorActionListener(
                 (pTextView, pActionId, pEvent) -> {
                     if (pActionId == EditorInfo.IME_ACTION_DONE) {
+                        AndroidUtils.hideKeyboard(mContext, holder.editTextOutraQuantidade);
                         if (!TextUtils.isEmpty(holder.editTextOutraQuantidade.getText())) {
                             float outraQuantidade = Float.valueOf(
                                     holder.editTextOutraQuantidade.getText().toString());
