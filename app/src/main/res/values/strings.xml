@@ -161,5 +161,7 @@
     <string name="message_unknown_error">
         Houve um erro desconhecido e a %1$s não foi realizada.
     </string>
+    <string name="default_text_nome_vendedor">Libert Vendas</string>
+    <string name="default_text_nome_empresa">Libert Solutions</string>
 
 </resources>
