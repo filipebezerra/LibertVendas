@@ -44,7 +44,8 @@ public class ImportacaoActivity extends LibertVendasActivity
                 Injection.provideClienteRepository(this),
                 Injection.provideTabelaPrecoService(this),
                 Injection.provideTabelaPrecoRepository(this),
-                Injection.provideImportacaoResourcesRepository(this));
+                Injection.provideImportacaoResourcesRepository(this),
+                Injection.provideSettingsRepository(this));
         super.onCreate(savedInstanceState);
         setAsSubActivity();
         mLoadingView.setAnimationListener(this);

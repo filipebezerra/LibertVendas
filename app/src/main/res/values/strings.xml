@@ -38,6 +38,9 @@
     <string name="text_login_error">Falhou</string>
     <string name="text_login_complete">Sucesso</string>
     <string name="text_login_progress">Logando…</string>
+    <string name="default_text_nome_vendedor">Libert Vendas</string>
+    <string name="default_text_nome_empresa">Libert Solutions</string>
+    <string name="title_dialog_choose_empresa_para_logar">Selecione a empresa para logar.</string>
 
     <!-- Screen Importação -->
     <string name="title_activity_importacao">Importação</string>
@@ -45,6 +48,7 @@
     <string name="message_importacao_completada">Importação completada com sucesso!</string>
     <string name="error_importando_dados">Falha ao tentar importar os dados do servidor!</string>
     <string name="message_vendedor_sem_empresas_vinculadas">Vendedor sem empresas vinculadas!</string>
+    <string name="message_vendedor_sem_empresa_logada">Vendedor sem empresa logada!</string>
 
     <!-- Screen Home -->
     <string name="title_activity_home">Libert Vendas</string>
@@ -161,8 +165,5 @@
     <string name="message_unknown_error">
         Houve um erro desconhecido e a %1$s não foi realizada.
     </string>
-    <string name="default_text_nome_vendedor">Libert Vendas</string>
-    <string name="default_text_nome_empresa">Libert Solutions</string>
-    <string name="title_dialog_choose_empresa_para_logar">Selecione a empresa para logar.</string>
 
 </resources>

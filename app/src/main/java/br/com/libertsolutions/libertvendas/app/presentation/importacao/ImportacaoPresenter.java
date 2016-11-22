@@ -6,6 +6,7 @@ import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamen
 import br.com.libertsolutions.libertvendas.app.data.importacao.ImportacaoRepository;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.tabelaspreco.TabelaPrecoService;
 import br.com.libertsolutions.libertvendas.app.domain.factory.CidadeFactory;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ClienteFactories;
@@ -32,7 +33,6 @@ import timber.log.Timber;
  * @author Filipe Bezerra
  */
 class ImportacaoPresenter implements ImportacaoContract.Presenter {
-    private static final int PRIMEIRO_ITEM = 0;
 
     private final ImportacaoContract.View mView;
 
@@ -60,6 +60,8 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
     private final ImportacaoResourcesRepository mResourcesRepository;
 
+    private final SettingsRepository mSettingsRepository;
+
     private boolean mIsDoingInitialDataSync = false;
 
     private Vendedor mUsuarioLogado;
@@ -75,7 +77,8 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
             ClienteService pClienteService, Repository<Cliente> pClienteRepository,
             TabelaPrecoService pTabelaPrecoService,
             Repository<TabelaPreco> pTabelaPrecoRepository,
-            ImportacaoResourcesRepository pResourcesRepository) {
+            ImportacaoResourcesRepository pResourcesRepository,
+            SettingsRepository pSettingsRepository) {
         mView = pView;
         mImportacaoRepository = pImportacaoRepository;
         mFormaPagamentoService = pFormaPagamentoService;
@@ -89,6 +92,7 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         mTabelaPrecoService = pTabelaPrecoService;
         mTabelaPrecoRepository = pTabelaPrecoRepository;
         mResourcesRepository = pResourcesRepository;
+        mSettingsRepository = pSettingsRepository;
 
         if (mImportacaoRepository.isImportacaoInicialFeita()) {
             mView.navigateToMainActivity();
@@ -120,9 +124,21 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
             return;
         }
 
-        String cnpjEmpresa = empresas
-                .get(PRIMEIRO_ITEM)
-                .getCnpj();
+        Empresa empresaLogada = null;
+        for (Empresa empresa : empresas) {
+            if (empresa.getIdEmpresa() == mSettingsRepository.getEmpresaLogada()) {
+                empresaLogada = empresa;
+                break;
+            }
+        }
+
+        if (empresaLogada == null) {
+            mView.showMessageDialog(
+                    mResourcesRepository.obtainStringMessageVendedorSemEmpresaLogada());
+            return;
+        }
+
+        final String cnpjEmpresa = empresaLogada.getCnpj();
 
         Observable<List<FormaPagamento>> getFormasPagamento = mFormaPagamentoService
                 .get(cnpjEmpresa)
@@ -211,4 +227,5 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
             mView.showUnknownError();
         }
     }
+
 }

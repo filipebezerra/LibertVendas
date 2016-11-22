@@ -5,4 +5,6 @@ package br.com.libertsolutions.libertvendas.app.presentation.resources;
  */
 public interface ImportacaoResourcesRepository extends CommonResourcesRepository {
     String obtainStringMessageVendedorSemEmpresasVinculadas();
+
+    String obtainStringMessageVendedorSemEmpresaLogada();
 }

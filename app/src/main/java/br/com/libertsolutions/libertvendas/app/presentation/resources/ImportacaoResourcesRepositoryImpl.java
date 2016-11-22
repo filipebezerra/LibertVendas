@@ -15,4 +15,8 @@ public class ImportacaoResourcesRepositoryImpl extends CommonResourcesRepository
     @Override public String obtainStringMessageVendedorSemEmpresasVinculadas() {
         return getResources().getString(R.string.message_vendedor_sem_empresas_vinculadas);
     }
+
+    @Override public String obtainStringMessageVendedorSemEmpresaLogada() {
+        return getResources().getString(R.string.message_vendedor_sem_empresa_logada);
+    }
 }
