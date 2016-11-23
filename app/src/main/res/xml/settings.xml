@@ -25,9 +25,8 @@
         <SwitchPreference
             android:key="@string/key_pref_sincronizar_pedido_automaticamente"
             android:title="@string/title_pref_sincronizar_pedido_automaticamente"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:summary="@string/summary_pref_sincronizar_pedido_automaticamente"
-            android:enabled="false"
             />
     </PreferenceCategory>
 
