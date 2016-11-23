@@ -1,13 +1,17 @@
 package br.com.libertsolutions.libertvendas.app.presentation.login;
 
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
+import br.com.libertsolutions.libertvendas.app.presentation.base.MvpPresenter;
+import br.com.libertsolutions.libertvendas.app.presentation.base.MvpView;
 import java.util.List;
 
 /**
  * @author Filipe Bezerra
  */
 interface LoginContract {
-    interface View {
+
+    interface View extends MvpView {
+
         LoginViewModel extractViewModel();
 
         void hideRequiredMessages();
@@ -45,10 +49,10 @@ interface LoginContract {
         void resultAsOk(int resultCode);
 
         void finishActivity();
+
     }
 
-    interface Presenter {
-        void initializeView();
+    interface Presenter extends MvpPresenter<View> {
 
         void clickButtonEntrar(boolean pDeviceConnected);
 
@@ -56,8 +60,8 @@ interface LoginContract {
 
         void clickChooseEmpresaParaLogar(Empresa pEmpresa);
 
-        void stopWork();
-
         void finalizeView();
+
     }
+
 }

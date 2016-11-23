@@ -7,19 +7,15 @@ import android.view.View;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
-import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FeedbackHelper;
 import butterknife.BindView;
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import static br.com.libertsolutions.libertvendas.app.R.string.importacao;
 import static br.com.libertsolutions.libertvendas.app.R.string.message_importacao_completada;
 import static br.com.libertsolutions.libertvendas.app.R.string.message_network_error;
 import static br.com.libertsolutions.libertvendas.app.R.string.message_unknown_error;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils.isDeviceConnected;
-import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
@@ -29,10 +25,10 @@ public class ImportacaoActivity extends LibertVendasActivity
 
     @BindView(R.id.loading_view) protected AnimatedCircleLoadingView mLoadingView;
 
-    private ImportacaoPresenter mPresenter;
+    private ImportacaoContract.Presenter mPresenter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
-        mPresenter = new ImportacaoPresenter(this,
+        mPresenter = new ImportacaoPresenter(
                 Injection.provideImportacaoRepository(this),
                 Injection.provideFormaPagamentoService(this),
                 Injection.provideFormaPagamentoRepository(this),
@@ -49,6 +45,7 @@ public class ImportacaoActivity extends LibertVendasActivity
         super.onCreate(savedInstanceState);
         setAsSubActivity();
         mLoadingView.setAnimationListener(this);
+        mPresenter.attachView(this);
     }
 
     @Override protected int provideContentViewResource() {
@@ -76,17 +73,12 @@ public class ImportacaoActivity extends LibertVendasActivity
 
     @Override public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        mPresenter.registerForEvents();
     }
 
     @Override public void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = MAIN, sticky = true) public void onUsuarioLogadoEvent(
-            UsuarioLogadoEvent pEvent) {
-        mPresenter.handleUsuarioLogadoEvent(pEvent.getVendedor());
+        mPresenter.unregisterForEvents();
     }
 
     @Override protected void onResume() {
@@ -162,4 +154,5 @@ public class ImportacaoActivity extends LibertVendasActivity
     @Override public void onAnimationEnd(boolean success) {
         mPresenter.handleAnimationEnd(success);
     }
+
 }

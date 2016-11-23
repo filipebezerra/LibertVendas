@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.events;
 
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 
 /**
@@ -8,15 +9,22 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 public class UsuarioLogadoEvent {
     private final Vendedor mVendedor;
 
-    private UsuarioLogadoEvent(Vendedor pVendedor) {/* No constructor*/
+    private final Empresa mEmpresa;
+
+    private UsuarioLogadoEvent(Vendedor pVendedor, Empresa pEmpresa) {
         mVendedor = pVendedor;
+        mEmpresa = pEmpresa;
     }
 
-    public static UsuarioLogadoEvent newEvent(Vendedor pVendedor) {
-        return new UsuarioLogadoEvent(pVendedor);
+    public static UsuarioLogadoEvent newEvent(Vendedor pVendedor, Empresa pEmpresa) {
+        return new UsuarioLogadoEvent(pVendedor, pEmpresa);
     }
 
     public Vendedor getVendedor() {
         return mVendedor;
+    }
+
+    public Empresa getEmpresa() {
+        return mEmpresa;
     }
 }

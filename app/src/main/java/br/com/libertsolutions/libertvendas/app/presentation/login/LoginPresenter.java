@@ -7,19 +7,19 @@ import br.com.libertsolutions.libertvendas.app.domain.factory.VendedorFactory;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
+import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ValidationError;
 import org.greenrobot.eventbus.EventBus;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * @author Filipe Bezerra
  */
-class LoginPresenter implements LoginContract.Presenter {
-    private final LoginContract.View mView;
+class LoginPresenter extends BasePresenter<LoginContract.View> 
+        implements LoginContract.Presenter {
 
     private final CommonResourcesRepository mResourcesRepository;
 
@@ -29,46 +29,67 @@ class LoginPresenter implements LoginContract.Presenter {
 
     private final SettingsRepository mSettingsRepository;
 
-    private Subscription mSubscription;
-
     private Vendedor mVendedor;
 
     private boolean mFailed = false;
 
     LoginPresenter(
-            LoginContract.View view, CommonResourcesRepository pCommonResourcesRepository,
+            CommonResourcesRepository pCommonResourcesRepository,
             VendedorService pVendedorService, Repository<Vendedor> pVendedorRepository,
             SettingsRepository pSettingsRepository) {
-        mView = view;
         mResourcesRepository = pCommonResourcesRepository;
         mVendedorService = pVendedorService;
         mVendedorRepository = pVendedorRepository;
         mSettingsRepository = pSettingsRepository;
+    }
+
+    @Override
+    public void attachView(LoginContract.View pView) {
+        super.attachView(pView);
         if (mSettingsRepository.hasUsuarioLogado()) {
-            mVendedorRepository
+            addSubscription(mVendedorRepository
                     .findById(mSettingsRepository.getUsuarioLogado())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnNext(pVendedor -> {
-                        EventBus.getDefault().postSticky(UsuarioLogadoEvent.newEvent(pVendedor));
-                        mView.resultAsOk(Navigator.RESULT_OK);
-                    })
-                    .subscribe();
-        }
-    }
+                        Empresa empresaLogada = null;
+                        final int idEmpresaLogada = mSettingsRepository.getEmpresaLogada();
+                        for (Empresa empresa : pVendedor.getEmpresas()) {
+                            if (empresa.getIdEmpresa() == idEmpresaLogada) {
+                                empresaLogada = empresa;
+                                break;
+                            }
+                        }
 
-    @Override public void initializeView() {
-        mView.showIdle();
+                        if (empresaLogada == null) {
+                            getView().displayValidationError(
+                                    mResourcesRepository
+                                            .obtainStringMessageVendedorSemEmpresaLogada());
+                            getView().showFeedbackMessage(
+                                    mResourcesRepository
+                                            .obtainStringMessageVendedorSemEmpresaLogada());
+                            return;
+                        }
+
+                        EventBus.getDefault()
+                                .postSticky(UsuarioLogadoEvent.newEvent(pVendedor, empresaLogada));
+                        getView().resultAsOk(Navigator.RESULT_OK);
+                    })
+                    .subscribe());
+            return;
+        }
+
+        getView().showIdle();
     }
 
     @Override public void clickButtonEntrar(boolean pDeviceConnected) {
-        mView.hideRequiredMessages();
-        mView.showIdle();
+        getView().hideRequiredMessages();
+        getView().showIdle();
 
-        final LoginViewModel viewModel = mView.extractViewModel();
+        final LoginViewModel viewModel = getView().extractViewModel();
 
         if (!shownViewModelErrors(viewModel)) {
             if (pDeviceConnected) {
-                mSubscription = mVendedorService
+                addSubscription(mVendedorService
                         .get(viewModel.cpfCnpj, viewModel.senha)
                         .flatMap(pVendedorDto -> {
                             if (pVendedorDto.error) {
@@ -84,12 +105,21 @@ class LoginPresenter implements LoginContract.Presenter {
                         .doOnNext(pVendedor -> {
                             if (pVendedor.getEmpresas() != null &&
                                     !pVendedor.getEmpresas().isEmpty()) {
-                                mView.showChooseEmpresaParaLogar(pVendedor.getEmpresas());
+                                getView().showChooseEmpresaParaLogar(pVendedor.getEmpresas());
+                            } else {
+                                getView().showErrorIndicator();
+                                getView().unblockEditEntries();
+                                getView().displayValidationError(
+                                        mResourcesRepository
+                                                .obtainStringMessageVendedorSemEmpresasVinculadas());
+                                getView().showFeedbackMessage(
+                                        mResourcesRepository
+                                                .obtainStringMessageVendedorSemEmpresasVinculadas());
                             }
                         })
-                        .subscribe(LoginSubscriber.newLoginSubscriber(mView));
+                        .subscribe(LoginSubscriber.newLoginSubscriber(getView())));
             } else {
-                mView.showDeviceNotConnectedError();
+                getView().showDeviceNotConnectedError();
             }
         }
     }
@@ -97,14 +127,14 @@ class LoginPresenter implements LoginContract.Presenter {
     private boolean shownViewModelErrors(LoginViewModel pViewModel) {
         if (pViewModel.hasDefaultValues()) {
             if (!pViewModel.hasSenha()) {
-                mView.displayRequiredMessageForFieldSenha();
+                getView().displayRequiredMessageForFieldSenha();
             }
 
             if (!pViewModel.hasCpfCnpj()) {
-                mView.displayRequiredMessageForFieldCpfCnpj();
+                getView().displayRequiredMessageForFieldCpfCnpj();
             }
 
-            mView.showFeedbackMessage(mResourcesRepository.obtainStringMessageFieldsRequired());
+            getView().showFeedbackMessage(mResourcesRepository.obtainStringMessageFieldsRequired());
             return true;
         } else {
             return false;
@@ -113,24 +143,19 @@ class LoginPresenter implements LoginContract.Presenter {
 
     @Override public void handleEditEntriesTextChanged() {
         if (mFailed) {
-            mView.showIdle();
+            getView().showIdle();
         }
     }
 
     @Override public void clickChooseEmpresaParaLogar(Empresa pEmpresa) {
         mSettingsRepository.setUsuarioLogado(mVendedor.getIdVendedor());
         mSettingsRepository.setEmpresaLogada(pEmpresa.getIdEmpresa());
-        mView.resultAsOk(Navigator.RESULT_OK);
-    }
-
-    @Override public void stopWork() {
-        if (mSubscription != null && mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
-        }
+        EventBus.getDefault().postSticky(UsuarioLogadoEvent.newEvent(mVendedor, pEmpresa));
+        getView().resultAsOk(Navigator.RESULT_OK);
     }
 
     @Override public void finalizeView() {
-        stopWork();
-        mView.finishActivity();
+        getView().finishActivity();
     }
+
 }

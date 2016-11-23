@@ -2,10 +2,8 @@ package br.com.libertsolutions.libertvendas.app.presentation.login;
 
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
-import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ValidationError;
 import java.io.IOException;
-import org.greenrobot.eventbus.EventBus;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
@@ -43,9 +41,7 @@ class LoginSubscriber extends Subscriber<Vendedor> {
         }
     }
 
-    @Override public void onNext(Vendedor pVendedor) {
-        EventBus.getDefault().postSticky(UsuarioLogadoEvent.newEvent(pVendedor));
-    }
+    @Override public void onNext(Vendedor pVendedor) {}
 
     @Override public void onCompleted() {
         mView.showCompletedIndicator();

@@ -17,6 +17,14 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
         mView = pView;
     }
 
+    @Override public void registerForEvents() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override public void unregisterForEvents() {
+        EventBus.getDefault().unregister(this);
+    }
+
     @Override public void detach() {
         mView = null;
         mCompositeSubscription.clear();
@@ -41,14 +49,6 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
     public void addSubscription(Subscription pSubscription) {
         mCompositeSubscription.add(pSubscription);
-    }
-
-    public void registerForEvents() {
-        EventBus.getDefault().register(this);
-    }
-
-    public void unregisterForEvents() {
-        EventBus.getDefault().unregister(this);
     }
 
     public static class MvpViewNotAttachedException extends RuntimeException {

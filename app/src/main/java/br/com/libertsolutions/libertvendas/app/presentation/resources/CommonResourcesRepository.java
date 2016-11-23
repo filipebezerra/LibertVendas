@@ -5,5 +5,11 @@ package br.com.libertsolutions.libertvendas.app.presentation.resources;
  */
 
 public interface CommonResourcesRepository {
+
+    String obtainStringMessageVendedorSemEmpresasVinculadas();
+
+    String obtainStringMessageVendedorSemEmpresaLogada();
+
     String obtainStringMessageFieldsRequired();
+
 }

@@ -1,38 +1,47 @@
 package br.com.libertsolutions.libertvendas.app.presentation.home;
 
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
+import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
+import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ExtrasExtractor;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
  */
-class HomePresenter implements HomeContract.Presenter {
-    private final HomeContract.View mView;
+class HomePresenter extends BasePresenter<HomeContract.View> implements HomeContract.Presenter {
 
-    HomePresenter(HomeContract.View view) {
-        mView = view;
+    @Subscribe(threadMode = MAIN, sticky = true) public void onUsuarioLogadoEvent(
+            UsuarioLogadoEvent pEvent) {
+        Vendedor vendedor = pEvent.getVendedor();
+        Empresa empresa = pEvent.getEmpresa();
+        getView().showUsuarioLogado(vendedor.getNome(), empresa.getNome());
     }
 
     @Override
     public void clickNavigationMenuSettings() {
-        mView.navigateToSettings();
+        getView().navigateToSettings();
     }
 
     @Override
     public void clickNavigationMenuClientes() {
-        mView.navigateToClientes();
+        getView().navigateToClientes();
     }
 
     @Override
     public void clickNavigationMenuProdutos() {
-        mView.navigateToProdutos();
+        getView().navigateToProdutos();
     }
 
     @Override
     public void clickNavigationMenuPedidos() {
-        mView.navigateToPedidos();
+        getView().navigateToPedidos();
     }
 
     @Override public void getClienteFromResult(ExtrasExtractor<Cliente> pClienteExtrasExtractor) {
@@ -48,4 +57,5 @@ class HomePresenter implements HomeContract.Presenter {
             EventBus.getDefault().postSticky(NewPedidoCadastradoEvent.notifyEvent(pedido));
         }
     }
+
 }

@@ -20,21 +20,25 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
+import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
+import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ImportacaoResourcesRepository;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import org.greenrobot.eventbus.Subscribe;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
 
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
+
 /**
  * @author Filipe Bezerra
  */
-class ImportacaoPresenter implements ImportacaoContract.Presenter {
-
-    private final ImportacaoContract.View mView;
+class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
+        implements ImportacaoContract.Presenter {
 
     private final ImportacaoRepository mImportacaoRepository;
 
@@ -66,10 +70,12 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
     private Vendedor mUsuarioLogado;
 
+    private Empresa mEmpresaLogada;
+
     private Throwable mErrorMakingNetworkCall;
 
     ImportacaoPresenter(
-            ImportacaoContract.View pView, ImportacaoRepository pImportacaoRepository,
+            ImportacaoRepository pImportacaoRepository,
             FormaPagamentoService pFormaPagamentoService,
             Repository<FormaPagamento> pFormaPagamentoRepository,
             CidadeService pCidadeService, Repository<Cidade> pCidadeRepository,
@@ -79,7 +85,6 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
             Repository<TabelaPreco> pTabelaPrecoRepository,
             ImportacaoResourcesRepository pResourcesRepository,
             SettingsRepository pSettingsRepository) {
-        mView = pView;
         mImportacaoRepository = pImportacaoRepository;
         mFormaPagamentoService = pFormaPagamentoService;
         mFormaPagamentoRepository = pFormaPagamentoRepository;
@@ -93,52 +98,41 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
         mTabelaPrecoRepository = pTabelaPrecoRepository;
         mResourcesRepository = pResourcesRepository;
         mSettingsRepository = pSettingsRepository;
+    }
 
+    @Override public void attachView(ImportacaoContract.View pView) {
+        super.attachView(pView);
         if (mImportacaoRepository.isImportacaoInicialFeita()) {
-            mView.navigateToMainActivity();
-            mView.finishActivity();
+            getView().navigateToMainActivity();
+            getView().finishActivity();
         }
     }
 
-    @Override public void handleUsuarioLogadoEvent(Vendedor pVendedor) {
-        mUsuarioLogado = pVendedor;
+    @Subscribe(threadMode = MAIN, sticky = true) public void onUsuarioLogadoEvent(
+            UsuarioLogadoEvent pEvent) {
+        mUsuarioLogado = pEvent.getVendedor();
+        mEmpresaLogada = pEvent.getEmpresa();
     }
 
     @Override public void startSync(boolean pDeviceConnected) {
         if (pDeviceConnected) {
-            mView.showLoading();
+            getView().showLoading();
             requestImportacao();
         } else {
-            mView.showDeviceNotConnectedError();
+            getView().showDeviceNotConnectedError();
         }
     }
 
     private void requestImportacao() {
         mIsDoingInitialDataSync = true;
 
-        final List<Empresa> empresas = mUsuarioLogado.getEmpresas();
-
-        if (empresas == null || empresas.isEmpty()) {
-            mView.showMessageDialog(
-                    mResourcesRepository.obtainStringMessageVendedorSemEmpresasVinculadas());
-            return;
-        }
-
-        Empresa empresaLogada = null;
-        for (Empresa empresa : empresas) {
-            if (empresa.getIdEmpresa() == mSettingsRepository.getEmpresaLogada()) {
-                empresaLogada = empresa;
-                break;
-            }
-        }
-
-        if (empresaLogada == null) {
-            mView.showMessageDialog(
+        if (mEmpresaLogada == null) {
+            getView().showMessageDialog(
                     mResourcesRepository.obtainStringMessageVendedorSemEmpresaLogada());
             return;
         }
 
-        final String cnpjEmpresa = empresaLogada.getCnpj();
+        final String cnpjEmpresa = mEmpresaLogada.getCnpj();
 
         Observable<List<FormaPagamento>> getFormasPagamento = mFormaPagamentoService
                 .get(cnpjEmpresa)
@@ -170,7 +164,7 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
                 .flatMap(data -> mTabelaPrecoRepository
                         .saveAll(TabelaPrecoFactory.createListTabelaPreco(data)));
 
-        Observable
+        addSubscription(Observable
                 .merge(
                         getFormasPagamento,
                         getCidades,
@@ -182,22 +176,22 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
                 .subscribe(
                         pResult -> {
                             mImportacaoRepository.setImportacaoInicialComoFeita();
-                            mView.hideLoadingWithSuccess();
+                            getView().hideLoadingWithSuccess();
                         },
 
                         e -> {
                             Timber.e(e);
                             mErrorMakingNetworkCall = e;
-                            mView.hideLoadingWithFail();
+                            getView().hideLoadingWithFail();
                         }
-                );
+                ));
     }
 
     @Override public void handleClickDoneMenuItem() {
         if (mIsDoingInitialDataSync) {
-            mView.navigateToMainActivity();
+            getView().navigateToMainActivity();
         } else {
-            mView.finishActivity();
+            getView().finishActivity();
         }
     }
 
@@ -206,13 +200,13 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
     }
 
     @Override public void handleCancelOnSyncError() {
-        mView.finishActivity();
+        getView().finishActivity();
     }
 
     @Override public void handleAnimationEnd(boolean pSuccess) {
         if (pSuccess) {
-            mView.showSuccessMessage();
-            mView.invalidateMenu();
+            getView().showSuccessMessage();
+            getView().invalidateMenu();
         } else {
             showError();
         }
@@ -220,11 +214,11 @@ class ImportacaoPresenter implements ImportacaoContract.Presenter {
 
     private void showError() {
         if (mErrorMakingNetworkCall instanceof HttpException) {
-            mView.showServerError();
+            getView().showServerError();
         } else if (mErrorMakingNetworkCall instanceof IOException) {
-            mView.showNetworkError();
+            getView().showNetworkError();
         } else {
-            mView.showUnknownError();
+            getView().showUnknownError();
         }
     }
 

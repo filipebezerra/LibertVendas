@@ -7,6 +7,10 @@ public interface MvpPresenter<V extends  MvpView> {
 
     void attachView(V pView);
 
+    void registerForEvents();
+
     void detach();
+
+    void unregisterForEvents();
 
 }

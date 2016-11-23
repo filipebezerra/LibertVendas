@@ -10,12 +10,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.gordonwong.materialsheetfab.DimOverlayFrameLayout;
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
@@ -30,6 +32,9 @@ public class HomeActivity extends LibertVendasActivity
     @BindView(R.id.fab_sheet) protected CardView mFabSheet;
     @BindView(R.id.overlay) protected DimOverlayFrameLayout mFabOverlay;
 
+    @BindView(R.id.drawer_layout) protected DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view) protected NavigationView mNavigationView;
+
     @BindColor(R.color.background_card) protected int mFabSheetColor;
     @BindColor(R.color.color_accent) protected int mAccentColor;
 
@@ -37,38 +42,43 @@ public class HomeActivity extends LibertVendasActivity
 
     private MaterialSheetFab<SheetFloatingActionButton> mMaterialSheetFab;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new HomePresenter(this);
-
         setAsHomeActivity();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, mToolbar, R.string.navigation_drawer_open,
+                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+        mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
         mMaterialSheetFab = new MaterialSheetFab<>(
                 mFloatingActionButton, mFabSheet, mFabOverlay, mFabSheetColor, mAccentColor);
+
+        mPresenter = new HomePresenter();
+        mPresenter.attachView(this);
     }
 
-    @Override
-    protected int provideContentViewResource() {
+    @Override protected int provideContentViewResource() {
         return R.layout.activity_home;
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+    @Override protected void onStart() {
+        super.onStart();
+        mPresenter.registerForEvents();
+    }
+
+    @Override protected void onStop() {
+        super.onStop();
+        mPresenter.unregisterForEvents();
+    }
+
+    @Override public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else if (mMaterialSheetFab.isSheetVisible()) {
             mMaterialSheetFab.hideSheet();
         } else {
@@ -76,9 +86,8 @@ public class HomeActivity extends LibertVendasActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    @SuppressWarnings("StatementWithEmptyBody") @Override public boolean onNavigationItemSelected(
+            @NonNull MenuItem item) {
         int id = item.getItemId();
         item.setChecked(false);
 
@@ -94,32 +103,35 @@ public class HomeActivity extends LibertVendasActivity
             mPresenter.clickNavigationMenuSettings();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override public void showUsuarioLogado(String pNomeVendedor, String pNomeEmpresa) {
+        ButterKnife.<TextView>findById(mNavigationView.getHeaderView(0), R.id.text_view_nome_vendedor)
+                .setText(pNomeVendedor);
+        ButterKnife.<TextView>findById(mNavigationView.getHeaderView(0), R.id.text_view_nome_empresa)
+                .setText(pNomeEmpresa);
     }
 
     @Override public void navigateToSettings() {
         navigate().toSettings(false);
     }
 
-    @Override
-    public void navigateToClientes() {
+    @Override public void navigateToClientes() {
         navigate().toClientes();
     }
 
-    @Override
-    public void navigateToProdutos() {
+    @Override public void navigateToProdutos() {
         navigate().toProdutos();
     }
 
-    @Override
-    public void navigateToPedidos() {
+    @Override public void navigateToPedidos() {
         navigate().toPedidos();
     }
 
-    @OnClick({ R.id.fab_sheet_item_novo_pedido, R.id.fab_sheet_item_novo_cliente })
-    void onFabClick(View pView) {
+    @OnClick({ R.id.fab_sheet_item_novo_pedido, R.id.fab_sheet_item_novo_cliente }) void onFabClick(
+            View pView) {
         mMaterialSheetFab.hideSheet();
         if (pView.getId() == R.id.fab_sheet_item_novo_pedido) {
             navigate().toPedido();
@@ -128,8 +140,7 @@ public class HomeActivity extends LibertVendasActivity
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case Navigator.REQUEST_NEW_CLIENTE: {
@@ -144,4 +155,10 @@ public class HomeActivity extends LibertVendasActivity
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detach();
+    }
+
 }

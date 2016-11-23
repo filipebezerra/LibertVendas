@@ -2,13 +2,19 @@ package br.com.libertsolutions.libertvendas.app.presentation.home;
 
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
+import br.com.libertsolutions.libertvendas.app.presentation.base.MvpPresenter;
+import br.com.libertsolutions.libertvendas.app.presentation.base.MvpView;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ExtrasExtractor;
 
 /**
  * @author Filipe Bezerra
  */
 interface HomeContract {
-    interface View {
+
+    interface View extends MvpView {
+
+        void showUsuarioLogado(String pNomeVendedor, String pNomeEmpresa);
+
         void navigateToSettings();
 
         void navigateToClientes();
@@ -18,7 +24,8 @@ interface HomeContract {
         void navigateToPedidos();
     }
 
-    interface Presenter {
+    interface Presenter extends MvpPresenter<View> {
+
         void clickNavigationMenuSettings();
 
         void clickNavigationMenuClientes();
@@ -30,5 +37,7 @@ interface HomeContract {
         void getClienteFromResult(ExtrasExtractor<Cliente> pClienteExtrasExtractor);
 
         void getPedidoFromResult(ExtrasExtractor<Pedido> pPedidoExtrasExtractor);
+
     }
+
 }

@@ -1,12 +1,14 @@
 package br.com.libertsolutions.libertvendas.app.presentation.importacao;
 
-import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
+import br.com.libertsolutions.libertvendas.app.presentation.base.MvpPresenter;
+import br.com.libertsolutions.libertvendas.app.presentation.base.MvpView;
 
 /**
  * @author Filipe Bezerra
  */
 interface ImportacaoContract {
-    interface View {
+
+    interface View extends MvpView {
         void showLoading();
 
         void showSuccessMessage();
@@ -33,8 +35,7 @@ interface ImportacaoContract {
 
     }
 
-    interface Presenter {
-        void handleUsuarioLogadoEvent(Vendedor pVendedor);
+    interface Presenter extends MvpPresenter<View> {
 
         void startSync(boolean pDeviceConnected);
 
@@ -45,5 +46,7 @@ interface ImportacaoContract {
         void handleCancelOnSyncError();
 
         void handleAnimationEnd(boolean pSuccess);
+
     }
+
 }

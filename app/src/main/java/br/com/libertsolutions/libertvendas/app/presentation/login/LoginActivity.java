@@ -34,25 +34,15 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
     private LoginContract.Presenter mPresenter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
-        mPresenter = new LoginPresenter(this,
+        mPresenter = new LoginPresenter(
                 Injection.provideCommonResourcesRepository(this),
                 Injection.provideVendedorService(this),
                 Injection.provideVendedorRepository(this),
                 Injection.provideSettingsRepository(this));
-
         super.onCreate(savedInstanceState);
 
         mButtonEntrar.setIndeterminateProgressMode(true);
-    }
-
-    @Override protected void onResume() {
-        super.onResume();
-        mPresenter.initializeView();
-    }
-
-    @Override protected void onPause() {
-        super.onPause();
-        mPresenter.stopWork();
+        mPresenter.attachView(this);
     }
 
     @Override protected int provideContentViewResource() {
@@ -159,7 +149,7 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
         new MaterialDialog.Builder(this)
                 .title(R.string.title_dialog_choose_empresa_para_logar)
                 .items(pEmpresas)
-                .itemsCallbackSingleChoice(0, (dialog, itemView, which, text) -> {
+                .itemsCallbackSingleChoice(-1, (dialog, itemView, which, text) -> {
                     mPresenter.clickChooseEmpresaParaLogar(pEmpresas.get(which));
                     return true;
                 })
@@ -179,4 +169,5 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
     @Override public void finishActivity() {
         finish();
     }
+
 }
