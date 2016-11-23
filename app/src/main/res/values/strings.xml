@@ -11,13 +11,13 @@
     <string name="summary_pref_endereco_servidor">Endereço web do servidor para troca de dados</string>
     <string name="key_pref_sincronizar_pedido_automaticamente" translatable="false">sincronizar_pedido_automaticamente</string>
     <string name="title_pref_sincronizar_pedido_automaticamente">Sincronizar pedido automaticamente</string>
-    <string name="summary_pref_sincronizar_pedido_automaticamente">A sincronizaçao será executada automaticamente, todos dias às 9 horas</string>
+    <string name="summary_pref_sincronizar_pedido_automaticamente">A sincronizaçao será executada automaticamente após cada pedido realizado</string>
     <string name="key_pref_chave_autenticacao" translatable="false">chave_autenticacao</string>
     <string name="title_pref_chave_autenticacao">Chave de autenticação</string>
     <string name="default_value_pref_chave_autenticacao" translatable="false">626c6f63736b696e</string>
     <string name="dialog_title_pref_chave_autenticacao">Confirme a chave de autenticação</string>
     <string name="dialog_message_pref_chave_autenticacao">Informe o valor da chave de autenticação para conceder acesso ao servidor</string>
-    <string name="summary_pref_chave_autenticacao">Chave para autenticar sua identidade e obter acesso ao servidor.</string>
+    <string name="summary_pref_chave_autenticacao">Chave para autenticar sua identidade e obter acesso ao servidor</string>
     <string name="title_pref_category_pedido">Pedido</string>
     <string name="key_pref_pode_aplicar_desconto" translatable="false">pode_aplicar_desconto</string>
     <string name="title_pref_pode_aplicar_desconto">Pode aplicar desconto</string>
