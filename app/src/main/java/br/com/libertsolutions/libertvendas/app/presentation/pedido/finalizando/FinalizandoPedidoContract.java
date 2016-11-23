@@ -10,6 +10,7 @@ import java.util.Calendar;
 interface FinalizandoPedidoContract {
 
     interface View extends MvpView {
+
         void showCalendarPicker(Calendar pDataEmissao);
 
         void hideRequiredMessages();
@@ -20,10 +21,13 @@ interface FinalizandoPedidoContract {
 
         void displayRequiredMessageForCliente();
 
+        void displayValidationErrorForDesconto(String pMessage);
+
         void showFeedbackMessage(String pMessage);
     }
 
     interface Presenter extends MvpPresenter<View> {
+
         void attachViewModel(
                 FinalizandoPedidoViewModel pViewModel,
                 FinalizandoPedidoExtrasExtractor pExtrasExtractor);
@@ -33,6 +37,7 @@ interface FinalizandoPedidoContract {
         void changeDataEmissao(long pDataSelecionada);
 
         void clickActionSave();
+
     }
 
 }

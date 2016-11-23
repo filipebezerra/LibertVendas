@@ -45,6 +45,7 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
     @BindView(R.id.input_layout_cliente) protected TextInputLayout mInputLayoutCliente;
     @BindView(R.id.edit_text_cliente) protected EditText mEditTextCliente;
     @BindView(R.id.edit_text_total_produtos) protected EditText mEditTextTotalProdutos;
+    @BindView(R.id.input_layout_desconto) protected TextInputLayout mInputLayoutDesconto;
     @BindView(R.id.edit_text_desconto) protected EditText mEditTextDesconto;
     @BindView(R.id.spinner_forma_pagamento) protected MaterialSpinner mSpinnerFormaPagamento;
     @BindView(R.id.edit_text_observacao) protected EditText mEditTextObservacao;
@@ -79,13 +80,15 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
         mPresenter = new FinalizandoPedidoPresenter(
                 Injection.provideFormaPagamentoRepository(getContext()),
                 Injection.providePedidoRepository(getContext()),
-                ResourcesRepositories.getFinalizaPedidoResourcesRepository(getContext()));
+                ResourcesRepositories.getFinalizaPedidoResourcesRepository(getContext()),
+                Injection.provideSettingsRepository(getContext()));
     }
 
     @Override public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mPresenter.attachView(this);
+        mPresenter.registerForEvents();
 
         mViewModel = new FinalizandoPedidoViewModel(getContext(),
                 mEditTextDataEmissao,
@@ -147,6 +150,11 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
 
     @Override public void displayRequiredMessageForCliente() {
         displayRequiredMessageForField(mInputLayoutCliente);
+    }
+
+    @Override public void displayValidationErrorForDesconto(String pMessage) {
+        mInputLayoutDesconto.setError(pMessage);
+        mEditTextDesconto.requestFocus();
     }
 
     @Override public void showFeedbackMessage(String pMessage) {

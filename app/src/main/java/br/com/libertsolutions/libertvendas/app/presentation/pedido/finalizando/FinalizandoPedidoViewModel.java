@@ -49,7 +49,8 @@ class FinalizandoPedidoViewModel {
     }
 
     boolean hasDesconto() {
-        return !TextUtils.isEmpty(mEditTextValorDesconto.getText());
+        return !TextUtils.isEmpty(mEditTextValorDesconto.getText()) &&
+                !mEditTextValorDesconto.getText().toString().equals("0");
     }
 
     String desconto() {
@@ -71,6 +72,10 @@ class FinalizandoPedidoViewModel {
 
     void totalProdutos(String pTotalProdutos) {
         mEditTextTotalProdutos.setText(pTotalProdutos);
+    }
+
+    String totalProdutos() {
+        return mEditTextTotalProdutos.getText().toString();
     }
 
     void cliente(String nomeCliente) {

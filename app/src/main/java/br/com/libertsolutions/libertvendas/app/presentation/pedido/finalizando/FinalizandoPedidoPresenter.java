@@ -1,13 +1,17 @@
 package br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizando;
 
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
+import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.NovoPedidoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.FinalizaPedidoResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
@@ -15,10 +19,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizando.FinalizandoPedidoContract.Presenter;
 import static br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizando.FinalizandoPedidoContract.View;
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
@@ -30,6 +36,8 @@ class FinalizandoPedidoPresenter extends BasePresenter<View> implements Presente
     private final Repository<Pedido> mPedidoRepository;
 
     private final FinalizaPedidoResourcesRepository mResourcesRepository;
+
+    private final SettingsRepository mSettingsRepository;
 
     private FinalizandoPedidoViewModel mViewModel;
 
@@ -43,14 +51,20 @@ class FinalizandoPedidoPresenter extends BasePresenter<View> implements Presente
 
     private List<ProdutoVo> mProdutosSelecionados;
 
+    private Vendedor mVendedorLogado;
+
+    private Empresa mEmpresaLogada;
+
     FinalizandoPedidoPresenter(
             Repository<FormaPagamento> pFormaPagamentoRepository,
             Repository<Pedido> pPedidoRepository,
-            FinalizaPedidoResourcesRepository pResourcesRepository) {
+            FinalizaPedidoResourcesRepository pResourcesRepository,
+            SettingsRepository pSettingsRepository) {
 
         mFormaPagamentoRepository = pFormaPagamentoRepository;
         mPedidoRepository = pPedidoRepository;
         mResourcesRepository = pResourcesRepository;
+        mSettingsRepository = pSettingsRepository;
     }
 
     @Override public void attachViewModel(
@@ -81,12 +95,12 @@ class FinalizandoPedidoPresenter extends BasePresenter<View> implements Presente
                             mViewModel.formasPagamento(pFormaPagamentos);
                         }
                 );
-
-        //registerForEvents();
     }
 
-    private String formatDataEmissao() {
-        return FormattingUtils.convertMillisecondsToDateAsString(mDataEmissao.getTimeInMillis());
+    @Subscribe(threadMode = MAIN, sticky = true) public void onUsuarioLogadoEvent(
+            UsuarioLogadoEvent pEvent) {
+        mVendedorLogado = pEvent.getVendedor();
+        mEmpresaLogada = pEvent.getEmpresa();
     }
 
     @Override public void clickSelectDataEmissao() {
@@ -96,6 +110,10 @@ class FinalizandoPedidoPresenter extends BasePresenter<View> implements Presente
     @Override public void changeDataEmissao(long pDataSelecionada) {
         mDataEmissao.setTimeInMillis(pDataSelecionada);
         mViewModel.dataEmissao(formatDataEmissao());
+    }
+
+    private String formatDataEmissao() {
+        return FormattingUtils.convertMillisecondsToDateAsString(mDataEmissao.getTimeInMillis());
     }
 
     @Override public void clickActionSave() {
@@ -158,6 +176,37 @@ class FinalizandoPedidoPresenter extends BasePresenter<View> implements Presente
             getView().showFeedbackMessage(mResourcesRepository.obtainStringMessageFieldsRequired());
             return true;
         } else {
+            if (mViewModel.hasDesconto()) {
+                if (!mSettingsRepository.loadSettings().isPodeAplicarDesconto()) {
+                    getView().displayValidationErrorForDesconto(
+                            mResourcesRepository
+                                    .obtainStringMessageVendedorNaoPermitidoAplicarDesconto());
+                    return true;
+                }
+
+                final FormaPagamento formaPagamento = mViewModel.formaPagamento();
+                final float percentualDesconto = formaPagamento.getPercentualDesconto();
+
+                if (percentualDesconto == 0) {
+                    getView().displayValidationErrorForDesconto(
+                            mResourcesRepository
+                                    .obtainStringMessageValorDescontoNaoPermitido());
+                    return true;
+                }
+
+                final Double desconto = Double.valueOf(mViewModel.desconto());
+                final Double totalProdutos = Double.valueOf(mViewModel.totalProdutos());
+
+                final double percentualAplicadoVenda = desconto * 100 / totalProdutos;
+
+                if (percentualAplicadoVenda > percentualDesconto) {
+                    getView().displayValidationErrorForDesconto(
+                            mResourcesRepository
+                                    .obtainStringMessageValorDescontoNaoPermitido());
+                    return true;
+                }
+            }
+
             return false;
         }
     }
