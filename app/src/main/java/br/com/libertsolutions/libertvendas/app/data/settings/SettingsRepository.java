@@ -10,6 +10,10 @@ public interface SettingsRepository {
 
     void setFirstTimeSettingsLaunch();
 
+    boolean isFirstTimeFeaturedMenuShown();
+
+    void setFirstTimeFeaturedMenuShown();
+
     boolean hasAllSettingsFields();
 
     Settings loadSettings();

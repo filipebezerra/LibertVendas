@@ -11,6 +11,7 @@ import android.support.v7.widget.CardView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
@@ -58,7 +59,7 @@ public class HomeActivity extends LibertVendasActivity
         mMaterialSheetFab = new MaterialSheetFab<>(
                 mFloatingActionButton, mFabSheet, mFabOverlay, mFabSheetColor, mAccentColor);
 
-        mPresenter = new HomePresenter();
+        mPresenter = new HomePresenter(Injection.provideSettingsRepository(this));
         mPresenter.attachView(this);
     }
 
@@ -112,6 +113,10 @@ public class HomeActivity extends LibertVendasActivity
                 .setText(pNomeVendedor);
         ButterKnife.<TextView>findById(mNavigationView.getHeaderView(0), R.id.text_view_nome_empresa)
                 .setText(pNomeEmpresa);
+    }
+
+    @Override public void showFeaturedMenu() {
+        mDrawerLayout.openDrawer(GravityCompat.START);
     }
 
     @Override public void navigateToSettings() {

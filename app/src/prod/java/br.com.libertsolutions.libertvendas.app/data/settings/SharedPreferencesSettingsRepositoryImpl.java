@@ -15,9 +15,13 @@ import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_tabela_p
  * @author Filipe Bezerra
  */
 public class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
-    private static final String KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH = "first-time-settings-launch";
+
+    private static final String KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH
+            = "first-time-settings-launch";
     private static final String KEY_PREF_USUARIO_LOGADO = "usuario-logado";
     private static final String KEY_PREF_EMPRESA_LOGADA = "empresa-logada";
+    private static final String KEY_PREF_FIRST_TIME_FEATURED_MENU_SHOWN
+            = "first-time-featured-menu-shown";
 
     private final Context mContext;
 
@@ -29,16 +33,30 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
     }
 
     @Override public boolean isFirstTimeSettingsLaunch() {
-        return PreferenceManager
-                .getDefaultSharedPreferences(mContext)
-                .getBoolean(KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH, true);
+        return getBooleanPreference(KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH, true);
     }
 
     @Override public void setFirstTimeSettingsLaunch() {
+        putBooleanPreference(KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH, false);
+    }
+
+    @Override public boolean isFirstTimeFeaturedMenuShown() {
+        return getBooleanPreference(KEY_PREF_FIRST_TIME_FEATURED_MENU_SHOWN, false);
+    }
+
+    @Override public void setFirstTimeFeaturedMenuShown() {
+        putBooleanPreference(KEY_PREF_FIRST_TIME_FEATURED_MENU_SHOWN, true);
+    }
+
+    private boolean getBooleanPreference(final String preferenceKey, final boolean defaultValue) {
+        return mPreferences.getBoolean(preferenceKey, defaultValue);
+    }
+
+    private void putBooleanPreference(final String preferenceKey, final boolean value) {
         PreferenceManager
                 .getDefaultSharedPreferences(mContext)
                 .edit()
-                .putBoolean(KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH, false)
+                .putBoolean(preferenceKey, value)
                 .apply();
     }
 
@@ -72,26 +90,31 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
     }
 
     @Override public void setUsuarioLogado(int idVendedor) {
-        PreferenceManager
-                .getDefaultSharedPreferences(mContext)
-                .edit()
-                .putInt(KEY_PREF_USUARIO_LOGADO, idVendedor)
-                .apply();
+        putIntPreference(KEY_PREF_USUARIO_LOGADO, idVendedor);
     }
 
     @Override public int getUsuarioLogado() {
-        return mPreferences.getInt(KEY_PREF_USUARIO_LOGADO, -1);
+        return getIntPreference(KEY_PREF_USUARIO_LOGADO, -1);
     }
 
     @Override public void setEmpresaLogada(int idEmpresa) {
-        PreferenceManager
-                .getDefaultSharedPreferences(mContext)
-                .edit()
-                .putInt(KEY_PREF_EMPRESA_LOGADA, idEmpresa)
-                .apply();
+        putIntPreference(KEY_PREF_EMPRESA_LOGADA, idEmpresa);
     }
 
     @Override public int getEmpresaLogada() {
-        return mPreferences.getInt(KEY_PREF_EMPRESA_LOGADA, -1);
+        return getIntPreference(KEY_PREF_EMPRESA_LOGADA, -1);
     }
+
+    private int getIntPreference(final String preferenceKey, final int defaultValue) {
+        return mPreferences.getInt(preferenceKey, defaultValue);
+    }
+
+    private void putIntPreference(final String preferenceKey, final int value) {
+        PreferenceManager
+                .getDefaultSharedPreferences(mContext)
+                .edit()
+                .putInt(preferenceKey, value)
+                .apply();
+    }
+
 }

@@ -15,6 +15,8 @@ interface HomeContract {
 
         void showUsuarioLogado(String pNomeVendedor, String pNomeEmpresa);
 
+        void showFeaturedMenu();
+
         void navigateToSettings();
 
         void navigateToClientes();
