@@ -39,11 +39,9 @@
             android:summary="@string/summary_pref_pode_aplicar_desconto"
             />
 
-        <EditTextPreference
+        <Preference
             android:key="@string/key_pref_tabela_preco_padrao"
             android:title="@string/title_pref_tabela_preco_padrao"
-            android:inputType="numberSigned"
-            android:dialogTitle="@string/dialog_title_pref_tabela_preco_padrao"
             android:summary="@string/summary_pref_tabela_preco_padrao"
             android:enabled="false"
             />
