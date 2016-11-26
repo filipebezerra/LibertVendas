@@ -8,7 +8,6 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
-import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ValidationError;
 import org.greenrobot.eventbus.EventBus;

@@ -1,4 +1,4 @@
-package br.com.libertsolutions.libertvendas.app.presentation.events;
+package br.com.libertsolutions.libertvendas.app.presentation.login;
 
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;

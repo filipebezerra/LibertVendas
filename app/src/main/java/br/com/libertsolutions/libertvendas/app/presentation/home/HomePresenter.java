@@ -6,7 +6,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
-import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.login.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ExtrasExtractor;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

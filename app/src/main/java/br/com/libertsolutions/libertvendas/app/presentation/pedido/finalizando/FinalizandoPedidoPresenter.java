@@ -11,7 +11,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
-import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.login.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.FinalizaPedidoResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
 import java.util.ArrayList;
