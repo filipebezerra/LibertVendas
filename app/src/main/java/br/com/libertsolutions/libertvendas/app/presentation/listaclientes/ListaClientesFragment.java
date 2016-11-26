@@ -22,21 +22,28 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.List;
 
 /**
- * @author Filipe Bezerra.
+ * @author Filipe Bezerra
  */
 public class ListaClientesFragment extends LibertVendasFragment
         implements ListaClientesContract.View, OnItemClickListener {
 
-    @BindView(R.id.recycler_view_clientes) protected RecyclerView mRecyclerViewClientes;
+    private static final String ARG_EXTRA_TO_SELECT
+            = ListaClientesFragment.class.getSimpleName() + ".argExtraToSelect";
 
-    private ClienteAdapter mClienteAdapter;
+    @BindView(R.id.recycler_view_clientes) protected RecyclerView mRecyclerViewClientes;
 
     private ListaClientesContract.Presenter mPresenter;
 
+    private ListaClientesAdapter mRecyclerViewAdapter;
+
     private MaterialDialog mProgressDialog;
 
-    public static ListaClientesFragment newInstance() {
-        return new ListaClientesFragment();
+    public static ListaClientesFragment newInstance(boolean toSelect) {
+        ListaClientesFragment fragment = new ListaClientesFragment();
+        Bundle arguments = new Bundle();
+        arguments.putBoolean(ARG_EXTRA_TO_SELECT, toSelect);
+        fragment.setArguments(arguments);
+        return fragment;
     }
 
     @Override protected int provideContentViewResource() {
@@ -50,12 +57,14 @@ public class ListaClientesFragment extends LibertVendasFragment
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter = new ListaClientesPresenter(
-                Injection.provideClienteRepository(getContext()));
 
         mRecyclerViewClientes.setHasFixedSize(true);
         mRecyclerViewClientes.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        final boolean toSelect = getArguments().getBoolean(ARG_EXTRA_TO_SELECT);
+
+        mPresenter = new ListaClientesPresenter(toSelect,
+                Injection.provideClienteRepository(getContext()));
         mPresenter.attachView(this);
         mPresenter.loadListaClientes();
     }
@@ -73,7 +82,7 @@ public class ListaClientesFragment extends LibertVendasFragment
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mClienteAdapter.getFilter().filter(newText);
+                mRecyclerViewAdapter.getFilter().filter(newText);
                 return true;
             }
         });
@@ -95,7 +104,7 @@ public class ListaClientesFragment extends LibertVendasFragment
 
     @Override public void showListaClientes(List<Cliente> pClienteList) {
         mRecyclerViewClientes.setAdapter(
-                mClienteAdapter = new ClienteAdapter(getContext(), pClienteList));
+                mRecyclerViewAdapter = new ListaClientesAdapter(getContext(), pClienteList));
         mRecyclerViewClientes.addOnItemTouchListener(
                 new OnItemTouchListener(getContext(), mRecyclerViewClientes, this));
         mRecyclerViewClientes
@@ -109,29 +118,21 @@ public class ListaClientesFragment extends LibertVendasFragment
                         hideLoading();
                     }
                 });
-
     }
 
-    @Override public void updateListaClientes(int pPosition) {
-        mClienteAdapter.notifyItemInserted(pPosition);
-    }
-
-    @Override public void onStart() {
-        super.onStart();
-        mPresenter.registerForEvents();
-    }
-
-    @Override public void onStop() {
-        super.onStop();
-        mPresenter.unregisterForEvents();
+    @Override public void navigateToCliente(Cliente pCliente) {
+        hostActivity().navigate().toCliente(pCliente);
     }
 
     @Override public void onSingleTapUp(View view, int position) {
         mPresenter.handleSingleTapUp(position);
     }
 
-    @Override public void onLongPress(View view, int position) {
+    @Override public void onLongPress(View view, int position) {}
 
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        mPresenter.detach();
     }
 
 }

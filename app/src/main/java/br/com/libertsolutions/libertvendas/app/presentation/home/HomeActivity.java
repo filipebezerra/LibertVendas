@@ -124,7 +124,7 @@ public class HomeActivity extends LibertVendasActivity
     }
 
     @Override public void navigateToClientes() {
-        navigate().toClientes();
+        navigate().toClientes(false);
     }
 
     @Override public void navigateToProdutos() {
@@ -141,7 +141,7 @@ public class HomeActivity extends LibertVendasActivity
         if (pView.getId() == R.id.fab_sheet_item_novo_pedido) {
             navigate().toPedido();
         } else {
-            navigate().toCliente(true);
+            navigate().toCliente(null);
         }
     }
 

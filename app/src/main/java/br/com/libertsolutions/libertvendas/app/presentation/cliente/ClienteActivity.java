@@ -28,7 +28,7 @@ import smtchahal.materialspinner.MaterialSpinner;
  */
 public class ClienteActivity extends LibertVendasActivity implements ClienteContract.View {
 
-    public static final String EXTRA_FROM_HOME
+    public static final String EXTRA_CLIENTE
             = ClienteActivity.class.getSimpleName() + ".extraFromHome";
 
     public static final String EXTRA_RESULT_NEW_CLIENTE =
@@ -56,24 +56,13 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setAsInitialFlowActivity();
         mPresenter = new ClientePresenter(this,
                 Injection.provideClienteRepository(this),
                 Injection.provideClienteResourcesRepository(this),
                 Injection.provideEstadoRepository(this),
                 Injection.provideCidadeRepository(this));
         mPresenter.initializeView();
-        extractExtras();
-    }
-
-    private void extractExtras() {
-        final Bundle extras = getIntent().getExtras();
-        if (extras.containsKey(EXTRA_FROM_HOME)) {
-            if (extras.getBoolean(EXTRA_FROM_HOME)) {
-                setAsInitialFlowActivity();
-            } else {
-                setAsSubActivity();
-            }
-        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package br.com.libertsolutions.libertvendas.app.presentation.pedido.listaclientes;
+package br.com.libertsolutions.libertvendas.app.presentation.listaclientes;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -43,7 +43,7 @@ class ListaClientesAdapter extends RecyclerView.Adapter<ListaClientesViewHolder>
     @Override public void onBindViewHolder(ListaClientesViewHolder holder, int position) {
         final Cliente cliente = mClienteList.get(position);
         holder.textViewRazaoSocial.setText(cliente.getNome());
-        holder.textViewCpfOuCnpj.setText(cliente.getCpfCnpj());
+        holder.textViewCpfOuCnpj.setText(FormattingUtils.formatCPForCPNJ(cliente.getCpfCnpj()));
 
         if (!TextUtils.isEmpty(cliente.getTelefone())
                 && !TextUtils.isEmpty(cliente.getTelefone2())) {

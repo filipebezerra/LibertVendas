@@ -2,8 +2,10 @@ package br.com.libertsolutions.libertvendas.app.presentation.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.cliente.ClienteActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.importacao.ImportacaoActivity;
@@ -47,10 +49,10 @@ public class Navigator {
         ActivityCompat.startActivity(mActivity, homeIntent, null);
     }
 
-    public void toClientes() {
+    public void toClientes(boolean pToSelect) {
         mActivity.getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, ListaClientesFragment.newInstance())
+                .replace(R.id.fragment_container, ListaClientesFragment.newInstance(pToSelect))
                 .addToBackStack(null)
                 .commit();
         mActivity.setTitle(R.string.title_fragment_lista_clientes);
@@ -77,11 +79,16 @@ public class Navigator {
         ActivityCompat.startActivity(mActivity, pedidoIntent, null);
     }
 
-    public void toCliente(boolean fromHome) {
-        final Intent clienteIntent = new Intent(mActivity, ClienteActivity.class)
-                .putExtra(ClienteActivity.EXTRA_FROM_HOME, fromHome);
+    public void toCliente(@Nullable Cliente pCliente) {
+        final Intent clienteIntent = new Intent(mActivity, ClienteActivity.class);
+
+        if (pCliente != null) {
+            clienteIntent.putExtra(ClienteActivity.EXTRA_CLIENTE, pCliente);
+        }
+
         ActivityCompat.startActivityForResult(mActivity, clienteIntent, REQUEST_NEW_CLIENTE, null);
     }
+
 
     public void toImportacao() {
         final Intent importacaoIntent = new Intent(mActivity, ImportacaoActivity.class);

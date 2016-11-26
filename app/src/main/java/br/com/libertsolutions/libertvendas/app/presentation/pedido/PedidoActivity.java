@@ -8,7 +8,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizando.FinalizandoPedidoFragment;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.listaclientes.ListaClientesFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.widget.TabAdapter;
 import butterknife.BindView;
@@ -68,7 +68,7 @@ public class PedidoActivity extends LibertVendasActivity implements PedidoContra
 
     @Override public void goToListaClientesStep() {
         if (!mTabAdapter.hasPosition(PAGE_LISTA_CLIENTES)) {
-            mTabAdapter.addFragment(ListaClientesFragment.newInstance(),
+            mTabAdapter.addFragment(ListaClientesFragment.newInstance(true),
                     getString(title_fragment_selecione_cliente));
         }
 
