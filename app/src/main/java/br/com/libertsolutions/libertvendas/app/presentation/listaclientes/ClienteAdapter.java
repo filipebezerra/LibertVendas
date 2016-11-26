@@ -44,7 +44,7 @@ class ClienteAdapter extends RecyclerView.Adapter<ClienteViewHolder> implements 
     public void onBindViewHolder(ClienteViewHolder holder, int position) {
         final Cliente cliente = mClienteList.get(position);
         holder.textViewRazaoSocial.setText(cliente.getNome());
-
+        holder.textViewCpfOuCnpj.setText(FormattingUtils.formatCPForCPNJ(cliente.getCpfCnpj()));
         holder.textViewTelefone.setText(cliente.getTelefone());
 
         if (!TextUtils.isEmpty(cliente.getTelefone())

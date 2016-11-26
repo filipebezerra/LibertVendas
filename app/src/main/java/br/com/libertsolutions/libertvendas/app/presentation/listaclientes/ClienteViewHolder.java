@@ -16,6 +16,7 @@ class ClienteViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.text_view_razao_social) TextView textViewRazaoSocial;
     @BindView(R.id.text_view_telefone) TextView textViewTelefone;
     @BindView(R.id.text_view_email) TextView textViewEmail;
+    @BindView(R.id.text_view_cpf_ou_cnpj) TextView textViewCpfOuCnpj;
 
     ClienteViewHolder(View itemView) {
         super(itemView);

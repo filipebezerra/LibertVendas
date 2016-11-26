@@ -4,6 +4,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,6 +30,10 @@ public class FormattingUtils {
     private static final PhoneNumberUtil PHONE_UTIL = PhoneNumberUtil.getInstance();
 
     private static final String BR_REGION_CODE = "BR";
+
+    private static final DecimalFormat CNPJ_NFORMAT = new DecimalFormat("00000000000000");
+
+    private static final DecimalFormat CPF_NFORMAT = new DecimalFormat("00000000000");
 
     static {
         PT_BR_CURRENCY_FORMATTER.setMaximumFractionDigits(2);
@@ -65,5 +70,27 @@ public class FormattingUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliseconds);
         return DATE_FORMATTER_AS_DD_MM_YYYY.format(calendar.getTime());
+    }
+
+    public static String formatCPForCPNJ(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return value;
+        }
+
+        final int valueSize = value.length();
+        if (valueSize > 14) {
+            return value;
+        }
+
+        boolean isCPF = valueSize < 12;
+        DecimalFormat formatDecimal = isCPF ? CPF_NFORMAT : CNPJ_NFORMAT;
+
+        final String stringNumber = formatDecimal.format(Long.valueOf(value));
+
+        return isCPF ? stringNumber.replaceAll(
+                "([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{2})", "$1.$2.$3-$4")
+                : stringNumber.replaceAll(
+                        "([0-9]{2})([0-9]{3})([0-9]{3})([0-9]{4})([0-9]{2})",
+                        "$1.$2.$3/$4-$5");
     }
 }
