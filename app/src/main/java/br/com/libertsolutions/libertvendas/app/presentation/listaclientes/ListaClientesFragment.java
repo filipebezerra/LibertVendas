@@ -15,15 +15,11 @@ import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
-import br.com.libertsolutions.libertvendas.app.presentation.home.NewClienteCadastradoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemClickListener;
 import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemTouchListener;
 import butterknife.BindView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.List;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * @author Filipe Bezerra.
@@ -43,31 +39,28 @@ public class ListaClientesFragment extends LibertVendasFragment
         return new ListaClientesFragment();
     }
 
-    @Override
-    protected int provideContentViewResource() {
+    @Override protected int provideContentViewResource() {
         return R.layout.fragment_lista_clientes;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter = new ListaClientesPresenter(this,
+        mPresenter = new ListaClientesPresenter(
                 Injection.provideClienteRepository(getContext()));
 
         mRecyclerViewClientes.setHasFixedSize(true);
         mRecyclerViewClientes.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        mPresenter.attachView(this);
         mPresenter.loadListaClientes();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_lista_clientes, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -119,27 +112,18 @@ public class ListaClientesFragment extends LibertVendasFragment
 
     }
 
-    @Override
-    public void updateListaClientes(int pPosition) {
+    @Override public void updateListaClientes(int pPosition) {
         mClienteAdapter.notifyItemInserted(pPosition);
     }
 
-    @Override
-    public void onStart() {
+    @Override public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        mPresenter.registerForEvents();
     }
 
-    @Override
-    public void onStop() {
+    @Override public void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onNewClienteCadastrado(NewClienteCadastradoEvent pEvent) {
-        mPresenter.addNewClienteCadastrado(pEvent.getCliente());
-        EventBus.getDefault().removeStickyEvent(pEvent);
+        mPresenter.unregisterForEvents();
     }
 
     @Override public void onSingleTapUp(View view, int position) {
@@ -149,4 +133,5 @@ public class ListaClientesFragment extends LibertVendasFragment
     @Override public void onLongPress(View view, int position) {
 
     }
+
 }

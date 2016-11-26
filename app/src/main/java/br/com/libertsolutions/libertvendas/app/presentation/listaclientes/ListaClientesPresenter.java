@@ -2,29 +2,31 @@ package br.com.libertsolutions.libertvendas.app.presentation.listaclientes;
 
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
+import br.com.libertsolutions.libertvendas.app.presentation.home.NewClienteCadastradoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ObservableUtils;
 import java.util.Collections;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
 
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
+
 /**
  * @author Filipe Bezerra
  */
-
-class ListaClientesPresenter implements ListaClientesContract.Presenter {
-    private final ListaClientesContract.View mView;
+class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
+        implements ListaClientesContract.Presenter {
 
     private final Repository<Cliente> mClienteRepository;
 
     private List<Cliente> mClienteList;
 
-    ListaClientesPresenter(
-            ListaClientesContract.View pView, Repository<Cliente> pClienteRepository) {
-        mView = pView;
+    ListaClientesPresenter(Repository<Cliente> pClienteRepository) {
         mClienteRepository = pClienteRepository;
     }
 
@@ -42,16 +44,16 @@ class ListaClientesPresenter implements ListaClientesContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Cliente>>() {
                     @Override public void onStart() {
-                        mView.showLoading();
+                        getView().showLoading();
                     }
 
                     @Override public void onError(Throwable e) {
                         Timber.e(e);
-                        mView.hideLoading();
+                        getView().hideLoading();
                     }
 
                     @Override public void onNext(List<Cliente> pClienteList) {
-                        mView.showListaClientes(mClienteList);
+                        getView().showListaClientes(mClienteList);
                     }
 
                     @Override public void onCompleted() {}
@@ -62,16 +64,22 @@ class ListaClientesPresenter implements ListaClientesContract.Presenter {
         mClienteList = pClienteList;
     }
 
-    @Override public void addNewClienteCadastrado(Cliente pCliente) {
-        final int lastPosition = mClienteList.size();
-        mClienteList.add(pCliente);
-        mView.updateListaClientes(lastPosition);
-    }
-
     @Override public void handleSingleTapUp(int pPosition) {
         if (pPosition >= 0 && pPosition < mClienteList.size()) {
             final Cliente cliente = mClienteList.get(pPosition);
             EventBus.getDefault().postSticky(ClienteSelecionadoEvent.newEvent(cliente));
         }
     }
+
+    @Subscribe(threadMode = MAIN, sticky = true) public void onNewClienteCadastrado(
+            NewClienteCadastradoEvent pEvent) {
+        Cliente cliente = pEvent.getCliente();
+        EventBus.getDefault().removeStickyEvent(pEvent);
+        if (cliente != null) {
+            final int lastPosition = mClienteList.size();
+            mClienteList.add(cliente);
+            getView().updateListaClientes(lastPosition);
+        }
+    }
+
 }
