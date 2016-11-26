@@ -5,8 +5,8 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.NovoPedidoEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.ProdutosSelecionadosEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizando.NovoPedidoEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.pedido.listaprodutos.ProdutosSelecionadosEvent;
 import java.util.List;
 import org.greenrobot.eventbus.Subscribe;
 

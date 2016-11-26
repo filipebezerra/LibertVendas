@@ -48,7 +48,9 @@ class PedidoMapper extends Mapper<Pedido,PedidoEntity> {
                 .setFormaPagamento(mFormaPagamentoEntityMapper.toEntity(object.getFormaPagamento()))
                 .setTabelaPreco(mTabelaPrecoEntityMapper.toEntity(object.getTabelaPreco()))
                 .setItens(mItemPedidoEntityMapper.toEntityList(object.getItens()))
-                .setUltimaAlteracao(object.getUltimaAlteracao());
+                .setUltimaAlteracao(object.getUltimaAlteracao())
+                .setCnpjEmpresa(object.getCnpjEmpresa())
+                .setCpfCnpjVendedor(object.getCpfCnpjVendedor());
     }
 
     @Override public Pedido toViewObject(PedidoEntity entity) {
@@ -67,10 +69,13 @@ class PedidoMapper extends Mapper<Pedido,PedidoEntity> {
         TabelaPreco tabelaPreco = mTabelaPrecoEntityMapper.toViewObject(entity.getTabelaPreco());
         List<ItemPedido> itemPedidos = mItemPedidoEntityMapper.toViewObjectList(entity.getItens());
         String ultimaAlteracao = entity.getUltimaAlteracao();
+        String cnpjEmpresa = entity.getCnpjEmpresa();
+        String cpfCnpjVendedor = entity.getCpfCnpjVendedor();
 
         return new Pedido(
                 id, idPedido, tipo, numero, status, dataEmissao, desconto, percentualDesconto,
-                observacao, cliente, formaPagamento, tabelaPreco, itemPedidos, ultimaAlteracao
+                observacao, cliente, formaPagamento, tabelaPreco, itemPedidos, ultimaAlteracao,
+                cnpjEmpresa, cpfCnpjVendedor
         );
     }
 }

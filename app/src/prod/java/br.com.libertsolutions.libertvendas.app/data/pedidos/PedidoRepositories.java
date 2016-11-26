@@ -6,9 +6,11 @@ import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeRepositories;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepositories;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoRepositories;
+import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.tabelaspreco.TabelaPrecoRepositories;
+import br.com.libertsolutions.libertvendas.app.data.util.ServiceFactory;
 import br.com.libertsolutions.libertvendas.app.domain.entity.ItemPedidoEntity;
 import br.com.libertsolutions.libertvendas.app.domain.entity.PedidoEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
@@ -20,11 +22,21 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 public class PedidoRepositories {
     private PedidoRepositories() {/* No instances */}
 
+    private static PedidoService sService = null;
+
     private static Repository<Pedido> sRepository = null;
 
     private static Mapper<Pedido, PedidoEntity> sMapper = null;
 
     private static Mapper<ItemPedido, ItemPedidoEntity> sItemPedidoEntityMapper = null;
+
+    public static synchronized PedidoService getService(@NonNull Context pContext) {
+        if (sService == null) {
+            sService = ServiceFactory.createService(pContext, PedidoService.class);
+        }
+        return sService;
+    }
+
 
     public synchronized static Repository<Pedido> getRepository(@NonNull Context context) {
         if (sRepository == null) {

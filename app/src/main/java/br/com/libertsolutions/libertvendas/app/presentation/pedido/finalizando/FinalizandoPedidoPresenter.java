@@ -12,7 +12,6 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.events.UsuarioLogadoEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.NovoPedidoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.FinalizaPedidoResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
 import java.util.ArrayList;
@@ -137,6 +136,9 @@ class FinalizandoPedidoPresenter extends BasePresenter<View> implements Presente
 
             final FormaPagamento formaPagamento = mViewModel.formaPagamento();
 
+            final String cnpjEmpresa = mEmpresaLogada.getCnpj();
+            final String cpfCnpjVendedor = mVendedorLogado.getCpfCnpj();
+
             Pedido novoPedido = Pedido.novoPedido(
                     mDataEmissao.getTimeInMillis(),
                     desconto,
@@ -145,17 +147,17 @@ class FinalizandoPedidoPresenter extends BasePresenter<View> implements Presente
                     mClienteSelecionado,
                     formaPagamento,
                     mTabelaPrecoPadrao,
-                    itensPedido
+                    itensPedido,
+                    cnpjEmpresa,
+                    cpfCnpjVendedor
             );
 
-            mPedidoRepository
+            addSubscription(mPedidoRepository
                     .save(novoPedido)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(pPedido -> {
                         EventBus.getDefault().postSticky(NovoPedidoEvent.newEvent(pPedido));
-                    });
-
-            unregisterForEvents();
+                    }));
         }
     }
 
@@ -209,6 +211,10 @@ class FinalizandoPedidoPresenter extends BasePresenter<View> implements Presente
 
             return false;
         }
+    }
+
+    private void syncPedido() {
+
     }
 
 }

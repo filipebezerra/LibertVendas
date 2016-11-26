@@ -1,4 +1,4 @@
-package br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido;
+package br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizando;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

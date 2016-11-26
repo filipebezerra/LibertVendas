@@ -12,6 +12,7 @@ import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamen
 import br.com.libertsolutions.libertvendas.app.data.importacao.ImportacaoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.importacao.ImportacaoRepository;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepositories;
+import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoService;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
@@ -97,6 +98,10 @@ public class Injection {
     public static ClienteResourcesRepository provideClienteResourcesRepository(
             @NonNull Context context) {
         return ResourcesRepositories.getClienteResources(context);
+    }
+
+    public static PedidoService providePedidoService(@NonNull Context pContext) {
+        return PedidoRepositories.getService(pContext);
     }
 
     public static Repository<Pedido> providePedidoRepository(@NonNull Context pContext) {

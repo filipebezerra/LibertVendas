@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import br.com.libertsolutions.libertvendas.app.R;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
-import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.cliente.ClienteActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.importacao.ImportacaoActivity;
@@ -14,10 +12,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFra
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoginActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.PedidoActivity;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.FinalizaPedidoFragment;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.selecioneprodutos.SelecioneProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsActivity;
-import java.util.List;
 
 /**
  * @author Filipe Bezerra
@@ -25,7 +20,6 @@ import java.util.List;
 public class Navigator {
     public static final int REQUEST_SETTINGS = 0x1;
     public static final int REQUEST_NEW_CLIENTE = 0x2;
-    public static final int REQUEST_NEW_PEDIDO = 0x3;
 
     public static final int RESULT_OK = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
@@ -80,24 +74,7 @@ public class Navigator {
 
     public void toPedido() {
         final Intent pedidoIntent = new Intent(mActivity, PedidoActivity.class);
-        ActivityCompat.startActivityForResult(mActivity, pedidoIntent, REQUEST_NEW_PEDIDO, null);
-    }
-
-    public void toSelecioneProdutos() {
-        mActivity.getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, SelecioneProdutosFragment.newInstance())
-                .commit();
-        mActivity.setTitle(R.string.title_fragment_selecione_produtos);
-    }
-
-    public void toFinalizaPedido(List<ProdutoVo> pProdutosSelecionados, TabelaPreco pTabelaPreco) {
-        mActivity.getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, FinalizaPedidoFragment
-                        .newInstance(pProdutosSelecionados, pTabelaPreco))
-                .commit();
-        mActivity.setTitle(R.string.title_fragment_finalizando_pedido);
+        ActivityCompat.startActivity(mActivity, pedidoIntent, null);
     }
 
     public void toCliente(boolean fromHome) {

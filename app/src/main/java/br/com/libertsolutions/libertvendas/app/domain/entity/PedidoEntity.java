@@ -39,6 +39,10 @@ import io.realm.annotations.RealmClass;
 
     private String ultimaAlteracao;
 
+    private String cnpjEmpresa;
+
+    private String cpfCnpjVendedor;
+
     public Integer getId() {
         return id;
     }
@@ -166,6 +170,24 @@ import io.realm.annotations.RealmClass;
 
     public PedidoEntity setUltimaAlteracao(String pUltimaAlteracao) {
         ultimaAlteracao = pUltimaAlteracao;
+        return this;
+    }
+
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
+    }
+
+    public PedidoEntity setCnpjEmpresa(String pCnpjEmpresa) {
+        cnpjEmpresa = pCnpjEmpresa;
+        return this;
+    }
+
+    public String getCpfCnpjVendedor() {
+        return cpfCnpjVendedor;
+    }
+
+    public PedidoEntity setCpfCnpjVendedor(String pCpfCnpjVendedor) {
+        cpfCnpjVendedor = pCpfCnpjVendedor;
         return this;
     }
 }

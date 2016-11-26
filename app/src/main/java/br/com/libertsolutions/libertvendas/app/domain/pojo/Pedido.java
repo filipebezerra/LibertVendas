@@ -49,11 +49,15 @@ public class Pedido implements Parcelable {
 
     private final String ultimaAlteracao;
 
+    private final String cnpjEmpresa;
+
+    private final String cpfCnpjVendedor;
+
     public Pedido(
             int pId, int pIdPedido, int pTipo, String pNumero, int pStatus, long pDataEmissao,
             double pDesconto, float pPercentualDesconto, String pObservacao, Cliente pCliente,
             FormaPagamento pFormaPagamento, TabelaPreco pTabelaPreco, List<ItemPedido> pItens,
-            String pUltimaAlteracao) {
+            String pUltimaAlteracao, String pCnpjEmpresa, String pCpfCnpjVendedor) {
         id = pId;
         idPedido = pIdPedido;
         tipo = pTipo;
@@ -68,6 +72,8 @@ public class Pedido implements Parcelable {
         tabelaPreco = pTabelaPreco;
         itens = pItens;
         ultimaAlteracao = pUltimaAlteracao;
+        cnpjEmpresa = pCnpjEmpresa;
+        cpfCnpjVendedor = pCpfCnpjVendedor;
     }
 
     protected Pedido(Parcel in) {
@@ -85,16 +91,16 @@ public class Pedido implements Parcelable {
         tabelaPreco = in.readParcelable(TabelaPreco.class.getClassLoader());
         itens = in.createTypedArrayList(ItemPedido.CREATOR);
         ultimaAlteracao = in.readString();
+        cnpjEmpresa = in.readString();
+        cpfCnpjVendedor = in.readString();
     }
 
     public static final Creator<Pedido> CREATOR = new Creator<Pedido>() {
-        @Override
-        public Pedido createFromParcel(Parcel in) {
+        @Override public Pedido createFromParcel(Parcel in) {
             return new Pedido(in);
         }
 
-        @Override
-        public Pedido[] newArray(int size) {
+        @Override public Pedido[] newArray(int size) {
             return new Pedido[size];
         }
     };
@@ -102,11 +108,13 @@ public class Pedido implements Parcelable {
     public static Pedido novoPedido(
             long pDataEmissao,
             double pDesconto, float pPercentualDesconto, String pObservacao, Cliente pCliente,
-            FormaPagamento pFormaPagamento, TabelaPreco pTabelaPreco, List<ItemPedido> pItens) {
+            FormaPagamento pFormaPagamento, TabelaPreco pTabelaPreco, List<ItemPedido> pItens,
+            String pCnpjEmpresa, String pCpfCnpjVendedor) {
         return new Pedido(
                 SEM_ID, SEM_ID_PEDIDO, TIPO_NORMAL, SEM_NUMERO, STATUS_EM_DIGITACAO,
                 pDataEmissao, pDesconto, pPercentualDesconto, pObservacao, pCliente,
-                pFormaPagamento, pTabelaPreco, pItens, SEM_ALTERACAO
+                pFormaPagamento, pTabelaPreco, pItens, SEM_ALTERACAO, pCnpjEmpresa,
+                pCpfCnpjVendedor
         );
     }
 
@@ -166,6 +174,14 @@ public class Pedido implements Parcelable {
         return ultimaAlteracao;
     }
 
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
+    }
+
+    public String getCpfCnpjVendedor() {
+        return cpfCnpjVendedor;
+    }
+
     @Override public boolean equals(Object pAnotherPedido) {
         if (this == pAnotherPedido) {
             return true;
@@ -207,5 +223,7 @@ public class Pedido implements Parcelable {
         pOut.writeParcelable(tabelaPreco, pFlags);
         pOut.writeTypedList(itens);
         pOut.writeString(ultimaAlteracao);
+        pOut.writeString(cnpjEmpresa);
+        pOut.writeString(cpfCnpjVendedor);
     }
 }

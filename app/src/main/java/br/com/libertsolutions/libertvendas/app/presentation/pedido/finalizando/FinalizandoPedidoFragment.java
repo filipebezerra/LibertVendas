@@ -15,7 +15,6 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizapedido.FinalizaPedidoFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ResourcesRepositories;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FeedbackHelper;
 import butterknife.BindView;
@@ -33,11 +32,11 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
         implements FinalizandoPedidoContract.View {
 
     static final String EXTRA_ARG_PRODUTOS_SELECIONADOS
-            = FinalizaPedidoFragment.class.getSimpleName() + ".extraArgProdutosSelecionados";
+            = FinalizandoPedidoFragment.class.getSimpleName() + ".extraArgProdutosSelecionados";
     static final String EXTRA_ARG_TABELA_PRECO_PADRAO
-            = FinalizaPedidoFragment.class.getSimpleName() + ".extraArgTabelaPrecoPadrao";
+            = FinalizandoPedidoFragment.class.getSimpleName() + ".extraArgTabelaPrecoPadrao";
     static final String EXTRA_ARG_CLIENTE_SELECIONADO
-            = FinalizaPedidoFragment.class.getSimpleName() + ".extraArgClienteSelecionado";
+            = FinalizandoPedidoFragment.class.getSimpleName() + ".extraArgClienteSelecionado";
 
     @BindView(R.id.container_finalizando_pedido) protected NestedScrollView mContainerFinalizandoPedido;
     @BindView(R.id.input_layout_data_emissao) protected TextInputLayout mInputLayoutDataEmissao;
