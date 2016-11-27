@@ -15,6 +15,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TipoPessoa;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FeedbackHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -228,14 +229,37 @@ public class CadastroClienteActivity extends LibertVendasActivity
     }
 
     @Override public void displayRequiredFieldMessages() {
+        ViewGroup firstRequiredField = null;
+
         for (int i = 0; i < mRequiredFields.size() - 1; i++) {
             ViewGroup requiredField = mRequiredFields.valueAt(i);
 
             if (requiredField instanceof MaterialSpinner) {
-                ((MaterialSpinner) requiredField).setError(R.string.error_campo_requerido);
+                if (((MaterialSpinner) requiredField).getSelectedItem() == null) {
+                    ((MaterialSpinner) requiredField).setError(R.string.error_campo_requerido);
+
+                    if (firstRequiredField == null) {
+                        firstRequiredField = requiredField;
+                    }
+                }
             } else if (requiredField instanceof TextInputLayout) {
-                ((TextInputLayout) requiredField)
-                        .setError(getString(R.string.error_campo_requerido));
+                if (TextUtils.isEmpty(((TextInputLayout) requiredField).getEditText().getText())) {
+                    ((TextInputLayout) requiredField).setError(getString(R.string.error_campo_requerido));
+
+                    if (firstRequiredField == null) {
+                        firstRequiredField = requiredField;
+                    }
+                }
+            }
+        }
+
+        if (firstRequiredField != null) {
+            if (firstRequiredField instanceof MaterialSpinner) {
+                firstRequiredField.requestFocusFromTouch();
+                firstRequiredField.performClick();
+                AndroidUtils.hideKeyboard(this, getCurrentFocus());
+            } else {
+                AndroidUtils.focusThenShowKeyboard(this, firstRequiredField);
             }
         }
     }

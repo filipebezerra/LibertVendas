@@ -62,7 +62,7 @@ public class AndroidUtils {
 
     public static void focusThenShowKeyboard(
             @NonNull final Context context, @NonNull final View view) {
-        if (view.isShown() && view.isFocusable()) {
+        if (view.isShown()) {
             if (view.requestFocus()) {
                 showKeyboard(context, view);
             }
