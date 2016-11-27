@@ -1,6 +1,5 @@
 package br.com.libertsolutions.libertvendas.app.data.cidades;
 
-import android.content.Context;
 import br.com.libertsolutions.libertvendas.app.data.repository.AbstractRealmRepository;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
 import br.com.libertsolutions.libertvendas.app.data.util.RealmObservable;
@@ -15,13 +14,13 @@ import timber.log.Timber;
  * @author Filipe Bezerra
  */
 public class CidadeRepository extends AbstractRealmRepository<Cidade, CidadeEntity> {
-    public CidadeRepository(Context context, Mapper<Cidade, CidadeEntity> mapper) {
-        super(context, CidadeEntity.class, mapper);
+    public CidadeRepository(Mapper<Cidade, CidadeEntity> mapper) {
+        super(CidadeEntity.class, mapper);
     }
 
     public Observable<List<Cidade>> list(int pIdEstado) {
         return RealmObservable
-                .results(mContext,
+                .results(
                         realm -> {
                             RealmResults<CidadeEntity> list = realm
                                     .where(mEntityClass)

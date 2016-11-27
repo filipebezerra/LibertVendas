@@ -37,7 +37,7 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
         mPresenter = new LoginPresenter(
                 Injection.provideCommonResourcesRepository(this),
                 Injection.provideVendedorService(this),
-                Injection.provideVendedorRepository(this),
+                Injection.provideVendedorRepository(),
                 Injection.provideSettingsRepository(this));
         super.onCreate(savedInstanceState);
 

@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.data.produtos;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
-import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.util.ServiceFactory;
 import br.com.libertsolutions.libertvendas.app.domain.entity.ProdutoEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
@@ -16,7 +15,7 @@ public class ProdutoRepositories {
 
     private static ProdutoService sService = null;
 
-    private static Repository<Produto> sRepository = null;
+    private static ProdutoRepository sRepository = null;
 
     private static Mapper<Produto, ProdutoEntity> sMapper = null;
 
@@ -27,9 +26,9 @@ public class ProdutoRepositories {
         return sService;
     }
 
-    public synchronized static Repository<Produto> getRepository(@NonNull Context context) {
+    public synchronized static ProdutoRepository getRepository() {
         if (sRepository == null) {
-            sRepository = new ProdutoRepository(context.getApplicationContext());
+            sRepository = new ProdutoRepository();
         }
         return sRepository;
     }

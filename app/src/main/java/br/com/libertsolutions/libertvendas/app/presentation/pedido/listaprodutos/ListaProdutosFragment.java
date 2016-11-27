@@ -48,10 +48,10 @@ public class ListaProdutosFragment extends LibertVendasFragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mPresenter = new ListaProdutosPresenter(
-                Injection.provideProdutoRepository(getContext()),
+                Injection.provideProdutoRepository(),
                 Injection.provideSelecioneProdutosResourcesRepository(getContext()),
-                Injection.provideVendedorRepository(getContext()),
-                Injection.provideTabelaPrecoRepository(getContext()),
+                Injection.provideVendedorRepository(),
+                Injection.provideTabelaPrecoRepository(),
                 Injection.provideSettingsRepository(getContext()));
     }
 

@@ -64,7 +64,7 @@ public class ListaClientesFragment extends LibertVendasFragment
         final boolean toSelect = getArguments().getBoolean(ARG_EXTRA_TO_SELECT);
 
         mPresenter = new ListaClientesPresenter(toSelect,
-                Injection.provideClienteRepository(getContext()));
+                Injection.provideClienteRepository());
         mPresenter.attachView(this);
         mPresenter.loadListaClientes();
     }

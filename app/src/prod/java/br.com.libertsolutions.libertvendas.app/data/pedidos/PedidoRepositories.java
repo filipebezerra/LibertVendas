@@ -6,9 +6,7 @@ import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeRepositories;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepositories;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoRepositories;
-import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
-import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.tabelaspreco.TabelaPrecoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.util.ServiceFactory;
 import br.com.libertsolutions.libertvendas.app.domain.entity.ItemPedidoEntity;
@@ -24,7 +22,7 @@ public class PedidoRepositories {
 
     private static PedidoService sService = null;
 
-    private static Repository<Pedido> sRepository = null;
+    private static PedidoRepository sRepository = null;
 
     private static Mapper<Pedido, PedidoEntity> sMapper = null;
 
@@ -38,9 +36,9 @@ public class PedidoRepositories {
     }
 
 
-    public synchronized static Repository<Pedido> getRepository(@NonNull Context context) {
+    public synchronized static PedidoRepository getRepository() {
         if (sRepository == null) {
-            sRepository = new PedidoRepository(context.getApplicationContext());
+            sRepository = new PedidoRepository();
         }
         return sRepository;
     }

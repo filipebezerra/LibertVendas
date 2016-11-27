@@ -50,7 +50,7 @@ public class ListaProdutosFragment extends LibertVendasFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter = new ListaProdutosPresenter(this,
-                Injection.provideProdutoRepository(getContext()));
+                Injection.provideProdutoRepository());
 
         mRecyclerViewProdutos.setHasFixedSize(true);
         mRecyclerViewProdutos.setLayoutManager(new LinearLayoutManager(getContext()));

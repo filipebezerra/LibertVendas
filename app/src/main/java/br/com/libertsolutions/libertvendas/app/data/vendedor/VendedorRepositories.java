@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.data.vendedor;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
-import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.util.ServiceFactory;
 import br.com.libertsolutions.libertvendas.app.domain.entity.EmpresaEntity;
 import br.com.libertsolutions.libertvendas.app.domain.entity.VendedorEntity;
@@ -18,7 +17,7 @@ public class VendedorRepositories {
 
     private static VendedorService sService = null;
 
-    private static Repository<Vendedor> sRepository = null;
+    private static VendedorRepository sRepository = null;
 
     private static Mapper<Vendedor, VendedorEntity> sMapper = null;
 
@@ -31,9 +30,9 @@ public class VendedorRepositories {
         return sService;
     }
 
-    public static synchronized Repository<Vendedor> getRepository(@NonNull Context pContext) {
+    public static synchronized VendedorRepository getRepository() {
         if (sRepository == null) {
-            sRepository = new VendedorRepository(pContext, getMapper());
+            sRepository = new VendedorRepository(getMapper());
         }
         return sRepository;
     }

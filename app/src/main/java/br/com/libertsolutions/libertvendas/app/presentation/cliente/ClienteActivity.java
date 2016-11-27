@@ -58,10 +58,10 @@ public class ClienteActivity extends LibertVendasActivity implements ClienteCont
         super.onCreate(savedInstanceState);
         setAsInitialFlowActivity();
         mPresenter = new ClientePresenter(this,
-                Injection.provideClienteRepository(this),
+                Injection.provideClienteRepository(),
                 Injection.provideClienteResourcesRepository(this),
-                Injection.provideEstadoRepository(this),
-                Injection.provideCidadeRepository(this));
+                Injection.provideEstadoRepository(),
+                Injection.provideCidadeRepository());
         mPresenter.initializeView();
     }
 

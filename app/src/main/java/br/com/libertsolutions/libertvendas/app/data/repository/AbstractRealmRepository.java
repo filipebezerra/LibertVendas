@@ -1,6 +1,5 @@
 package br.com.libertsolutions.libertvendas.app.data.repository;
 
-import android.content.Context;
 import br.com.libertsolutions.libertvendas.app.data.util.RealmObservable;
 import io.realm.RealmList;
 import io.realm.RealmModel;
@@ -13,25 +12,21 @@ import timber.log.Timber;
 /**
  * @author Filipe Bezerra
  */
-@SuppressWarnings("Convert2MethodRef")
 public abstract class AbstractRealmRepository<T, E extends RealmModel> implements Repository<T> {
     private static final String ID_FIELD_NAME = "id";
-
-    protected final Context mContext;
 
     protected final Class<E> mEntityClass;
 
     protected final Mapper<T, E> mMapper;
 
-    public AbstractRealmRepository(Context context, Class<E> entityClass, Mapper<T, E> mapper) {
-        mContext = context;
+    public AbstractRealmRepository(Class<E> entityClass, Mapper<T, E> mapper) {
         mEntityClass = entityClass;
         mMapper = mapper;
     }
 
     @Override public Observable<T> save(T object) {
         return RealmObservable
-                .object(mContext,
+                .object(
                         realm -> {
                             Timber.d("%s.save() with %s", mEntityClass.getSimpleName(), object);
                             E saved = realm.copyToRealmOrUpdate(mMapper.toEntity(object));
@@ -39,12 +34,12 @@ public abstract class AbstractRealmRepository<T, E extends RealmModel> implement
                             return saved;
                         })
                 .map(
-                        entity -> mMapper.toViewObject(entity));
+                        mMapper::toViewObject);
     }
 
     @Override public Observable<List<T>> saveAll(List<T> objects) {
         return RealmObservable
-                .list(mContext,
+                .list(
                         realm -> {
                             Timber.d("%s.saveAll() with %d",
                                     mEntityClass.getSimpleName(), objects.size());
@@ -65,12 +60,12 @@ public abstract class AbstractRealmRepository<T, E extends RealmModel> implement
                             return realmObjects;
                         })
                 .map(
-                        entities -> mMapper.toViewObjectList(entities));
+                        mMapper::toViewObjectList);
     }
 
     @Override public Observable<List<T>> list() {
         return RealmObservable
-                .results(mContext,
+                .results(
                         realm -> {
                             RealmResults<E> list = realm.where(mEntityClass).findAll();
                             Timber.i("%s.list() results %s",
@@ -78,12 +73,12 @@ public abstract class AbstractRealmRepository<T, E extends RealmModel> implement
                             return list;
                         })
                 .map(
-                        entities -> mMapper.toViewObjectList(entities));
+                        mMapper::toViewObjectList);
     }
 
     @Override public Observable<T> findById(int id) {
         return RealmObservable
-                .object(mContext,
+                .object(
                         realm -> {
                             E first = realm
                                     .where(mEntityClass)
@@ -94,7 +89,7 @@ public abstract class AbstractRealmRepository<T, E extends RealmModel> implement
                             return first;
                         })
                 .map(
-                        entity -> mMapper.toViewObject(entity));
+                        mMapper::toViewObject);
     }
 
     @Override public String idFieldName() {

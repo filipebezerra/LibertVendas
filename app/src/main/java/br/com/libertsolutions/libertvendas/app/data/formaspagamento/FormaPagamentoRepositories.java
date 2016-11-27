@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.data.formaspagamento;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
-import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.util.ServiceFactory;
 import br.com.libertsolutions.libertvendas.app.domain.entity.FormaPagamentoEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
@@ -16,7 +15,7 @@ public class FormaPagamentoRepositories {
 
     private static FormaPagamentoService sService = null;
 
-    private static Repository<FormaPagamento> sRepository = null;
+    private static FormaPagamentoRepository sRepository = null;
 
     private static Mapper<FormaPagamento, FormaPagamentoEntity> sMapper = null;
 
@@ -27,9 +26,9 @@ public class FormaPagamentoRepositories {
         return sService;
     }
 
-    public static synchronized Repository<FormaPagamento> getRepository(@NonNull Context pContext) {
+    public static synchronized FormaPagamentoRepository getRepository() {
         if (sRepository == null) {
-            sRepository = new FormaPagamentoRepository(pContext, getEntityMapper());
+            sRepository = new FormaPagamentoRepository(getEntityMapper());
         }
         return sRepository;
     }

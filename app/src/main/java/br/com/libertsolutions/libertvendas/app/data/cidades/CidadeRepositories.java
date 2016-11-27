@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.data.cidades;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
-import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.util.ServiceFactory;
 import br.com.libertsolutions.libertvendas.app.domain.entity.CidadeEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
@@ -16,7 +15,7 @@ public class CidadeRepositories {
 
     private static CidadeService sService = null;
 
-    private static Repository<Cidade> sRepository = null;
+    private static CidadeRepository sRepository = null;
 
     private static Mapper<Cidade, CidadeEntity> sMapper = null;
 
@@ -27,9 +26,9 @@ public class CidadeRepositories {
         return sService;
     }
 
-    public static synchronized Repository<Cidade> getRepository(@NonNull Context pContext) {
+    public static synchronized CidadeRepository getRepository() {
         if (sRepository == null) {
-            sRepository = new CidadeRepository(pContext, getEntityMapper());
+            sRepository = new CidadeRepository(getEntityMapper());
         }
         return sRepository;
     }

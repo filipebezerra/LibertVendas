@@ -77,8 +77,8 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mPresenter = new FinalizandoPedidoPresenter(
-                Injection.provideFormaPagamentoRepository(getContext()),
-                Injection.providePedidoRepository(getContext()),
+                Injection.provideFormaPagamentoRepository(),
+                Injection.providePedidoRepository(),
                 ResourcesRepositories.getFinalizaPedidoResourcesRepository(getContext()),
                 Injection.provideSettingsRepository(getContext()));
     }

@@ -31,15 +31,15 @@ public class ImportacaoActivity extends LibertVendasActivity
         mPresenter = new ImportacaoPresenter(
                 Injection.provideImportacaoRepository(this),
                 Injection.provideFormaPagamentoService(this),
-                Injection.provideFormaPagamentoRepository(this),
+                Injection.provideFormaPagamentoRepository(),
                 Injection.provideCidadeService(this),
-                Injection.provideCidadeRepository(this),
+                Injection.provideCidadeRepository(),
                 Injection.provideProdutoService(this),
-                Injection.provideProdutoRepository(this),
+                Injection.provideProdutoRepository(),
                 Injection.provideClienteService(this),
-                Injection.provideClienteRepository(this),
+                Injection.provideClienteRepository(),
                 Injection.provideTabelaPrecoService(this),
-                Injection.provideTabelaPrecoRepository(this),
+                Injection.provideTabelaPrecoRepository(),
                 Injection.provideImportacaoResourcesRepository(this),
                 Injection.provideSettingsRepository(this));
         super.onCreate(savedInstanceState);

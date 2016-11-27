@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.data.tabelaspreco;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
-import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.util.ServiceFactory;
 import br.com.libertsolutions.libertvendas.app.domain.entity.ItemTabelaEntity;
 import br.com.libertsolutions.libertvendas.app.domain.entity.TabelaPrecoEntity;
@@ -18,7 +17,7 @@ public class TabelaPrecoRepositories {
 
     private static TabelaPrecoService sService = null;
 
-    private static Repository<TabelaPreco> sRepository = null;
+    private static TabelaPrecoRepository sRepository = null;
 
     private static Mapper<TabelaPreco, TabelaPrecoEntity> sMapper = null;
 
@@ -31,9 +30,9 @@ public class TabelaPrecoRepositories {
         return sService;
     }
 
-    public static synchronized Repository<TabelaPreco> getRepository(@NonNull Context pContext) {
+    public static synchronized TabelaPrecoRepository getRepository() {
         if (sRepository == null) {
-            sRepository = new TabelaPrecoRepository(pContext, getEntityMapper());
+            sRepository = new TabelaPrecoRepository(getEntityMapper());
         }
         return sRepository;
     }

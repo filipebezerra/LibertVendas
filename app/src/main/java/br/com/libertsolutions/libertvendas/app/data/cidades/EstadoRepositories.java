@@ -1,9 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.data.cidades;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
-import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.domain.entity.EstadoEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 
@@ -13,13 +10,13 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 public class EstadoRepositories {
     private EstadoRepositories() {/* No instances */}
 
-    private static Repository<Estado> sRepository = null;
+    private static EstadoRepository sRepository = null;
 
     private static Mapper<Estado, EstadoEntity> sMapper = null;
 
-    public static synchronized Repository<Estado> getRepository(@NonNull Context pContext) {
+    public static synchronized EstadoRepository getRepository() {
         if (sRepository == null) {
-            sRepository = new EstadoRepository(pContext, getEstadoMapper());
+            sRepository = new EstadoRepository(getEstadoMapper());
         }
         return sRepository;
     }

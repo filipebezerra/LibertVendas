@@ -1,6 +1,5 @@
 package br.com.libertsolutions.libertvendas.app.data.util;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import io.realm.Realm;
 import io.realm.exceptions.RealmException;
@@ -10,7 +9,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
 /**
@@ -19,15 +17,10 @@ import rx.subscriptions.Subscriptions;
  * @author Kirill Boyarshinov
  */
 abstract class OnSubscribeRealm<T> implements Observable.OnSubscribe<T> {
-    private final Context mContext;
 
     private final List<Subscriber<? super T>> mSubscribers = new ArrayList<>();
     private final AtomicBoolean mCanceled = new AtomicBoolean();
     private final Object mLock = new Object();
-
-    public OnSubscribeRealm(Context context) {
-        mContext = context;
-    }
 
     @Override
     public void call(final Subscriber<? super T> subscriber) {
@@ -106,14 +99,11 @@ abstract class OnSubscribeRealm<T> implements Observable.OnSubscribe<T> {
 
     @NonNull
     private Subscription newUnsubscribeAction(final Subscriber<? super T> subscriber) {
-        return Subscriptions.create(new Action0() {
-            @Override
-            public void call() {
-                synchronized (mLock) {
-                    mSubscribers.remove(subscriber);
-                    if (mSubscribers.isEmpty()) {
-                        mCanceled.set(true);
-                    }
+        return Subscriptions.create(() -> {
+            synchronized (mLock) {
+                mSubscribers.remove(subscriber);
+                if (mSubscribers.isEmpty()) {
+                    mCanceled.set(true);
                 }
             }
         });
