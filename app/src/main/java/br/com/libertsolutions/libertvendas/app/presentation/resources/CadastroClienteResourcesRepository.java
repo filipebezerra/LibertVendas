@@ -30,4 +30,6 @@ public interface CadastroClienteResourcesRepository extends CommonResourcesRepos
     int obtainTelefoneViewId();
 
     int obtainCelularViewId();
+
+    String obtainStringTitleEditandoCliente();
 }

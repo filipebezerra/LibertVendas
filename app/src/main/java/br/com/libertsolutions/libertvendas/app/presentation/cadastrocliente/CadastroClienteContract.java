@@ -25,6 +25,8 @@ interface CadastroClienteContract {
 
         void displayCidades(List<Cidade> pCidadesList);
 
+        void changeTitle(String pNewTitle);
+
         void updateCidades();
 
         void setViewValue(final int pViewId, final String pViewValue);

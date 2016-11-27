@@ -131,6 +131,10 @@ public class CadastroClienteActivity extends LibertVendasActivity
         mCidadesSpinner.setAdapter(mCidadesAdapter = new CidadesAdapter(this, pCidadesList));
     }
 
+    @Override public void changeTitle(String pNewTitle) {
+        getSupportActionBar().setTitle(pNewTitle);
+    }
+
     @Override public void updateCidades() {
         if (mCidadesAdapter.isEmpty()) {
             mCidadesSpinner.setSelection(0, true);

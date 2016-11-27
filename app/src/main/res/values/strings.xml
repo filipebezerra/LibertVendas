@@ -122,7 +122,7 @@
     <string name="loading_produtos">Carregando lista de produtos, por favor aguarde…</string>
 
     <!-- Screen Cliente -->
-    <string name="title_activity_cliente">Novo cliente</string>
+    <string name="title_activity_cadastro_cliente">Novo cliente</string>
     <string name="hint_tipo_pessoa">Selecione o tipo de pessoa</string>
     <string name="label_tipo_pessoa">Tipo de pessoa selecionado</string>
     <string name="hint_cpf_ou_cnpj">CPF&#47;CNPJ</string>
@@ -139,6 +139,7 @@
     <string name="hint_estados">Selecione o estado</string>
     <string name="label_estado">Estado selecionado</string>
     <string name="hint_email">E-mail</string>
+    <string name="title_activity_cadastro_cliente_editando">Editando cliente</string>
 
     <!-- Common strings -->
     <string name="action_search">Pesquisar</string>

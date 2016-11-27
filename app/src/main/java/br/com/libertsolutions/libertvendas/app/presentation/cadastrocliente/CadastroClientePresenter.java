@@ -99,6 +99,8 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
 
     private void initializeFieldsIfEmEdicao() {
         if (mClienteEmEdicao != null) {
+            getView().changeTitle(mResourcesRepository.obtainStringTitleEditandoCliente());
+
             for (TipoPessoa tipoPessoa : mTiposPessoaList) {
                 if (tipoPessoa.equals(mClienteEmEdicao.getTipo())) {
                     getView().setViewValue(

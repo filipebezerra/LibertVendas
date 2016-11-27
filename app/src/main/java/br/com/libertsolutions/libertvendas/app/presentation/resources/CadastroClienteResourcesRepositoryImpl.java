@@ -64,4 +64,8 @@ public class CadastroClienteResourcesRepositoryImpl extends CommonResourcesRepos
     @Override public int obtainCelularViewId() {
         return R.id.input_layout_celular;
     }
+
+    @Override public String obtainStringTitleEditandoCliente() {
+        return getResources().getString(R.string.title_activity_cadastro_cliente_editando);
+    }
 }

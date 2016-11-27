@@ -75,7 +75,7 @@
 
         <activity
             android:name=".presentation.cadastrocliente.CadastroClienteActivity"
-            android:label="@string/title_activity_cliente"
+            android:label="@string/title_activity_cadastro_cliente"
             android:theme="@style/Libert.Theme.NoActionBar"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
             />
