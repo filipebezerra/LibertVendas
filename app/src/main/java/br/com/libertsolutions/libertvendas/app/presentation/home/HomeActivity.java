@@ -1,6 +1,5 @@
 package br.com.libertsolutions.libertvendas.app.presentation.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -9,12 +8,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
-import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -87,21 +84,21 @@ public class HomeActivity extends LibertVendasActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody") @Override public boolean onNavigationItemSelected(
-            @NonNull MenuItem item) {
+    @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         item.setChecked(false);
 
+        //noinspection StatementWithEmptyBody
         if (id == R.id.nav_home) {
 
         } else if (id == R.id.nav_pedidos) {
-            mPresenter.clickNavigationMenuPedidos();
+            mPresenter.handlePedidosNavigationItemSelected();
         } else if (id == R.id.nav_clientes) {
-            mPresenter.clickNavigationMenuClientes();
+            mPresenter.handleClientesNavigationItemSelected();
         } else if (id == R.id.nav_produtos) {
-            mPresenter.clickNavigationMenuProdutos();
+            mPresenter.handleProdutosNavigationItemSelected();
         } else if (id == R.id.nav_settings) {
-            mPresenter.clickNavigationMenuSettings();
+            mPresenter.handleSettingsNavigationItemSelected();
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -135,31 +132,18 @@ public class HomeActivity extends LibertVendasActivity
         navigate().toPedidos();
     }
 
-    @OnClick({ R.id.fab_sheet_item_novo_pedido, R.id.fab_sheet_item_novo_cliente }) void onFabClick(
-            View pView) {
+    @OnClick(R.id.fab_sheet_item_novo_pedido) void onNovoPedidoSheetItemClicked() {
         mMaterialSheetFab.hideSheet();
-        if (pView.getId() == R.id.fab_sheet_item_novo_pedido) {
-            navigate().toPedido();
-        } else {
-            navigate().toCliente(null);
-        }
+        navigate().toPedido();
     }
 
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case Navigator.REQUEST_NEW_CLIENTE: {
-                    mPresenter.getClienteFromResult(new ClienteExtrasExtractor(data));
-                    break;
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+    @OnClick(R.id.fab_sheet_item_novo_cliente) void onNovoClienteSheetItemClicked() {
+        mMaterialSheetFab.hideSheet();
+        navigate().toCliente(null);
     }
 
     @Override protected void onDestroy() {
         super.onDestroy();
         mPresenter.detach();
     }
-
 }

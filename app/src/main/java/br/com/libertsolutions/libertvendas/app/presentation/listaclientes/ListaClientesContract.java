@@ -18,8 +18,11 @@ interface ListaClientesContract {
 
         void showListaClientes(List<Cliente> pClienteList);
 
-        void navigateToCliente(Cliente pCliente);
+        void updateChangedItemAtPosition(int pPosition);
 
+        void updateInsertedItemAtPosition(int pPosition);
+
+        void navigateToCliente(Cliente pCliente);
     }
 
     interface Presenter extends MvpPresenter<ListaClientesContract.View> {

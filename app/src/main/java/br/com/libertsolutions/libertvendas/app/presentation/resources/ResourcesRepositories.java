@@ -11,7 +11,7 @@ public class ResourcesRepositories {
 
     private static CommonResourcesRepository sCommonResourcesRepository = null;
 
-    private static ClienteResourcesRepository sClienteResources = null;
+    private static CadastroClienteResourcesRepository sClienteResources = null;
 
     private static SelecioneProdutosResourcesRepository sSelecioneProdutosResourcesRepository = null;
 
@@ -19,10 +19,10 @@ public class ResourcesRepositories {
 
     private static FinalizaPedidoResourcesRepository sFinalizaPedidoResourcesRepository = null;
 
-    public synchronized static ClienteResourcesRepository getClienteResources(
+    public synchronized static CadastroClienteResourcesRepository getClienteResources(
             @NonNull Context context) {
         if (sClienteResources == null) {
-            sClienteResources = new ClienteResourcesRepositoryImpl(context.getResources());
+            sClienteResources = new CadastroClienteResourcesRepositoryImpl(context.getResources());
         }
         return sClienteResources;
     }

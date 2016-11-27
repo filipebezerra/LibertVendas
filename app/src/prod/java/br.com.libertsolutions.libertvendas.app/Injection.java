@@ -29,7 +29,7 @@ import br.com.libertsolutions.libertvendas.app.data.tabelaspreco.TabelaPrecoServ
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepositories;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepository;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
-import br.com.libertsolutions.libertvendas.app.presentation.resources.ClienteResourcesRepository;
+import br.com.libertsolutions.libertvendas.app.presentation.resources.CadastroClienteResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ImportacaoResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ResourcesRepositories;
@@ -94,7 +94,7 @@ public class Injection {
         return ResourcesRepositories.getCommonResources(pContext);
     }
 
-    public static ClienteResourcesRepository provideClienteResourcesRepository(
+    public static CadastroClienteResourcesRepository provideClienteResourcesRepository(
             @NonNull Context context) {
         return ResourcesRepositories.getClienteResources(context);
     }

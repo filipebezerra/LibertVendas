@@ -2,48 +2,25 @@ package br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import br.com.libertsolutions.libertvendas.app.presentation.widget.SingleTextViewAdapter;
 import java.util.List;
 
 /**
  * @author Filipe Bezerra
  */
-class EstadosAdapter extends ArrayAdapter<Estado> {
-    private LayoutInflater mInflater;
+class EstadosAdapter extends SingleTextViewAdapter<Estado> {
 
-    EstadosAdapter(@NonNull Context context, @NonNull List<Estado> pEstadoList) {
-        super(context, android.R.layout.simple_spinner_item, pEstadoList);
-        setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mInflater = LayoutInflater.from(context);
+    EstadosAdapter(@NonNull Context pContext, @NonNull List<Estado> pEstados) {
+        super(pContext, pEstados);
     }
 
-    @NonNull @Override public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            convertView = mInflater.inflate(android.R.layout.simple_spinner_item, parent, false);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
+    @Override protected String getText(int pPosition) {
+        if (pPosition >= 0 && pPosition < getCount()) {
+            return getItem(pPosition).getNome();
         } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.textViewNome.setText(getItem(position).getNome());
-        return convertView;
-    }
-
-    static final class ViewHolder {
-        @BindView(android.R.id.text1) TextView textViewNome;
-
-        ViewHolder(View pItemView) {
-            ButterKnife.bind(this, pItemView);
+            return "";
         }
     }
+
 }

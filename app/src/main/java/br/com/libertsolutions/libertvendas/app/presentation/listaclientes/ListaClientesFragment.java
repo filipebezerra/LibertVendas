@@ -88,6 +88,11 @@ public class ListaClientesFragment extends LibertVendasFragment
         });
     }
 
+    @Override public void onStart() {
+        super.onStart();
+        mPresenter.registerForEvents();
+    }
+
     @Override public void showLoading() {
         mProgressDialog = new MaterialDialog.Builder(getContext())
                 .content(getString(R.string.loading_clientes))
@@ -120,6 +125,16 @@ public class ListaClientesFragment extends LibertVendasFragment
                 });
     }
 
+    @Override public void updateChangedItemAtPosition(int pPosition) {
+        mRecyclerViewAdapter.notifyItemChanged(pPosition);
+        mRecyclerViewClientes.smoothScrollToPosition(pPosition);
+    }
+
+    @Override public void updateInsertedItemAtPosition(int pPosition) {
+        mRecyclerViewAdapter.notifyItemInserted(pPosition);
+        mRecyclerViewClientes.smoothScrollToPosition(pPosition);
+    }
+
     @Override public void navigateToCliente(Cliente pCliente) {
         hostActivity().navigate().toCliente(pCliente);
     }
@@ -130,9 +145,13 @@ public class ListaClientesFragment extends LibertVendasFragment
 
     @Override public void onLongPress(View view, int position) {}
 
+    @Override public void onStop() {
+        super.onStop();
+        mPresenter.unregisterForEvents();
+    }
+
     @Override public void onDestroyView() {
         super.onDestroyView();
         mPresenter.detach();
     }
-
 }

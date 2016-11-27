@@ -11,6 +11,7 @@ public class Cliente implements Parcelable {
     private static final String SEM_CODIGO = null;
     private static final boolean ATIVO = true;
     private static final String NAO_FOI_ALTERADO = null;
+    private static final String SEM_CONTATO = "";
 
     private final int id;
 
@@ -79,11 +80,11 @@ public class Cliente implements Parcelable {
         }
     };
 
-    public Cliente(String pNome, int pTipo, String pCpfCnpj,
-            String pContato, String pEmail, String pTelefone, String pTelefone2,
-            String pEndereco, String pCep, Cidade pCidade, String pBairro, String pNumero,
-            String pComplemento) {
-        this(SEM_ID, SEM_CODIGO, pNome, pTipo, pCpfCnpj, pContato, pEmail,
+    public Cliente(
+            String pNome, int pTipo, String pCpfCnpj, String pEmail, String pTelefone,
+            String pTelefone2, String pEndereco, String pCep, Cidade pCidade,
+            String pBairro, String pNumero, String pComplemento) {
+        this(SEM_ID, SEM_CODIGO, pNome, pTipo, pCpfCnpj, SEM_CONTATO, pEmail,
                 pTelefone, pTelefone2, pEndereco, pCep, pCidade, pBairro, pNumero,
                 pComplemento, NAO_FOI_ALTERADO, ATIVO);
     }

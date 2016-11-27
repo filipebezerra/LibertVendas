@@ -1,31 +1,34 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listaclientes;
 
-import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
+import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
+import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.ClienteSavedEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ObservableUtils;
 import java.util.Collections;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
+
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
  */
 class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
-    implements ListaClientesContract.Presenter {
+        implements ListaClientesContract.Presenter {
 
     private final boolean mToSelect;
 
-    private final Repository<Cliente> mClienteRepository;
+    private final ClienteRepository mClienteRepository;
 
     private List<Cliente> mClienteList;
 
-    ListaClientesPresenter(boolean pToSelect, Repository<Cliente> pClienteRepository) {
+    ListaClientesPresenter(boolean pToSelect, ClienteRepository pClienteRepository) {
         mToSelect = pToSelect;
         mClienteRepository = pClienteRepository;
     }
@@ -38,31 +41,26 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
                 .list()
                 .doOnNext(this::saveClientesToMemoryCache);
 
-        Subscription listListaClientesSubscription = Observable
+        addSubscription(Observable
                 .concat(clientesFromMemoryCache, clientesFromDiskCache)
                 .firstOrDefault(Collections.emptyList())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Cliente>>() {
-                    @Override
-                    public void onStart() {
+                    @Override public void onStart() {
                         getView().showLoading();
                     }
 
-                    @Override
-                    public void onError(Throwable e) {
+                    @Override public void onError(Throwable e) {
                         Timber.e(e);
                         getView().hideLoading();
                     }
 
-                    @Override
-                    public void onNext(List<Cliente> pClienteList) {
+                    @Override public void onNext(List<Cliente> pClienteList) {
                         getView().showListaClientes(mClienteList);
                     }
 
-                    @Override
-                    public void onCompleted() {}
-                });
-        addSubscription(listListaClientesSubscription);
+                    @Override public void onCompleted() {}
+                }));
     }
 
     private void saveClientesToMemoryCache(List<Cliente> pClienteList) {
@@ -81,4 +79,19 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
         }
     }
 
+    @Subscribe(threadMode = MAIN, sticky = true) public void onClienteSavedEvent(
+            ClienteSavedEvent pEvent) {
+        Cliente cliente = pEvent.getEventValue();
+        int position;
+        if (mClienteList.contains(cliente)) {
+            position = mClienteList.indexOf(cliente);
+            mClienteList.set(position, cliente);
+            getView().updateChangedItemAtPosition(position);
+        } else {
+            position = mClienteList.size();
+            mClienteList.add(position, cliente);
+            getView().updateInsertedItemAtPosition(position);
+        }
+        EventBus.getDefault().removeStickyEvent(pEvent);
+    }
 }

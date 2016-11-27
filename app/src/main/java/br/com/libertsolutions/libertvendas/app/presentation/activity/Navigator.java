@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
-import br.com.libertsolutions.libertvendas.app.presentation.cliente.ClienteActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.CadastroClienteActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.importacao.ImportacaoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
@@ -21,14 +21,13 @@ import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsAct
  */
 public class Navigator {
     public static final int REQUEST_SETTINGS = 0x1;
-    public static final int REQUEST_NEW_CLIENTE = 0x2;
 
     public static final int RESULT_OK = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
 
     private final LibertVendasActivity mActivity;
 
-    public Navigator(LibertVendasActivity activity) {
+    Navigator(LibertVendasActivity activity) {
         mActivity = activity;
     }
 
@@ -80,15 +79,11 @@ public class Navigator {
     }
 
     public void toCliente(@Nullable Cliente pCliente) {
-        final Intent clienteIntent = new Intent(mActivity, ClienteActivity.class);
+        final Intent cadastroClienteIntent = new Intent(mActivity, CadastroClienteActivity.class)
+                .putExtra(CadastroClienteActivity.EXTRA_CLIENTE_EDICAO, pCliente);
 
-        if (pCliente != null) {
-            clienteIntent.putExtra(ClienteActivity.EXTRA_CLIENTE, pCliente);
-        }
-
-        ActivityCompat.startActivityForResult(mActivity, clienteIntent, REQUEST_NEW_CLIENTE, null);
+        ActivityCompat.startActivity(mActivity, cadastroClienteIntent, null);
     }
-
 
     public void toImportacao() {
         final Intent importacaoIntent = new Intent(mActivity, ImportacaoActivity.class);
