@@ -199,7 +199,7 @@ public class CadastroClienteActivity extends LibertVendasActivity
     }
 
     @Override public void hideRequiredMessages() {
-        for (int i = 0; i < mRequiredFields.size() - 1; i++) {
+        for (int i = 0; i < mRequiredFields.size(); i++) {
             ViewGroup requiredField = mRequiredFields.valueAt(i);
             if (requiredField instanceof MaterialSpinner) {
                 ((MaterialSpinner) requiredField).setError(null);
@@ -210,7 +210,7 @@ public class CadastroClienteActivity extends LibertVendasActivity
     }
 
     @Override public boolean hasEmptyRequiredFields() {
-        for (int i = 0; i < mRequiredFields.size() - 1; i++) {
+        for (int i = 0; i < mRequiredFields.size(); i++) {
             ViewGroup requiredField = mRequiredFields.valueAt(i);
 
             boolean isEmpty = false;
@@ -231,7 +231,7 @@ public class CadastroClienteActivity extends LibertVendasActivity
     @Override public void displayRequiredFieldMessages() {
         ViewGroup firstRequiredField = null;
 
-        for (int i = 0; i < mRequiredFields.size() - 1; i++) {
+        for (int i = 0; i < mRequiredFields.size(); i++) {
             ViewGroup requiredField = mRequiredFields.valueAt(i);
 
             if (requiredField instanceof MaterialSpinner) {
