@@ -6,13 +6,13 @@ import br.com.libertsolutions.libertvendas.app.presentation.base.BaseEvent;
 /**
  * @author Filipe Bezerra
  */
-public class ClienteSavedEvent extends BaseEvent<Cliente> {
+public class NovoClienteEvent extends BaseEvent<Cliente> {
 
-    private ClienteSavedEvent(Cliente pEventValue) {
+    private NovoClienteEvent(Cliente pEventValue) {
         super(pEventValue);
     }
 
-    static ClienteSavedEvent newEvent(Cliente pEventValue) {
-        return new ClienteSavedEvent(pEventValue);
+    static NovoClienteEvent newEvent(Cliente pEventValue) {
+        return new NovoClienteEvent(pEventValue);
     }
 }

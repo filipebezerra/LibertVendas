@@ -88,11 +88,6 @@ public class ListaClientesFragment extends LibertVendasFragment
         });
     }
 
-    @Override public void onStart() {
-        super.onStart();
-        mPresenter.registerForEvents();
-    }
-
     @Override public void showLoading() {
         mProgressDialog = new MaterialDialog.Builder(getContext())
                 .content(getString(R.string.loading_clientes))
@@ -121,6 +116,7 @@ public class ListaClientesFragment extends LibertVendasFragment
                                 .getViewTreeObserver()
                                 .removeOnGlobalLayoutListener(this);
                         hideLoading();
+                        mPresenter.registerForEvents();
                     }
                 });
     }
@@ -145,13 +141,9 @@ public class ListaClientesFragment extends LibertVendasFragment
 
     @Override public void onLongPress(View view, int position) {}
 
-    @Override public void onStop() {
-        super.onStop();
-        mPresenter.unregisterForEvents();
-    }
-
     @Override public void onDestroyView() {
         super.onDestroyView();
+        mPresenter.unregisterForEvents();
         mPresenter.detach();
     }
 }

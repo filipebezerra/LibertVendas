@@ -3,7 +3,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.listaclientes;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
-import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.ClienteSavedEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.NovoClienteEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ObservableUtils;
 import java.util.Collections;
 import java.util.List;
@@ -79,19 +79,10 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
         }
     }
 
-    @Subscribe(threadMode = MAIN, sticky = true) public void onClienteSavedEvent(
-            ClienteSavedEvent pEvent) {
-        Cliente cliente = pEvent.getEventValue();
-        int position;
-        if (mClienteList.contains(cliente)) {
-            position = mClienteList.indexOf(cliente);
-            mClienteList.set(position, cliente);
-            getView().updateChangedItemAtPosition(position);
-        } else {
-            position = mClienteList.size();
-            mClienteList.add(position, cliente);
-            getView().updateInsertedItemAtPosition(position);
-        }
-        EventBus.getDefault().removeStickyEvent(pEvent);
+    @Subscribe(threadMode = MAIN) public void onClienteSavedEvent(NovoClienteEvent pEvent) {
+        final Cliente cliente = pEvent.getEventValue();
+        final int position = mClienteList.size();
+        mClienteList.add(cliente);
+        getView().updateInsertedItemAtPosition(position);
     }
 }

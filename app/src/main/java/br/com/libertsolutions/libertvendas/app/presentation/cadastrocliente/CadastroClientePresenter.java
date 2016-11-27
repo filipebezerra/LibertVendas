@@ -213,8 +213,7 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 pCliente -> {
-                                    EventBus.getDefault()
-                                        .postSticky(ClienteSavedEvent.newEvent(pCliente));
+                                    EventBus.getDefault().post(NovoClienteEvent.newEvent(pCliente));
                                     getView().finishView();
                                 },
 
