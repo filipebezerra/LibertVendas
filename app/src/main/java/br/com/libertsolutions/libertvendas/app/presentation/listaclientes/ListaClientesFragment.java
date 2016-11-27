@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listaclientes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
@@ -14,6 +15,8 @@ import android.view.ViewTreeObserver;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
+import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.CadastroClienteActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemClickListener;
 import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemTouchListener;
@@ -131,12 +134,21 @@ public class ListaClientesFragment extends LibertVendasFragment
         mRecyclerViewClientes.smoothScrollToPosition(pPosition);
     }
 
-    @Override public void navigateToCliente(Cliente pCliente) {
-        hostActivity().navigate().toCliente(pCliente);
-    }
-
     @Override public void onSingleTapUp(View view, int position) {
         mPresenter.handleSingleTapUp(position);
+    }
+
+    @Override public void navigateToCliente(Cliente pCliente) {
+        hostActivity().navigate().toCadastroCliente(pCliente);
+    }
+
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Navigator.REQUEST_EDITAR_CLIENTE && resultCode == Navigator.RESULT_OK) {
+            mPresenter.handleResultClienteEditado(
+                    data.getParcelableExtra(CadastroClienteActivity.RESULT_CLIENTE_EDITADO));
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override public void onLongPress(View view, int position) {}

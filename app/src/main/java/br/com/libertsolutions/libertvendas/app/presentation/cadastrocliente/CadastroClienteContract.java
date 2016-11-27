@@ -53,6 +53,8 @@ interface CadastroClienteContract {
 
         void showExitViewQuestion();
 
+        void resultClienteEditado(Cliente pCliente);
+
         void finishView();
     }
 
@@ -72,5 +74,4 @@ interface CadastroClienteContract {
 
         void handleBackPressed();
     }
-
 }

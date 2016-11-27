@@ -12,7 +12,7 @@ public class ApiUtils {
     private ApiUtils() {/* No constructor */}
 
     private static final DateFormat API_DEFAULT_DATE_FORMATTER =
-            new SimpleDateFormat("YYYY-MM-DD'T'hh-mm-ss", Locale.US);
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH);
 
     public static String formatApiDateTime(long milliseconds) {
         Calendar calendar = Calendar.getInstance();

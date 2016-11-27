@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -139,7 +141,16 @@ public class HomeActivity extends LibertVendasActivity
 
     @OnClick(R.id.fab_sheet_item_novo_cliente) void onNovoClienteSheetItemClicked() {
         mMaterialSheetFab.hideSheet();
-        navigate().toCliente(null);
+        navigate().toCadastroCliente(null);
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Navigator.REQUEST_EDITAR_CLIENTE) {
+            getSupportFragmentManager().findFragmentById(R.id.fragment_container)
+                    .onActivityResult(requestCode, resultCode, data);
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override protected void onDestroy() {

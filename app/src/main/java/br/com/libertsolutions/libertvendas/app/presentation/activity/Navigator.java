@@ -20,9 +20,13 @@ import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsAct
  * @author Filipe Bezerra
  */
 public class Navigator {
+
     public static final int REQUEST_SETTINGS = 0x1;
 
+    public static final int REQUEST_EDITAR_CLIENTE = 0x2;
+
     public static final int RESULT_OK = Activity.RESULT_OK;
+
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
 
     private final LibertVendasActivity mActivity;
@@ -78,11 +82,16 @@ public class Navigator {
         ActivityCompat.startActivity(mActivity, pedidoIntent, null);
     }
 
-    public void toCliente(@Nullable Cliente pCliente) {
-        final Intent cadastroClienteIntent = new Intent(mActivity, CadastroClienteActivity.class)
-                .putExtra(CadastroClienteActivity.EXTRA_CLIENTE_EDICAO, pCliente);
+    public void toCadastroCliente(@Nullable Cliente pCliente) {
+        final Intent cadastroClienteIntent = new Intent(mActivity, CadastroClienteActivity.class);
 
-        ActivityCompat.startActivity(mActivity, cadastroClienteIntent, null);
+        if (pCliente == null) {
+            ActivityCompat.startActivity(mActivity, cadastroClienteIntent, null);
+        } else {
+            cadastroClienteIntent.putExtra(CadastroClienteActivity.EXTRA_CLIENTE_EDICAO, pCliente);
+            ActivityCompat.startActivityForResult(
+                    mActivity, cadastroClienteIntent, REQUEST_EDITAR_CLIENTE, null);
+        }
     }
 
     public void toImportacao() {

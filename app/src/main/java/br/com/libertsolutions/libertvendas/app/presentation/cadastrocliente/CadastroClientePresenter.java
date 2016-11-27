@@ -3,6 +3,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente;
 import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeRepository;
 import br.com.libertsolutions.libertvendas.app.data.cidades.EstadoRepository;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteRepository;
+import br.com.libertsolutions.libertvendas.app.data.util.ApiUtils;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
@@ -206,20 +207,13 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
         getView().hideRequiredMessages();
 
         if (!getView().hasEmptyRequiredFields()) {
-            if (isEditing()) {
+            addSubscription(mClienteRepository.save(clienteFromFields())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            this::notifyClienteSalvo,
 
-            } else {
-                addSubscription(mClienteRepository.save(clienteFromFields())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                pCliente -> {
-                                    EventBus.getDefault().post(NovoClienteEvent.newEvent(pCliente));
-                                    getView().finishView();
-                                },
-
-                                Timber::e
-                        ));
-            }
+                            Timber::e
+                    ));
         } else {
             getView().displayRequiredFieldMessages();
         }
@@ -262,20 +256,52 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
         final String complemento = getView().getViewStringValue(
                 mResourcesRepository.obtainComplementoViewId());
 
-        return new Cliente(
-                nomeCliente,
-                mTiposPessoaList.get(positionTipoPessoa).getIntType(),
-                cpfOuCnpj,
-                email,
-                telefone,
-                celular,
-                endereco,
-                cep,
-                mCidadesList.get(positionCidade),
-                bairro,
-                numero,
-                complemento
-        );
+        if (isEditing()) {
+            return new Cliente(
+                    mClienteEmEdicao.getId(),
+                    mClienteEmEdicao.getIdCliente(),
+                    mClienteEmEdicao.getCodigo(),
+                    nomeCliente,
+                    mTiposPessoaList.get(positionTipoPessoa).getIntType(),
+                    cpfOuCnpj,
+                    mClienteEmEdicao.getContato(),
+                    email,
+                    telefone,
+                    celular,
+                    endereco,
+                    cep,
+                    mCidadesList.get(positionCidade),
+                    bairro,
+                    numero,
+                    complemento,
+                    ApiUtils.formatApiDateTime(System.currentTimeMillis()),
+                    mClienteEmEdicao.isAtivo()
+            );
+        } else {
+            return new Cliente(
+                    nomeCliente,
+                    mTiposPessoaList.get(positionTipoPessoa).getIntType(),
+                    cpfOuCnpj,
+                    email,
+                    telefone,
+                    celular,
+                    endereco,
+                    cep,
+                    mCidadesList.get(positionCidade),
+                    bairro,
+                    numero,
+                    complemento
+            );
+        }
+    }
+
+    private void notifyClienteSalvo(final Cliente pCliente) {
+        if (isEditing()) {
+            getView().resultClienteEditado(pCliente);
+        } else {
+            EventBus.getDefault().post(NovoClienteEvent.newEvent(pCliente));
+            getView().finishView();
+        }
     }
 
     @Override public void handleTiposPessoaSpinnerItemSelected(int pPosition) {

@@ -79,6 +79,14 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
         }
     }
 
+    @Override public void handleResultClienteEditado(Cliente pClienteEditado) {
+        int position = mClienteList.indexOf(pClienteEditado);
+        if (position != -1) {
+            mClienteList.set(position, pClienteEditado);
+            getView().updateChangedItemAtPosition(position);
+        }
+    }
+
     @Subscribe(threadMode = MAIN) public void onClienteSavedEvent(NovoClienteEvent pEvent) {
         final Cliente cliente = pEvent.getEventValue();
         final int position = mClienteList.size();

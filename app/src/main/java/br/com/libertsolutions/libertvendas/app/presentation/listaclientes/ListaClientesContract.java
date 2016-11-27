@@ -31,6 +31,6 @@ interface ListaClientesContract {
 
         void handleSingleTapUp(int pPosition);
 
+        void handleResultClienteEditado(Cliente pClienteEditado);
     }
-
 }

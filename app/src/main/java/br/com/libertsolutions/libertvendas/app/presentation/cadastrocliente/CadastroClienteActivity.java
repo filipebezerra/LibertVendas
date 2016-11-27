@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -12,9 +13,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TipoPessoa;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FeedbackHelper;
 import butterknife.BindView;
@@ -34,6 +37,8 @@ public class CadastroClienteActivity extends LibertVendasActivity
 
     public static final String EXTRA_CLIENTE_EDICAO
             = CadastroClienteActivity.class.getSimpleName() + ".extraClienteEdicao";
+    public static final String RESULT_CLIENTE_EDITADO
+            = CadastroClienteActivity.class.getSimpleName() + ".resultClienteEditado";
 
     @BindView(R.id.spinner_tipo_pessoa) protected MaterialSpinner mTiposPessoaSpinner;
     @BindView(R.id.input_layout_cpf_ou_cnpj) protected TextInputLayout mCpfOuCnpjInputLayout;
@@ -283,6 +288,13 @@ public class CadastroClienteActivity extends LibertVendasActivity
     @Override public void showExitViewQuestion() {
         FeedbackHelper.showQuestionDialog(this, R.string.exit_and_cancel_question,
                 (dialog, which) -> finishView(), null);
+    }
+
+    @Override public void resultClienteEditado(Cliente pCliente) {
+        Intent data = new Intent()
+                .putExtra(RESULT_CLIENTE_EDITADO, pCliente);
+        setResult(Navigator.RESULT_OK, data);
+        finishView();
     }
 
     @Override public void onBackPressed() {
