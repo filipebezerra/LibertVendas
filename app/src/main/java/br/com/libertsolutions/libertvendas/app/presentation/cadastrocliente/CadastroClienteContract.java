@@ -49,7 +49,7 @@ interface CadastroClienteContract {
 
         void displayRequiredFieldMessages();
 
-        boolean isUnmodifiedFields();
+        boolean hasUnmodifiedFields();
 
         void showExitViewQuestion();
 

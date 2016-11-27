@@ -240,7 +240,7 @@ public class CadastroClienteActivity extends LibertVendasActivity
         }
     }
 
-    @Override public boolean isUnmodifiedFields() {
+    @Override public boolean hasUnmodifiedFields() {
         return (mTiposPessoaSpinner.getSelectedItem() == null)
                 && TextUtils.isEmpty(mCpfOuCnpjInputLayout.getEditText().getText())
                 && TextUtils.isEmpty(mNomeInputLayout.getEditText().getText())

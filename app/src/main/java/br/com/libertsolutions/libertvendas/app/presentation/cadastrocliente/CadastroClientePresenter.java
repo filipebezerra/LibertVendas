@@ -24,6 +24,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.presentation.util.StringUtils.equalsIgnoringNullOrWhitespace;
 import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
@@ -98,7 +99,7 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
     }
 
     private void initializeFieldsIfEmEdicao() {
-        if (mClienteEmEdicao != null) {
+        if (isEditing()) {
             getView().changeTitle(mResourcesRepository.obtainStringTitleEditandoCliente());
 
             for (TipoPessoa tipoPessoa : mTiposPessoaList) {
@@ -189,7 +190,7 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
     }
 
     private void initializeEstadosFieldsIfEmEdicao() {
-        if (mClienteEmEdicao != null) {
+        if (isEditing()) {
             int indexOfEstado = mEstadosList.indexOf(mClienteEmEdicao.getCidade().getEstado());
             getView().setViewValue(mResourcesRepository.obtainEstadosViewId(), indexOfEstado);
         }
@@ -205,7 +206,9 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
         getView().hideRequiredMessages();
 
         if (!getView().hasEmptyRequiredFields()) {
-            if (mClienteEmEdicao == null) {
+            if (isEditing()) {
+
+            } else {
                 addSubscription(mClienteRepository.save(clienteFromFields())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -217,8 +220,6 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
 
                                 Timber::e
                         ));
-            } else {
-
             }
         } else {
             getView().displayRequiredFieldMessages();
@@ -319,22 +320,54 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
     }
 
     private void initializeCidadesFieldsIfEmEdicao() {
-        if (mClienteEmEdicao != null) {
+        if (isEditing()) {
             int indexOfCidade = mCidadesList.indexOf(mClienteEmEdicao.getCidade());
             getView().setViewValue(mResourcesRepository.obtainCidadesViewId(), indexOfCidade);
         }
     }
 
     @Override public void handleBackPressed() {
-        if (canGoBack()) {
+        if (hasUnmodifiedFields()) {
             getView().finishView();
         } else {
             getView().showExitViewQuestion();
         }
     }
 
-    private boolean canGoBack() {
-        return getView().isUnmodifiedFields();
+    private boolean hasUnmodifiedFields() {
+        if (!isEditing()) {
+            return getView().hasUnmodifiedFields();
+        }
+
+        Cliente clienteFromFields = clienteFromFields();
+
+        return clienteFromFields.getTipo() == mClienteEmEdicao.getTipo() &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getCpfCnpj(), mClienteEmEdicao.getCpfCnpj()) &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getNome(), mClienteEmEdicao.getNome()) &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getEmail(), mClienteEmEdicao.getEmail()) &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getEndereco(), mClienteEmEdicao.getEndereco()) &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getNumero(), mClienteEmEdicao.getNumero()) &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getBairro(), mClienteEmEdicao.getBairro()) &&
+                clienteFromFields.getCidade()
+                        .equals(mClienteEmEdicao.getCidade()) &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getCep(), mClienteEmEdicao.getCep()) &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getComplemento(), mClienteEmEdicao.getComplemento()) &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getTelefone(), mClienteEmEdicao.getTelefone()) &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getTelefone2(), mClienteEmEdicao.getTelefone2());
+    }
+
+    private boolean isEditing() {
+        return mClienteEmEdicao != null;
     }
 
     private <T> T getItemFromList(List<T> list, int position) {
