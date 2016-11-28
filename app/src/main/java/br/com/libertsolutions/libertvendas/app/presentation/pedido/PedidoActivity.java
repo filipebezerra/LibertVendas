@@ -9,7 +9,7 @@ import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.pedido.finalizando.FinalizandoPedidoFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.listaprodutos.ListaProdutosFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.widget.TabAdapter;
 import butterknife.BindView;
 import java.util.List;
@@ -40,7 +40,7 @@ public class PedidoActivity extends LibertVendasActivity implements PedidoContra
         mPresenter.attachView(this);
 
         mTabAdapter = new TabAdapter(getSupportFragmentManager());
-        mTabAdapter.addFragment(ListaProdutosFragment.newInstance(),
+        mTabAdapter.addFragment(ListaProdutosFragment.newInstance(true),
                 getString(title_fragment_selecione_produtos));
 
         mViewPager.setAdapter(mTabAdapter);

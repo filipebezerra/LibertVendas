@@ -1,4 +1,4 @@
-package br.com.libertsolutions.libertvendas.app.presentation.pedido.listaprodutos;
+package br.com.libertsolutions.libertvendas.app.presentation.listaprodutos;
 
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;

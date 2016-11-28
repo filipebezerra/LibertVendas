@@ -1,4 +1,4 @@
-package br.com.libertsolutions.libertvendas.app.presentation.pedido.listaprodutos;
+package br.com.libertsolutions.libertvendas.app.presentation.listaprodutos;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -17,6 +17,8 @@ import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.GONE;
+
 /**
  * @author Filipe Bezerra
  */
@@ -27,6 +29,8 @@ class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosViewHolder>
 
     private final ProdutoSelecionadoAdapterCallbacks mCallbacks;
 
+    private final boolean mToSelect;
+
     private List<ProdutoVo> mProdutoList;
 
     private List<ProdutoVo> mOriginalValues;
@@ -35,10 +39,11 @@ class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosViewHolder>
 
     ListaProdutosAdapter(@NonNull Context pContext,
             @NonNull ProdutoSelecionadoAdapterCallbacks pCallbacks,
-            @NonNull List<ProdutoVo> pProdutoList) {
+            @NonNull List<ProdutoVo> pProdutoList, boolean pToSelect) {
         mContext = pContext;
         mCallbacks = pCallbacks;
         mProdutoList = pProdutoList;
+        mToSelect = pToSelect;
     }
 
     @Override public ListaProdutosViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,35 +65,44 @@ class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosViewHolder>
                 mContext.getString(R.string.template_text_total,
                         FormattingUtils.formatAsDinheiro(produto.getTotalProdutos())));
 
-        holder.textViewQuantidade.setText(String.valueOf(produto.getQuantidadeAdicionada()));
-        holder.editTextOutraQuantidade.setText(String.valueOf(produto.getQuantidadeAdicionada()));
+        if (mToSelect) {
+            holder.textViewQuantidade.setText(String.valueOf(produto.getQuantidadeAdicionada()));
+            holder.editTextOutraQuantidade.setText(
+                    String.valueOf(produto.getQuantidadeAdicionada()));
 
-        holder.buttonAdicionar.setOnClickListener(
-                view -> mCallbacks.onQuantidadeAdicionada(holder.getAdapterPosition()));
+            holder.buttonAdicionar.setOnClickListener(
+                    view -> mCallbacks.onQuantidadeAdicionada(holder.getAdapterPosition()));
 
-        holder.buttonRemover.setOnClickListener(
-                view -> mCallbacks.onQuantidadeRemovida(holder.getAdapterPosition()));
+            holder.buttonRemover.setOnClickListener(
+                    view -> mCallbacks.onQuantidadeRemovida(holder.getAdapterPosition()));
 
-        holder.textViewQuantidade.setOnClickListener(pView -> {
-            holder.viewSwitcher.showNext();
-            AndroidUtils.focusThenShowKeyboard(mContext, holder.editTextOutraQuantidade);
-        });
+            holder.textViewQuantidade.setOnClickListener(pView -> {
+                holder.viewSwitcher.showNext();
+                AndroidUtils.focusThenShowKeyboard(mContext, holder.editTextOutraQuantidade);
+            });
 
-        holder.editTextOutraQuantidade.setOnEditorActionListener(
-                (pTextView, pActionId, pEvent) -> {
-                    if (pActionId == EditorInfo.IME_ACTION_DONE) {
-                        AndroidUtils.hideKeyboard(mContext, holder.editTextOutraQuantidade);
-                        if (!TextUtils.isEmpty(holder.editTextOutraQuantidade.getText())) {
-                            float outraQuantidade = Float.valueOf(
-                                    holder.editTextOutraQuantidade.getText().toString());
-                            mCallbacks.onQuantidadeModificada(holder.getAdapterPosition(),
-                                    outraQuantidade);
+            holder.editTextOutraQuantidade.setOnEditorActionListener(
+                    (pTextView, pActionId, pEvent) -> {
+                        if (pActionId == EditorInfo.IME_ACTION_DONE) {
+                            AndroidUtils.hideKeyboard(mContext, holder.editTextOutraQuantidade);
+                            if (!TextUtils.isEmpty(holder.editTextOutraQuantidade.getText())) {
+                                float outraQuantidade = Float.valueOf(
+                                        holder.editTextOutraQuantidade.getText().toString());
+                                mCallbacks.onQuantidadeModificada(holder.getAdapterPosition(),
+                                        outraQuantidade);
+                            }
+                            holder.viewSwitcher.showPrevious();
+                            return true;
                         }
-                        holder.viewSwitcher.showPrevious();
-                        return true;
-                    }
-                    return false;
-                });
+                        return false;
+                    });
+
+            holder.containerBotoes.setVisibility(View.VISIBLE);
+            holder.viewSwitcher.setVisibility(View.VISIBLE);
+        } else {
+            holder.containerBotoes.setVisibility(GONE);
+            holder.viewSwitcher.setVisibility(GONE);
+        }
     }
 
     @Override public int getItemCount() {

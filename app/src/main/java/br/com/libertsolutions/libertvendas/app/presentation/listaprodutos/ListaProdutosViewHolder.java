@@ -1,10 +1,11 @@
-package br.com.libertsolutions.libertvendas.app.presentation.pedido.listaprodutos;
+package br.com.libertsolutions.libertvendas.app.presentation.listaprodutos;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 import br.com.libertsolutions.libertvendas.app.R;
@@ -24,6 +25,7 @@ class ListaProdutosViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.button_remover) ImageButton buttonRemover;
     @BindView(R.id.view_switcher) ViewSwitcher viewSwitcher;
     @BindView(R.id.edit_text_edit_quantidade) EditText editTextOutraQuantidade;
+    @BindView(R.id.container_botoes) LinearLayout containerBotoes;
 
     ListaProdutosViewHolder(View itemView) {
         super(itemView);

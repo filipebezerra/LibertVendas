@@ -52,7 +52,7 @@ public class Navigator {
         ActivityCompat.startActivity(mActivity, homeIntent, null);
     }
 
-    public void toClientes(boolean pToSelect) {
+    public void toListaClientes(boolean pToSelect) {
         mActivity.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, ListaClientesFragment.newInstance(pToSelect))
@@ -61,10 +61,10 @@ public class Navigator {
         mActivity.setTitle(R.string.title_fragment_lista_clientes);
     }
 
-    public void toProdutos() {
+    public void toListaProdutos(boolean pToSelect) {
         mActivity.getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, ListaProdutosFragment.newInstance())
+                .replace(R.id.fragment_container, ListaProdutosFragment.newInstance(pToSelect))
                 .commit();
         mActivity.setTitle(R.string.title_fragment_lista_produtos);
     }

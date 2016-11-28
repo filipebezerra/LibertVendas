@@ -123,11 +123,11 @@ public class HomeActivity extends LibertVendasActivity
     }
 
     @Override public void navigateToClientes() {
-        navigate().toClientes(false);
+        navigate().toListaClientes(false);
     }
 
     @Override public void navigateToProdutos() {
-        navigate().toProdutos();
+        navigate().toListaProdutos(false);
     }
 
     @Override public void navigateToPedidos() {

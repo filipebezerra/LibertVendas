@@ -41,10 +41,10 @@ public class ListaClientesFragment extends LibertVendasFragment
 
     private MaterialDialog mProgressDialog;
 
-    public static ListaClientesFragment newInstance(boolean toSelect) {
+    public static ListaClientesFragment newInstance(boolean pToSelect) {
         ListaClientesFragment fragment = new ListaClientesFragment();
         Bundle arguments = new Bundle();
-        arguments.putBoolean(ARG_EXTRA_TO_SELECT, toSelect);
+        arguments.putBoolean(ARG_EXTRA_TO_SELECT, pToSelect);
         fragment.setArguments(arguments);
         return fragment;
     }
