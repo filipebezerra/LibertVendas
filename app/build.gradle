@@ -23,8 +23,8 @@ android {
         // 25   = Major Android version
         // 060  = Production version (Semantic versioning)
         // 1    = Pre-release version (Internal versioning)
-        versionCode 250601
-        versionName "0.6.0.1-pre_release"
+        versionCode 25062
+        versionName "0.6.2-beta"
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "LibertVendas-$versionName")
     }
