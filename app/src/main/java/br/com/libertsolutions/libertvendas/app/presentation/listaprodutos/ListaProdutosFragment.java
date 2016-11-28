@@ -93,7 +93,7 @@ public class ListaProdutosFragment extends LibertVendasFragment
     }
 
     @Override public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_done).setVisible(getArguments().getBoolean(ARG_EXTRA_TO_SELECT));
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
