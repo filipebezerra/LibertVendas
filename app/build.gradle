@@ -13,7 +13,7 @@ if (project.hasProperty("LibertVendas.signing")
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         applicationId "br.com.libertsolutions.libertvendas.app"
