@@ -99,7 +99,7 @@ dependencies {
     // Material components libraries
     compile 'com.github.smtchahal:MaterialSpinner:1.1.7'
     compile 'com.gordonwong:material-sheet-fab:1.2.1'
-    compile 'com.afollestad.material-dialogs:core:0.9.0.2'
+    compile 'com.afollestad.material-dialogs:core:0.9.1.0'
     compile 'com.code-troopers.betterpickers:library:3.0.1'
 
     // Phone number formatting library
