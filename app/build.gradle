@@ -103,7 +103,7 @@ dependencies {
     compile 'com.code-troopers.betterpickers:library:3.0.1'
 
     // Phone number formatting library
-    compile 'com.googlecode.libphonenumber:libphonenumber:7.7.2'
+    compile 'com.googlecode.libphonenumber:libphonenumber:7.7.5'
 
     // Progress Indicator/Loading library
     compile 'com.github.jlmd:AnimatedCircleLoadingView:1.1.5@aar'
