@@ -78,7 +78,8 @@ public class Navigator {
     public void toListaProdutos(boolean pToSelect) {
         mActivity.getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, ListaProdutosFragment.newInstance(pToSelect))
+                .replace(R.id.fragment_container,
+                        ListaProdutosFragment.newInstance(pToSelect), ListaProdutosFragment.TAG)
                 .commit();
         mActivity.setTitle(R.string.title_fragment_lista_produtos);
     }

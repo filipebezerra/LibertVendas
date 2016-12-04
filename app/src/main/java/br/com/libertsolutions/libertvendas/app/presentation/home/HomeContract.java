@@ -18,10 +18,16 @@ interface HomeContract {
         boolean isViewingListaClientes();
 
         void navigateToListaClientes();
+
+        boolean isViewingListaProdutos();
+
+        void navigateToListaProdutos();
     }
 
     interface Presenter extends MvpPresenter<View>, LifecyclePresenter {
 
         void handleClientesNavigationItemSelected();
+
+        void handleProdutosNavigationItemSelected();
     }
 }

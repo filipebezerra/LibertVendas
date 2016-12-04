@@ -13,6 +13,7 @@ import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -92,6 +93,7 @@ public class HomeActivity extends LibertVendasActivity
             }
 
             case R.id.nav_produtos: {
+                mPresenter.handleProdutosNavigationItemSelected();
                 break;
             }
 
@@ -120,9 +122,17 @@ public class HomeActivity extends LibertVendasActivity
         navigate().toListaClientes(false);
     }
 
+    @Override public boolean isViewingListaProdutos() {
+        return isViewingFragmentByTag(ListaProdutosFragment.TAG);
+    }
+
+    @Override public void navigateToListaProdutos() {
+        navigate().toListaProdutos(false);
+    }
+
     public boolean isViewingFragmentByTag(String tag) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-        return fragment != null;
+        return fragment != null && fragment.isVisible();
     }
 
     @Override protected void onResume() {

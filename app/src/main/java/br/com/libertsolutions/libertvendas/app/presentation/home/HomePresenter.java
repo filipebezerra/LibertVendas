@@ -38,4 +38,10 @@ class HomePresenter extends BasePresenter<HomeContract.View> implements HomeCont
             getView().navigateToListaClientes();
         }
     }
+
+    @Override public void handleProdutosNavigationItemSelected() {
+        if (!getView().isViewingListaProdutos()) {
+            getView().navigateToListaProdutos();
+        }
+    }
 }

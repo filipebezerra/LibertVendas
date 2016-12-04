@@ -30,8 +30,9 @@ public class ListaProdutosFragment extends LibertVendasFragment
         implements ListaProdutosContract.View,
         ListaProdutosAdapter.ProdutoSelecionadoAdapterCallbacks {
 
-    private static final String ARG_EXTRA_TO_SELECT
-            = ListaProdutosFragment.class.getSimpleName() + ".argExtraToSelect";
+    public static final String TAG = ListaProdutosFragment.class.getName();
+
+    private static final String ARG_EXTRA_TO_SELECT = TAG + ".argExtraToSelect";
 
     @BindView(R.id.container_lista_produtos) protected FrameLayout mContainerListaProdutos;
     @BindView(R.id.recycler_view_produtos) protected RecyclerView mRecyclerViewProdutos;
