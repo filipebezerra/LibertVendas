@@ -17,16 +17,6 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute"
         >
 
-        <!-- Splash screen -->
-        <activity
-            android:name=".presentation.launch.LaunchActivity"
-            android:noHistory="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Libert.Theme.NoActionBar.FullScreen"
-            >
-
-        </activity>
-
         <!-- Main/Home screen -->
         <activity
             android:name=".presentation.home.HomeActivity"

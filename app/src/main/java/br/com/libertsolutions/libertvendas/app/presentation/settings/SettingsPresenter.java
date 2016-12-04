@@ -7,21 +7,19 @@ import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
  * @author Filipe Bezerra
  */
 class SettingsPresenter implements SettingsContract.Presenter {
+
     private final SettingsContract.View mView;
 
     private final SettingsRepository mSettingsRepository;
 
     SettingsPresenter(
-            SettingsContract.View view, SettingsRepository settingsRepository,
-            boolean pIsFromLaunch) {
+            SettingsContract.View view, SettingsRepository settingsRepository) {
         mView = view;
         mSettingsRepository = settingsRepository;
 
-        if (pIsFromLaunch) {
-            if (!mSettingsRepository.isFirstTimeSettingsLaunch() &&
-                    mSettingsRepository.hasAllSettingsFields()) {
-                mView.resultAsOk(Navigator.RESULT_OK);
-            }
+        if (!mSettingsRepository.isInitialDataImportationFlowDone() &&
+                mSettingsRepository.isRequiredSettingsFieldsSet()) {
+            mView.resultAsOk(Navigator.RESULT_OK);
         }
     }
 
@@ -34,12 +32,11 @@ class SettingsPresenter implements SettingsContract.Presenter {
     }
 
     @Override public void handleClickDoneMenuItem() {
-        if (!mSettingsRepository.hasAllSettingsFields()) {
+        if (!mSettingsRepository.isRequiredSettingsFieldsSet()) {
             mView.showRequiredMessage();
             return;
         }
 
-        mSettingsRepository.setFirstTimeSettingsLaunch();
         mView.resultAsOk(Navigator.RESULT_OK);
     }
 }

@@ -15,17 +15,13 @@ import org.greenrobot.eventbus.EventBus;
  * @author Filipe Bezerra
  */
 public class SettingsActivity extends LibertVendasActivity implements SettingsContract.View {
-    public static final String EXTRA_FROM_LAUNCH
-            = SettingsActivity.class.getSimpleName() + ".extraFromLaunch";
 
     private SettingsContract.Presenter mPresenter;
 
     @Override protected void onCreate(@Nullable Bundle inState) {
         super.onCreate(inState);
         setAsInitialFlowActivity();
-        mPresenter = new SettingsPresenter(this,
-                Injection.provideSettingsRepository(this),
-                getIntent().getExtras().getBoolean(EXTRA_FROM_LAUNCH));
+        mPresenter = new SettingsPresenter(this, Injection.provideSettingsRepository(this));
 
         if (inState == null) {
             getSupportFragmentManager()

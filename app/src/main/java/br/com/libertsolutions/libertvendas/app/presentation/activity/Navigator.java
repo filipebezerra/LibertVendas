@@ -42,7 +42,6 @@ public class Navigator {
                 new Intent(mActivity, LoginActivity.class),
 
                 new Intent(mActivity, SettingsActivity.class)
-                        .putExtra(SettingsActivity.EXTRA_FROM_LAUNCH, true)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
         };
 
@@ -50,9 +49,8 @@ public class Navigator {
                 .startActivities(mActivity, intents, null);
     }
 
-    public void toSettings(boolean isFromLaunch) {
-        final Intent settingsIntent = new Intent(mActivity, SettingsActivity.class)
-                .putExtra(SettingsActivity.EXTRA_FROM_LAUNCH, isFromLaunch);
+    public void toSettings() {
+        final Intent settingsIntent = new Intent(mActivity, SettingsActivity.class);
         ActivityCompat.startActivityForResult(mActivity, settingsIntent, REQUEST_SETTINGS, null);
     }
 

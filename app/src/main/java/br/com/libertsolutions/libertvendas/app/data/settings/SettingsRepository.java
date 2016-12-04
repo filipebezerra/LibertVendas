@@ -11,16 +11,12 @@ public interface SettingsRepository {
 
     void doneInitialDataImportationFlow();
 
+    boolean isRequiredSettingsFieldsSet();
+
     //region deprecated
-    boolean isFirstTimeSettingsLaunch();
-
-    void setFirstTimeSettingsLaunch();
-
     boolean isFirstTimeFeaturedMenuShown();
 
     void setFirstTimeFeaturedMenuShown();
-
-    boolean hasAllSettingsFields();
 
     Settings loadSettings();
 

@@ -19,9 +19,6 @@ class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
     private static final String PREFERENCE_KEY_IS_INITIAL_DATA_IMPORTATION_FLOW_DONE
             = "is-initial-data-importation-flow-done";
 
-
-    private static final String KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH
-            = "first-time-settings-launch";
     private static final String KEY_PREF_USUARIO_LOGADO = "usuario-logado";
     private static final String KEY_PREF_EMPRESA_LOGADA = "empresa-logada";
     private static final String KEY_PREF_FIRST_TIME_FEATURED_MENU_SHOWN
@@ -44,6 +41,13 @@ class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
         putBooleanPreference(PREFERENCE_KEY_IS_INITIAL_DATA_IMPORTATION_FLOW_DONE, true);
     }
 
+    @Override public boolean isRequiredSettingsFieldsSet() {
+        return mPreferences.contains(mContext.getString(key_pref_endereco_servidor))
+                && mPreferences.contains(mContext.getString(key_pref_chave_autenticacao))
+                && mPreferences.contains(mContext.getString(key_pref_sincronizar_pedido_automaticamente))
+                && mPreferences.contains(mContext.getString(key_pref_pode_aplicar_desconto));
+    }
+
     private void putBooleanPreference(final String preferenceKey, final boolean value) {
         PreferenceManager
                 .getDefaultSharedPreferences(mContext)
@@ -52,16 +56,7 @@ class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
                 .apply();
     }
 
-
     //region deprecated
-    @Override public boolean isFirstTimeSettingsLaunch() {
-        return getBooleanPreference(KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH, true);
-    }
-
-    @Override public void setFirstTimeSettingsLaunch() {
-        putBooleanPreference(KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH, false);
-    }
-
     @Override public boolean isFirstTimeFeaturedMenuShown() {
         return getBooleanPreference(KEY_PREF_FIRST_TIME_FEATURED_MENU_SHOWN, false);
     }
@@ -72,15 +67,6 @@ class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
 
     private boolean getBooleanPreference(final String preferenceKey, final boolean defaultValue) {
         return mPreferences.getBoolean(preferenceKey, defaultValue);
-    }
-
-
-
-    @Override public boolean hasAllSettingsFields() {
-        return mPreferences.contains(mContext.getString(key_pref_endereco_servidor))
-                && mPreferences.contains(mContext.getString(key_pref_chave_autenticacao))
-                && mPreferences.contains(mContext.getString(key_pref_sincronizar_pedido_automaticamente))
-                && mPreferences.contains(mContext.getString(key_pref_pode_aplicar_desconto));
     }
 
     @Override public Settings loadSettings() {
