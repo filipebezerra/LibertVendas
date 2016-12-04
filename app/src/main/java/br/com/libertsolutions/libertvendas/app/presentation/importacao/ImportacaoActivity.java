@@ -155,4 +155,8 @@ public class ImportacaoActivity extends LibertVendasActivity
         mPresenter.handleAnimationEnd(success);
     }
 
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detach();
+    }
 }

@@ -43,7 +43,7 @@
     <string name="title_dialog_choose_empresa_para_logar">Selecione a empresa para logar.</string>
 
     <!-- Screen Importação -->
-    <string name="title_activity_importacao">Importação</string>
+    <string name="title_activity_importacao">Importando seus dados</string>
     <string name="importacao">Importação</string>
     <string name="message_importacao_completada">Importação completada com sucesso!</string>
     <string name="error_importando_dados">Falha ao tentar importar os dados do servidor!</string>
