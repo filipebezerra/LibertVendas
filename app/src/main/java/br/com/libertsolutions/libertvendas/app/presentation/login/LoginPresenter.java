@@ -10,6 +10,8 @@ import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ValidationError;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LoginEvent;
 import org.greenrobot.eventbus.EventBus;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -147,6 +149,9 @@ class LoginPresenter extends BasePresenter<LoginContract.View>
     }
 
     @Override public void clickChooseEmpresaParaLogar(Empresa pEmpresa) {
+        Answers.getInstance().logLogin(new LoginEvent()
+                .putMethod("Digits")
+                .putSuccess(true));
         mSettingsRepository.setUsuarioLogado(mVendedor.getIdVendedor());
         mSettingsRepository.setEmpresaLogada(pEmpresa.getIdEmpresa());
         EventBus.getDefault().postSticky(UsuarioLogadoEvent.newEvent(mVendedor, pEmpresa));
