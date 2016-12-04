@@ -23,6 +23,8 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.login.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ImportacaoResourcesRepository;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -213,13 +215,20 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
     }
 
     private void showError() {
+        String errorType;
         if (mErrorMakingNetworkCall instanceof HttpException) {
+            errorType = "server";
             getView().showServerError();
         } else if (mErrorMakingNetworkCall instanceof IOException) {
+            errorType = "network";
             getView().showNetworkError();
         } else {
+            errorType = "unknown";
             getView().showUnknownError();
         }
-    }
 
+        Answers.getInstance().logCustom(new CustomEvent("Importação")
+                .putCustomAttribute("errorType", errorType)
+                .putCustomAttribute("message", mErrorMakingNetworkCall.getMessage()));
+    }
 }
