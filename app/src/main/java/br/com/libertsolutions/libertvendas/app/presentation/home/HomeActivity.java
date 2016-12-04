@@ -105,6 +105,15 @@ public class HomeActivity extends LibertVendasActivity
         navigate().toInitialDataImportationFlow();
     }
 
+    @Override public void showDrawer() {
+        mDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        mPresenter.resume();
+    }
+
     @Override protected void onDestroy() {
         super.onDestroy();
         mPresenter.detach();

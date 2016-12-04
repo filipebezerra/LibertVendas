@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.home;
 
+import br.com.libertsolutions.libertvendas.app.presentation.base.LifecyclePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.base.MvpPresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.base.MvpView;
 
@@ -11,9 +12,11 @@ interface HomeContract {
     interface View extends MvpView {
 
         void navigateToInitialDataImportationFlow();
+
+        void showDrawer();
     }
 
-    interface Presenter extends MvpPresenter<View> {
+    interface Presenter extends MvpPresenter<View>, LifecyclePresenter {
 
 
     }

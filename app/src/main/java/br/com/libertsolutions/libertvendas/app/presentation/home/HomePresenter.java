@@ -24,4 +24,12 @@ class HomePresenter extends BasePresenter<HomeContract.View> implements HomeCont
             getView().navigateToInitialDataImportationFlow();
         }
     }
+
+    @Override public void resume() {
+        if (mSettingsRepository.isInitialDataImportationFlowDone() &&
+                !mSettingsRepository.isUserLearnedDrawer()) {
+            getView().showDrawer();
+            mSettingsRepository.doneUserLearnedDrawer();
+        }
+    }
 }
