@@ -7,13 +7,13 @@ import android.support.v4.app.ActivityCompat;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.CadastroClienteActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.CadastroPedidoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.importacao.ImportacaoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoginActivity;
-import br.com.libertsolutions.libertvendas.app.presentation.pedido.PedidoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsActivity;
 
 /**
@@ -77,8 +77,8 @@ public class Navigator {
         mActivity.setTitle(R.string.title_fragment_lista_pedidos);
     }
 
-    public void toPedido() {
-        final Intent pedidoIntent = new Intent(mActivity, PedidoActivity.class);
+    public void toCadastroPedido() {
+        final Intent pedidoIntent = new Intent(mActivity, CadastroPedidoActivity.class);
         ActivityCompat.startActivity(mActivity, pedidoIntent, null);
     }
 

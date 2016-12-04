@@ -65,7 +65,7 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
         mClienteEmEdicao = pClienteFromExtra;
         getView().displayTiposPessoa(mTiposPessoaList);
         loadEstados();
-
+        //TODO Move view initialization above
         initializeViewFields();
         initializeViewRequiredFields();
         initializeFieldsIfEmEdicao();

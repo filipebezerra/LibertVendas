@@ -136,7 +136,7 @@ public class HomeActivity extends LibertVendasActivity
 
     @OnClick(R.id.fab_sheet_item_novo_pedido) void onNovoPedidoSheetItemClicked() {
         mMaterialSheetFab.hideSheet();
-        navigate().toPedido();
+        navigate().toCadastroPedido();
     }
 
     @OnClick(R.id.fab_sheet_item_novo_cliente) void onNovoClienteSheetItemClicked() {

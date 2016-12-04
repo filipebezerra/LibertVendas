@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/keyline_large"
     android:paddingBottom="@dimen/keyline_large"
     android:clipToPadding="false"
-    tools:context=".presentation.pedido.finalizando.FinalizandoPedidoFragment"
+    tools:context=".presentation.cadastropedido.finalizando.FinalizandoPedidoFragment"
     >
 
     <TableLayout

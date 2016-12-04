@@ -31,6 +31,7 @@ import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepository;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CadastroClienteResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.CommonResourcesRepository;
+import br.com.libertsolutions.libertvendas.app.presentation.resources.FinalizandoPedidoResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ImportacaoResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.ResourcesRepositories;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.SelecioneProdutosResourcesRepository;
@@ -124,8 +125,12 @@ public class Injection {
     }
 
     public static SelecioneProdutosResourcesRepository provideSelecioneProdutosResourcesRepository(
-            @NonNull Context context) {
-        return ResourcesRepositories.getSelecioneProdutosResourcesRepository(context);
+            @NonNull Context pContext) {
+        return ResourcesRepositories.getSelecioneProdutosResourcesRepository(pContext);
     }
 
+    public static FinalizandoPedidoResourcesRepository provideFinalizandoPedidoResourcesRepository(
+            @NonNull Context pContext) {
+        return ResourcesRepositories.getFinalizandoPedidoResourcesRepository(pContext);
+    }
 }

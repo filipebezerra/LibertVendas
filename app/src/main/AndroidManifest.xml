@@ -61,7 +61,7 @@
             />
 
         <activity
-            android:name=".presentation.pedido.PedidoActivity"
+            android:name=".presentation.cadastropedido.CadastroPedidoActivity"
             android:label="@string/title_activity_pedido"
             android:theme="@style/Libert.Theme.NoActionBar"
             android:parentActivityName=".presentation.home.HomeActivity"

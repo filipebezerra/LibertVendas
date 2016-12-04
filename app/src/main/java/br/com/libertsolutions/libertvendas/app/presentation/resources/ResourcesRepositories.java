@@ -17,7 +17,7 @@ public class ResourcesRepositories {
 
     private static ImportacaoResourcesRepository sImportacaoResourcesRepository = null;
 
-    private static FinalizaPedidoResourcesRepository sFinalizaPedidoResourcesRepository = null;
+    private static FinalizandoPedidoResourcesRepository sFinalizandoPedidoResourcesRepository = null;
 
     public synchronized static CadastroClienteResourcesRepository getClienteResources(
             @NonNull Context context) {
@@ -53,12 +53,12 @@ public class ResourcesRepositories {
         return sImportacaoResourcesRepository;
     }
 
-    public synchronized static FinalizaPedidoResourcesRepository getFinalizaPedidoResourcesRepository(
+    public synchronized static FinalizandoPedidoResourcesRepository getFinalizandoPedidoResourcesRepository(
             @NonNull Context pContext) {
-        if (sFinalizaPedidoResourcesRepository == null) {
-            sFinalizaPedidoResourcesRepository =
-                    new FinalizaPedidoResourcesRepositoryImpl(pContext.getResources());
+        if (sFinalizandoPedidoResourcesRepository == null) {
+            sFinalizandoPedidoResourcesRepository =
+                    new FinalizandoPedidoResourcesRepositoryImpl(pContext.getResources());
         }
-        return sFinalizaPedidoResourcesRepository;
+        return sFinalizandoPedidoResourcesRepository;
     }
 }
