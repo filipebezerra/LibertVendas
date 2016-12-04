@@ -59,21 +59,28 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+ext {
+    support = '25.0.1'
+    butterknife = '8.4.0'
+    retrofit = '2.1.0'
+    okhttp = '3.5.0'
+}
+
 dependencies {
     testCompile 'junit:junit:4.12'
 
     // Support library
-    compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
-    compile "com.android.support:design:${supportLibraryVersion}"
-    compile "com.android.support:recyclerview-v7:${supportLibraryVersion}"
-    compile "com.android.support:cardview-v7:${supportLibraryVersion}"
-    compile ("com.takisoft.fix:preference-v7:${supportLibraryVersion}.0", {
+    compile "com.android.support:appcompat-v7:${support}"
+    compile "com.android.support:design:${support}"
+    compile "com.android.support:recyclerview-v7:${support}"
+    compile "com.android.support:cardview-v7:${support}"
+    compile ("com.takisoft.fix:preference-v7:${support}.0", {
             exclude group: 'android.support.annotation', module: 'support-annotations'
     })
 
     // View injection library
-    compile "com.jakewharton:butterknife:${butterKnifeVersion}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
+    compile "com.jakewharton:butterknife:${butterknife}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknife}"
 
     // Logging library
     compile 'com.jakewharton.timber:timber:4.3.1'
@@ -99,13 +106,13 @@ dependencies {
     compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
 
     // Http libraries
-    compile ("com.squareup.retrofit2:retrofit:${retrofitVersion}", {
+    compile ("com.squareup.retrofit2:retrofit:${retrofit}", {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     })
-    compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
-    compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
-    compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
-    compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
+    compile "com.squareup.retrofit2:adapter-rxjava:${retrofit}"
+    compile "com.squareup.retrofit2:converter-gson:${retrofit}"
+    compile "com.squareup.okhttp3:okhttp:${okhttp}"
+    compile "com.squareup.okhttp3:logging-interceptor:${okhttp}"
 
     // Crash reporting library
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
