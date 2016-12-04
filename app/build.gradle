@@ -76,14 +76,14 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
 
     // Logging library
-    compile 'com.jakewharton.timber:timber:4.3.0'
+    compile 'com.jakewharton.timber:timber:4.3.1'
 
     //Event Bus library
     compile 'org.greenrobot:eventbus:3.0.0'
 
     //Reactive Extensions library
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'io.reactivex:rxjava:1.2.3'
 
     // Material components libraries
     compile 'com.github.smtchahal:MaterialSpinner:1.1.7'
