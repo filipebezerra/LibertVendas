@@ -30,8 +30,9 @@ import java.util.List;
 public class ListaClientesFragment extends LibertVendasFragment
         implements ListaClientesContract.View, OnItemClickListener {
 
-    private static final String ARG_EXTRA_TO_SELECT
-            = ListaClientesFragment.class.getSimpleName() + ".argExtraToSelect";
+    public static final String TAG = ListaClientesFragment.class.getName();
+
+    private static final String ARG_EXTRA_TO_SELECT = TAG + ".argExtraToSelect";
 
     @BindView(R.id.recycler_view_clientes) protected RecyclerView mRecyclerViewClientes;
 

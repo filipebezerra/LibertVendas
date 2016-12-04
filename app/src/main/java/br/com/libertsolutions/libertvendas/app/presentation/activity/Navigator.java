@@ -68,7 +68,8 @@ public class Navigator {
     public void toListaClientes(boolean pToSelect) {
         mActivity.getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, ListaClientesFragment.newInstance(pToSelect))
+                .replace(R.id.fragment_container,
+                        ListaClientesFragment.newInstance(pToSelect), ListaClientesFragment.TAG)
                 .addToBackStack(null)
                 .commit();
         mActivity.setTitle(R.string.title_fragment_lista_clientes);

@@ -14,10 +14,14 @@ interface HomeContract {
         void navigateToInitialDataImportationFlow();
 
         void showDrawer();
+
+        boolean isViewingListaClientes();
+
+        void navigateToListaClientes();
     }
 
     interface Presenter extends MvpPresenter<View>, LifecyclePresenter {
 
-
+        void handleClientesNavigationItemSelected();
     }
 }

@@ -32,4 +32,10 @@ class HomePresenter extends BasePresenter<HomeContract.View> implements HomeCont
             mSettingsRepository.doneUserLearnedDrawer();
         }
     }
+
+    @Override public void handleClientesNavigationItemSelected() {
+        if (!getView().isViewingListaClientes()) {
+            getView().navigateToListaClientes();
+        }
+    }
 }

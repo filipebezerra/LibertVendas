@@ -3,6 +3,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.home;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -85,6 +87,7 @@ public class HomeActivity extends LibertVendasActivity
             }
 
             case R.id.nav_clientes: {
+                mPresenter.handleClientesNavigationItemSelected();
                 break;
             }
 
@@ -107,6 +110,19 @@ public class HomeActivity extends LibertVendasActivity
 
     @Override public void showDrawer() {
         mDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    @Override public boolean isViewingListaClientes() {
+        return isViewingFragmentByTag(ListaClientesFragment.TAG);
+    }
+
+    @Override public void navigateToListaClientes() {
+        navigate().toListaClientes(false);
+    }
+
+    public boolean isViewingFragmentByTag(String tag) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+        return fragment != null;
     }
 
     @Override protected void onResume() {
