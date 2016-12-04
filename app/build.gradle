@@ -28,7 +28,11 @@ android {
         setProperty("archivesBaseName", "LibertVendas-$versionName")
     }
     buildTypes {
+        debug {
+            ext.enableCrashlytics = false
+        }
         release {
+            ext.enableCrashlytics = true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
