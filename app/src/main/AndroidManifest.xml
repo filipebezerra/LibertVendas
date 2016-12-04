@@ -22,6 +22,8 @@
             android:name=".presentation.home.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/Libert.Theme.NoActionBar"
+            android:launchMode="singleTop"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
