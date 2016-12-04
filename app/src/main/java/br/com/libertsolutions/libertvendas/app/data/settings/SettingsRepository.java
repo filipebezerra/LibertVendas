@@ -13,21 +13,17 @@ public interface SettingsRepository {
 
     boolean isRequiredSettingsFieldsSet();
 
-    //region deprecated
-    boolean isFirstTimeFeaturedMenuShown();
+    Settings getSettings();
 
-    void setFirstTimeFeaturedMenuShown();
+    boolean isUserLoggedIn();
 
-    Settings loadSettings();
+    int getLoggedInUser();
 
-    boolean hasUsuarioLogado();
+    int getLoggedInUserCompany();
 
-    void setUsuarioLogado(int idVendedor);
+    void setLoggedInUser(int idVendedor, int idEmpresa);
+    
+    boolean isUserLearnedDrawer();
 
-    int getUsuarioLogado();
-
-    void setEmpresaLogada(int idEmpresa);
-
-    int getEmpresaLogada();
-    //endregion
+    void doneUserLearnedDrawer();
 }

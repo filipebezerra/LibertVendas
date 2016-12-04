@@ -37,7 +37,7 @@ public class ServiceFactory {
     private static SettingsRepository sSettingsRepository;
 
     public static <S> S createService(@NonNull Context context, @NonNull Class<S> serviceClass) {
-        final Settings settings = getSettingsRepository(context).loadSettings();
+        final Settings settings = getSettingsRepository(context).getSettings();
         final String urlServidor = settings.getUrlServidor();
         final String chaveAutenticacao = settings.getChaveAutenticacao();
 

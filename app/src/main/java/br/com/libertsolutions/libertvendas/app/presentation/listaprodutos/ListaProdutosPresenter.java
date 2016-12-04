@@ -56,7 +56,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
 
     @Override public void loadListaProdutos() {
         mVendedorRepository
-                .findById(mSettingsRepository.getUsuarioLogado())
+                .findById(mSettingsRepository.getLoggedInUser())
                 .flatMap(
                         new Func1<Vendedor, Observable<TabelaPreco>>() {
                             @Override

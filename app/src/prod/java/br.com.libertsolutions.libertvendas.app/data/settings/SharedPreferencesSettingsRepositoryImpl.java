@@ -19,10 +19,11 @@ class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
     private static final String PREFERENCE_KEY_IS_INITIAL_DATA_IMPORTATION_FLOW_DONE
             = "is-initial-data-importation-flow-done";
 
-    private static final String KEY_PREF_USUARIO_LOGADO = "usuario-logado";
-    private static final String KEY_PREF_EMPRESA_LOGADA = "empresa-logada";
-    private static final String KEY_PREF_FIRST_TIME_FEATURED_MENU_SHOWN
-            = "first-time-featured-menu-shown";
+    private static final String PREFERENCE_KEY_LOGGED_IN_USER = "logged-in-user";
+
+    private static final String PREFERENCE_KEY_LOGGED_IN_USER_COMPANY = "logged-in-user-company";
+
+    private static final String PREFERENCE_KEY_USER_LEARNED_DRAWER = "user-learned-drawer";
 
     private final Context mContext;
 
@@ -34,7 +35,7 @@ class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
     }
 
     @Override public boolean isInitialDataImportationFlowDone() {
-        return mPreferences.getBoolean(PREFERENCE_KEY_IS_INITIAL_DATA_IMPORTATION_FLOW_DONE, false);
+        return getBooleanPreference(PREFERENCE_KEY_IS_INITIAL_DATA_IMPORTATION_FLOW_DONE, false);
     }
 
     @Override public void doneInitialDataImportationFlow() {
@@ -48,28 +49,7 @@ class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
                 && mPreferences.contains(mContext.getString(key_pref_pode_aplicar_desconto));
     }
 
-    private void putBooleanPreference(final String preferenceKey, final boolean value) {
-        PreferenceManager
-                .getDefaultSharedPreferences(mContext)
-                .edit()
-                .putBoolean(preferenceKey, value)
-                .apply();
-    }
-
-    //region deprecated
-    @Override public boolean isFirstTimeFeaturedMenuShown() {
-        return getBooleanPreference(KEY_PREF_FIRST_TIME_FEATURED_MENU_SHOWN, false);
-    }
-
-    @Override public void setFirstTimeFeaturedMenuShown() {
-        putBooleanPreference(KEY_PREF_FIRST_TIME_FEATURED_MENU_SHOWN, true);
-    }
-
-    private boolean getBooleanPreference(final String preferenceKey, final boolean defaultValue) {
-        return mPreferences.getBoolean(preferenceKey, defaultValue);
-    }
-
-    @Override public Settings loadSettings() {
+    @Override public Settings getSettings() {
         final String urlServidor = mPreferences
                 .getString(mContext.getString(key_pref_endereco_servidor), "");
         final String chaveAutenticacao = mPreferences
@@ -87,36 +67,52 @@ class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
         );
     }
 
-    @Override public boolean hasUsuarioLogado() {
-        return mPreferences.contains(KEY_PREF_USUARIO_LOGADO);
+    @Override public boolean isUserLoggedIn() {
+        return mPreferences.contains(PREFERENCE_KEY_LOGGED_IN_USER);
     }
 
-    @Override public void setUsuarioLogado(int idVendedor) {
-        putIntPreference(KEY_PREF_USUARIO_LOGADO, idVendedor);
+    @Override public int getLoggedInUser() {
+        return getIntegerPreference(PREFERENCE_KEY_LOGGED_IN_USER, -1);
     }
 
-    @Override public int getUsuarioLogado() {
-        return getIntPreference(KEY_PREF_USUARIO_LOGADO, -1);
+    @Override public int getLoggedInUserCompany() {
+        return getIntegerPreference(PREFERENCE_KEY_LOGGED_IN_USER_COMPANY, -1);
     }
 
-    @Override public void setEmpresaLogada(int idEmpresa) {
-        putIntPreference(KEY_PREF_EMPRESA_LOGADA, idEmpresa);
+    @Override public void setLoggedInUser(int idVendedor, int idEmpresa) {
+        putIntegerPreference(PREFERENCE_KEY_LOGGED_IN_USER, idVendedor);
+        putIntegerPreference(PREFERENCE_KEY_LOGGED_IN_USER_COMPANY, idEmpresa);
     }
 
-    @Override public int getEmpresaLogada() {
-        return getIntPreference(KEY_PREF_EMPRESA_LOGADA, -1);
+    @Override public boolean isUserLearnedDrawer() {
+        return getBooleanPreference(PREFERENCE_KEY_USER_LEARNED_DRAWER, false);
     }
 
-    private int getIntPreference(final String preferenceKey, final int defaultValue) {
+    @Override public void doneUserLearnedDrawer() {
+        putBooleanPreference(PREFERENCE_KEY_USER_LEARNED_DRAWER, true);
+    }
+
+    private boolean getBooleanPreference(final String preferenceKey, final boolean defaultValue) {
+        return mPreferences.getBoolean(preferenceKey, defaultValue);
+    }
+
+    private void putBooleanPreference(final String preferenceKey, final boolean value) {
+        PreferenceManager
+                .getDefaultSharedPreferences(mContext)
+                .edit()
+                .putBoolean(preferenceKey, value)
+                .apply();
+    }
+
+    private int getIntegerPreference(final String preferenceKey, final int defaultValue) {
         return mPreferences.getInt(preferenceKey, defaultValue);
     }
 
-    private void putIntPreference(final String preferenceKey, final int value) {
+    private void putIntegerPreference(final String preferenceKey, final int value) {
         PreferenceManager
                 .getDefaultSharedPreferences(mContext)
                 .edit()
                 .putInt(preferenceKey, value)
                 .apply();
     }
-    //endregion
 }
