@@ -10,27 +10,11 @@ interface HomeContract {
 
     interface View extends MvpView {
 
-        void showUsuarioLogado(String pNomeVendedor, String pNomeEmpresa);
-
-        void showFeaturedMenu();
-
-        void navigateToSettings();
-
-        void navigateToClientes();
-
-        void navigateToProdutos();
-
-        void navigateToPedidos();
+        void navigateToInitialDataImportationFlow();
     }
 
     interface Presenter extends MvpPresenter<View> {
 
-        void handleSettingsNavigationItemSelected();
 
-        void handleClientesNavigationItemSelected();
-
-        void handleProdutosNavigationItemSelected();
-
-        void handlePedidosNavigationItemSelected();
     }
 }

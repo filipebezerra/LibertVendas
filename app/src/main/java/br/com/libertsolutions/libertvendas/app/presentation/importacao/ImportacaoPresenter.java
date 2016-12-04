@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.presentation.importacao;
 import br.com.libertsolutions.libertvendas.app.data.cidades.CidadeService;
 import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteService;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
-import br.com.libertsolutions.libertvendas.app.data.importacao.ImportacaoRepository;
 import br.com.libertsolutions.libertvendas.app.data.produtos.ProdutoService;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
@@ -42,8 +41,6 @@ import static org.greenrobot.eventbus.ThreadMode.MAIN;
 class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
         implements ImportacaoContract.Presenter {
 
-    private final ImportacaoRepository mImportacaoRepository;
-
     private final FormaPagamentoService mFormaPagamentoService;
 
     private final Repository<FormaPagamento> mFormaPagamentoRepository;
@@ -77,7 +74,6 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
     private Throwable mErrorMakingNetworkCall;
 
     ImportacaoPresenter(
-            ImportacaoRepository pImportacaoRepository,
             FormaPagamentoService pFormaPagamentoService,
             Repository<FormaPagamento> pFormaPagamentoRepository,
             CidadeService pCidadeService, Repository<Cidade> pCidadeRepository,
@@ -87,7 +83,6 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
             Repository<TabelaPreco> pTabelaPrecoRepository,
             ImportacaoResourcesRepository pResourcesRepository,
             SettingsRepository pSettingsRepository) {
-        mImportacaoRepository = pImportacaoRepository;
         mFormaPagamentoService = pFormaPagamentoService;
         mFormaPagamentoRepository = pFormaPagamentoRepository;
         mCidadeService = pCidadeService;
@@ -100,14 +95,6 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
         mTabelaPrecoRepository = pTabelaPrecoRepository;
         mResourcesRepository = pResourcesRepository;
         mSettingsRepository = pSettingsRepository;
-    }
-
-    @Override public void attachView(ImportacaoContract.View pView) {
-        super.attachView(pView);
-        if (mImportacaoRepository.isImportacaoInicialFeita()) {
-            getView().navigateToMainActivity();
-            getView().finishActivity();
-        }
     }
 
     @Subscribe(threadMode = MAIN, sticky = true) public void onUsuarioLogadoEvent(
@@ -177,7 +164,7 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
                 .lastOrDefault(Collections.emptyList())
                 .subscribe(
                         pResult -> {
-                            mImportacaoRepository.setImportacaoInicialComoFeita();
+                            mSettingsRepository.doneInitialDataImportationFlow();
                             getView().hideLoadingWithSuccess();
                         },
 
@@ -198,7 +185,7 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
     }
 
     @Override public boolean isSyncDone() {
-        return mImportacaoRepository.isImportacaoInicialFeita();
+        return mSettingsRepository.isInitialDataImportationFlowDone();
     }
 
     @Override public void handleCancelOnSyncError() {

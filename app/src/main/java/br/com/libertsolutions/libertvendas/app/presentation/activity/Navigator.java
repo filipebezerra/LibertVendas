@@ -35,6 +35,21 @@ public class Navigator {
         mActivity = activity;
     }
 
+    public void toInitialDataImportationFlow() {
+        Intent[] intents = new Intent[] {
+                new Intent(mActivity, ImportacaoActivity.class),
+
+                new Intent(mActivity, LoginActivity.class),
+
+                new Intent(mActivity, SettingsActivity.class)
+                        .putExtra(SettingsActivity.EXTRA_FROM_LAUNCH, true)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        };
+
+        ActivityCompat
+                .startActivities(mActivity, intents, null);
+    }
+
     public void toSettings(boolean isFromLaunch) {
         final Intent settingsIntent = new Intent(mActivity, SettingsActivity.class)
                 .putExtra(SettingsActivity.EXTRA_FROM_LAUNCH, isFromLaunch);

@@ -6,6 +6,12 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
  * @author Filipe Bezerra
  */
 public interface SettingsRepository {
+
+    boolean isInitialDataImportationFlowDone();
+
+    void doneInitialDataImportationFlow();
+
+    //region deprecated
     boolean isFirstTimeSettingsLaunch();
 
     void setFirstTimeSettingsLaunch();
@@ -27,4 +33,5 @@ public interface SettingsRepository {
     void setEmpresaLogada(int idEmpresa);
 
     int getEmpresaLogada();
+    //endregion
 }

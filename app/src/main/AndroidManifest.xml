@@ -17,11 +17,21 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute"
         >
 
+        <!-- Splash screen -->
         <activity
             android:name=".presentation.launch.LaunchActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/Libert.Theme.NoActionBar.FullScreen"
+            >
+
+        </activity>
+
+        <!-- Main/Home screen -->
+        <activity
+            android:name=".presentation.home.HomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Libert.Theme.NoActionBar"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +40,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Settings screen -->
         <activity
             android:name=".presentation.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -37,6 +48,7 @@
             android:theme="@style/Libert.Theme.NoActionBar.Settings"
             />
 
+        <!-- Login screen -->
         <activity
             android:name=".presentation.login.LoginActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
@@ -46,6 +58,7 @@
             android:windowSoftInputMode="stateHidden|adjustResize"
             />
 
+        <!-- Data Importation screen -->
         <activity
             android:name=".presentation.importacao.ImportacaoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
@@ -54,12 +67,15 @@
             android:theme="@style/Libert.Theme.NoActionBar"
             />
 
+        <!-- New Customer screen -->
         <activity
-            android:name=".presentation.home.HomeActivity"
-            android:label="@string/title_activity_home"
+            android:name=".presentation.cadastrocliente.CadastroClienteActivity"
+            android:label="@string/title_activity_cadastro_cliente"
             android:theme="@style/Libert.Theme.NoActionBar"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
             />
 
+        <!-- New Order screen -->
         <activity
             android:name=".presentation.cadastropedido.CadastroPedidoActivity"
             android:label="@string/title_activity_pedido"
@@ -73,17 +89,10 @@
                 />
         </activity>
 
-        <activity
-            android:name=".presentation.cadastrocliente.CadastroClienteActivity"
-            android:label="@string/title_activity_cadastro_cliente"
-            android:theme="@style/Libert.Theme.NoActionBar"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
-            />
-
+        <!-- Fabric API Key -->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="88453d956cd483a917c0c313a6a47582a0853bcf"
             />
     </application>
-
 </manifest>

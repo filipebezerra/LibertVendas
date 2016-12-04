@@ -13,8 +13,6 @@ import br.com.libertsolutions.libertvendas.app.data.clientes.ClienteService;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepository;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoService;
-import br.com.libertsolutions.libertvendas.app.data.importacao.ImportacaoRepositories;
-import br.com.libertsolutions.libertvendas.app.data.importacao.ImportacaoRepository;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepository;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoService;
@@ -40,10 +38,6 @@ import br.com.libertsolutions.libertvendas.app.presentation.resources.SelecioneP
  * @author Filipe Bezerra
  */
 public class Injection {
-
-    public static ImportacaoRepository provideImportacaoRepository(@NonNull Context pContext) {
-        return ImportacaoRepositories.getImportacaoRepository(pContext);
-    }
 
     public static ImportacaoResourcesRepository provideImportacaoResourcesRepository(
             @NonNull Context pContext) {

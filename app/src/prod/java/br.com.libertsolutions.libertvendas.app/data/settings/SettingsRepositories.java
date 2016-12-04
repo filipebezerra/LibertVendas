@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
  * @author Filipe Bezerra
  */
 public class SettingsRepositories {
+
     private SettingsRepositories() {/* No instances */}
 
     private static SettingsRepository sRepository = null;

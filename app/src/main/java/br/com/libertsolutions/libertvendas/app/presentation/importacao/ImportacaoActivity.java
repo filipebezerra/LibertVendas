@@ -29,7 +29,6 @@ public class ImportacaoActivity extends LibertVendasActivity
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         mPresenter = new ImportacaoPresenter(
-                Injection.provideImportacaoRepository(this),
                 Injection.provideFormaPagamentoService(this),
                 Injection.provideFormaPagamentoRepository(),
                 Injection.provideCidadeService(this),

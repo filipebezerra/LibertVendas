@@ -14,7 +14,11 @@ import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_tabela_p
 /**
  * @author Filipe Bezerra
  */
-public class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
+class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
+
+    private static final String PREFERENCE_KEY_IS_INITIAL_DATA_IMPORTATION_FLOW_DONE
+            = "is-initial-data-importation-flow-done";
+
 
     private static final String KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH
             = "first-time-settings-launch";
@@ -27,11 +31,29 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
 
     private final SharedPreferences mPreferences;
 
-    public SharedPreferencesSettingsRepositoryImpl(Context context) {
+    SharedPreferencesSettingsRepositoryImpl(Context context) {
         mContext = context;
         mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
+    @Override public boolean isInitialDataImportationFlowDone() {
+        return mPreferences.getBoolean(PREFERENCE_KEY_IS_INITIAL_DATA_IMPORTATION_FLOW_DONE, false);
+    }
+
+    @Override public void doneInitialDataImportationFlow() {
+        putBooleanPreference(PREFERENCE_KEY_IS_INITIAL_DATA_IMPORTATION_FLOW_DONE, true);
+    }
+
+    private void putBooleanPreference(final String preferenceKey, final boolean value) {
+        PreferenceManager
+                .getDefaultSharedPreferences(mContext)
+                .edit()
+                .putBoolean(preferenceKey, value)
+                .apply();
+    }
+
+
+    //region deprecated
     @Override public boolean isFirstTimeSettingsLaunch() {
         return getBooleanPreference(KEY_PREF_FIRST_TIME_SETTINGS_LAUNCH, true);
     }
@@ -52,13 +74,7 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
         return mPreferences.getBoolean(preferenceKey, defaultValue);
     }
 
-    private void putBooleanPreference(final String preferenceKey, final boolean value) {
-        PreferenceManager
-                .getDefaultSharedPreferences(mContext)
-                .edit()
-                .putBoolean(preferenceKey, value)
-                .apply();
-    }
+
 
     @Override public boolean hasAllSettingsFields() {
         return mPreferences.contains(mContext.getString(key_pref_endereco_servidor))
@@ -116,5 +132,5 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
                 .putInt(preferenceKey, value)
                 .apply();
     }
-
+    //endregion
 }
