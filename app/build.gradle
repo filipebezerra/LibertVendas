@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
+apply plugin: 'android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 
@@ -84,7 +85,7 @@ dependencies {
 
     // View injection library
     compile "com.jakewharton:butterknife:${butterknife}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknife}"
+    apt "com.jakewharton:butterknife-compiler:${butterknife}"
 
     // Logging library
     compile 'com.jakewharton.timber:timber:4.3.1'
