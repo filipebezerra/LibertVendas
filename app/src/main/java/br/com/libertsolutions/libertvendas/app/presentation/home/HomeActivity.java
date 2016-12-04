@@ -76,8 +76,6 @@ public class HomeActivity extends LibertVendasActivity
     }
 
     @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        item.setChecked(false);
-
         switch (item.getItemId()) {
             case R.id.nav_home: {
                 break;
