@@ -224,6 +224,10 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
         return false;
     }
 
+    @Override public void finishView() {
+        getActivity().finish();
+    }
+
     @Override public void onDestroyView() {
         super.onDestroyView();
         mPresenter.unregisterForEvents();

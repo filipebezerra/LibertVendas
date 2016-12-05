@@ -37,6 +37,8 @@ interface FinalizandoPedidoContract {
         int getViewPositionValue(final int pViewId);
 
         void displayValidationErrorForDesconto(String pValidationMessage);
+
+        void finishView();
     }
 
     interface Presenter extends MvpPresenter<View> {

@@ -5,6 +5,7 @@ import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
@@ -173,7 +174,14 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
 
         if (!getView().hasEmptyRequiredFields()) {
             if (validateDesconto()) {
+                addSubscription(mPedidoRepository.save(pedidoFromFields())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                this::notifyPedidoSalvo,
 
+                                Timber::e
+                        )
+                );
             }
         } else {
             getView().displayRequiredFieldMessages();
@@ -231,6 +239,63 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         }
 
         return true;
+    }
+
+    private Pedido pedidoFromFields() {
+        final long dataEmissao = mDataEmissao.getTimeInMillis();
+
+        String descontoStr = getView().getViewStringValue(
+                mResourcesRepository.obtainDescontoViewId());
+        final double desconto = StringUtils.isEmpty(descontoStr) ? 0 : Double.valueOf(descontoStr);
+
+        int positionFormaPagamento = getView().getViewPositionValue(
+                mResourcesRepository.obtainFormaPagamentoViewId());
+        final FormaPagamento formaPagamento
+                = getItemFromList(mFormasPagamentoList, positionFormaPagamento);
+
+        final String observacao = getView().getViewStringValue(
+                mResourcesRepository.obtainObservacaoViewId());
+
+        List<ItemPedido> itensPedido = new ArrayList<>();
+        for (ProdutoVo vo : mProdutosSelecionados) {
+            itensPedido.add(
+                    ItemPedido.novoItem(
+                            vo.getPreco(),
+                            vo.getQuantidadeAdicionada(),
+                            vo.getTotalProdutos(),
+                            vo.getProduto()
+                    )
+            );
+        }
+
+        //final String cnpjEmpresa = mEmpresaLogada.getCnpj();
+        //final String cpfCnpjVendedor = mVendedorLogado.getCpfCnpj();
+
+        if (isEditing()) {
+            return null;
+        } else {
+            return Pedido.novoPedido(
+                    dataEmissao,
+                    desconto,
+                    formaPagamento.getPercentualDesconto(),
+                    observacao,
+                    mClienteSelecionado,
+                    formaPagamento,
+                    mTabelaPrecoPadrao,
+                    itensPedido,
+                    null, //cnpjEmpresa
+                    null //cpfCnpjVendedor
+            );
+        }
+    }
+
+    private void notifyPedidoSalvo(final Pedido pNovoPedido) {
+        if (isEditing()) {
+            //getView().resultClienteEditado(pNovoPedido);
+        } else {
+            EventBus.getDefault().post(NovoPedidoEvent.newEvent(pNovoPedido));
+            getView().finishView();
+        }
     }
 
     private boolean isEditing() {
