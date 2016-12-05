@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.CadastroClienteActivity;
@@ -66,12 +67,16 @@ public class Navigator {
     }
 
     public void toListaClientes(boolean pToSelect) {
-        mActivity.getSupportFragmentManager()
+        FragmentTransaction transaction = mActivity.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container,
-                        ListaClientesFragment.newInstance(pToSelect), ListaClientesFragment.TAG)
-                .addToBackStack(null)
-                .commit();
+                        ListaClientesFragment.newInstance(pToSelect), ListaClientesFragment.TAG);
+
+        if (pToSelect) {
+            transaction.addToBackStack(null);
+        }
+
+        transaction.commit();
         mActivity.setTitle(R.string.title_fragment_lista_clientes);
     }
 
