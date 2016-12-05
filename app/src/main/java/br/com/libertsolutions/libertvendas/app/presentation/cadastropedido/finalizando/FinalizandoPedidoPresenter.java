@@ -3,16 +3,20 @@ package br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.fina
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepository;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
+import br.com.libertsolutions.libertvendas.app.data.util.ApiUtils;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ProdutosSelecionadosEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.login.UsuarioLogadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.FinalizandoPedidoResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ObservableUtils;
@@ -26,6 +30,8 @@ import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
+
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
@@ -52,6 +58,10 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
     private List<ProdutoVo> mProdutosSelecionados;
 
     private List<FormaPagamento> mFormasPagamentoList;
+
+    private Vendedor mVendedorLogado;
+
+    private Empresa mEmpresaLogada;
 
     FinalizandoPedidoPresenter(FinalizandoPedidoDependencyContainer pDependencyContainer) {
         mFormaPagamentoRepository = pDependencyContainer.getFormaPagamentoRepository();
@@ -171,6 +181,13 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
 
         EventBus.getDefault().removeStickyEvent(pEvent);
     }
+
+    @Subscribe(threadMode = MAIN, sticky = true) public void onUsuarioLogadoEvent(
+            UsuarioLogadoEvent pEvent) {
+        mVendedorLogado = pEvent.getVendedor();
+        mEmpresaLogada = pEvent.getEmpresa();
+    }
+
 
     private double calculateTotalProdutos() {
         double totalProdutos = 0;
@@ -303,11 +320,28 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
             );
         }
 
-        //final String cnpjEmpresa = mEmpresaLogada.getCnpj();
-        //final String cpfCnpjVendedor = mVendedorLogado.getCpfCnpj();
+        final String cnpjEmpresa = mEmpresaLogada.getCnpj();
+        final String cpfCnpjVendedor = mVendedorLogado.getCpfCnpj();
 
         if (isEditing()) {
-            return null;
+            return new Pedido(
+                    mPedidoEmEdicao.getId(),
+                    mPedidoEmEdicao.getIdPedido(),
+                    mPedidoEmEdicao.getTipo(),
+                    mPedidoEmEdicao.getNumero(),
+                    mPedidoEmEdicao.getStatus(),
+                    dataEmissao,
+                    desconto,
+                    formaPagamento.getPercentualDesconto(),
+                    observacao,
+                    mClienteSelecionado,
+                    formaPagamento,
+                    mTabelaPrecoPadrao,
+                    itensPedido,
+                    ApiUtils.formatApiDateTime(System.currentTimeMillis()),
+                    cnpjEmpresa,
+                    cpfCnpjVendedor
+            );
         } else {
             return Pedido.novoPedido(
                     dataEmissao,
@@ -318,8 +352,8 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
                     formaPagamento,
                     mTabelaPrecoPadrao,
                     itensPedido,
-                    null, //cnpjEmpresa
-                    null //cpfCnpjVendedor
+                    cnpjEmpresa,
+                    cpfCnpjVendedor
             );
         }
     }
