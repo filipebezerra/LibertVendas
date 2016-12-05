@@ -4,6 +4,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.base.MvpPresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.base.MvpView;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -22,10 +23,24 @@ interface FinalizandoPedidoContract {
         void setViewValue(final int pViewId, int pPosition);
 
         void setViewValue(final int pViewId, final String pViewValue);
+
+        void showCalendarPicker(Calendar pDataPreSelecionada);
+
+        void hideRequiredMessages();
+
+        boolean hasEmptyRequiredFields();
+
+        void displayRequiredFieldMessages();
     }
 
     interface Presenter extends MvpPresenter<View> {
 
         void initializeView(Pedido pPedidoFromExtra);
+
+        void handleDataEmissaoTouched();
+
+        void handleDateSelected(int pYear, int pMonthOfYear, int pDayOfMonth);
+
+        void handleActionSave();
     }
 }

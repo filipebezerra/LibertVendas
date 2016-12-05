@@ -3,17 +3,24 @@ package br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.fina
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnTouch;
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import java.util.Calendar;
 import java.util.List;
 import smtchahal.materialspinner.MaterialSpinner;
 
@@ -66,6 +73,15 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
         inflater.inflate(R.menu.menu_finalizando_pedido, menu);
     }
 
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_save) {
+            mPresenter.handleActionSave();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override public void displayFormasPagamento(List<FormaPagamento> pFormasPagamentoList) {
         mSpinnerFormaPagamento.setAdapter(
                 new FormasPagamentoAdapter(getContext(), pFormasPagamentoList));
@@ -97,6 +113,95 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
         if (field != null && field instanceof TextInputLayout) {
             ((TextInputLayout) field).getEditText().setText(pViewValue);
         }
+    }
+
+    @Override public void showCalendarPicker(Calendar pDataPreSelecionada) {
+        new CalendarDatePickerDialogFragment()
+                .setOnDateSetListener((dialog, year, monthOfYear, dayOfMonth) ->
+                        mPresenter.handleDateSelected(year, monthOfYear, dayOfMonth))
+                .setPreselectedDate(
+                        pDataPreSelecionada.get(Calendar.YEAR),
+                        pDataPreSelecionada.get(Calendar.MONTH),
+                        pDataPreSelecionada.get(Calendar.DAY_OF_MONTH)
+                )
+                .setThemeCustom(R.style.Widget_Libert_BetterPickersDialogs)
+                .show(getChildFragmentManager(), "DatePickerDialog");
+    }
+
+    @Override public void hideRequiredMessages() {
+        for (int i = 0; i < mRequiredFields.size(); i++) {
+            ViewGroup requiredField = mRequiredFields.valueAt(i);
+            if (requiredField instanceof MaterialSpinner) {
+                ((MaterialSpinner) requiredField).setError(null);
+            } else if (requiredField instanceof TextInputLayout) {
+                ((TextInputLayout) requiredField).setError(null);
+            }
+        }
+    }
+
+    @Override public boolean hasEmptyRequiredFields() {
+        for (int i = 0; i < mRequiredFields.size(); i++) {
+            ViewGroup requiredField = mRequiredFields.valueAt(i);
+
+            boolean isEmpty = false;
+            if (requiredField instanceof MaterialSpinner) {
+                isEmpty = ((MaterialSpinner) requiredField).getSelectedItem() == null;
+            } else if (requiredField instanceof TextInputLayout) {
+                isEmpty = TextUtils
+                        .isEmpty(((TextInputLayout) requiredField).getEditText().getText());
+            }
+
+            if (isEmpty) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override public void displayRequiredFieldMessages() {
+        ViewGroup firstRequiredField = null;
+
+        for (int i = 0; i < mRequiredFields.size(); i++) {
+            ViewGroup requiredField = mRequiredFields.valueAt(i);
+
+            if (requiredField instanceof MaterialSpinner) {
+                if (((MaterialSpinner) requiredField).getSelectedItem() == null) {
+                    ((MaterialSpinner) requiredField)
+                            .setError(R.string.error_campo_requerido);
+
+                    if (firstRequiredField == null) {
+                        firstRequiredField = requiredField;
+                    }
+                }
+            } else if (requiredField instanceof TextInputLayout) {
+                if (TextUtils.isEmpty(((TextInputLayout) requiredField).getEditText().getText())) {
+                    ((TextInputLayout) requiredField)
+                            .setError(getString(R.string.error_campo_requerido));
+
+                    if (firstRequiredField == null) {
+                        firstRequiredField = requiredField;
+                    }
+                }
+            }
+        }
+
+        if (firstRequiredField != null) {
+            if (firstRequiredField instanceof MaterialSpinner) {
+                firstRequiredField.requestFocusFromTouch();
+                firstRequiredField.performClick();
+                AndroidUtils.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
+            } else {
+                AndroidUtils.focusThenShowKeyboard(getActivity(), firstRequiredField);
+            }
+        }
+    }
+
+    @OnTouch(R.id.edit_text_data_emissao) boolean onEditTextDataEmissaoTouched(MotionEvent e) {
+        if (e.getAction() == MotionEvent.ACTION_UP) {
+            mPresenter.handleDataEmissaoTouched();
+            return true;
+        }
+        return false;
     }
 
     @Override public void onDestroyView() {
