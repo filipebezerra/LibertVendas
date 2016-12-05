@@ -63,11 +63,10 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
 
     @Override public void initializeView(Cliente pClienteFromExtra) {
         mClienteEmEdicao = pClienteFromExtra;
-        getView().displayTiposPessoa(mTiposPessoaList);
-        loadEstados();
-        //TODO Move view initialization above
         initializeViewFields();
         initializeViewRequiredFields();
+        getView().displayTiposPessoa(mTiposPessoaList);
+        loadEstados();
         initializeFieldsIfEmEdicao();
     }
 
@@ -97,6 +96,34 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
         requiredViewIds.add(mResourcesRepository.obtainEstadosViewId());
         requiredViewIds.add(mResourcesRepository.obtainCidadesViewId());
         getView().setRequiredFields(requiredViewIds);
+    }
+
+    private void loadEstados() {
+        Observable<List<Estado>> estadosFromMemoryCache = ObservableUtils
+                .toObservable(mEstadosList);
+
+        Observable<List<Estado>> estadosFromDiskCache = mEstadoRepository
+                .list()
+                .doOnNext(pEstadosList -> mEstadosList = pEstadosList);
+
+        addSubscription(Observable.concat(estadosFromMemoryCache, estadosFromDiskCache)
+                .firstOrDefault(Collections.emptyList())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        pEstadosList -> {
+                            getView().displayEstados(mEstadosList);
+                            initializeEstadosFieldsIfEmEdicao();
+                        },
+
+                        Timber::e
+                ));
+    }
+
+    private void initializeEstadosFieldsIfEmEdicao() {
+        if (isEditing()) {
+            int indexOfEstado = mEstadosList.indexOf(mClienteEmEdicao.getCidade().getEstado());
+            getView().setViewValue(mResourcesRepository.obtainEstadosViewId(), indexOfEstado);
+        }
     }
 
     private void initializeFieldsIfEmEdicao() {
@@ -166,34 +193,6 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
                         mResourcesRepository.obtainCelularViewId(),
                         mClienteEmEdicao.getTelefone2());
             }
-        }
-    }
-
-    private void loadEstados() {
-        Observable<List<Estado>> estadosFromMemoryCache = ObservableUtils
-                .toObservable(mEstadosList);
-
-        Observable<List<Estado>> estadosFromDiskCache = mEstadoRepository
-                .list()
-                .doOnNext(pEstadosList -> mEstadosList = pEstadosList);
-
-        addSubscription(Observable.concat(estadosFromMemoryCache, estadosFromDiskCache)
-                .firstOrDefault(Collections.emptyList())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        pEstadosList -> {
-                            getView().displayEstados(mEstadosList);
-                            initializeEstadosFieldsIfEmEdicao();
-                        },
-
-                        Timber::e
-                ));
-    }
-
-    private void initializeEstadosFieldsIfEmEdicao() {
-        if (isEditing()) {
-            int indexOfEstado = mEstadosList.indexOf(mClienteEmEdicao.getCidade().getEstado());
-            getView().setViewValue(mResourcesRepository.obtainEstadosViewId(), indexOfEstado);
         }
     }
 
