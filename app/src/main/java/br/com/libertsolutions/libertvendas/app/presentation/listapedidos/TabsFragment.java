@@ -17,6 +17,8 @@ import butterknife.ButterKnife;
  */
 public class TabsFragment extends LibertVendasFragment {
 
+    public static final String TAG = TabsFragment.class.getName();
+
     @BindView(R.id.view_pager) protected ViewPager mViewPager;
 
     private AppBarLayout mAppBarLayoutActivity;

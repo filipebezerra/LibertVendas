@@ -15,6 +15,10 @@ interface HomeContract {
 
         void showDrawer();
 
+        boolean isviewingListaPedidos();
+
+        void navigateToListaPedidos();
+
         boolean isViewingListaClientes();
 
         void navigateToListaClientes();
@@ -25,6 +29,8 @@ interface HomeContract {
     }
 
     interface Presenter extends MvpPresenter<View>, LifecyclePresenter {
+
+        void handlePedidosNavigationItemSelected();
 
         void handleClientesNavigationItemSelected();
 

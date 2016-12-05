@@ -84,10 +84,11 @@ public class Navigator {
         mActivity.setTitle(R.string.title_fragment_lista_produtos);
     }
 
-    public void toPedidos() {
+    public void toListaPedidos() {
         mActivity.getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, TabsFragment.newInstance())
+                .replace(R.id.fragment_container,
+                        TabsFragment.newInstance(), TabsFragment.TAG)
                 .commit();
         mActivity.setTitle(R.string.title_fragment_lista_pedidos);
     }

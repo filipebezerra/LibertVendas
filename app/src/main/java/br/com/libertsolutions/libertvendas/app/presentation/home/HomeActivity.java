@@ -13,6 +13,7 @@ import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
@@ -82,6 +83,7 @@ public class HomeActivity extends LibertVendasActivity
             }
 
             case R.id.nav_pedidos: {
+                mPresenter.handlePedidosNavigationItemSelected();
                 break;
             }
 
@@ -110,6 +112,14 @@ public class HomeActivity extends LibertVendasActivity
 
     @Override public void showDrawer() {
         mDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    @Override public boolean isviewingListaPedidos() {
+        return isViewingFragmentByTag(TabsFragment.TAG);
+    }
+
+    @Override public void navigateToListaPedidos() {
+        navigate().toListaPedidos();
     }
 
     @Override public boolean isViewingListaClientes() {
