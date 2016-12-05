@@ -11,12 +11,13 @@ import org.greenrobot.eventbus.Subscribe;
 class CadastroPedidoPresenter extends BasePresenter<CadastroPedidoContract.View>
         implements CadastroPedidoContract.Presenter {
 
-    @Subscribe(sticky = true) public void onProdutosSelecionadosEvent(
+    @Subscribe(sticky = true, priority = 1) public void onProdutosSelecionadosEvent(
             ProdutosSelecionadosEvent pEvent) {
         getView().navigateToStepListaClientes();
     }
 
-    @Subscribe public void onClienteSelecionadoEvent(ClienteSelecionadoEvent pEvent) {
+    @Subscribe(sticky = true, priority = 1) public void onClienteSelecionadoEvent(
+            ClienteSelecionadoEvent pEvent) {
         getView().navigateToStepFinalizandoPedido();
     }
 }
