@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
@@ -41,6 +41,10 @@ public class ListaClientesFragment extends LibertVendasFragment
     private ListaClientesAdapter mRecyclerViewAdapter;
 
     private MaterialDialog mProgressDialog;
+
+    private OnGlobalLayoutListener mRecyclerViewLayoutListener = null;
+
+    private OnItemTouchListener mRecyclerViewItemTouchListener = null;
 
     public static ListaClientesFragment newInstance(boolean pToSelect) {
         ListaClientesFragment fragment = new ListaClientesFragment();
@@ -109,20 +113,28 @@ public class ListaClientesFragment extends LibertVendasFragment
     @Override public void showListaClientes(List<Cliente> pClienteList) {
         mRecyclerViewClientes.setAdapter(
                 mRecyclerViewAdapter = new ListaClientesAdapter(getContext(), pClienteList));
-        mRecyclerViewClientes.addOnItemTouchListener(
-                new OnItemTouchListener(getContext(), mRecyclerViewClientes, this));
+
         mRecyclerViewClientes
                 .getViewTreeObserver()
-                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        mRecyclerViewClientes
-                                .getViewTreeObserver()
-                                .removeOnGlobalLayoutListener(this);
-                        hideLoading();
-                        mPresenter.registerForEvents();
-                    }
-                });
+                .addOnGlobalLayoutListener(
+                        mRecyclerViewLayoutListener = this::recyclerViewFinishLoading);
+    }
+
+    private void recyclerViewFinishLoading() {
+        mRecyclerViewClientes
+                .getViewTreeObserver()
+                .removeOnGlobalLayoutListener(mRecyclerViewLayoutListener);
+
+        if (mRecyclerViewItemTouchListener != null) {
+            mRecyclerViewClientes.removeOnItemTouchListener(mRecyclerViewItemTouchListener);
+        }
+
+        mRecyclerViewClientes.addOnItemTouchListener(
+                mRecyclerViewItemTouchListener
+                        = new OnItemTouchListener(getContext(), mRecyclerViewClientes, this));
+
+        mPresenter.registerForEvents();
+        hideLoading();
     }
 
     @Override public void updateChangedItemAtPosition(int pPosition) {

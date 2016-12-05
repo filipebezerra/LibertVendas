@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
@@ -67,14 +69,13 @@ public class HomeActivity extends LibertVendasActivity
         return R.layout.activity_home;
     }
 
-    @Override public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else if (mMaterialSheetFab.isSheetVisible()) {
-            mMaterialSheetFab.hideSheet();
-        } else {
-            super.onBackPressed();
-        }
+    @Override protected void onResume() {
+        super.onResume();
+        mPresenter.resume();
+    }
+
+    @Override public void showDrawer() {
+        mDrawerLayout.openDrawer(GravityCompat.START);
     }
 
     @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -109,10 +110,6 @@ public class HomeActivity extends LibertVendasActivity
 
     @Override public void navigateToInitialDataImportationFlow() {
         navigate().toInitialDataImportationFlow();
-    }
-
-    @Override public void showDrawer() {
-        mDrawerLayout.openDrawer(GravityCompat.START);
     }
 
     @Override public boolean isviewingListaPedidos() {
@@ -151,12 +148,28 @@ public class HomeActivity extends LibertVendasActivity
 
     @OnClick(R.id.fab_sheet_item_novo_pedido) void onNovoPedidoSheetItemClicked() {
         mMaterialSheetFab.hideSheet();
-        navigate().toCadastroPedido();
+        navigate().toCadastroPedido(null);
     }
 
-    @Override protected void onResume() {
-        super.onResume();
-        mPresenter.resume();
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Navigator.REQUEST_EDITAR_CLIENTE: {
+                getSupportFragmentManager().findFragmentById(R.id.fragment_container)
+                        .onActivityResult(requestCode, resultCode, data);
+                break;
+            }
+            default: super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else if (mMaterialSheetFab.isSheetVisible()) {
+            mMaterialSheetFab.hideSheet();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override protected void onDestroy() {
