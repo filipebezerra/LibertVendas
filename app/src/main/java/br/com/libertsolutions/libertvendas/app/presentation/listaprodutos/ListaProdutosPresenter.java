@@ -158,7 +158,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
             return;
         }
 
-        EventBus.getDefault().post(
+        EventBus.getDefault().postSticky(
                 ProdutosSelecionadosEvent.newEvent(produtosSelecionados, mTabelaPrecoPadrao));
     }
 }

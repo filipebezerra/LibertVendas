@@ -20,6 +20,8 @@ interface FinalizandoPedidoContract {
         void setRequiredFields(List<Integer> pRequiredViewIds);
 
         void setViewValue(final int pViewId, int pPosition);
+
+        void setViewValue(final int pViewId, final String pViewValue);
     }
 
     interface Presenter extends MvpPresenter<View> {

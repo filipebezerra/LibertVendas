@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.fina
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -88,6 +89,13 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
         final ViewGroup field = mViewFields.get(pViewId);
         if (field != null && field instanceof MaterialSpinner) {
             ((MaterialSpinner) field).setSelection(pPosition + 1, true);
+        }
+    }
+
+    @Override public void setViewValue(int pViewId, String pViewValue) {
+        final ViewGroup field = mViewFields.get(pViewId);
+        if (field != null && field instanceof TextInputLayout) {
+            ((TextInputLayout) field).getEditText().setText(pViewValue);
         }
     }
 

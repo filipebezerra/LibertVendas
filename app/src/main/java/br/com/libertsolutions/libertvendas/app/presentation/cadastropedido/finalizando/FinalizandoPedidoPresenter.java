@@ -12,11 +12,13 @@ import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ProdutosSelecionadosEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.FinalizandoPedidoResourcesRepository;
+import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ObservableUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -117,7 +119,16 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         if ((produtoVoList != null && !produtoVoList.isEmpty()) && tabelaPreco != null) {
             mProdutosSelecionados = produtoVoList;
             mTabelaPrecoPadrao = tabelaPreco;
+
+            double totalProdutos = 0;
+            for (ProdutoVo vo : mProdutosSelecionados) {
+                totalProdutos += vo.getTotalProdutos();
+            }
+            getView().setViewValue(mResourcesRepository.obtainTotalProdutosViewId(),
+                    FormattingUtils.formatAsDinheiro(totalProdutos));
         }
+
+        EventBus.getDefault().removeStickyEvent(pEvent);
     }
 
     @Subscribe(sticky = true) public void onClienteSelecionadoEvent(
@@ -125,7 +136,10 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         Cliente cliente = pEvent.getCliente();
         if (cliente != null) {
             mClienteSelecionado = cliente;
+            getView().setViewValue(mResourcesRepository.obtainClienteViewId(), cliente.getNome());
         }
+
+        EventBus.getDefault().removeStickyEvent(pEvent);
     }
 
     private boolean isEditing() {
