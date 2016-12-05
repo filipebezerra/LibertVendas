@@ -73,7 +73,7 @@
 
     <!-- Screen Lista de Clientes -->
     <string name="title_fragment_lista_clientes">Clientes</string>
-    <string name="hint_busca_cliente">Busque pelo nome</string>
+    <string name="hint_busca_cliente">Use CPF, CNPJ, nome ou contato</string>
     <string name="template_text_telefones">%1$s &#47; %2$s</string>
     <string name="text_sem_telefone">Sem telefone</string>
     <string name="example_text_razao_social">Waldomiro Martins Braga</string>
