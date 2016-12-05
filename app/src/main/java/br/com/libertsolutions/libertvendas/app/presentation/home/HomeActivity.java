@@ -18,6 +18,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaP
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
 import butterknife.BindView;
+import butterknife.OnClick;
 import com.gordonwong.materialsheetfab.DimOverlayFrameLayout;
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 
@@ -141,6 +142,11 @@ public class HomeActivity extends LibertVendasActivity
     public boolean isViewingFragmentByTag(String tag) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
         return fragment != null && fragment.isVisible();
+    }
+
+    @OnClick(R.id.fab_sheet_item_novo_cliente) void onNovoClienteSheetItemClicked() {
+        mMaterialSheetFab.hideSheet();
+        navigate().toCadastroCliente(null);
     }
 
     @Override protected void onResume() {
