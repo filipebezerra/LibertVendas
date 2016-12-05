@@ -44,41 +44,8 @@ class LoginPresenter extends BasePresenter<LoginContract.View>
         mSettingsRepository = pSettingsRepository;
     }
 
-    @Override
-    public void attachView(LoginContract.View pView) {
+    @Override public void attachView(LoginContract.View pView) {
         super.attachView(pView);
-        if (mSettingsRepository.isUserLoggedIn()) {
-            addSubscription(mVendedorRepository
-                    .findById(mSettingsRepository.getLoggedInUser())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnNext(pVendedor -> {
-                        Empresa empresaLogada = null;
-                        final int idEmpresaLogada = mSettingsRepository.getLoggedInUserCompany();
-                        for (Empresa empresa : pVendedor.getEmpresas()) {
-                            if (empresa.getIdEmpresa() == idEmpresaLogada) {
-                                empresaLogada = empresa;
-                                break;
-                            }
-                        }
-
-                        if (empresaLogada == null) {
-                            getView().displayValidationError(
-                                    mResourcesRepository
-                                            .obtainStringMessageVendedorSemEmpresaLogada());
-                            getView().showFeedbackMessage(
-                                    mResourcesRepository
-                                            .obtainStringMessageVendedorSemEmpresaLogada());
-                            return;
-                        }
-
-                        EventBus.getDefault()
-                                .postSticky(UsuarioLogadoEvent.newEvent(pVendedor, empresaLogada));
-                        getView().resultAsOk(Navigator.RESULT_OK);
-                    })
-                    .subscribe());
-            return;
-        }
-
         getView().showIdle();
     }
 

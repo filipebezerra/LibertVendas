@@ -10,7 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
 import android.view.MenuItem;
-import br.com.libertsolutions.libertvendas.app.Injection;
+import android.widget.TextView;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
@@ -20,9 +20,12 @@ import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaP
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.gordonwong.materialsheetfab.DimOverlayFrameLayout;
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
+
+import static br.com.libertsolutions.libertvendas.app.presentation.home.HomeDependencyContainer.createDependencyContainer;
 
 /**
  * @author Filipe Bezerra
@@ -61,7 +64,7 @@ public class HomeActivity extends LibertVendasActivity
         mMaterialSheetFab = new MaterialSheetFab<>(
                 mFloatingActionButton, mFabSheet, mFabOverlay, mFabSheetColor, mAccentColor);
 
-        mPresenter = new HomePresenter(Injection.provideSettingsRepository(this));
+        mPresenter = new HomePresenter(createDependencyContainer(this));
         mPresenter.attachView(this);
     }
 
@@ -110,6 +113,15 @@ public class HomeActivity extends LibertVendasActivity
 
     @Override public void navigateToInitialDataImportationFlow() {
         navigate().toInitialDataImportationFlow();
+    }
+
+    @Override public void showUsuarioLogado(String pNomeVendedor, String pNomeEmpresa) {
+        ButterKnife
+                .<TextView>findById(mNavigationView.getHeaderView(0), R.id.text_view_nome_vendedor)
+                .setText(pNomeVendedor);
+        ButterKnife
+                .<TextView>findById(mNavigationView.getHeaderView(0), R.id.text_view_nome_empresa)
+                .setText(pNomeEmpresa);
     }
 
     @Override public boolean isviewingListaPedidos() {

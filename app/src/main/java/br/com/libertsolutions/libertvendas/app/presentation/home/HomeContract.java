@@ -13,6 +13,8 @@ interface HomeContract {
 
         void navigateToInitialDataImportationFlow();
 
+        void showUsuarioLogado(String pNomeVendedor, String pNomeEmpresa);
+
         void showDrawer();
 
         boolean isviewingListaPedidos();
