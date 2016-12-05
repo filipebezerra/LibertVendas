@@ -196,6 +196,26 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
         }
     }
 
+    @Override public String getViewStringValue(int pViewId) {
+        final ViewGroup field = mViewFields.get(pViewId);
+        if (field != null && field instanceof TextInputLayout) {
+            return ((TextInputLayout) field).getEditText().getText().toString();
+        }
+        return "";
+    }
+
+    @Override public int getViewPositionValue(int pViewId) {
+        final ViewGroup field = mViewFields.get(pViewId);
+        if (field != null && field instanceof MaterialSpinner) {
+            return ((MaterialSpinner) field).getSelectedItemPosition();
+        }
+        return -1;
+    }
+
+    @Override public void displayValidationErrorForDesconto(String pValidationMessage) {
+        mSpinnerFormaPagamento.setError(pValidationMessage);
+    }
+
     @OnTouch(R.id.edit_text_data_emissao) boolean onEditTextDataEmissaoTouched(MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_UP) {
             mPresenter.handleDataEmissaoTouched();

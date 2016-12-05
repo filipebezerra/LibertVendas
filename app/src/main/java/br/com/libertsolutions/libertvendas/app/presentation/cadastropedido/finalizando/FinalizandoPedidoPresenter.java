@@ -6,6 +6,7 @@ import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BasePresenter;
@@ -14,6 +15,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.Produt
 import br.com.libertsolutions.libertvendas.app.presentation.resources.FinalizandoPedidoResourcesRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
 import br.com.libertsolutions.libertvendas.app.presentation.util.ObservableUtils;
+import br.com.libertsolutions.libertvendas.app.presentation.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -136,18 +138,18 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         if ((produtoVoList != null && !produtoVoList.isEmpty()) && tabelaPreco != null) {
             mProdutosSelecionados = produtoVoList;
             mTabelaPrecoPadrao = tabelaPreco;
-            calculateTotalProdutos();
+            displayTotalProdutos(calculateTotalProdutos());
         }
 
         EventBus.getDefault().removeStickyEvent(pEvent);
     }
 
-    private void calculateTotalProdutos() {
+    private double calculateTotalProdutos() {
         double totalProdutos = 0;
         for (ProdutoVo vo : mProdutosSelecionados) {
             totalProdutos += vo.getTotalProdutos();
         }
-        displayTotalProdutos(totalProdutos);
+        return totalProdutos;
     }
 
     private void displayTotalProdutos(double pTotalProdutos) {
@@ -170,13 +172,75 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         getView().hideRequiredMessages();
 
         if (!getView().hasEmptyRequiredFields()) {
+            if (validateDesconto()) {
 
+            }
         } else {
             getView().displayRequiredFieldMessages();
         }
     }
 
+    private boolean validateDesconto() {
+        final String descontoStr = getView().getViewStringValue(
+                mResourcesRepository.obtainDescontoViewId());
+
+        if (StringUtils.isEmpty(descontoStr)) {
+            return true;
+        }
+
+        final double desconto = Double.valueOf(descontoStr);
+
+        if (desconto == 0) {
+            return true;
+        }
+
+        final Settings settings = mSettingsRepository.getSettings();
+
+        if (!settings.isPodeAplicarDesconto()) {
+            getView().displayValidationErrorForDesconto(
+                    mResourcesRepository.obtainStringMessageVendedorNaoPermitidoAplicarDesconto());
+            return false;
+        }
+
+        int positionFormaPagamento = getView()
+                .getViewPositionValue(mResourcesRepository.obtainFormaPagamentoViewId());
+
+        final FormaPagamento formaPagamento = getItemFromList(
+                mFormasPagamentoList, positionFormaPagamento);
+
+        if (formaPagamento == null) {
+            return true;
+        }
+
+        final float percentualDesconto = formaPagamento.getPercentualDesconto();
+
+        if (percentualDesconto == 0) {
+            getView().displayValidationErrorForDesconto(
+                    mResourcesRepository.obtainStringMessageValorDescontoNaoPermitido());
+            return false;
+        }
+
+        final double totalProdutos = calculateTotalProdutos();
+        final double percentualAplicadoVenda = desconto * 100 / totalProdutos;
+
+        if (percentualAplicadoVenda > percentualDesconto) {
+            getView().displayValidationErrorForDesconto(
+                    mResourcesRepository
+                            .obtainStringMessageValorDescontoNaoPermitido());
+            return false;
+        }
+
+        return true;
+    }
+
     private boolean isEditing() {
         return mPedidoEmEdicao != null;
+    }
+
+    private <T> T getItemFromList(List<T> list, int position) {
+        if (position >= 0 && position < list.size()) {
+            return list.get(position);
+        }
+        return null;
     }
 }

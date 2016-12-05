@@ -31,6 +31,12 @@ interface FinalizandoPedidoContract {
         boolean hasEmptyRequiredFields();
 
         void displayRequiredFieldMessages();
+
+        String getViewStringValue(final int pViewId);
+
+        int getViewPositionValue(final int pViewId);
+
+        void displayValidationErrorForDesconto(String pValidationMessage);
     }
 
     interface Presenter extends MvpPresenter<View> {
