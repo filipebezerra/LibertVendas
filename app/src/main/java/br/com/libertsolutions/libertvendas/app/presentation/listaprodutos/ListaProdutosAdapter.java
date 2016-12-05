@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * @author Filipe Bezerra
@@ -97,11 +98,13 @@ class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosViewHolder>
                         return false;
                     });
 
-            holder.containerBotoes.setVisibility(View.VISIBLE);
-            holder.viewSwitcher.setVisibility(View.VISIBLE);
+            holder.containerBotoes.setVisibility(VISIBLE);
+            holder.viewSwitcher.setVisibility(VISIBLE);
+            holder.textViewTotal.setVisibility(VISIBLE);
         } else {
             holder.containerBotoes.setVisibility(GONE);
             holder.viewSwitcher.setVisibility(GONE);
+            holder.textViewTotal.setVisibility(GONE);
         }
     }
 
