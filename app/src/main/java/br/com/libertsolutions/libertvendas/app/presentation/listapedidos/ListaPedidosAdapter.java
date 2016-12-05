@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author Filipe Bezerra
  */
-class PedidoAdapter extends RecyclerView.Adapter<PedidoViewHolder> implements Filterable {
+class ListaPedidosAdapter extends RecyclerView.Adapter<ListaPedidosViewHolder> implements Filterable {
     private final Context mContext;
 
     private final boolean mShowStatusIndicator;
@@ -32,7 +32,7 @@ class PedidoAdapter extends RecyclerView.Adapter<PedidoViewHolder> implements Fi
 
     private PedidoAdapterFilter mFilter;
 
-    PedidoAdapter(
+    ListaPedidosAdapter(
             @NonNull Context pContext, boolean showStatusIndicator,
             @NonNull List<Pedido> pPedidoList) {
         mContext = pContext;
@@ -41,14 +41,14 @@ class PedidoAdapter extends RecyclerView.Adapter<PedidoViewHolder> implements Fi
     }
 
     @Override
-    public PedidoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ListaPedidosViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View itemView = LayoutInflater.from(mContext)
                 .inflate(R.layout.list_item_pedido, parent, false);
-        return new PedidoViewHolder(itemView);
+        return new ListaPedidosViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(PedidoViewHolder holder, int position) {
+    public void onBindViewHolder(ListaPedidosViewHolder holder, int position) {
         final Pedido pedido = mPedidoList.get(position);
         final Resources resources = mContext.getResources();
         holder.textViewNumeroPedido.setText(

@@ -1,6 +1,8 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listapedidos;
 
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
+import br.com.libertsolutions.libertvendas.app.presentation.base.MvpPresenter;
+import br.com.libertsolutions.libertvendas.app.presentation.base.MvpView;
 import java.util.List;
 
 /**
@@ -8,19 +10,20 @@ import java.util.List;
  */
 
 interface ListaPedidosContract {
-    interface View {
+
+    interface View extends MvpView {
+
         void showListaPedidos(List<Pedido> pPedidoList);
 
         void showLoading();
 
         void hideLoading();
 
-        void updateListaPedidos(int pPosition);
+        void updateInsertedItemAtPosition(int pPosition);
     }
 
-    interface Presenter {
-        void loadListaPedidos(boolean listaPedidosNaoEnviados);
+    interface Presenter extends MvpPresenter<View> {
 
-        void addNewPedidoCadastrado(Pedido pPedido);
+        void loadListaPedidos(boolean listaPedidosNaoEnviados);
     }
 }

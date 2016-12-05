@@ -10,14 +10,9 @@ import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
-import br.com.libertsolutions.libertvendas.app.presentation.home.NewPedidoCadastradoEvent;
 import butterknife.BindView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.List;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
@@ -30,9 +25,9 @@ public class ListaPedidosFragment extends LibertVendasFragment
 
     @BindView(R.id.recycler_view_pedidos) protected RecyclerView mRecyclerViewPedidos;
 
-    private PedidoAdapter mPedidoAdapter;
-
     private ListaPedidosContract.Presenter mPresenter;
+
+    private ListaPedidosAdapter mRecyclerViewAdapter;
 
     private boolean mListaPedidosNaoEnviados;
 
@@ -52,8 +47,6 @@ public class ListaPedidosFragment extends LibertVendasFragment
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter = new ListaPedidosPresenter(this,
-                Injection.providePedidoRepository());
 
         mRecyclerViewPedidos.setHasFixedSize(true);
         mRecyclerViewPedidos.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -62,25 +55,11 @@ public class ListaPedidosFragment extends LibertVendasFragment
         if (arguments != null && arguments.containsKey(ARG_LISTA_PEDIDOS_NAO_ENVIADOS)) {
             mListaPedidosNaoEnviados = arguments.getBoolean(ARG_LISTA_PEDIDOS_NAO_ENVIADOS);
 
-            mPresenter.loadListaPedidos(mListaPedidosNaoEnviados);
         }
-    }
 
-    @Override public void showListaPedidos(List<Pedido> pPedidoList) {
-        mRecyclerViewPedidos.setAdapter(
-                mPedidoAdapter = new PedidoAdapter(
-                        getContext(), !mListaPedidosNaoEnviados, pPedidoList));
-        mRecyclerViewPedidos
-                .getViewTreeObserver()
-                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        mRecyclerViewPedidos
-                                .getViewTreeObserver()
-                                .removeOnGlobalLayoutListener(this);
-                        hideLoading();
-                    }
-                });
+        mPresenter = new ListaPedidosPresenter(Injection.providePedidoRepository());
+        mPresenter.attachView(this);
+        mPresenter.loadListaPedidos(mListaPedidosNaoEnviados);
     }
 
     @Override public void showLoading() {
@@ -97,23 +76,32 @@ public class ListaPedidosFragment extends LibertVendasFragment
         }
     }
 
-    @Override public void updateListaPedidos(int pPosition) {
-        mPedidoAdapter.notifyItemInserted(pPosition);
+    @Override public void showListaPedidos(List<Pedido> pPedidoList) {
+        mRecyclerViewPedidos.setAdapter(
+                mRecyclerViewAdapter = new ListaPedidosAdapter(
+                        getContext(), !mListaPedidosNaoEnviados, pPedidoList));
+        mRecyclerViewPedidos
+                .getViewTreeObserver()
+                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mRecyclerViewPedidos
+                                .getViewTreeObserver()
+                                .removeOnGlobalLayoutListener(this);
+                        hideLoading();
+                        mPresenter.registerForEvents();
+                    }
+                });
     }
 
-    @Override public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
+    @Override public void updateInsertedItemAtPosition(int pPosition) {
+        mRecyclerViewAdapter.notifyItemInserted(pPosition);
+        mRecyclerViewPedidos.smoothScrollToPosition(pPosition);
     }
 
-    @Override public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = MAIN, sticky = true) public void onNewPedidoCadastradoEvent(
-            NewPedidoCadastradoEvent pEvent) {
-        mPresenter.addNewPedidoCadastrado(pEvent.getPedido());
-        EventBus.getDefault().removeStickyEvent(pEvent);
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        mPresenter.unregisterForEvents();
+        mPresenter.detach();
     }
 }
