@@ -4,6 +4,7 @@ import android.support.v4.util.Pair;
 import br.com.libertsolutions.libertvendas.app.data.repository.Repository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemTabela;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Produto;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
@@ -26,8 +27,6 @@ import timber.log.Timber;
 class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
         implements ListaProdutosContract.Presenter {
 
-    private final boolean mToSelect;
-
     private final Repository<Produto> mProdutoRepository;
 
     private final SelecioneProdutosResourcesRepository mResourcesRepository;
@@ -38,6 +37,10 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
 
     private final SettingsRepository mSettingsRepository;
 
+    private final boolean mListaSelecionavel;
+
+    private final List<ItemPedido> mItensPedido;
+
     private List<Pair<Produto, ItemTabela>> mProdutoList = new ArrayList<>();
 
     private List<ProdutoVo> mProdutoVos;
@@ -45,16 +48,19 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
     private TabelaPreco mTabelaPrecoPadrao;
 
     ListaProdutosPresenter(
-            boolean pToSelect, ListaProdutosDependencyContainer pDependencyContainer) {
-        mToSelect = pToSelect;
+            ListaProdutosDependencyContainer pDependencyContainer,
+            boolean pListaSelecionavel, List<ItemPedido> pItensPedido) {
         mProdutoRepository = pDependencyContainer.getProdutoRepository();
         mResourcesRepository = pDependencyContainer.getResourcesRepository();
         mVendedorRepository = pDependencyContainer.getVendedorRepository();
         mTabelaPrecoRepository = pDependencyContainer.getTabelaPrecoRepository();
         mSettingsRepository = pDependencyContainer.getSettingsRepository();
+        mListaSelecionavel = pListaSelecionavel;
+        mItensPedido = pItensPedido;
     }
 
     @Override public void loadListaProdutos() {
+        getView().showLoading();
         mVendedorRepository
                 .findById(mSettingsRepository.getLoggedInUser())
                 .flatMap(
@@ -67,22 +73,14 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
                         })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        new Subscriber<TabelaPreco>() {
-                            @Override public void onStart() {
-                                getView().showLoading();
-                            }
+                        pTabelaPreco -> {
+                            mTabelaPrecoPadrao = pTabelaPreco;
+                            findProdutos(pTabelaPreco.getItensTabela());
+                        },
 
-                            @Override public void onError(Throwable e) {
-                                Timber.e(e);
-                                getView().hideLoading();
-                            }
-
-                            @Override public void onNext(TabelaPreco pTabelaPreco) {
-                                mTabelaPrecoPadrao = pTabelaPreco;
-                                findProdutos(pTabelaPreco.getItensTabela());
-                            }
-
-                            @Override public void onCompleted() {}
+                        pError -> {
+                            Timber.e(pError);
+                            getView().hideLoading();
                         }
                 );
     }
@@ -107,7 +105,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
 
                                 @Override
                                 public void onNext(Produto pProduto) {
-                                    mProdutoList.add(new Pair<>(pProduto, item));
+                                   mProdutoList.add(new Pair<>(pProduto, item));
                                 }
                             }
                     );
@@ -116,7 +114,21 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
 
     private void showListaProdutos() {
         mProdutoVos = ProdutoFactories.createListProdutoVo(mProdutoList);
-        getView().showListaProdutos(mProdutoVos, mToSelect);
+
+        //TODO: Validar quando houver divergência de preço do produto do item do pedido para um possível produto atualizado
+        if (mItensPedido != null) {
+            for(ItemPedido item : mItensPedido) {
+                for (Pair<Produto, ItemTabela> itemTabela : mProdutoList) {
+                    if (item.getProduto().equals(itemTabela.first)) {
+                        ProdutoVo vo = new ProdutoVo(item.getProduto(), itemTabela.second);
+                        vo.setQuantidade(item.getQuantidade());
+                        mProdutoVos.add(vo);
+                    }
+                }
+            }
+        }
+
+        getView().showListaProdutos(mProdutoVos, mListaSelecionavel);
     }
 
     @Override public void clickAdicionaQuantidadeItem(int pPosition) {

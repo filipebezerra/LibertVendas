@@ -30,7 +30,7 @@ class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosViewHolder>
 
     private final ProdutoSelecionadoAdapterCallbacks mCallbacks;
 
-    private final boolean mToSelect;
+    private final boolean mListaSelecionavel;
 
     private List<ProdutoVo> mProdutoList;
 
@@ -40,11 +40,11 @@ class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosViewHolder>
 
     ListaProdutosAdapter(@NonNull Context pContext,
             @NonNull ProdutoSelecionadoAdapterCallbacks pCallbacks,
-            @NonNull List<ProdutoVo> pProdutoList, boolean pToSelect) {
+            @NonNull List<ProdutoVo> pProdutoList, boolean pListaSelecionavel) {
         mContext = pContext;
         mCallbacks = pCallbacks;
         mProdutoList = pProdutoList;
-        mToSelect = pToSelect;
+        mListaSelecionavel = pListaSelecionavel;
     }
 
     @Override public ListaProdutosViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -66,7 +66,7 @@ class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosViewHolder>
                 mContext.getString(R.string.template_text_total,
                         FormattingUtils.formatAsDinheiro(produto.getTotalProdutos())));
 
-        if (mToSelect) {
+        if (mListaSelecionavel) {
             holder.textViewQuantidade.setText(String.valueOf(produto.getQuantidadeAdicionada()));
             holder.editTextOutraQuantidade.setText(
                     String.valueOf(produto.getQuantidadeAdicionada()));

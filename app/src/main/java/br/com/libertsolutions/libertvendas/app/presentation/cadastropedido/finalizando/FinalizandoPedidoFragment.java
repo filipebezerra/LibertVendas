@@ -87,6 +87,10 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
                 new FormasPagamentoAdapter(getContext(), pFormasPagamentoList));
     }
 
+    @Override public void changeTitle(String pNewTitle) {
+        hostActivity().getSupportActionBar().setTitle(pNewTitle);
+    }
+
     @Override public void setViewFields(List<Integer> pViewIds) {
         mViewFields.clear();
         for (Integer viewId : pViewIds) {

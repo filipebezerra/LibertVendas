@@ -133,7 +133,7 @@ public class HomeActivity extends LibertVendasActivity
     }
 
     @Override public void navigateToListaProdutos() {
-        navigate().toListaProdutos(false);
+        navigate().toListaProdutos();
     }
 
     public boolean isViewingFragmentByTag(String tag) {
@@ -153,7 +153,8 @@ public class HomeActivity extends LibertVendasActivity
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case Navigator.REQUEST_EDITAR_CLIENTE: {
+            case Navigator.REQUEST_EDITAR_CLIENTE:
+            case Navigator.REQUEST_EDITAR_PEDIDO: {
                 getSupportFragmentManager().findFragmentById(R.id.fragment_container)
                         .onActivityResult(requestCode, resultCode, data);
                 break;

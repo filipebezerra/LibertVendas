@@ -74,7 +74,7 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
             if (mToSelect) {
                 EventBus.getDefault().postSticky(ClienteSelecionadoEvent.newEvent(cliente));
             } else {
-                getView().navigateToCliente(cliente);
+                getView().navigateToCadastroCliente(cliente);
             }
         }
     }

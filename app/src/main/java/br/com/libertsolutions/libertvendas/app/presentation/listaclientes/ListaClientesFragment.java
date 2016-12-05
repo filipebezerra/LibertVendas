@@ -137,21 +137,13 @@ public class ListaClientesFragment extends LibertVendasFragment
         hideLoading();
     }
 
-    @Override public void updateChangedItemAtPosition(int pPosition) {
-        mRecyclerViewAdapter.notifyItemChanged(pPosition);
-        mRecyclerViewClientes.smoothScrollToPosition(pPosition);
-    }
-
-    @Override public void updateInsertedItemAtPosition(int pPosition) {
-        mRecyclerViewAdapter.notifyItemInserted(pPosition);
-        mRecyclerViewClientes.smoothScrollToPosition(pPosition);
-    }
-
     @Override public void onSingleTapUp(View view, int position) {
         mPresenter.handleSingleTapUp(position);
     }
 
-    @Override public void navigateToCliente(Cliente pCliente) {
+    @Override public void onLongPress(View view, int position) {}
+
+    @Override public void navigateToCadastroCliente(Cliente pCliente) {
         hostActivity().navigate().toCadastroCliente(pCliente);
     }
 
@@ -164,7 +156,15 @@ public class ListaClientesFragment extends LibertVendasFragment
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override public void onLongPress(View view, int position) {}
+    @Override public void updateInsertedItemAtPosition(int pPosition) {
+        mRecyclerViewAdapter.notifyItemInserted(pPosition);
+        mRecyclerViewClientes.smoothScrollToPosition(pPosition);
+    }
+
+    @Override public void updateChangedItemAtPosition(int pPosition) {
+        mRecyclerViewAdapter.notifyItemChanged(pPosition);
+        mRecyclerViewClientes.smoothScrollToPosition(pPosition);
+    }
 
     @Override public void onDestroyView() {
         super.onDestroyView();

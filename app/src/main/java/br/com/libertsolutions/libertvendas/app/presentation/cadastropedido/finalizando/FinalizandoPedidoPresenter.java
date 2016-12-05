@@ -66,6 +66,7 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         initializeViewRequiredFields();
         displayDataEmissao();
         loadFormasPagamento();
+        initializeFieldsIfEmEdicao();
     }
 
     private void initializeViewFields() {
@@ -116,6 +117,30 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         }
     }
 
+    private void initializeFieldsIfEmEdicao() {
+        if (isEditing()) {
+            getView().changeTitle(mResourcesRepository.obtainStringTitleEditandoPedido());
+
+            displayDataEmissao();
+
+            getView().setViewValue(
+                    mResourcesRepository.obtainClienteViewId(),
+                    mPedidoEmEdicao.getCliente().getNome());
+
+            displayTotalProdutos(calculateTotalProdutos());
+
+            getView().setViewValue(
+                    mResourcesRepository.obtainDescontoViewId(),
+                    String.valueOf(mPedidoEmEdicao.getDesconto()));
+
+            if (!StringUtils.isEmpty(mPedidoEmEdicao.getObservacao())) {
+                getView().setViewValue(
+                        mResourcesRepository.obtainObservacaoViewId(),
+                        mPedidoEmEdicao.getObservacao());
+            }
+        }
+    }
+
     @Override public void handleDataEmissaoTouched() {
         getView().showCalendarPicker(mDataEmissao);
     }
@@ -128,8 +153,10 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
     }
 
     private void displayDataEmissao() {
+        long dataEmissao = isEditing() ?
+                mPedidoEmEdicao.getDataEmissao() : mDataEmissao.getTimeInMillis();
         getView().setViewValue(mResourcesRepository.obtainDataEmissaoViewId(),
-                FormattingUtils.convertMillisecondsToDateAsString(mDataEmissao.getTimeInMillis()));
+                FormattingUtils.convertMillisecondsToDateAsString(dataEmissao));
     }
 
     @Subscribe(sticky = true) public void onProdutosSelecionadosEvent(
@@ -147,8 +174,16 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
 
     private double calculateTotalProdutos() {
         double totalProdutos = 0;
-        for (ProdutoVo vo : mProdutosSelecionados) {
-            totalProdutos += vo.getTotalProdutos();
+        if (isEditing()) {
+            List<ItemPedido> itens = mPedidoEmEdicao.getItens();
+
+            for (ItemPedido item : itens) {
+                totalProdutos += item.getSubTotal();
+            }
+        } else {
+            for (ProdutoVo vo : mProdutosSelecionados) {
+                totalProdutos += vo.getTotalProdutos();
+            }
         }
         return totalProdutos;
     }

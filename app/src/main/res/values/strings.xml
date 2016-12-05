@@ -93,6 +93,7 @@
 
     <!-- Screen Pedido -->
     <string name="title_activity_pedido">Novo pedido</string>
+    <string name="title_activity_cadastro_pedido_editando">Editando pedido</string>
 
     <!-- Screen Selecione os produtos -->
     <string name="title_fragment_selecione_produtos">Selecione os produtos</string>

@@ -19,11 +19,19 @@ interface ListaPedidosContract {
 
         void hideLoading();
 
+        void navigateToCadastroPedido(Pedido pPedido);
+
         void updateInsertedItemAtPosition(int pPosition);
+
+        void updateChangedItemAtPosition(int pPosition);
     }
 
     interface Presenter extends MvpPresenter<View> {
 
         void loadListaPedidos(boolean listaPedidosNaoEnviados);
+
+        void handleSingleTapUp(int pPosition);
+
+        void handleResultPedidoEditado(Pedido pPedidoEditado);
     }
 }

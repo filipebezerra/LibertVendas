@@ -44,4 +44,8 @@ public class FinalizandoPedidoResourcesRepositoryImpl extends CommonResourcesRep
     @Override public int obtainObservacaoViewId() {
         return R.id.input_layout_observacao;
     }
+
+    @Override public String obtainStringTitleEditandoPedido() {
+        return getResources().getString(R.string.title_activity_cadastro_pedido_editando);
+    }
 }

@@ -64,6 +64,21 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
         mPedidoList = pPedidoList;
     }
 
+    @Override public void handleSingleTapUp(int pPosition) {
+        if (pPosition >= 0 && pPosition < mPedidoList.size()) {
+            final Pedido pedido = mPedidoList.get(pPosition);
+            getView().navigateToCadastroPedido(pedido);
+        }
+    }
+
+    @Override public void handleResultPedidoEditado(Pedido pPedidoEditado) {
+        int position = mPedidoList.indexOf(pPedidoEditado);
+        if (position != -1) {
+            mPedidoList.set(position, pPedidoEditado);
+            getView().updateChangedItemAtPosition(position);
+        }
+    }
+
     @Subscribe(threadMode = MAIN) public void onPedidoSavedEvent(NovoPedidoEvent pEvent) {
         final Pedido pedido = pEvent.getEventValue();
         final int position = mPedidoList.size();

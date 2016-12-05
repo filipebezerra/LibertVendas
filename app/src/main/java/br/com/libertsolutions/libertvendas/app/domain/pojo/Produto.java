@@ -113,6 +113,23 @@ public class Produto implements Parcelable {
         return ultimaAlteracao;
     }
 
+    @Override public boolean equals(Object pAnotherProduto) {
+        if (this == pAnotherProduto) {
+            return true;
+        }
+        if (pAnotherProduto == null || getClass() != pAnotherProduto.getClass()) {
+            return false;
+        }
+
+        Produto produto = (Produto) pAnotherProduto;
+
+        return getIdProduto() == produto.getIdProduto();
+    }
+
+    @Override public int hashCode() {
+        return getIdProduto();
+    }
+
     @Override public int describeContents() {
         return 0;
     }

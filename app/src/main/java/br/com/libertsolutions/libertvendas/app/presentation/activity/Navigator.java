@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.CadastroClienteActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.CadastroPedidoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
@@ -24,6 +25,8 @@ public class Navigator {
     public static final int REQUEST_SETTINGS = 0x1;
 
     public static final int REQUEST_EDITAR_CLIENTE = 0x2;
+
+    public static final int REQUEST_EDITAR_PEDIDO = 0x3;
 
     public static final int RESULT_OK = Activity.RESULT_OK;
 
@@ -74,11 +77,11 @@ public class Navigator {
         mActivity.setTitle(R.string.title_fragment_lista_clientes);
     }
 
-    public void toListaProdutos(boolean pToSelect) {
+    public void toListaProdutos() {
         mActivity.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container,
-                        ListaProdutosFragment.newInstance(pToSelect), ListaProdutosFragment.TAG)
+                        ListaProdutosFragment.newInstance(false, null), ListaProdutosFragment.TAG)
                 .commit();
         mActivity.setTitle(R.string.title_fragment_lista_produtos);
     }
@@ -92,9 +95,16 @@ public class Navigator {
         mActivity.setTitle(R.string.title_fragment_lista_pedidos);
     }
 
-    public void toCadastroPedido() {
+    public void toCadastroPedido(@Nullable Pedido pPedido) {
         final Intent pedidoIntent = new Intent(mActivity, CadastroPedidoActivity.class);
-        ActivityCompat.startActivity(mActivity, pedidoIntent, null);
+
+        if (pPedido == null) {
+            ActivityCompat.startActivity(mActivity, pedidoIntent, null);
+        } else {
+            pedidoIntent.putExtra(CadastroPedidoActivity.EXTRA_PEDIDO_EDICAO, pPedido);
+            ActivityCompat.startActivityForResult(
+                    mActivity, pedidoIntent, REQUEST_EDITAR_PEDIDO, null);
+        }
     }
 
     public void toCadastroCliente(@Nullable Cliente pCliente) {

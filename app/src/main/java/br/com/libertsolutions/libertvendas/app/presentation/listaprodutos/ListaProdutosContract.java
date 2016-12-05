@@ -11,11 +11,12 @@ import java.util.List;
 interface ListaProdutosContract {
 
     interface View extends MvpView {
+
         void showLoading();
 
         void hideLoading();
 
-        void showListaProdutos(List<ProdutoVo> pProdutoVoList, boolean pToSelect);
+        void showListaProdutos(List<ProdutoVo> pProdutoVoList, boolean pListaSelecionavel);
 
         void showFeedbackMessage(String pMessage);
 
@@ -23,6 +24,7 @@ interface ListaProdutosContract {
     }
 
     interface Presenter extends MvpPresenter<View> {
+
         void loadListaProdutos();
 
         void clickAdicionaQuantidadeItem(int pPosition);

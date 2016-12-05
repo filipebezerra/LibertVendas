@@ -16,6 +16,8 @@ interface FinalizandoPedidoContract {
 
         void displayFormasPagamento(List<FormaPagamento> pFormasPagamentoList);
 
+        void changeTitle(String pNewTitle);
+
         void setViewFields(List<Integer> pViewIds);
 
         void setRequiredFields(List<Integer> pRequiredViewIds);

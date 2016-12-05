@@ -20,4 +20,6 @@ public interface FinalizandoPedidoResourcesRepository extends CommonResourcesRep
     int obtainFormaPagamentoViewId();
 
     int obtainObservacaoViewId();
+
+    String obtainStringTitleEditandoPedido();
 }

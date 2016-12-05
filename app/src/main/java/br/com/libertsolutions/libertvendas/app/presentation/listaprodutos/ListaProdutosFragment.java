@@ -11,14 +11,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.FrameLayout;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.util.FeedbackHelper;
 import butterknife.BindView;
 import com.afollestad.materialdialogs.MaterialDialog;
+import java.util.ArrayList;
 import java.util.List;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosDependencyContainer.createDependencyContainer;
@@ -32,7 +34,8 @@ public class ListaProdutosFragment extends LibertVendasFragment
 
     public static final String TAG = ListaProdutosFragment.class.getName();
 
-    private static final String ARG_EXTRA_TO_SELECT = TAG + ".argExtraToSelect";
+    private static final String ARG_EXTRA_LISTA_SELECIONAVEL = TAG + ".argExtraListaSelecionavel";
+    private static final String ARG_EXTRA_ITENS_PEDIDO = TAG + ".argExtraItensPedido";
 
     @BindView(R.id.container_lista_produtos) protected FrameLayout mContainerListaProdutos;
     @BindView(R.id.recycler_view_produtos) protected RecyclerView mRecyclerViewProdutos;
@@ -43,11 +46,19 @@ public class ListaProdutosFragment extends LibertVendasFragment
 
     private MaterialDialog mProgressDialog;
 
-    public static ListaProdutosFragment newInstance(boolean pToSelect) {
+    private OnGlobalLayoutListener mRecyclerViewLayoutListener = null;
+
+    public static ListaProdutosFragment newInstance(
+            boolean pListaSelecionavel, @Nullable List<ItemPedido> pItensPedido) {
         ListaProdutosFragment fragment = new ListaProdutosFragment();
+
         Bundle arguments = new Bundle();
-        arguments.putBoolean(ARG_EXTRA_TO_SELECT, pToSelect);
+        arguments.putBoolean(ARG_EXTRA_LISTA_SELECIONAVEL, pListaSelecionavel);
+        if (pItensPedido != null && !pItensPedido.isEmpty()) {
+            arguments.putParcelableArrayList(ARG_EXTRA_ITENS_PEDIDO, new ArrayList<>(pItensPedido));
+        }
         fragment.setArguments(arguments);
+
         return fragment;
     }
 
@@ -66,10 +77,10 @@ public class ListaProdutosFragment extends LibertVendasFragment
         mRecyclerViewProdutos.setHasFixedSize(true);
         mRecyclerViewProdutos.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        final boolean toSelect = getArguments().getBoolean(ARG_EXTRA_TO_SELECT);
-
-        mPresenter = new ListaProdutosPresenter(toSelect,
-                createDependencyContainer(this));
+        mPresenter = new ListaProdutosPresenter(
+                createDependencyContainer(this),
+                getArguments().getBoolean(ARG_EXTRA_LISTA_SELECIONAVEL),
+                getArguments().getParcelableArrayList(ARG_EXTRA_ITENS_PEDIDO));
         mPresenter.attachView(this);
         mPresenter.loadListaProdutos();
     }
@@ -94,7 +105,8 @@ public class ListaProdutosFragment extends LibertVendasFragment
     }
 
     @Override public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_done).setVisible(getArguments().getBoolean(ARG_EXTRA_TO_SELECT));
+        menu.findItem(R.id.action_done)
+                .setVisible(getArguments().getBoolean(ARG_EXTRA_LISTA_SELECIONAVEL));
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -120,21 +132,25 @@ public class ListaProdutosFragment extends LibertVendasFragment
         }
     }
 
-    @Override public void showListaProdutos(List<ProdutoVo> pProdutoVoList, boolean pToSelect) {
+    @Override public void showListaProdutos(
+            List<ProdutoVo> pProdutoVoList, boolean pListaSelecionavel) {
+
         mRecyclerViewProdutos.setAdapter(
-                mRecyclerViewAdapter =
-                        new ListaProdutosAdapter(getContext(), this, pProdutoVoList, pToSelect));
+                mRecyclerViewAdapter = new ListaProdutosAdapter(
+                        getContext(), this, pProdutoVoList, pListaSelecionavel));
+
         mRecyclerViewProdutos
                 .getViewTreeObserver()
-                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        mRecyclerViewProdutos
-                                .getViewTreeObserver()
-                                .removeOnGlobalLayoutListener(this);
-                        hideLoading();
-                    }
-                });
+                .addOnGlobalLayoutListener(
+                        mRecyclerViewLayoutListener = this::recyclerViewFinishLoading);
+    }
+
+    private void recyclerViewFinishLoading() {
+        mRecyclerViewProdutos
+                .getViewTreeObserver()
+                .removeOnGlobalLayoutListener(mRecyclerViewLayoutListener);
+
+        hideLoading();
     }
 
     @Override public void showFeedbackMessage(String pMessage) {
