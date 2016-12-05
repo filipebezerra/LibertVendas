@@ -135,9 +135,11 @@ class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosViewHolder>
                 final List<ProdutoVo> newValues = new ArrayList<>();
 
                 for(ProdutoVo produto : values) {
-                    String valueText = produto.getNome();
-                    if (!TextUtils.isEmpty(valueText) &&
-                            valueText.toLowerCase().contains(prefixString)) {
+                    boolean contains = containsAnyProperty(prefixString,
+                            produto.getNome(),
+                            produto.getProduto().getCodigoBarras());
+
+                    if (contains) {
                         newValues.add(produto);
                     }
                 }
@@ -147,6 +149,16 @@ class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosViewHolder>
             }
 
             return results;
+        }
+
+        private boolean containsAnyProperty(String pPrefix, String...pProperties) {
+            for (String property : pProperties) {
+                if (!TextUtils.isEmpty(property)
+                        && property.trim().toLowerCase().contains(pPrefix)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override protected void publishResults(CharSequence prefix, FilterResults results) {

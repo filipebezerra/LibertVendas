@@ -85,7 +85,7 @@
 
     <!-- Screen Lista de Produtos -->
     <string name="title_fragment_lista_produtos">Produtos</string>
-    <string name="hint_busca_produto">Busque pela nome</string>
+    <string name="hint_busca_produto">Use nome ou código barras</string>
     <string name="template_text_qtde_estoque">Qtd. Est. %1$s</string>
     <string name="example_text_qtde_estoque">Qtd. Est. 10</string>
     <string name="example_text_preco_produto">Preço R$ 4.49</string>

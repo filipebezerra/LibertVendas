@@ -101,7 +101,7 @@ class ListaClientesAdapter extends RecyclerView.Adapter<ListaClientesViewHolder>
                 final List<Cliente> newValues = new ArrayList<>();
 
                 for(Cliente cliente : values) {
-                    boolean contains = containsNoCliente(prefixString,
+                    boolean contains = containsAnyProperty(prefixString,
                             cliente.getNome(),
                             cliente.getContato(),
                             cliente.getCpfCnpj());
@@ -118,7 +118,7 @@ class ListaClientesAdapter extends RecyclerView.Adapter<ListaClientesViewHolder>
             return results;
         }
 
-        private boolean containsNoCliente(String pPrefix, String...pProperties) {
+        private boolean containsAnyProperty(String pPrefix, String...pProperties) {
             for (String property : pProperties) {
                 if (!TextUtils.isEmpty(property)
                         && property.trim().toLowerCase().contains(pPrefix)) {
