@@ -140,13 +140,10 @@
                 >
 
                 <android.support.design.widget.TextInputEditText
-                    style="@style/Widget.Libert.EditableField"
+                    style="@style/Widget.Libert.MultilineEditableField"
                     android:id="@+id/edit_text_observacao"
-                    android:layout_height="110dp"
                     android:hint="@string/hint_observacao"
-                    android:inputType="textMultiLine|textCapSentences"
                     android:imeOptions="actionDone"
-                    android:gravity="top"
                     />
 
             </android.support.design.widget.TextInputLayout>

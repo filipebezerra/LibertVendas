@@ -58,6 +58,13 @@
         <item name="android:selectAllOnFocus">true</item>
     </style>
 
+    <style name="Widget.Libert.MultilineEditableField" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">110dp</item>
+        <item name="android:gravity">top</item>
+        <item name="android:inputType">textMultiLine|textCapSentences</item>
+    </style>
+
     <style name="Widget.Libert.NonEditableField" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
