@@ -46,8 +46,6 @@ public class ListaProdutosFragment extends LibertVendasFragment
 
     private MaterialDialog mProgressDialog;
 
-    private OnGlobalLayoutListener mRecyclerViewLayoutListener = null;
-
     public static ListaProdutosFragment newInstance(
             boolean pListaSelecionavel, @Nullable List<ItemPedido> pItensPedido) {
         ListaProdutosFragment fragment = new ListaProdutosFragment();
@@ -142,15 +140,16 @@ public class ListaProdutosFragment extends LibertVendasFragment
         mRecyclerViewProdutos
                 .getViewTreeObserver()
                 .addOnGlobalLayoutListener(
-                        mRecyclerViewLayoutListener = this::recyclerViewFinishLoading);
-    }
-
-    private void recyclerViewFinishLoading() {
-        mRecyclerViewProdutos
-                .getViewTreeObserver()
-                .removeOnGlobalLayoutListener(mRecyclerViewLayoutListener);
-
-        hideLoading();
+                        new OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                mRecyclerViewProdutos
+                                        .getViewTreeObserver()
+                                        .removeOnGlobalLayoutListener(this);
+                                hideLoading();
+                            }
+                        }
+                );
     }
 
     @Override public void showFeedbackMessage(String pMessage) {
