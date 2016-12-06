@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.finalizando;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
+import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
+import br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.CadastroPedidoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils;
 import butterknife.BindView;
@@ -218,6 +221,12 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
 
     @Override public void displayValidationErrorForDesconto(String pValidationMessage) {
         mSpinnerFormaPagamento.setError(pValidationMessage);
+    }
+
+    @Override public void resultPedidoEditado(Pedido pPedido) {
+        Intent data = new Intent().putExtra(CadastroPedidoActivity.RESULT_PEDIDO_EDITADO, pPedido);
+        getActivity().setResult(Navigator.RESULT_OK, data);
+        finishView();
     }
 
     @OnTouch(R.id.edit_text_data_emissao) boolean onEditTextDataEmissaoTouched(MotionEvent e) {

@@ -40,6 +40,8 @@ interface FinalizandoPedidoContract {
 
         void displayValidationErrorForDesconto(String pValidationMessage);
 
+        void resultPedidoEditado(Pedido pPedido);
+
         void finishView();
     }
 

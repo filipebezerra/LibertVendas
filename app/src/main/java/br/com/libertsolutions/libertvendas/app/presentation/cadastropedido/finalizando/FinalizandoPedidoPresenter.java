@@ -137,7 +137,7 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
                     mResourcesRepository.obtainClienteViewId(),
                     mPedidoEmEdicao.getCliente().getNome());
 
-            displayTotalProdutos(calculateTotalProdutos());
+            displayTotalProdutos(calculateTotalProdutosPedido());
 
             getView().setViewValue(
                     mResourcesRepository.obtainDescontoViewId(),
@@ -149,6 +149,18 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
                         mPedidoEmEdicao.getObservacao());
             }
         }
+    }
+
+    private double calculateTotalProdutosPedido() {
+        double totalProdutosPedido = 0;
+        if (isEditing()) {
+            List<ItemPedido> itens = mPedidoEmEdicao.getItens();
+
+            for (ItemPedido item : itens) {
+                totalProdutosPedido += item.getSubTotal();
+            }
+        }
+        return totalProdutosPedido;
     }
 
     @Override public void handleDataEmissaoTouched() {
@@ -176,7 +188,7 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         if ((produtoVoList != null && !produtoVoList.isEmpty()) && tabelaPreco != null) {
             mProdutosSelecionados = produtoVoList;
             mTabelaPrecoPadrao = tabelaPreco;
-            displayTotalProdutos(calculateTotalProdutos());
+            displayTotalProdutos(calculateTotalProdutosSelecionados());
         }
 
         EventBus.getDefault().removeStickyEvent(pEvent);
@@ -186,23 +198,6 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
             UsuarioLogadoEvent pEvent) {
         mVendedorLogado = pEvent.getVendedor();
         mEmpresaLogada = pEvent.getEmpresa();
-    }
-
-
-    private double calculateTotalProdutos() {
-        double totalProdutos = 0;
-        if (isEditing()) {
-            List<ItemPedido> itens = mPedidoEmEdicao.getItens();
-
-            for (ItemPedido item : itens) {
-                totalProdutos += item.getSubTotal();
-            }
-        } else {
-            for (ProdutoVo vo : mProdutosSelecionados) {
-                totalProdutos += vo.getTotalProdutos();
-            }
-        }
-        return totalProdutos;
     }
 
     private void displayTotalProdutos(double pTotalProdutos) {
@@ -280,7 +275,7 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
             return false;
         }
 
-        final double totalProdutos = calculateTotalProdutos();
+        final double totalProdutos = calculateTotalProdutosSelecionados();
         final double percentualAplicadoVenda = desconto * 100 / totalProdutos;
 
         if (percentualAplicadoVenda > percentualDesconto) {
@@ -291,6 +286,14 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         }
 
         return true;
+    }
+
+    private double calculateTotalProdutosSelecionados() {
+        double totalProdutos = 0;
+        for (ProdutoVo vo : mProdutosSelecionados) {
+            totalProdutos += vo.getTotalProdutos();
+        }
+        return totalProdutos;
     }
 
     private Pedido pedidoFromFields() {
@@ -358,11 +361,11 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         }
     }
 
-    private void notifyPedidoSalvo(final Pedido pNovoPedido) {
+    private void notifyPedidoSalvo(final Pedido pPedido) {
         if (isEditing()) {
-            //getView().resultClienteEditado(pNovoPedido);
+            getView().resultPedidoEditado(pPedido);
         } else {
-            EventBus.getDefault().post(NovoPedidoEvent.newEvent(pNovoPedido));
+            EventBus.getDefault().post(NovoPedidoEvent.newEvent(pPedido));
             getView().finishView();
         }
     }
