@@ -25,7 +25,7 @@
     <string name="key_pref_tabela_preco_padrao" translatable="false">tabela_preco_padrao</string>
     <string name="title_pref_tabela_preco_padrao">Tabela de preço padrão</string>
     <string name="dialog_title_pref_tabela_preco_padrao">Digite o código da tabela de preço</string>
-    <string name="summary_pref_tabela_preco_padrao">Será aplicada esta tabela de preço por padrão em cada novo pedido</string>
+    <string name="summary_pref_tabela_preco_padrao">Sem definição</string>
     <string name="action_done">Continuar</string>
     <string name="message_settings_required">É necessário preencher todas configurações!</string>
 
@@ -41,10 +41,11 @@
     <string name="default_text_nome_vendedor">Libert Vendas</string>
     <string name="default_text_nome_empresa">Libert Solutions</string>
     <string name="title_dialog_choose_empresa_para_logar">Selecione a empresa para logar.</string>
+    <string name="login">o login</string>
 
     <!-- Screen Importação -->
     <string name="title_activity_importacao">Importando seus dados</string>
-    <string name="importacao">Importação</string>
+    <string name="importacao">a importação</string>
     <string name="message_importacao_completada">Importação completada com sucesso!</string>
     <string name="error_importando_dados">Falha ao tentar importar os dados do servidor!</string>
     <string name="message_vendedor_sem_empresas_vinculadas">Vendedor sem empresas vinculadas!</string>
@@ -165,7 +166,7 @@
         Houve um erro de rede e a %1$s não foi realizada.
     </string>
     <string name="message_unknown_error">
-        Houve um erro desconhecido e a %1$s não foi realizada.
+        Houve um erro desconhecido e %1$s não foi realizada.
     </string>
 
 </resources>

@@ -26,10 +26,12 @@ public class Vendedor {
 
     private final List<Empresa> empresas;
 
+    private final boolean aplicaDesconto;
+
     public Vendedor(
             int pIdVendedor, String pCodigo, String pNome, String pCpfCnpj,
             String pTelefone, String pEmail, boolean pAtivo, int pIdTabela,
-            String pUltimaAlteracao, List<Empresa> pEmpresas) {
+            String pUltimaAlteracao, List<Empresa> pEmpresas, boolean pAplicaDesconto) {
         idVendedor = pIdVendedor;
         codigo = pCodigo;
         nome = pNome;
@@ -40,6 +42,7 @@ public class Vendedor {
         idTabela = pIdTabela;
         ultimaAlteracao = pUltimaAlteracao;
         empresas = pEmpresas;
+        aplicaDesconto = pAplicaDesconto;
     }
 
     public int getIdVendedor() {
@@ -80,6 +83,10 @@ public class Vendedor {
 
     public List<Empresa> getEmpresas() {
         return empresas;
+    }
+
+    public boolean isAplicaDesconto() {
+        return aplicaDesconto;
     }
 
     @SuppressWarnings("StringBufferReplaceableByString") @Override public String toString() {

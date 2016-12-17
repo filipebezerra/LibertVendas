@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepository;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepository;
-import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.presentation.resources.FinalizandoPedidoResourcesRepository;
 
 /**
@@ -18,13 +17,10 @@ class FinalizandoPedidoDependencyContainer {
 
     private final FinalizandoPedidoResourcesRepository mResourcesRepository;
 
-    private final SettingsRepository mSettingsRepository;
-
     private FinalizandoPedidoDependencyContainer(@NonNull FinalizandoPedidoFragment pFragment) {
         mFormaPagamentoRepository = Injection.provideFormaPagamentoRepository();
         mPedidoRepository = Injection.providePedidoRepository();
         mResourcesRepository = Injection.provideFinalizandoPedidoResourcesRepository(pFragment.getContext());
-        mSettingsRepository = Injection.provideSettingsRepository(pFragment.getContext());
     }
 
     static FinalizandoPedidoDependencyContainer createDependencyContainer(
@@ -42,9 +38,5 @@ class FinalizandoPedidoDependencyContainer {
 
     FinalizandoPedidoResourcesRepository getResourcesRepository() {
         return mResourcesRepository;
-    }
-
-    SettingsRepository getSettingsRepository() {
-        return mSettingsRepository;
     }
 }

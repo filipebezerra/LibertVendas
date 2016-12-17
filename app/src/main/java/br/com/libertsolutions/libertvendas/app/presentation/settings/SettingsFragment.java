@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.settings;
 
 import android.os.Bundle;
+import android.support.v14.preference.SwitchPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
@@ -9,14 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.presentation.login.UsuarioLogadoEvent;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompatDividers;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_chave_autenticacao;
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_endereco_servidor;
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_tabela_preco_padrao;
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
 /**
  * @author Filipe Bezerra
@@ -57,8 +59,13 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onSettingsEvent(SettingsEvent event) {
-        findPreference(event.getKey()).setEnabled(true);
+    @Subscribe(threadMode = MAIN, sticky = true) public void onUsuarioLogadoEvent(
+            UsuarioLogadoEvent pEvent) {
+        ((SwitchPreference)findPreference(getString(R.string.key_pref_pode_aplicar_desconto)))
+                .setChecked(pEvent.getVendedor().isAplicaDesconto());
+
+        findPreference(getString(R.string.key_pref_tabela_preco_padrao))
+                .setSummary(String.valueOf(pEvent.getVendedor().getIdTabela()));
     }
 
     private Preference.OnPreferenceChangeListener mOnPreferenceChangeListener

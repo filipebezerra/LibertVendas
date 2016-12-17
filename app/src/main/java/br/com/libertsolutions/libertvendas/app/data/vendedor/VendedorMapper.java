@@ -11,14 +11,14 @@ import java.util.List;
  * @author Filipe Bezerra
  */
 class VendedorMapper extends Mapper<Vendedor,VendedorEntity> {
+
     private final Mapper<Empresa, EmpresaEntity> mEmpresaEntityMapper;
 
-    public VendedorMapper(Mapper<Empresa, EmpresaEntity> pEmpresaEntityMapper) {
+    VendedorMapper(Mapper<Empresa, EmpresaEntity> pEmpresaEntityMapper) {
         mEmpresaEntityMapper = pEmpresaEntityMapper;
     }
 
-    @Override
-    public VendedorEntity toEntity(Vendedor object) {
+    @Override public VendedorEntity toEntity(Vendedor object) {
         return new VendedorEntity()
                 .setIdVendedor(object.getIdVendedor())
                 .setCodigo(object.getCodigo())
@@ -29,11 +29,11 @@ class VendedorMapper extends Mapper<Vendedor,VendedorEntity> {
                 .setAtivo(object.isAtivo())
                 .setIdTabela(object.getIdTabela())
                 .setUltimaAlteracao(object.getUltimaAlteracao())
-                .setEmpresas(mEmpresaEntityMapper.toEntityList(object.getEmpresas()));
+                .setEmpresas(mEmpresaEntityMapper.toEntityList(object.getEmpresas()))
+                .setAplicaDesconto(object.isAplicaDesconto());
     }
 
-    @Override
-    public Vendedor toViewObject(VendedorEntity entity) {
+    @Override public Vendedor toViewObject(VendedorEntity entity) {
         Integer idVendedor = entity.getIdVendedor();
         String codigo = entity.getCodigo();
         String nome = entity.getNome();
@@ -44,10 +44,11 @@ class VendedorMapper extends Mapper<Vendedor,VendedorEntity> {
         Integer idTabela = entity.getIdTabela();
         String ultimaAlteracao = entity.getUltimaAlteracao();
         List<Empresa> empresas = mEmpresaEntityMapper.toViewObjectList(entity.getEmpresas());
+        Boolean aplicaDesconto = entity.isAplicaDesconto();
 
         return new Vendedor(
                 idVendedor, codigo, nome, cpfCnpj, telefone, email, ativo, idTabela,
-                ultimaAlteracao, empresas
+                ultimaAlteracao, empresas, aplicaDesconto
         );
     }
 }

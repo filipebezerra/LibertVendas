@@ -77,4 +77,8 @@ class HomePresenter extends BasePresenter<HomeContract.View> implements HomeCont
             getView().navigateToListaProdutos();
         }
     }
+
+    @Override public void handleSettingsNavigationItemSelected() {
+        getView().navigateToSettings();
+    }
 }

@@ -32,6 +32,8 @@ import io.realm.annotations.Required;
 
     private RealmList<EmpresaEntity> empresas;
 
+    private Boolean aplicaDesconto;
+
     public Integer getIdVendedor() {
         return idVendedor;
     }
@@ -119,6 +121,15 @@ import io.realm.annotations.Required;
 
     public VendedorEntity setEmpresas(RealmList<EmpresaEntity> pEmpresas) {
         empresas = pEmpresas;
+        return this;
+    }
+
+    public Boolean isAplicaDesconto() {
+        return aplicaDesconto;
+    }
+
+    public VendedorEntity setAplicaDesconto(Boolean pAplicaDesconto) {
+        aplicaDesconto = pAplicaDesconto;
         return this;
     }
 }

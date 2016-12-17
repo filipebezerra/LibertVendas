@@ -34,8 +34,8 @@
         <SwitchPreference
             android:key="@string/key_pref_pode_aplicar_desconto"
             android:title="@string/title_pref_pode_aplicar_desconto"
-            android:defaultValue="false"
             android:summary="@string/summary_pref_pode_aplicar_desconto"
+            android:enabled="false"
             />
 
         <Preference

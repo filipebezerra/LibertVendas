@@ -24,4 +24,6 @@ public final class VendedorDto {
     @SerializedName("idTabela") @Expose public int idTabela;
 
     @SerializedName("ultimaAlteracao") @Expose public String ultimaAlteracao;
+
+    @SerializedName("aplicaDesconto") @Expose public boolean aplicaDesconto;
 }

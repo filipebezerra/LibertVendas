@@ -9,7 +9,6 @@ import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_chave_au
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_endereco_servidor;
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_pode_aplicar_desconto;
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_sincronizar_pedido_automaticamente;
-import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_tabela_preco_padrao;
 
 /**
  * @author Filipe Bezerra
@@ -56,14 +55,9 @@ class SharedPreferencesSettingsRepositoryImpl implements SettingsRepository {
                 .getString(mContext.getString(key_pref_chave_autenticacao), "");
         final boolean sincronizaPedidoAutomaticamente = mPreferences
                 .getBoolean(mContext.getString(key_pref_sincronizar_pedido_automaticamente), true);
-        final boolean podeAplicarDesconto = mPreferences
-                .getBoolean(mContext.getString(key_pref_pode_aplicar_desconto), false);
-        final int tabelaPrecoPadrao = mPreferences
-                .getInt(mContext.getString(key_pref_tabela_preco_padrao), 0);
 
         return Settings.create(
-                urlServidor, chaveAutenticacao, sincronizaPedidoAutomaticamente,
-                podeAplicarDesconto, tabelaPrecoPadrao
+                urlServidor, chaveAutenticacao, sincronizaPedidoAutomaticamente
         );
     }
 

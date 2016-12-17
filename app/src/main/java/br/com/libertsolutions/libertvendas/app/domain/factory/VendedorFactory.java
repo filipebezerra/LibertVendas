@@ -39,7 +39,6 @@ public class VendedorFactory {
         return new Vendedor(
                 vendedor.idVendedor, vendedor.codigo, vendedor.nome, vendedor.cpfCnpj,
                 vendedor.telefone, vendedor.email, vendedor.ativo, vendedor.idTabela,
-                vendedor.ultimaAlteracao, empresas
-        );
+                vendedor.ultimaAlteracao, empresas, pDto.vendedor.aplicaDesconto);
     }
 }

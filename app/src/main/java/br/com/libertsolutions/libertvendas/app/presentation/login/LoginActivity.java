@@ -16,7 +16,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.dd.CircularProgressButton;
 import java.util.List;
 
-import static br.com.libertsolutions.libertvendas.app.R.string.importacao;
+import static br.com.libertsolutions.libertvendas.app.R.string.login;
 import static br.com.libertsolutions.libertvendas.app.R.string.message_network_error;
 import static br.com.libertsolutions.libertvendas.app.R.string.message_unknown_error;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils.isDeviceConnected;
@@ -94,17 +94,17 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
 
     @Override public void showServerError() {
         FeedbackHelper.showMessageDialog(this,
-                getString(R.string.message_server_error, getString(importacao)));
+                getString(R.string.message_server_error, getString(login)));
     }
 
     @Override public void showNetworkError() {
         FeedbackHelper.showMessageDialog(this,
-                getString(message_network_error, getString(importacao)));
+                getString(message_network_error, getString(login)));
     }
 
     @Override public void showUnknownError() {
         FeedbackHelper.showMessageDialog(this,
-                getString(message_unknown_error, getString(importacao)));
+                getString(message_unknown_error, getString(login)));
     }
 
     @Override public void showIdle() {

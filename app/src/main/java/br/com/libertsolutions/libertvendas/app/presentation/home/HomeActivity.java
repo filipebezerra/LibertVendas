@@ -103,6 +103,7 @@ public class HomeActivity extends LibertVendasActivity
             }
 
             case R.id.nav_settings: {
+                mPresenter.handleSettingsNavigationItemSelected();
                 break;
             }
         }
@@ -146,6 +147,10 @@ public class HomeActivity extends LibertVendasActivity
 
     @Override public void navigateToListaProdutos() {
         navigate().toListaProdutos();
+    }
+
+    @Override public void navigateToSettings() {
+        navigate().toSettings();
     }
 
     public boolean isViewingFragmentByTag(String tag) {

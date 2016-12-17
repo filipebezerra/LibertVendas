@@ -9,7 +9,6 @@ import br.com.libertsolutions.libertvendas.app.Injection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import com.afollestad.materialdialogs.MaterialDialog;
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * @author Filipe Bezerra
@@ -70,11 +69,6 @@ public class SettingsActivity extends LibertVendasActivity implements SettingsCo
     @Override public void resultAsOk(int resultCode) {
         setResult(resultCode);
         navigate().toLogin();
-    }
-
-    @Override public void enableSettingTabelaPrecoPadrao() {
-        EventBus.getDefault().post(
-                SettingsEvent.create(getString(R.string.key_pref_tabela_preco_padrao)));
     }
 
     @Override public void showRequiredMessage() {

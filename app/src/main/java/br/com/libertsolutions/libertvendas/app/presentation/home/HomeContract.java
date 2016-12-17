@@ -28,6 +28,8 @@ interface HomeContract {
         boolean isViewingListaProdutos();
 
         void navigateToListaProdutos();
+
+        void navigateToSettings();
     }
 
     interface Presenter extends MvpPresenter<View>, LifecyclePresenter {
@@ -37,5 +39,7 @@ interface HomeContract {
         void handleClientesNavigationItemSelected();
 
         void handleProdutosNavigationItemSelected();
+
+        void handleSettingsNavigationItemSelected();
     }
 }

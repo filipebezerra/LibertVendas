@@ -2,14 +2,12 @@ package br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.fina
 
 import br.com.libertsolutions.libertvendas.app.data.formaspagamento.FormaPagamentoRepository;
 import br.com.libertsolutions.libertvendas.app.data.pedidos.PedidoRepository;
-import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.util.ApiUtils;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.TabelaPreco;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
@@ -45,8 +43,6 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
 
     private final FinalizandoPedidoResourcesRepository mResourcesRepository;
 
-    private final SettingsRepository mSettingsRepository;
-
     private Pedido mPedidoEmEdicao;
 
     private Calendar mDataEmissao = Calendar.getInstance();
@@ -67,7 +63,6 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         mFormaPagamentoRepository = pDependencyContainer.getFormaPagamentoRepository();
         mPedidoRepository = pDependencyContainer.getPedidoRepository();
         mResourcesRepository = pDependencyContainer.getResourcesRepository();
-        mSettingsRepository = pDependencyContainer.getSettingsRepository();
     }
 
     @Override public void initializeView(Pedido pPedidoFromExtra) {
@@ -249,9 +244,7 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
             return true;
         }
 
-        final Settings settings = mSettingsRepository.getSettings();
-
-        if (!settings.isPodeAplicarDesconto()) {
+        if (!mVendedorLogado.isAplicaDesconto()) {
             getView().displayValidationErrorForDesconto(
                     mResourcesRepository.obtainStringMessageVendedorNaoPermitidoAplicarDesconto());
             return false;
