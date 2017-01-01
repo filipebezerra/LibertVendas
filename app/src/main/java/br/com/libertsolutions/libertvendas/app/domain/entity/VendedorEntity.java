@@ -34,6 +34,8 @@ import io.realm.annotations.Required;
 
     private RealmList<EmpresaEntity> empresas;
 
+    private EmpresaEntity empresaSelecionada;
+
     @Override public VendedorEntity setId(final Integer id) {
         idVendedor = id;
         return this;
@@ -130,6 +132,15 @@ import io.realm.annotations.Required;
 
     public VendedorEntity setEmpresas(final RealmList<EmpresaEntity> empresas) {
         this.empresas = empresas;
+        return this;
+    }
+
+    public EmpresaEntity getEmpresaSelecionada() {
+        return empresaSelecionada;
+    }
+
+    public VendedorEntity setEmpresaSelecionada(final EmpresaEntity empresaSelecionada) {
+        this.empresaSelecionada = empresaSelecionada;
         return this;
     }
 }

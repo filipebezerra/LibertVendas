@@ -40,7 +40,7 @@ class SettingsPresenter extends BasePresenter<SettingsContract.View>
             return;
         }
 
-        if (Pattern.compile("\\s").matcher(settings.getChaveAutenticao()).find()) {
+        if (Pattern.compile("\\s").matcher(settings.getChaveAutenticacao()).find()) {
             getView().showInvalidChaveAutenticaoMessage();
             return;
         }

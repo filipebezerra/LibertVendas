@@ -7,22 +7,22 @@ public final class Settings {
 
     private final String urlServidor;
 
-    private final String chaveAutenticao;
+    private final String chaveAutenticacao;
 
-    private Settings(final String urlServidor, final String chaveAutenticao) {
+    private Settings(final String urlServidor, final String chaveAutenticacao) {
         this.urlServidor = urlServidor;
-        this.chaveAutenticao = chaveAutenticao;
+        this.chaveAutenticacao = chaveAutenticacao;
     }
 
-    public static Settings create(final String urlServidor, final String chaveAutenticao) {
-        return new Settings(urlServidor, chaveAutenticao);
+    public static Settings create(final String urlServidor, final String chaveAutenticacao) {
+        return new Settings(urlServidor, chaveAutenticacao);
     }
 
     public String getUrlServidor() {
         return urlServidor;
     }
 
-    public String getChaveAutenticao() {
-        return chaveAutenticao;
+    public String getChaveAutenticacao() {
+        return chaveAutenticacao;
     }
 }

@@ -31,6 +31,8 @@ public final class Vendedor implements Parcelable {
 
     private final List<Empresa> empresas;
 
+    private final Empresa empresaSelecionada;
+
     public static final Creator<Vendedor> CREATOR = new Creator<Vendedor>() {
         @Override public Vendedor createFromParcel(Parcel in) {
             return new Vendedor(in);
@@ -41,12 +43,13 @@ public final class Vendedor implements Parcelable {
         }
     };
 
-    public static Vendedor create(final int idVendedor, final String codigo, final String nome,
-            final String cpfCnpj,
+    public static Vendedor create(
+            final int idVendedor, final String codigo, final String nome, final String cpfCnpj,
             final String telefone, final String email, final boolean ativo, final int idTabela,
-            final String ultimaAlteracao, final boolean aplicaDesconto, List<Empresa> empresas) {
+            final String ultimaAlteracao, final boolean aplicaDesconto, List<Empresa> empresas,
+            final Empresa empresaSelecionada) {
         return new Vendedor(idVendedor, codigo, nome, cpfCnpj, telefone, email, ativo, idTabela,
-                ultimaAlteracao, aplicaDesconto, empresas);
+                ultimaAlteracao, aplicaDesconto, empresas, empresaSelecionada);
     }
 
     private Vendedor(Parcel in) {
@@ -61,12 +64,14 @@ public final class Vendedor implements Parcelable {
         ultimaAlteracao = in.readString();
         aplicaDesconto = in.readByte() == 1;
         empresas = in.createTypedArrayList(Empresa.CREATOR);
+        empresaSelecionada = in.readParcelable(Empresa.class.getClassLoader());
     }
 
     private Vendedor(
             final int idVendedor, final String codigo, final String nome, final String cpfCnpj,
             final String telefone, final String email, final boolean ativo, final int idTabela,
-            final String ultimaAlteracao, final boolean aplicaDesconto, List<Empresa> empresas) {
+            final String ultimaAlteracao, final boolean aplicaDesconto, List<Empresa> empresas,
+            final Empresa empresaSelecionada) {
         this.idVendedor = idVendedor;
         this.codigo = codigo;
         this.nome = nome;
@@ -78,6 +83,7 @@ public final class Vendedor implements Parcelable {
         this.ultimaAlteracao = ultimaAlteracao;
         this.aplicaDesconto = aplicaDesconto;
         this.empresas = empresas;
+        this.empresaSelecionada = empresaSelecionada;
     }
 
     public int getIdVendedor() {
@@ -124,6 +130,10 @@ public final class Vendedor implements Parcelable {
         return empresas;
     }
 
+    public Empresa getEmpresaSelecionada() {
+        return empresaSelecionada;
+    }
+
     @Override public int describeContents() {
         return 0;
     }
@@ -140,5 +150,6 @@ public final class Vendedor implements Parcelable {
         out.writeString(ultimaAlteracao);
         out.writeByte((byte)(aplicaDesconto ? 1 : 0));
         out.writeTypedList(empresas);
+        out.writeParcelable(empresaSelecionada, flags);
     }
 }

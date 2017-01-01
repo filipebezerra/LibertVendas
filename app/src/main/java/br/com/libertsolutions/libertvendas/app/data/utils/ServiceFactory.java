@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import br.com.libertsolutions.libertvendas.app.BuildConfig;
+import br.com.libertsolutions.libertvendas.app.PresentationInjection;
+import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
@@ -31,12 +34,12 @@ public class ServiceFactory {
 
     private static String sBaseUrl;
 
-    //private static SettingsRepository sSettingsRepository;
+    private static SettingsRepository sSettingsRepository;
 
     public static <S> S createService(@NonNull Context context, @NonNull Class<S> serviceClass) {
-        //final Settings settings = getSettingsRepository(context).getSettings();
-        final String urlServidor = "http://187.32.187.153:8085" /*settings.getUrlServidor()*/;
-        final String chaveAutenticacao = "626c6f63736b696e" /*settings.getChaveAutenticacao()*/;
+        final Settings settings = getSettingsRepository(context).loadSettings();
+        final String urlServidor = settings.getUrlServidor();
+        final String chaveAutenticacao = settings.getChaveAutenticacao();
 
         if (TextUtils.isEmpty(urlServidor) || TextUtils.isEmpty(chaveAutenticacao)) {
             return null;
@@ -45,13 +48,12 @@ public class ServiceFactory {
         return getRetrofit(context, urlServidor, chaveAutenticacao).create(serviceClass);
     }
 
-    //TODO: Provide SettingsRepository
-    /*private static SettingsRepository getSettingsRepository(Context context) {
+    private static SettingsRepository getSettingsRepository(Context context) {
         if (sSettingsRepository == null) {
-            sSettingsRepository = Injection.provideSettingsRepository(context);
+            sSettingsRepository = PresentationInjection.provideSettingsRepository(context);
         }
         return sSettingsRepository;
-    }*/
+    }
 
     private static Retrofit getRetrofit(
             Context context, String enderecoServidor, String chaveAutenticacao) {
@@ -73,7 +75,7 @@ public class ServiceFactory {
         return new OkHttpClient
                 .Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(BuildConfig.DEBUG ? 30 : 10, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .cache(createCache(context))
                 .addInterceptor(createLoggingInterceptor())

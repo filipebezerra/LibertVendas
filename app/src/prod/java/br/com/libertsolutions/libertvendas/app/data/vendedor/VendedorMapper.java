@@ -30,7 +30,8 @@ class VendedorMapper extends RealmMapper<Vendedor, VendedorEntity> {
                 .setIdTabela(object.getIdTabela())
                 .setUltimaAlteracao(object.getUltimaAlteracao())
                 .setAplicaDesconto(object.isAplicaDesconto())
-                .setEmpresas(mEmpresaMapper.toEntityList(object.getEmpresas()));
+                .setEmpresas(mEmpresaMapper.toEntityList(object.getEmpresas()))
+                .setEmpresaSelecionada(mEmpresaMapper.toEntity(object.getEmpresaSelecionada()));
     }
 
     @Override public Vendedor toViewObject(final VendedorEntity entity) {
@@ -45,10 +46,11 @@ class VendedorMapper extends RealmMapper<Vendedor, VendedorEntity> {
         String ultimaAlteracao = entity.getUltimaAlteracao();
         Boolean aplicaDesconto = entity.isAplicaDesconto();
         List<Empresa> empresas = mEmpresaMapper.toViewObjectList(entity.getEmpresas());
+        Empresa empresaSelecionada = mEmpresaMapper.toViewObject(entity.getEmpresaSelecionada());
 
         return Vendedor.create(
                 id, codigo, nome, cpfCnpj, telefone, email, ativo, idTabela, ultimaAlteracao,
-                aplicaDesconto, empresas
+                aplicaDesconto, empresas, empresaSelecionada
         );
     }
 }

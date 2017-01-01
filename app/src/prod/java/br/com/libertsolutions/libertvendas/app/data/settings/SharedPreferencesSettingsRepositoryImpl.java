@@ -3,10 +3,7 @@ package br.com.libertsolutions.libertvendas.app.data.settings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_chave_autenticacao;
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_endereco_servidor;
@@ -21,11 +18,6 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
 
     private static final String KEY_USER_LOGGED_IN = "pref.userLoggedIn";
     private static final String KEY_ID_LOGGED_IN_USER = "pref.idLoggedInUser";
-    private static final String KEY_NAME_LOGGED_IN_USER = "pref.nameLoggedInUser";
-    private static final String KEY_CPF_LOGGED_IN_USER = "pref.cpfLoggedInUser";
-    private static final String KEY_ID_LOGGED_IN_USER_COMPANY = "pref.idLoggedInUserCompany";
-    private static final String KEY_NAME_LOGGED_IN_USER_COMPANY = "pref.nameLoggedInUserCompany";
-    private static final String KEY_CNPJ_LOGGED_IN_USER_COMPANY = "pref.cnpjLoggedInUserCompany";
 
     private static final String KEY_INITIAL_DATA_IMPORTATION_DONE
             = "pref.initialDataImportationDone";
@@ -65,29 +57,13 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
         return getBooleanPreference(KEY_USER_LOGGED_IN, false);
     }
 
-    @Override public void setLoggedInUser(final Vendedor vendedor, final Empresa empresa) {
-        putIntegerPreference(KEY_ID_LOGGED_IN_USER, vendedor.getIdVendedor());
-        putStringPreference(KEY_NAME_LOGGED_IN_USER, vendedor.getNome());
-        putStringPreference(KEY_CPF_LOGGED_IN_USER, vendedor.getCpfCnpj());
-        putIntegerPreference(KEY_ID_LOGGED_IN_USER_COMPANY, empresa.getIdEmpresa());
-        putStringPreference(KEY_NAME_LOGGED_IN_USER_COMPANY, empresa.getNome());
-        putStringPreference(KEY_CNPJ_LOGGED_IN_USER_COMPANY, empresa.getCnpj());
+    @Override public void setLoggedInUser(final int userId) {
+        putIntegerPreference(KEY_ID_LOGGED_IN_USER, userId);
         putBooleanPreference(KEY_USER_LOGGED_IN , true);
     }
 
-    @Override public LoggedUser getLoggedInUser() {
-        if (!isUserLoggedIn()) {
-            return null;
-        }
-
-        int idVendedor = getIntegerPreference(KEY_ID_LOGGED_IN_USER, -1);
-        String nomeVendedor = getStringPreference(KEY_NAME_LOGGED_IN_USER, "");
-        String cpfVendedor = getStringPreference(KEY_CPF_LOGGED_IN_USER, "");
-        int idEmpresa = getIntegerPreference(KEY_ID_LOGGED_IN_USER_COMPANY, -1);
-        String nomeEmpresa = getStringPreference(KEY_NAME_LOGGED_IN_USER_COMPANY, "");
-        String cnpjEmpresa = getStringPreference(KEY_CNPJ_LOGGED_IN_USER_COMPANY, "");
-        return LoggedUser.create(
-                idVendedor, nomeVendedor, cpfVendedor, idEmpresa, nomeEmpresa, cnpjEmpresa);
+    @Override public int getLoggedInUser() {
+        return getIntegerPreference(KEY_ID_LOGGED_IN_USER, -1);
     }
 
     @Override public void setInitialDataImportationDone() {

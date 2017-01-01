@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.home;
 
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.MvpPresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.MvpView;
+import java.util.List;
 
 /**
  * @author Filipe Bezerra
@@ -10,7 +11,7 @@ interface HomeContract {
 
     interface View extends MvpView {
 
-        void setupViews(final String nomeVendedor, final String nomeEmpresa);
+        void setupViews(final String nomeVendedor, final List<String> nomeEmpresas);
 
         void startInitialConfiguration();
 
@@ -26,5 +27,7 @@ interface HomeContract {
         void initializeView();
 
         void handleViewAfterResulted(int requestCode, int resultCode);
+
+        void finalizeView();
     }
 }

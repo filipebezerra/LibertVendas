@@ -30,7 +30,7 @@ interface LoginContract {
 
         void showLoading();
 
-        void showChooseEmpresaParaLogar(List<Empresa> empresas);
+        void showSelectCompany(List<Empresa> empresas);
 
         void displayErrorIndicator();
 
@@ -57,7 +57,7 @@ interface LoginContract {
 
         void startLogin();
 
-        void handleChooseEmpresaParaLogar(Empresa empresa);
+        void handleCompanySelected(Empresa empresa);
 
         void cancel();
     }

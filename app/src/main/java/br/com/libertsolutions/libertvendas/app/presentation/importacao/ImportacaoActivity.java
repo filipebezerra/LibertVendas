@@ -66,16 +66,6 @@ public class ImportacaoActivity extends LibertVendasActivity implements Importac
         }
     }
 
-    @Override public void onStart() {
-        super.onStart();
-        mPresenter.registerEventBus();
-    }
-
-    @Override public void onStop() {
-        super.onStop();
-        mPresenter.unregisterEventBus();
-    }
-
     @Override protected void onResume() {
         super.onResume();
         mPresenter.startSync();

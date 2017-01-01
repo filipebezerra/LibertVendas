@@ -95,12 +95,12 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
         mButtonEntrar.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
     }
 
-    @Override public void showChooseEmpresaParaLogar(final List<Empresa> empresas) {
+    @Override public void showSelectCompany(final List<Empresa> empresas) {
         new MaterialDialog.Builder(this)
                 .title(R.string.title_dialog_choose_empresa_para_logar)
                 .items(empresas)
                 .itemsCallbackSingleChoice(-1, (dialog, itemView, which, text) -> {
-                    mPresenter.handleChooseEmpresaParaLogar(empresas.get(which));
+                    mPresenter.handleCompanySelected(empresas.get(which));
                     return true;
                 })
                 .alwaysCallSingleChoiceCallback()
@@ -152,7 +152,8 @@ public class LoginActivity extends LibertVendasActivity implements LoginContract
     }
 
     @Override public void showValidationError(final String message) {
-        FeedbackHelper.showMessageDialog(this, message);
+        displayMessageForField(mTextInputLayoutCpfCpnj, message);
+        displayMessageForField(mTextInputLayoutSenha, message);
     }
 
     @Override public void finalizeView() {

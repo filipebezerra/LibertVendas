@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import br.com.libertsolutions.libertvendas.app.DataInjection;
 import br.com.libertsolutions.libertvendas.app.PresentationInjection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
@@ -25,6 +26,9 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondarySwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Filipe Bezerra
@@ -49,8 +53,6 @@ public class HomeActivity extends LibertVendasActivity
     private Drawer mDrawer;
 
     private AccountHeader mAccountHeader;
-
-    private ProfileDrawerItem mPrimaryProfileDrawerItem;
 
     private PrimaryDrawerItem mHomeDrawerItem;
 
@@ -78,24 +80,28 @@ public class HomeActivity extends LibertVendasActivity
         super.onCreate(mInState = inState);
         setAsHomeActivity();
         mPresenter = new HomePresenter(
-                PresentationInjection.provideSettingsRepository(this));
+                PresentationInjection.provideSettingsRepository(this),
+                DataInjection.LocalRepositories.provideVendedorRepository());
         mPresenter.attachView(this);
-        mPresenter.registerEventBus();
         mPresenter.initializeView();
     }
 
-    @Override public void setupViews(final String nomeVendedor, final String nomeEmpresa) {
-        mPrimaryProfileDrawerItem = new ProfileDrawerItem()
-                .withName(nomeVendedor)
-                .withEmail(nomeEmpresa)
-                .withIcon(VectorDrawableCompat
-                        .create(getResources(), R.drawable.ic_user, getTheme()));
+    @Override public void setupViews(final String nomeVendedor, final List<String> nomeEmpresas) {
+        List<IProfile> profiles = new ArrayList<>();
+        for (String empresa : nomeEmpresas) {
+            profiles.add(new ProfileDrawerItem()
+                    .withName(nomeVendedor)
+                    .withEmail(empresa)
+                    .withIcon(VectorDrawableCompat
+                            .create(getResources(), R.drawable.ic_user, getTheme())));
+        }
 
         mAccountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.header_background)
-                .addProfiles(mPrimaryProfileDrawerItem)
+                .withProfiles(profiles)
                 .withSavedInstance(mInState)
+                .withOnlyMainProfileImageVisible(true)
                 .build();
 
         mHomeDrawerItem = new PrimaryDrawerItem()
@@ -244,7 +250,7 @@ public class HomeActivity extends LibertVendasActivity
     }
 
     @Override protected void onDestroy() {
-        mPresenter.unregisterEventBus();
+        mPresenter.finalizeView();
         mPresenter.detach();
         super.onDestroy();
     }

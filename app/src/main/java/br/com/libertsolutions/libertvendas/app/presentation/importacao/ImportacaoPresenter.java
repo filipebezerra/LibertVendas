@@ -16,14 +16,13 @@ import br.com.libertsolutions.libertvendas.app.domain.factory.TabelaFactory;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Tabela;
 import br.com.libertsolutions.libertvendas.app.presentation.android.ConnectivityServices;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import java.io.IOException;
 import java.util.List;
-import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.EventBus;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import timber.log.Timber;
@@ -57,8 +56,6 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
 
     private final TabelaRepository mTabelaRepository;
 
-    private LoggedUser mLoggedUser;
-
     private Throwable mErrorMakingNetworkCall;
 
     ImportacaoPresenter(
@@ -81,10 +78,6 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
         mTabelaRepository = tabelaRepository;
     }
 
-    @Subscribe(sticky = true) public void onUsuarioLogadoEvent(LoggedUserEvent event) {
-        mLoggedUser = event.getLoggedUser();
-    }
-
     @Override public boolean handleMenuVisibility() {
         return mSettingsRepository.isInitialDataImportationDone();
     }
@@ -101,7 +94,8 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
 
         getView().showLoading();
 
-        final String cnpjEmpresa = mLoggedUser.getCnpjEmpresa();
+        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        final String cnpjEmpresa = event.getVendedor().getEmpresaSelecionada().getCnpj();
 
         Observable<List<FormaPagamento>> getFormasPagamento = mFormaPagamentoService
                 .get(cnpjEmpresa)

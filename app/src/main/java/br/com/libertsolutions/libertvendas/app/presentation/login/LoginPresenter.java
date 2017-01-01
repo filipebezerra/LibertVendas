@@ -1,8 +1,12 @@
 package br.com.libertsolutions.libertvendas.app.presentation.login;
 
+import android.support.v4.util.Pair;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepository;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
+import br.com.libertsolutions.libertvendas.app.domain.dto.EmpresaDto;
+import br.com.libertsolutions.libertvendas.app.domain.dto.VendedorDto;
+import br.com.libertsolutions.libertvendas.app.domain.factory.EmpresaFactory;
 import br.com.libertsolutions.libertvendas.app.domain.factory.VendedorFactory;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
@@ -10,9 +14,12 @@ import br.com.libertsolutions.libertvendas.app.presentation.android.Connectivity
 import br.com.libertsolutions.libertvendas.app.presentation.exceptions.ValidationError;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import java.io.IOException;
+import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
+import rx.Subscriber;
+import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent.newEvent;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
@@ -32,7 +39,9 @@ class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginC
 
     private LoginInputValues mInputValues;
 
-    private Vendedor mVendedorLogado;
+    private VendedorDto mVendedor;
+
+    private List<Empresa> mEmpresas;
 
     LoginPresenter(
             final VendedorService vendedorService,
@@ -63,8 +72,8 @@ class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginC
                             return Observable
                                     .error(ValidationError.newError(pVendedorDto.mensagem));
                         } else {
-                            mVendedorLogado = VendedorFactory.createVendedor(pVendedorDto);
-                            return mVendedorRepository.save(mVendedorLogado);
+                            return Observable
+                                    .just(Pair.create(pVendedorDto.vendedor, pVendedorDto.empresas));
                         }
                     })
                     .observeOn(mainThread())
@@ -91,9 +100,11 @@ class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginC
         }
     }
 
-    private void onLoginResult(final Vendedor vendedor) {
-        if (vendedor.getEmpresas() != null && !vendedor.getEmpresas().isEmpty()) {
-            getView().showChooseEmpresaParaLogar(vendedor.getEmpresas());
+    private void onLoginResult(final Pair<VendedorDto, List<EmpresaDto>> vendedorDtoListPair) {
+        if (vendedorDtoListPair.second != null && !vendedorDtoListPair.second.isEmpty()) {
+            mVendedor = vendedorDtoListPair.first;
+            mEmpresas = EmpresaFactory.createListEmpresa(vendedorDtoListPair.second);
+            getView().showSelectCompany(mEmpresas);
         } else {
             getView().displayErrorIndicator();
             getView().unblockInputFields();
@@ -101,10 +112,25 @@ class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginC
         }
     }
 
-    @Override public void handleChooseEmpresaParaLogar(final Empresa empresa) {
-        mSettingsRepository.setLoggedInUser(mVendedorLogado, empresa);
-        EventBus.getDefault().postSticky(newEvent(mSettingsRepository.getLoggedInUser()));
-        getView().finalizeViewWithSuccess();
+    @Override public void handleCompanySelected(final Empresa empresaSelecionada) {
+        Vendedor vendedor = VendedorFactory
+                .createVendedor(mVendedor, mEmpresas, empresaSelecionada);
+        addSubscription(mVendedorRepository.save(vendedor)
+                .observeOn(mainThread())
+                .subscribe(new Subscriber<Vendedor>() {
+                    @Override public void onCompleted() {
+                        getView().finalizeViewWithSuccess();
+                    }
+
+                    @Override public void onError(final Throwable e) {
+                        Timber.e(e);
+                    }
+
+                    @Override public void onNext(final Vendedor vendedor) {
+                        mSettingsRepository.setLoggedInUser(mVendedor.idVendedor);
+                        EventBus.getDefault().postSticky(newEvent(vendedor));
+                    }
+                }));
     }
 
     private void onLoginError(final Throwable error) {
