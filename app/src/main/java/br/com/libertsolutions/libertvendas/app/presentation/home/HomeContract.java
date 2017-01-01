@@ -20,6 +20,10 @@ interface HomeContract {
 
         void startDataImportation();
 
+        boolean getSincronizacaoPedidoAutomaticaCheckState();
+
+        void setSincronizacaoPedidoAutomaticaCheckState(boolean state);
+
         void finalizeView();
     }
 

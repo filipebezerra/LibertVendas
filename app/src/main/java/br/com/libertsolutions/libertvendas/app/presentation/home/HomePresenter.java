@@ -90,15 +90,25 @@ class HomePresenter extends BasePresenter<HomeContract.View>
 
     @Override public void handleViewAfterResulted(final int requestCode, final int resultCode) {
         switch (requestCode) {
-            case Navigator.REQUEST_SETTINGS:
+            case Navigator.REQUEST_SETTINGS: {
+                if (resultCode == Navigator.RESULT_CANCELED &&
+                        !mSettingsRepository.isInitialConfigurationDone()) {
+                    getView().finalizeView();
+                    return;
+                }
+
+                Settings settings = mSettingsRepository.loadSettings();
+                if (getView().getSincronizacaoPedidoAutomaticaCheckState()
+                        != settings.isSincronizarPedidoAutomaticamente()) {
+                    getView().setSincronizacaoPedidoAutomaticaCheckState(
+                            settings.isSincronizarPedidoAutomaticamente());
+                }
+
+                break;
+            }
             case Navigator.REQUEST_LOGIN:
             case Navigator.REQUEST_IMPORTACAO: {
                 if (resultCode == Navigator.RESULT_CANCELED) {
-                    if (requestCode == Navigator.REQUEST_SETTINGS &&
-                            mSettingsRepository.isInitialConfigurationDone()) {
-                        return;
-                    }
-
                     getView().finalizeView();
                     return;
                 }

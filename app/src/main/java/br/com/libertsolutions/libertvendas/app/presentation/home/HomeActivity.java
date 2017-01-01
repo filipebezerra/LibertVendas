@@ -195,6 +195,14 @@ public class HomeActivity extends LibertVendasActivity
         navigate().toImportacao();
     }
 
+    @Override public boolean getSincronizacaoPedidoAutomaticaCheckState() {
+        return mSincronizacaoAutomaticaDrawerItem.isChecked();
+    }
+
+    @Override public void setSincronizacaoPedidoAutomaticaCheckState(final boolean state) {
+        mSincronizacaoAutomaticaDrawerItem.withChecked(state);
+    }
+
     @Override public void finalizeView() {
         finish();
     }
