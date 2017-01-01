@@ -24,4 +24,6 @@ public interface SettingsRepository {
     void setInitialDataImportationDone();
 
     boolean isInitialDataImportationDone();
+
+    void setSincronizarPedidoAutomaticamente(boolean isEnabled);
 }

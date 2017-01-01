@@ -86,7 +86,8 @@ public class HomeActivity extends LibertVendasActivity
         mPresenter.initializeView();
     }
 
-    @Override public void setupViews(final String nomeVendedor, final List<String> nomeEmpresas) {
+    @Override public void setupViews(final String nomeVendedor, final List<String> nomeEmpresas,
+            final boolean sincronizarPedidoAutomaticamente) {
         List<IProfile> profiles = new ArrayList<>();
         for (String empresa : nomeEmpresas) {
             profiles.add(new ProfileDrawerItem()
@@ -143,8 +144,11 @@ public class HomeActivity extends LibertVendasActivity
                 .withIcon(VectorDrawableCompat
                         .create(getResources(), R.drawable.ic_sync, getTheme()))
                 .withSelectedIconColorRes(R.color.color_primary)
-                .withChecked(true)
+                .withChecked(sincronizarPedidoAutomaticamente)
                 .withSelectable(false)
+                .withOnCheckedChangeListener(
+                        (drawerItem, buttonView, isChecked) ->
+                                mPresenter.handleSincronizacaoAutomaticaChanged(isChecked))
         ;
 
         mConfiguracoesDrawerItem = new SecondaryDrawerItem()

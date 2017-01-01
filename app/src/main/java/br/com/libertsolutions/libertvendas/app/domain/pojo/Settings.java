@@ -9,13 +9,18 @@ public final class Settings {
 
     private final String chaveAutenticacao;
 
-    private Settings(final String urlServidor, final String chaveAutenticacao) {
+    private final boolean mSincronizarPedidoAutomaticamente;
+
+    private Settings(final String urlServidor, final String chaveAutenticacao,
+            final boolean sincronizarPedidoAutomaticamente) {
         this.urlServidor = urlServidor;
         this.chaveAutenticacao = chaveAutenticacao;
+        mSincronizarPedidoAutomaticamente = sincronizarPedidoAutomaticamente;
     }
 
-    public static Settings create(final String urlServidor, final String chaveAutenticacao) {
-        return new Settings(urlServidor, chaveAutenticacao);
+    public static Settings create(final String urlServidor, final String chaveAutenticacao,
+            final boolean sincronizarPedidoAutomaticamente) {
+        return new Settings(urlServidor, chaveAutenticacao, sincronizarPedidoAutomaticamente);
     }
 
     public String getUrlServidor() {
@@ -24,5 +29,9 @@ public final class Settings {
 
     public String getChaveAutenticacao() {
         return chaveAutenticacao;
+    }
+
+    public boolean isSincronizarPedidoAutomaticamente() {
+        return mSincronizarPedidoAutomaticamente;
     }
 }

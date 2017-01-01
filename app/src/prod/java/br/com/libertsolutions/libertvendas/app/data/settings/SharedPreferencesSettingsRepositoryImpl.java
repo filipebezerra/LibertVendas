@@ -7,6 +7,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
 
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_chave_autenticacao;
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_endereco_servidor;
+import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_sincronizar_pedido_automaticamente;
 
 /**
  * @author Filipe Bezerra
@@ -49,8 +50,10 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
                 .getString(mContext.getString(key_pref_endereco_servidor), "");
         final String chaveAutenticacao = mSharedPreferences
                 .getString(mContext.getString(key_pref_chave_autenticacao), "");
+        final boolean sincronizarPedidoAutomaticamente = mSharedPreferences.getBoolean(
+                mContext.getString(key_pref_sincronizar_pedido_automaticamente), true);
 
-        return Settings.create(urlServidor, chaveAutenticacao);
+        return Settings.create(urlServidor, chaveAutenticacao, sincronizarPedidoAutomaticamente);
     }
 
     @Override public boolean isUserLoggedIn() {
@@ -72,6 +75,11 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
 
     @Override public boolean isInitialDataImportationDone() {
         return getBooleanPreference(KEY_INITIAL_DATA_IMPORTATION_DONE, false);
+    }
+
+    @Override public void setSincronizarPedidoAutomaticamente(final boolean isEnabled) {
+        putBooleanPreference(mContext.getString(key_pref_sincronizar_pedido_automaticamente),
+                isEnabled);
     }
 
     private void putBooleanPreference(final String key, final boolean value) {

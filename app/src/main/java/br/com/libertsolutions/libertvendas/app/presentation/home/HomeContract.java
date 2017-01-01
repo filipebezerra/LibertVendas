@@ -11,7 +11,8 @@ interface HomeContract {
 
     interface View extends MvpView {
 
-        void setupViews(final String nomeVendedor, final List<String> nomeEmpresas);
+        void setupViews(final String nomeVendedor, final List<String> nomeEmpresas,
+                final boolean sincronizarPedidoAutomaticamente);
 
         void startInitialConfiguration();
 
@@ -27,6 +28,8 @@ interface HomeContract {
         void initializeView();
 
         void handleViewAfterResulted(int requestCode, int resultCode);
+
+        void handleSincronizacaoAutomaticaChanged(boolean isEnabled);
 
         void finalizeView();
     }

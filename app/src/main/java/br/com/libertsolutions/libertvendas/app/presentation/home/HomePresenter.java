@@ -3,6 +3,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.home;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
@@ -66,7 +67,7 @@ class HomePresenter extends BasePresenter<HomeContract.View>
         if (shouldPostEvent) {
             EventBus.getDefault().postSticky(newEvent(mVendedor));
         }
-        
+
         if (!mSettingsRepository.isInitialDataImportationDone()) {
             getView().startDataImportation();
             return;
@@ -81,7 +82,10 @@ class HomePresenter extends BasePresenter<HomeContract.View>
             }
         }
 
-        getView().setupViews(mVendedor.getNome(), nomeEmpresas);
+        Settings settings = mSettingsRepository.loadSettings();
+
+        getView().setupViews(mVendedor.getNome(), nomeEmpresas,
+                settings.isSincronizarPedidoAutomaticamente());
     }
 
     @Override public void handleViewAfterResulted(final int requestCode, final int resultCode) {
@@ -103,6 +107,10 @@ class HomePresenter extends BasePresenter<HomeContract.View>
                 break;
             }
         }
+    }
+
+    @Override public void handleSincronizacaoAutomaticaChanged(final boolean isEnabled) {
+        mSettingsRepository.setSincronizarPedidoAutomaticamente(isEnabled);
     }
 
     @Override public void finalizeView() {
