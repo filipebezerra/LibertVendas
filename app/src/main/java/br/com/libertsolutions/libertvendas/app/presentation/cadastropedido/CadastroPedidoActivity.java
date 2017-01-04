@@ -90,22 +90,22 @@ public class CadastroPedidoActivity extends LibertVendasActivity
         mViewPager.setCurrentItem(PAGE_FINALIZANDO_PEDIDO, true);
     }
 
-    @Override public void initializeSteps(List<ItemPedido> pItensPedido, Cliente pClientePedido) {
-        addStepListaProdutos(pItensPedido);
-        addStepListaClientes(pClientePedido);
+    @Override public void initializeSteps(List<ItemPedido> itensPedido, Cliente cliente) {
+        addStepListaProdutos(itensPedido);
+        addStepListaClientes(cliente);
         addStepFinalizandoPedido();
     }
 
-    private void addStepListaProdutos(List<ItemPedido> itens) {
+    private void addStepListaProdutos(List<ItemPedido> itensPedido) {
         if (!mTabAdapter.hasPosition(PAGE_LISTA_PRODUTOS)) {
-            mTabAdapter.addFragment(ListaProdutosFragment.newInstance(true, itens),
+            mTabAdapter.addFragment(ListaProdutosFragment.newInstance(true, itensPedido),
                     getString(R.string.title_fragment_selecione_produtos));
         }
     }
 
     private void addStepListaClientes(Cliente cliente) {
         if (!mTabAdapter.hasPosition(PAGE_LISTA_CLIENTES)) {
-            mTabAdapter.addFragment(ListaClientesFragment.newInstance(true),
+            mTabAdapter.addFragment(ListaClientesFragment.newInstance(true, cliente),
                     getString(R.string.title_fragment_selecione_cliente));
         }
     }

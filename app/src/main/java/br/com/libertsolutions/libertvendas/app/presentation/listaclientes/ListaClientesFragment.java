@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import br.com.libertsolutions.libertvendas.app.DataInjection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
@@ -24,6 +23,8 @@ import butterknife.BindView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.List;
 
+import static br.com.libertsolutions.libertvendas.app.DataInjection.LocalRepositories.provideClienteRepository;
+
 /**
  * @author Filipe Bezerra
  */
@@ -33,6 +34,9 @@ public class ListaClientesFragment extends LibertVendasFragment
     public static final String TAG = ListaClientesFragment.class.getName();
 
     private static final String ARG_EXTRA_IS_SELECTION_MODE = TAG + ".argExtraIsSelectionMode";
+
+    private static final String ARG_EXTRA_CLIENTE_PEDIDO_EM_EDICAO
+            = TAG  + ".argExtraClientePedidoEmEdicao";
 
     @BindView(R.id.recycler_view_clientes) protected RecyclerView mRecyclerViewClientes;
 
@@ -46,10 +50,14 @@ public class ListaClientesFragment extends LibertVendasFragment
 
     private OnItemTouchListener mRecyclerViewItemTouchListener = null;
 
-    public static ListaClientesFragment newInstance(boolean isSelectionMode) {
+    public static ListaClientesFragment newInstance(
+            boolean isSelectionMode, @Nullable Cliente cliente) {
         ListaClientesFragment fragment = new ListaClientesFragment();
         Bundle arguments = new Bundle();
         arguments.putBoolean(ARG_EXTRA_IS_SELECTION_MODE, isSelectionMode);
+        if (cliente != null) {
+            arguments.putParcelable(ARG_EXTRA_CLIENTE_PEDIDO_EM_EDICAO, cliente);
+        }
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -70,9 +78,10 @@ public class ListaClientesFragment extends LibertVendasFragment
         mRecyclerViewClientes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         final boolean isSelectionMode = getArguments().getBoolean(ARG_EXTRA_IS_SELECTION_MODE);
-
-        mPresenter = new ListaClientesPresenter(isSelectionMode,
-                DataInjection.LocalRepositories.provideClienteRepository());
+        final Cliente clientePedidoEmEdicao
+                = getArguments().getParcelable(ARG_EXTRA_CLIENTE_PEDIDO_EM_EDICAO);
+        mPresenter = new ListaClientesPresenter(
+                provideClienteRepository(), isSelectionMode, clientePedidoEmEdicao);
         mPresenter.attachView(this);
         mPresenter.loadClientes();
     }

@@ -162,7 +162,7 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
 
     @Subscribe(sticky = true) public void onProdutosSelecionadosEvent(ProdutosSelecionadosEvent event) {
         mProdutosSelecionados = event.getProdutos();
-        mTabelaPadrao = event.getTabela();;
+        mTabelaPadrao = event.getTabela();
         displayTotalProdutos(calculateTotalProdutosSelecionados());
         EventBus.getDefault().removeStickyEvent(event);
     }

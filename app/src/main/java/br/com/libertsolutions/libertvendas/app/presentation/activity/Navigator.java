@@ -74,7 +74,7 @@ public final class Navigator {
         mActivity.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container,
-                        ListaClientesFragment.newInstance(false), ListaClientesFragment.TAG)
+                        ListaClientesFragment.newInstance(false, null), ListaClientesFragment.TAG)
                 .commit();
         mActivity.setTitle(R.string.title_fragment_lista_clientes);
     }

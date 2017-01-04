@@ -5,7 +5,6 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.NewCustomerEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.ObservableUtils;
-import java.util.Collections;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -13,6 +12,8 @@ import rx.Observable;
 import rx.Subscriber;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent.newEvent;
+import static java.util.Collections.emptyList;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -21,15 +22,19 @@ import static rx.android.schedulers.AndroidSchedulers.mainThread;
 class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
         implements ListaClientesContract.Presenter {
 
-    private final boolean mIsSelectionMode;
-
     private final ClienteRepository mClienteRepository;
+
+    private final boolean mIsSelectionMode;
+    private final Cliente mClientePedidoEmEdicao;
 
     private List<Cliente> mClientes;
 
-    ListaClientesPresenter(final boolean isSelectionMode, final ClienteRepository clienteRepository) {
-        mIsSelectionMode = isSelectionMode;
+    ListaClientesPresenter(
+            final ClienteRepository clienteRepository,
+            final boolean isSelectionMode, final Cliente clientePedidoEmEdicao) {
         mClienteRepository = clienteRepository;
+        mIsSelectionMode = isSelectionMode;
+        mClientePedidoEmEdicao = clientePedidoEmEdicao;
     }
 
     @Override public void loadClientes() {
@@ -41,7 +46,7 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
 
         addSubscription(Observable
                 .concat(clientesFromMemoryCache, clientesFromDiskCache)
-                .firstOrDefault(Collections.emptyList())
+                .firstOrDefault(emptyList())
                 .observeOn(mainThread())
                 .subscribe(new Subscriber<List<Cliente>>() {
                     @Override public void onStart() {
@@ -57,8 +62,20 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
                         getView().showClientes(mClientes);
                     }
 
-                    @Override public void onCompleted() {}
+                    @Override public void onCompleted() {
+                        preSelectCliente();
+                    }
                 }));
+    }
+
+    private void preSelectCliente() {
+        if (mClientePedidoEmEdicao != null) {
+            int indexOf = mClientes.indexOf(mClientePedidoEmEdicao);
+            if (indexOf != -1) {
+                getView().updateChangedItemAtPosition(indexOf);
+            }
+            EventBus.getDefault().postSticky(newEvent(mClientePedidoEmEdicao));
+        }
     }
 
     @Override public void handleItemSelected(final int position) {
@@ -66,7 +83,7 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
             final Cliente cliente = mClientes.get(position);
 
             if (mIsSelectionMode) {
-                EventBus.getDefault().postSticky(ClienteSelecionadoEvent.newEvent(cliente));
+                EventBus.getDefault().postSticky(newEvent(cliente));
             } else {
                 getView().navigateToCadastroCliente(cliente);
             }
