@@ -1,9 +1,11 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listapedidos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import br.com.libertsolutions.libertvendas.app.R;
@@ -25,6 +27,8 @@ public class TabsFragment extends LibertVendasFragment {
 
     private TabLayout mTabLayout;
 
+    private TabAdapter mTabAdapter;
+
     public static TabsFragment newInstance() {
         return new TabsFragment();
     }
@@ -44,17 +48,24 @@ public class TabsFragment extends LibertVendasFragment {
             mTabLayout = (TabLayout) LayoutInflater.from(getContext())
                     .inflate(R.layout.tab_layout, mAppBarLayoutActivity, false);
 
-            TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
-            tabAdapter.addFragment(ListaPedidosFragment.newInstance(false),
+            mTabAdapter = new TabAdapter(getChildFragmentManager());
+            mTabAdapter.addFragment(ListaPedidosFragment.newInstance(false),
                     getString(R.string.title_fragment_todos_pedidos));
-            tabAdapter.addFragment(ListaPedidosFragment.newInstance(true),
+            mTabAdapter.addFragment(ListaPedidosFragment.newInstance(true),
                     getString(R.string.title_fragment_pedidos_nao_enviados));
-            mViewPager.setAdapter(tabAdapter);
+            mViewPager.setAdapter(mTabAdapter);
 
             mTabLayout.setupWithViewPager(mViewPager);
         }
 
         mAppBarLayoutActivity.addView(mTabLayout);
+    }
+
+    @Override public void onActivityResult(final int requestCode, final int resultCode,
+            final Intent data) {
+        for (Fragment fragment : mTabAdapter.getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override public void onDestroyView() {

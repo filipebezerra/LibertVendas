@@ -287,6 +287,7 @@ public class HomeActivity extends LibertVendasActivity
             final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
             case Navigator.REQUEST_EDITAR_CLIENTE:
+            case Navigator.REQUEST_EDITAR_PEDIDO:
                 getSupportFragmentManager().findFragmentById(R.id.fragment_container)
                         .onActivityResult(requestCode, resultCode, data);
                 break;
