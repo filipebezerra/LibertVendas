@@ -27,7 +27,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
 
     private final boolean mIsSelectionMode;
 
-    private final List<ItemPedido> mItens;
+    private final List<ItemPedido> mItensPedido;
 
     private final TabelaRepository mTabelaRepository;
 
@@ -36,10 +36,10 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
     private Tabela mTabelaPadrao;
 
     ListaProdutosPresenter(
-            final boolean isSelectionMode, List<ItemPedido> itens,
+            final boolean isSelectionMode, List<ItemPedido> itensPedido,
             final TabelaRepository tabelaRepository) {
         mIsSelectionMode = isSelectionMode;
-        mItens = itens;
+        mItensPedido = itensPedido;
         mTabelaRepository = tabelaRepository;
     }
 
@@ -67,7 +67,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
                     }
 
                     @Override public void onError(final Throwable e) {
-                        Timber.e(e);
+                        Timber.e(e, "Could not load products from local database");
                         getView().hideLoading();
                     }
 
@@ -76,22 +76,27 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
                     }
 
                     @Override public void onCompleted() {
-                        showProdutos();
+                        setProdutosPreSelecionados();
+                        getView().showProdutos(mProdutos, mIsSelectionMode);
                     }
                 }));
     }
 
-    private void showProdutos() {
-        if (mItens != null && !mItens.isEmpty()) {
-            for (ItemPedido item : mItens) {
+    private void setProdutosPreSelecionados() {
+        if (mItensPedido != null && !mItensPedido.isEmpty()) {
+            List<ProdutoVo> produtoPreSelecionados = new ArrayList<>();
+
+            for (ItemPedido item : mItensPedido) {
                 for (ProdutoVo vo : mProdutos) {
                     if (item.getProduto().equals(vo.getProduto())) {
-                            vo.setQuantidade(item.getQuantidade());
+                        vo.setQuantidade(item.getQuantidade());
+                        produtoPreSelecionados.add(vo);
                     }
                 }
             }
+
+            EventBus.getDefault().postSticky(newEvent(produtoPreSelecionados, mTabelaPadrao));
         }
-        getView().showProdutos(mProdutos, mIsSelectionMode);
     }
 
     @Override public boolean handleActionDoneVisibility() {

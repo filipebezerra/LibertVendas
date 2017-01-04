@@ -46,12 +46,12 @@ public class ListaProdutosFragment extends LibertVendasFragment
     private OnGlobalLayoutListener sRecyclerViewLayoutListener = null;
 
     public static ListaProdutosFragment newInstance(
-            boolean isSelectionMode,  @Nullable List<ItemPedido> itens) {
+            boolean isSelectionMode,  @Nullable List<ItemPedido> itensPedido) {
         ListaProdutosFragment fragment = new ListaProdutosFragment();
         Bundle arguments = new Bundle();
         arguments.putBoolean(ARG_EXTRA_IS_SELECTION_MODE, isSelectionMode);
-        if (itens != null && !itens.isEmpty()) {
-            arguments.putParcelableArrayList(ARG_EXTRA_ITENS_PEDIDO, new ArrayList<>(itens));
+        if (itensPedido != null && !itensPedido.isEmpty()) {
+            arguments.putParcelableArrayList(ARG_EXTRA_ITENS_PEDIDO, new ArrayList<>(itensPedido));
         }
         fragment.setArguments(arguments);
         return fragment;
