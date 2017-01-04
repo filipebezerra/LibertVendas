@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_importacao"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_importacao"
+    tools:context=".presentation.importacao.ImportacaoActivity"
+    >
+
+    <com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView
+        android:id="@+id/loading_view"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:background="@android:color/transparent"
+        app:mainColor="?attr/colorAccent"
+        app:secondaryColor="?attr/textColorError"
+        app:textColor="@android:color/white"
+        />
+
+</FrameLayout>

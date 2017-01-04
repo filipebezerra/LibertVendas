@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment"
+    >
+    <item
+        android:id="@+id/action_search"
+        android:title="@string/action_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:orderInCategory="0"
+        app:showAsAction="always"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        />
+
+    <item
+        android:id="@+id/action_done"
+        android:title="@string/action_done"
+        android:icon="@drawable/ic_done_white_24dp"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        />
+</menu>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <android.support.v7.widget.CardView
+        style="@style/Widget.LibertApp.CardView"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <View
+                android:id="@+id/view_status_pedido"
+                android:layout_width="@dimen/keyline_large"
+                android:layout_height="@dimen/keyline_large"
+                android:layout_marginLeft="@dimen/keyline_medium"
+                android:layout_marginStart="@dimen/keyline_medium"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:background="@color/color_pedido_enviado"
+                />
+
+            <TextView
+                android:id="@+id/text_view_numero_pedido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/keyline_medium"
+                android:layout_toLeftOf="@id/view_status_pedido"
+                android:layout_toStartOf="@id/view_status_pedido"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                tools:text="@string/example_text_numero_pedido"
+                />
+
+            <TextView
+                android:id="@+id/text_view_nome_cliente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/keyline_medium"
+                android:layout_below="@id/text_view_numero_pedido"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                tools:text="@string/example_text_nome_cliente"
+                />
+
+            <TextView
+                android:id="@+id/text_view_total_pedido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view_nome_cliente"
+                android:paddingBottom="@dimen/keyline_medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:textColor="?attr/colorAccent"
+                tools:text="@string/example_text_total_pedido"
+                />
+
+            <TextView
+                android:id="@+id/text_view_data_pedido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view_total_pedido"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                tools:text="@string/example_text_data_pedido"
+                />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

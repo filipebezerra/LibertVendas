@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#4ea8f3</color>
+    <color name="color_primary_dark">#1976D2</color>
+    <color name="color_accent">#00BFA5</color>
+    <color name="color_window_background">@android:color/white</color>
+    <color name="color_error">#DD2C00</color>
+
+    <color name="color_primary_pressed">#6a4ea8f3</color>
+    <color name="color_primary_focused">#964ea8f3</color>
+
+    <color name="color_accent_pressed">#6a00BFA5</color>
+    <color name="color_accent_focused">#9600BFA5</color>
+
+    <color name="color_error_pressed">#6aDD2C00</color>
+    <color name="color_error_focused">#96DD2C00</color>
+
+    <color name="background_card">#fff</color>
+    <color name="text_black_87">#de000000</color>
+    <color name="material_grey_500">#9E9E9E</color>
+    <color name="material_grey_700">#616161</color>
+
+    <color name="color_tab_indicator">#0D47A1</color>
+    <color name="color_pedido_pendente">#2196F3</color>
+    <color name="color_pedido_enviado">#4CAF50</color>
+    <color name="color_pedido_cancelado">#F44336</color>
+</resources>

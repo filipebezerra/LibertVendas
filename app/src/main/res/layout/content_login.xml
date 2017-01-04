@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_login"
+    tools:context=".presentation.login.LoginActivity"
+    >
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:contentPadding="@dimen/activity_horizontal_margin"
+        >
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchColumns="1"
+            >
+
+            <TableRow>
+
+                <ImageView
+                    android:layout_width="@dimen/keyline_icon"
+                    android:layout_height="@dimen/keyline_icon"
+                    android:layout_gravity="center_vertical"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/ic_perm_identity_accent_24dp"
+                    />
+
+                <android.support.design.widget.TextInputLayout
+                    style="@style/Widget.LibertApp.FormInputLayout"
+                    android:id="@+id/input_layout_cpf_cnpj"
+                    android:layout_marginLeft="@dimen/keyline_large"
+                    android:layout_marginStart="@dimen/keyline_large"
+                    >
+
+                    <android.support.design.widget.TextInputEditText
+                        style="@style/Widget.LibertApp.EditableField"
+                        android:id="@+id/edit_text_cpf_cnpj"
+                        android:hint="@string/hint_cpf"
+                        android:inputType="numberSigned"
+                        android:imeOptions="actionNext"
+                        android:maxLines="1"
+                        >
+
+                        <requestFocus />
+
+                    </android.support.design.widget.TextInputEditText>
+
+                </android.support.design.widget.TextInputLayout>
+
+            </TableRow>
+
+            <TableRow>
+
+                <ImageView
+                    android:layout_width="@dimen/keyline_icon"
+                    android:layout_height="@dimen/keyline_icon"
+                    android:layout_gravity="center_vertical"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/ic_lock_accent_24dp"
+                    />
+
+                <android.support.design.widget.TextInputLayout
+                    style="@style/Widget.LibertApp.FormInputLayout"
+                    android:id="@+id/input_layout_senha"
+                    android:layout_marginLeft="@dimen/keyline_large"
+                    android:layout_marginStart="@dimen/keyline_large"
+                    app:passwordToggleEnabled="true"
+                    >
+
+                    <android.support.design.widget.TextInputEditText
+                        style="@style/Widget.LibertApp.EditableField"
+                        android:id="@+id/edit_text_senha"
+                        android:hint="@string/hint_senha"
+                        android:inputType="textPassword"
+                        android:imeOptions="actionUnspecified"
+                        android:imeActionId="@integer/action_login"
+                        android:imeActionLabel="@string/text_login"
+                        android:maxLines="1"
+                        />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </TableRow>
+
+            <TableRow>
+
+                <com.dd.CircularProgressButton
+                    android:id="@+id/button_entrar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:layout_span="2"
+                    app:cpb_textIdle="@string/text_login"
+                    app:cpb_selectorIdle="@drawable/idle_state_selector"
+                    app:cpb_textError="@string/text_login_error"
+                    app:cpb_selectorError="@drawable/error_state_selector"
+                    app:cpb_textComplete="@string/text_login_complete"
+                    app:cpb_selectorComplete="@drawable/complete_state_selector"
+                    app:cpb_textProgress="@string/text_login_progress"
+                    app:cpb_colorIndicator="?attr/colorAccent"
+                    />
+
+            </TableRow>
+
+        </TableLayout>
+
+    </android.support.v7.widget.CardView>
+
+</android.support.v4.widget.NestedScrollView>
