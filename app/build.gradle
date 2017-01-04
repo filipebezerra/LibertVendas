@@ -11,8 +11,8 @@ android {
         applicationId "br.com.libertsolutions.libertvendas.app"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 25081
-        versionName "0.8.1-beta"
+        versionCode 25082
+        versionName "0.8.2-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "LibertVendas-$versionName")
