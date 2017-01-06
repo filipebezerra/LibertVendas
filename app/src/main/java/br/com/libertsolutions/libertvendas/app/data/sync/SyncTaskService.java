@@ -106,8 +106,8 @@ public class SyncTaskService extends GcmTaskService {
                     Timber.d("post request for customers done successfully");
                     ClienteDto body = response.body();
 
-                    Timber.d("committing changes to customers dated from %s to local database with id",
-                            body.ultimaAlteracao, body.idCliente);
+                    Timber.d("committing changes to customers dated from %s to local "
+                            + "database with id %d", body.ultimaAlteracao, body.idCliente);
                     getRealm().beginTransaction();
                     customer.setIdCliente(body.idCliente);
                     customer.setUltimaAlteracao(body.ultimaAlteracao);
@@ -131,7 +131,7 @@ public class SyncTaskService extends GcmTaskService {
                 .findAll();
 
         if (!changedCustomers.isEmpty()) {
-            Timber.d("found %d changed customers to sync", newCustomers.size());
+            Timber.d("found %d changed customers to sync", changedCustomers.size());
 
             try {
                 Response<List<ClienteDto>> response = getClienteService()
@@ -153,8 +153,8 @@ public class SyncTaskService extends GcmTaskService {
                             .equalTo("idCliente", dto.idCliente)
                             .findFirst();
 
-                    Timber.d("committing changes to customers dated from %s to local database with id",
-                            dto.ultimaAlteracao, dto.idCliente);
+                    Timber.d("committing changes to customers dated from %s to local database "
+                            + "with id %id", dto.ultimaAlteracao, dto.idCliente);
                     getRealm().beginTransaction();
                     customer.setUltimaAlteracao(dto.ultimaAlteracao);
                     customer.setStatus(Cliente.STATUS_SINCRONIZADO);
