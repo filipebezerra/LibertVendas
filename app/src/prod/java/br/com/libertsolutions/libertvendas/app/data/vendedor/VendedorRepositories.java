@@ -1,8 +1,10 @@
 package br.com.libertsolutions.libertvendas.app.data.vendedor;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import br.com.libertsolutions.libertvendas.app.NetworkInjection;
+import br.com.libertsolutions.libertvendas.app.data.repository.RealmMapper;
+import br.com.libertsolutions.libertvendas.app.domain.entity.VendedorEntity;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
+
+import static br.com.libertsolutions.libertvendas.app.NetworkInjection.provideRetrofit;
 
 /**
  * @author Filipe Bezerra
@@ -15,17 +17,26 @@ public final class VendedorRepositories {
 
     private static VendedorRepository sRepository = null;
 
-    public synchronized static VendedorService getService(@NonNull Context context) {
+    private static RealmMapper<Vendedor, VendedorEntity> sMapper = null;
+
+    public synchronized static VendedorService getService() {
         if (sService == null) {
-            sService = NetworkInjection.provideRetrofit().create(VendedorService.class);
+            sService = provideRetrofit().create(VendedorService.class);
         }
         return sService;
     }
 
     public synchronized static VendedorRepository getRepository() {
         if (sRepository == null) {
-            sRepository = new VendedorRepositoryImpl(new VendedorMapper(new EmpresaMapper()));
+            sRepository = new VendedorRepositoryImpl(getMapper());
         }
         return sRepository;
+    }
+
+    public synchronized static RealmMapper<Vendedor, VendedorEntity> getMapper() {
+        if (sMapper == null) {
+            sMapper = new VendedorMapper(new EmpresaMapper());
+        }
+        return sMapper;
     }
 }

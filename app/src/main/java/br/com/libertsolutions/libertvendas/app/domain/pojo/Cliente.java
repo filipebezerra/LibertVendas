@@ -14,6 +14,11 @@ public final class Cliente implements Parcelable {
     private static final String NAO_FOI_ALTERADO = "";
     private static final String SEM_CONTATO = "";
 
+    public static final int STATUS_IMPORTADO = 1;
+    public static final int STATUS_CRIADO = 2;
+    public static final int STATUS_MODIFICADO = 3;
+    public static final int STATUS_SINCRONIZADO = 4;
+
     private final int id;
 
     private final int idCliente;
@@ -50,6 +55,12 @@ public final class Cliente implements Parcelable {
 
     private final boolean ativo;
 
+    private final String cnpjEmpresa;
+
+    private final String cpfCnpjVendedor;
+
+    private final int status;
+
     public static final Creator<Cliente> CREATOR = new Creator<Cliente>() {
         @Override public Cliente createFromParcel(Parcel in) {
             return new Cliente(in);
@@ -64,24 +75,27 @@ public final class Cliente implements Parcelable {
             final String newNome, final int newTipo, final String newCfCnpj, final String newEmail,
             final String newTelefone, final String newTelefone2, final String newEndereco,
             final String newCep, final Cidade newCidade, final String newBairro,
-            final String newNumero, final String newComplemento) {
+            final String newNumero, final String newComplemento, final String cnpjEmpresa,
+            final String cpfCnpjVendedor) {
         return new Cliente(
                 SEM_ID, SEM_ID, SEM_CODIGO, newNome, newTipo, newCfCnpj, SEM_CONTATO, newEmail,
                 newTelefone, newTelefone2, newEndereco, newCep, newCidade, newBairro, newNumero,
-                newComplemento, NAO_FOI_ALTERADO, ATIVO);
+                newComplemento, NAO_FOI_ALTERADO, ATIVO, cnpjEmpresa, cpfCnpjVendedor,
+                STATUS_CRIADO);
     }
 
-    public static Cliente editing(
+    public static Cliente changed(
             Cliente clienteEdited, final String newNome, final int newTipo, final String newCfCnpj,
             final String newEmail, final String newTelefone, final String newTelefone2,
             final String newEndereco, final String newCep, final Cidade newCidade,
             final String newBairro, final String newNumero, final String newComplemento,
-            final String ultimaAlteracao) {
+            final String ultimaAlteracao, final String cnpjEmpresa, final String cpfCnpjVendedor) {
         return new Cliente(
                 clienteEdited.getId(), clienteEdited.getIdCliente(), clienteEdited.getCodigo(),
                 newNome, newTipo, newCfCnpj, clienteEdited.getContato(), newEmail, newTelefone,
                 newTelefone2, newEndereco, newCep, newCidade, newBairro, newNumero, newComplemento,
-                ultimaAlteracao, clienteEdited.isAtivo());
+                ultimaAlteracao, clienteEdited.isAtivo(), cnpjEmpresa, cpfCnpjVendedor,
+                STATUS_MODIFICADO);
     }
 
     public static Cliente create(
@@ -92,7 +106,8 @@ public final class Cliente implements Parcelable {
             final String ultimaAlteracao, final boolean ativo) {
         return new Cliente(
                 SEM_ID, idCliente, codigo, nome, tipo, cpfCnpj, contato, email, telefone, telefone2,
-                endereco, cep, cidade, bairro, numero, complemento, ultimaAlteracao, ativo);
+                endereco, cep, cidade, bairro, numero, complemento, ultimaAlteracao, ativo, null,
+                null, STATUS_IMPORTADO);
     }
 
     public static Cliente map(
@@ -100,10 +115,12 @@ public final class Cliente implements Parcelable {
             final int tipo, final String cpfCnpj, final String contato, final String email,
             final String telefone, final String telefone2, final String endereco, final String cep,
             final Cidade cidade, final String bairro, final String numero, final String complemento,
-            final String ultimaAlteracao, final boolean ativo) {
+            final String ultimaAlteracao, final boolean ativo, final String cnpjEmpresa,
+            final String cpfCnpjVendedor, int status) {
         return new Cliente(
                 id, idCliente, codigo, nome, tipo, cpfCnpj, contato, email, telefone, telefone2,
-                endereco, cep, cidade, bairro, numero, complemento, ultimaAlteracao, ativo);
+                endereco, cep, cidade, bairro, numero, complemento, ultimaAlteracao, ativo,
+                cnpjEmpresa, cpfCnpjVendedor, status);
     }
 
     private Cliente(Parcel in) {
@@ -125,6 +142,9 @@ public final class Cliente implements Parcelable {
         complemento = in.readString();
         ultimaAlteracao = in.readString();
         ativo = in.readByte() == 1;
+        cnpjEmpresa = in.readString();
+        cpfCnpjVendedor = in.readString();
+        status = in.readInt();
     }
 
     private Cliente(
@@ -132,7 +152,8 @@ public final class Cliente implements Parcelable {
             final int tipo, final String cpfCnpj, final String contato, final String email,
             final String telefone, final String telefone2, final String endereco, final String cep,
             final Cidade cidade, final String bairro, final String numero, final String complemento,
-            final String ultimaAlteracao, final boolean ativo) {
+            final String ultimaAlteracao, final boolean ativo, final String cnpjEmpresa,
+            final String cpfCnpjVendedor, final int status) {
         this.id = id;
         this.idCliente = idCliente;
         this.codigo = codigo;
@@ -151,6 +172,9 @@ public final class Cliente implements Parcelable {
         this.complemento = complemento;
         this.ultimaAlteracao = ultimaAlteracao;
         this.ativo = ativo;
+        this.cnpjEmpresa = cnpjEmpresa;
+        this.cpfCnpjVendedor = cpfCnpjVendedor;
+        this.status = status;
     }
 
     public int getId() {
@@ -225,6 +249,18 @@ public final class Cliente implements Parcelable {
         return ativo;
     }
 
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
+    }
+
+    public String getCpfCnpjVendedor() {
+        return cpfCnpjVendedor;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
     @Override public boolean equals(Object anotherCliente) {
         if (this == anotherCliente) {
             return true;
@@ -265,5 +301,8 @@ public final class Cliente implements Parcelable {
         out.writeString(complemento);
         out.writeString(ultimaAlteracao);
         out.writeByte((byte) (ativo ? 1 : 0));
+        out.writeString(cnpjEmpresa);
+        out.writeString(cpfCnpjVendedor);
+        out.writeInt(status);
     }
 }

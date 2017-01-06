@@ -13,6 +13,7 @@ import br.com.libertsolutions.libertvendas.app.data.formapagamento.FormaPagament
 import br.com.libertsolutions.libertvendas.app.data.formapagamento.FormaPagamentoService;
 import br.com.libertsolutions.libertvendas.app.data.pedido.PedidoRepositories;
 import br.com.libertsolutions.libertvendas.app.data.pedido.PedidoRepository;
+import br.com.libertsolutions.libertvendas.app.data.pedido.PedidoService;
 import br.com.libertsolutions.libertvendas.app.data.tabela.TabelaRepositories;
 import br.com.libertsolutions.libertvendas.app.data.tabela.TabelaRepository;
 import br.com.libertsolutions.libertvendas.app.data.tabela.TabelaService;
@@ -63,7 +64,7 @@ public final class DataInjection {
     public static final class RemoteRepositories {
 
         public static VendedorService provideVendedorService() {
-            return VendedorRepositories.getService(provideContext());
+            return VendedorRepositories.getService();
         }
 
         public static FormaPagamentoService provideFormaPagamentoService() {
@@ -80,6 +81,10 @@ public final class DataInjection {
 
         public static TabelaService provideTabelaService() {
             return TabelaRepositories.getService(provideContext());
+        }
+
+        public static PedidoService providePedidoService() {
+            return PedidoRepositories.getService();
         }
     }
 }

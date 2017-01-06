@@ -41,4 +41,6 @@ public class ClienteDto {
     @SerializedName("ultimaAlteracao") @Expose public String ultimaAlteracao;
 
     @SerializedName("ativo") @Expose public boolean ativo;
+
+    @SerializedName("appKey") @Expose public String appKey;
 }

@@ -49,6 +49,12 @@ import io.realm.annotations.Required;
 
     private Boolean ativo;
 
+    private String cnpjEmpresa;
+
+    private String cpfCnpjVendedor;
+
+    private int status;
+
     @Override public ClienteEntity setId(final Integer id) {
         if (id > 0) {
             this.id = id;
@@ -211,6 +217,33 @@ import io.realm.annotations.Required;
 
     public ClienteEntity setAtivo(final Boolean ativo) {
         this.ativo = ativo;
+        return this;
+    }
+
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
+    }
+
+    public ClienteEntity setCnpjEmpresa(final String cnpjEmpresa) {
+        this.cnpjEmpresa = cnpjEmpresa;
+        return this;
+    }
+
+    public String getCpfCnpjVendedor() {
+        return cpfCnpjVendedor;
+    }
+
+    public ClienteEntity setCpfCnpjVendedor(final String cpfCnpjVendedor) {
+        this.cpfCnpjVendedor = cpfCnpjVendedor;
+        return this;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public ClienteEntity setStatus(final int status) {
+        this.status = status;
         return this;
     }
 }

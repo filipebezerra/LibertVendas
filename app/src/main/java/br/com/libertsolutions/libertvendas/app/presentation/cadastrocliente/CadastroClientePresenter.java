@@ -1,8 +1,10 @@
 package br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente;
 
+import br.com.libertsolutions.libertvendas.app.PresentationInjection;
 import br.com.libertsolutions.libertvendas.app.data.cidade.CidadeRepository;
 import br.com.libertsolutions.libertvendas.app.data.cidade.EstadoRepository;
 import br.com.libertsolutions.libertvendas.app.data.cliente.ClienteRepository;
+import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.data.utils.ApiUtils;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
@@ -255,10 +257,8 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
         final String complemento = getView().getViewStringValue(
                 mResourcesRepository.obtainComplementoViewId());
 
-        // TODO: setar cnpjEmpresa e cpfCnpjVendedor do novo cliente
-
         if (isEditing()) {
-            return Cliente.editing(
+            return Cliente.changed(
                     mClienteEmEdicao,
                     nomeCliente,
                     mTiposPessoa.get(positionTipoPessoa).getIntType(),
@@ -272,7 +272,9 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
                     bairro,
                     numero,
                     complemento,
-                    ApiUtils.formatApiDateTime(System.currentTimeMillis())
+                    ApiUtils.formatApiDateTime(System.currentTimeMillis()),
+                    mVendedorLogado.getEmpresaSelecionada().getCnpj(),
+                    mVendedorLogado.getCpfCnpj()
             );
         } else {
             return Cliente.createNew(
@@ -287,7 +289,9 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
                     mCidades.get(positionCidade),
                     bairro,
                     numero,
-                    complemento
+                    complemento,
+                    mVendedorLogado.getEmpresaSelecionada().getCnpj(),
+                    mVendedorLogado.getCpfCnpj()
             );
         }
     }
@@ -299,6 +303,8 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
             EventBus.getDefault().post(newEvent(cliente));
             getView().finishView();
         }
+        SyncTaskService.schedule(PresentationInjection.provideContext(),
+                SyncTaskService.SYNC_CUSTOMERS);
     }
 
     @Override public void handleTipoPessoaSelected(final int position) {

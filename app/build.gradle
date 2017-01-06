@@ -73,6 +73,9 @@ dependencies {
         exclude group: 'android.support.annotation', module: 'support-annotations'
     })
 
+    // Play Services
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+
     // View Injection
     compile "com.jakewharton:butterknife:${butterknife}"
     apt "com.jakewharton:butterknife-compiler:${butterknife}"

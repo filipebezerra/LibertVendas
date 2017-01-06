@@ -36,7 +36,10 @@ class ClienteMapper extends RealmMapper<Cliente, ClienteEntity> {
                 .setNumero(object.getNumero())
                 .setComplemento(object.getComplemento())
                 .setUltimaAlteracao(object.getUltimaAlteracao())
-                .setAtivo(object.isAtivo());
+                .setAtivo(object.isAtivo())
+                .setCnpjEmpresa(object.getCnpjEmpresa())
+                .setCpfCnpjVendedor(object.getCpfCnpjVendedor())
+                .setStatus(object.getStatus());
     }
 
     @Override public Cliente toViewObject(final ClienteEntity entity) {
@@ -58,10 +61,14 @@ class ClienteMapper extends RealmMapper<Cliente, ClienteEntity> {
         final String complemento = entity.getComplemento();
         final String ultimaAlteracao = entity.getUltimaAlteracao();
         final boolean ativo = entity.isAtivo();
+        final String cnpjEmpresa = entity.getCnpjEmpresa();
+        final String cpfCnpjVendedor = entity.getCpfCnpjVendedor();
+        final int status = entity.getStatus();
 
         return Cliente.map(
                 id, idCliente, codigo, nome, tipo, cpfCnpj, contato, email, telefone, telefone2,
-                endereco, cep, cidade, bairro, numero, complemento, ultimaAlteracao, ativo
+                endereco, cep, cidade, bairro, numero, complemento, ultimaAlteracao, ativo,
+                cnpjEmpresa, cpfCnpjVendedor, status
         );
     }
 }

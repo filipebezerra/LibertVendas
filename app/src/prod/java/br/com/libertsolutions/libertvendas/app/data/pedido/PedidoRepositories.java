@@ -9,6 +9,8 @@ import br.com.libertsolutions.libertvendas.app.domain.entity.PedidoEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 
+import static br.com.libertsolutions.libertvendas.app.NetworkInjection.provideRetrofit;
+
 /**
  * @author Filipe Bezerra
  */
@@ -16,11 +18,20 @@ public class PedidoRepositories {
 
     private PedidoRepositories() {/* No instances */}
 
+    private static PedidoService sService = null;
+
     private static PedidoRepository sRepository = null;
 
     private static RealmMapper<Pedido, PedidoEntity> sMapper = null;
 
     private static RealmMapper<ItemPedido, ItemPedidoEntity> sItemMapper = null;
+
+    public static PedidoService getService() {
+        if (sService == null) {
+            sService = provideRetrofit().create(PedidoService.class);
+        }
+        return sService;
+    }
 
     public synchronized static PedidoRepository getRepository() {
         if (sRepository == null) {

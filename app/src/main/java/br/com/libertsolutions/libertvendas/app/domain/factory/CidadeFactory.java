@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.domain.factory;
 
 import br.com.libertsolutions.libertvendas.app.domain.dto.CidadeDto;
+import br.com.libertsolutions.libertvendas.app.domain.entity.CidadeEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
 import java.util.ArrayList;
@@ -31,5 +32,14 @@ public final class CidadeFactory {
         return Cidade.create(
                 pDto.idCidade, pDto.codMunicipio, pDto.nome, estado
         );
+    }
+
+    public static CidadeDto createDto(CidadeEntity cidadeEntity) {
+        CidadeDto cidadeDto = new CidadeDto();
+        cidadeDto.idCidade = cidadeEntity.getId();
+        cidadeDto.nome = cidadeEntity.getNome();
+        cidadeDto.codMunicipio = cidadeEntity.getCodMunicipio();
+        cidadeDto.estado = EstadoFactory.createDto(cidadeEntity.getEstado());
+        return cidadeDto;
     }
 }
