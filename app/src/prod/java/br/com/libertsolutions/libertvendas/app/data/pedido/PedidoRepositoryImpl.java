@@ -13,7 +13,7 @@ import timber.log.Timber;
 /**
  * @author Filipe Bezerra
  */
-public class PedidoRepositoryImpl extends RealmRepositoryImpl<Pedido, Integer, PedidoEntity>
+public class PedidoRepositoryImpl extends RealmRepositoryImpl<Pedido, String, PedidoEntity>
         implements PedidoRepository {
 
     public PedidoRepositoryImpl(final RealmMapper<Pedido, PedidoEntity> mapper) {
@@ -24,7 +24,7 @@ public class PedidoRepositoryImpl extends RealmRepositoryImpl<Pedido, Integer, P
         return "id";
     }
 
-    @Override public Observable<Pedido> findById(final Integer id) {
+    @Override public Observable<Pedido> findById(final String id) {
         return RealmObservable
                 .object(realm -> {
                     PedidoEntity first = realm.where(mEntityClass)

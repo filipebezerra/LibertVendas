@@ -1,7 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.domain.entity;
 
 import br.com.libertsolutions.libertvendas.app.data.repository.Entity;
-import br.com.libertsolutions.libertvendas.app.data.utils.RealmAutoIncrement;
 import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
@@ -10,16 +9,13 @@ import io.realm.annotations.RealmClass;
 /**
  * @author Filipe Bezerra
  */
-@RealmClass public class PedidoEntity implements Entity<Integer>, RealmModel {
+@RealmClass public class PedidoEntity implements Entity<String>, RealmModel {
 
-    @PrimaryKey private Integer id
-            = RealmAutoIncrement.getInstance(this.getClass()).getNextIdFromModel();
+    @PrimaryKey private String id;
 
     private Integer idPedido;
 
     private Integer tipo;
-
-    private String numero;
 
     private Integer status;
 
@@ -45,15 +41,12 @@ import io.realm.annotations.RealmClass;
 
     private String cpfCnpjVendedor;
 
-    @Override public PedidoEntity setId(final Integer id) {
-        if (id > 0) {
-            this.id = id;
-            this.numero = String.valueOf(id);
-        }
+    @Override public PedidoEntity setId(final String id) {
+        this.id = id;
         return this;
     }
 
-    @Override public Integer getId() {
+    @Override public String getId() {
         return id;
     }
 
@@ -72,15 +65,6 @@ import io.realm.annotations.RealmClass;
 
     public PedidoEntity setTipo(final Integer tipo) {
         this.tipo = tipo;
-        return this;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public PedidoEntity setNumero(final String numero) {
-        this.numero = numero;
         return this;
     }
 

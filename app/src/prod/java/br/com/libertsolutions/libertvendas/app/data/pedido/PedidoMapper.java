@@ -39,7 +39,6 @@ public class PedidoMapper extends RealmMapper<Pedido, PedidoEntity> {
                 .setId(object.getId())
                 .setIdPedido(object.getIdPedido())
                 .setTipo(object.getTipo())
-                .setNumero(object.getNumero())
                 .setStatus(object.getStatus())
                 .setDataEmissao(object.getDataEmissao())
                 .setDesconto(object.getDesconto())
@@ -55,18 +54,17 @@ public class PedidoMapper extends RealmMapper<Pedido, PedidoEntity> {
     }
 
     @Override public Pedido toViewObject(final PedidoEntity entity) {
-        Integer id = entity.getId();
+        String id = entity.getId();
         Integer idPedido = entity.getIdPedido();
         Integer tipo = entity.getTipo();
-        String numero = entity.getNumero();
         Integer status = entity.getStatus();
         Long dataEmissao = entity.getDataEmissao();
         Double desconto = entity.getDesconto();
         Float percentualDesconto = entity.getPercentualDesconto();
         String observacao = entity.getObservacao();
         Cliente cliente = mClienteEntityMapper.toViewObject(entity.getCliente());
-        FormaPagamento formaPagamento = mFormaPagamentoEntityMapper.toViewObject(
-                entity.getFormaPagamento());
+        FormaPagamento formaPagamento = mFormaPagamentoEntityMapper
+                .toViewObject(entity.getFormaPagamento());
         Tabela tabelaPreco = mTabelaEntityMapper.toViewObject(entity.getTabela());
         List<ItemPedido> itemPedidos = mItemPedidoEntityMapper.toViewObjectList(entity.getItens());
         String ultimaAlteracao = entity.getUltimaAlteracao();
@@ -74,7 +72,7 @@ public class PedidoMapper extends RealmMapper<Pedido, PedidoEntity> {
         String cpfCnpjVendedor = entity.getCpfCnpjVendedor();
 
         return Pedido.map(
-                id, idPedido, tipo, numero, status, dataEmissao, desconto, percentualDesconto,
+                id, idPedido, tipo, status, dataEmissao, desconto, percentualDesconto,
                 observacao, cliente, formaPagamento, tabelaPreco, itemPedidos, ultimaAlteracao,
                 cnpjEmpresa, cpfCnpjVendedor
         );

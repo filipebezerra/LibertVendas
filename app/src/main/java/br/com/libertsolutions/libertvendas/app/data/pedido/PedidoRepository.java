@@ -8,7 +8,7 @@ import rx.Observable;
 /**
  * @author Filipe Bezerra
  */
-public interface PedidoRepository extends Repository<Pedido, Integer> {
+public interface PedidoRepository extends Repository<Pedido, String> {
 
     Observable<List<Pedido>> findByStatus(int status);
 }

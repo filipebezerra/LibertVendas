@@ -5,34 +5,25 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.FormattingUtils;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Filipe Bezerra
  */
-class ListaPedidosAdapter extends RecyclerView.Adapter<ListaPedidosViewHolder>
-        implements Filterable {
+class ListaPedidosAdapter extends RecyclerView.Adapter<ListaPedidosViewHolder> {
 
     private final Context mContext;
 
     private final boolean mShowStatusIndicator;
 
     private List<Pedido> mPedidos;
-
-    private List<Pedido> mPedidosOriginalCopy;
-
-    private ListaPedidosFilter mFilter;
 
     ListaPedidosAdapter(
             @NonNull Context context, boolean showStatusIndicator, @NonNull List<Pedido> pedidos) {
@@ -50,9 +41,7 @@ class ListaPedidosAdapter extends RecyclerView.Adapter<ListaPedidosViewHolder>
     @Override public void onBindViewHolder(ListaPedidosViewHolder holder, int position) {
         final Pedido pedido = mPedidos.get(position);
         final Resources resources = mContext.getResources();
-        holder.textViewNumeroPedido.setText(
-                resources.getString(R.string.template_text_numero_pedido,
-                        pedido.getNumero()));
+
         holder.textViewNomeCliente.setText(
                 resources.getString(R.string.template_text_nome_cliente,
                         pedido.getCliente().getNome()));
@@ -69,6 +58,14 @@ class ListaPedidosAdapter extends RecyclerView.Adapter<ListaPedidosViewHolder>
         holder.textViewDataPedido.setText(
                 resources.getString(R.string.template_text_data_pedido,
                         FormattingUtils.formatMillisecondsToDateText(pedido.getDataEmissao())));
+
+        if (pedido.getIdPedido() != 0) {
+            holder.textViewNumeroPedido.setText(
+                    resources.getString(R.string.template_text_numero_pedido,
+                            pedido.getIdPedido()));
+        } else {
+            holder.textViewNumeroPedido.setVisibility(View.GONE);
+        }
 
         if (mShowStatusIndicator) {
             holder.viewStatusPedido.setVisibility(View.VISIBLE);
@@ -99,52 +96,5 @@ class ListaPedidosAdapter extends RecyclerView.Adapter<ListaPedidosViewHolder>
 
     @Override public int getItemCount() {
         return mPedidos.size();
-    }
-
-    @Override public Filter getFilter() {
-        if (mFilter == null) {
-            mFilter = new ListaPedidosFilter();
-        }
-        return mFilter;
-    }
-
-    private class ListaPedidosFilter extends Filter {
-        @Override protected FilterResults performFiltering(CharSequence prefix) {
-            FilterResults results = new FilterResults();
-
-            if (mPedidosOriginalCopy == null) {
-                mPedidosOriginalCopy = new ArrayList<>(mPedidos);
-            }
-
-            if (TextUtils.isEmpty(prefix)) {
-                List<Pedido> list = new ArrayList<>(mPedidosOriginalCopy);
-                results.values = list;
-                results.count = list.size();
-            } else {
-                final String prefixString = prefix.toString().toLowerCase();
-
-                List<Pedido> values = new ArrayList<>(mPedidosOriginalCopy);
-                final List<Pedido> newValues = new ArrayList<>();
-
-                for(Pedido pedido : values) {
-                    String valueText = String.valueOf(pedido.getNumero());
-                    if (!TextUtils.isEmpty(valueText) &&
-                            valueText.toLowerCase().contains(prefixString)) {
-                        newValues.add(pedido);
-                    }
-                }
-
-                results.values = newValues;
-                results.count = newValues.size();
-            }
-
-            return results;
-        }
-
-        @Override protected void publishResults(CharSequence prefix, FilterResults results) {
-            //noinspection unchecked
-            mPedidos = (List<Pedido>) results.values;
-            notifyDataSetChanged();
-        }
     }
 }

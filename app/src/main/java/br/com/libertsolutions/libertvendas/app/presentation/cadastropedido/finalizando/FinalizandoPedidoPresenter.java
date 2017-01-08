@@ -273,7 +273,7 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         }
 
         if (isEditing()) {
-            return Pedido.editing(
+            return Pedido.changed(
                     mPedidoEmEdicao,
                     dataEmissao,
                     desconto,
@@ -281,7 +281,9 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
                     mClienteSelecionado,
                     formaPagamento,
                     itensPedido,
-                    ApiUtils.formatApiDateTime(System.currentTimeMillis())
+                    ApiUtils.formatApiDateTime(System.currentTimeMillis()),
+                    mVendedorLogado.getEmpresaSelecionada().getCnpj(),
+                    mVendedorLogado.getCpfCnpj()
             );
         } else {
             return Pedido.createNew(

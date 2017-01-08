@@ -186,7 +186,7 @@
     <string name="example_text_nome_cliente">Cliente Gustavo Costa Alves</string>
     <string name="example_text_total_pedido">Total R$ 204.89</string>
     <string name="example_text_data_pedido">Data 14/09/2016</string>
-    <string name="template_text_numero_pedido">Nº %1$s</string>
+    <string name="template_text_numero_pedido">Nº %1$d</string>
     <string name="template_text_nome_cliente">Cliente %1$s</string>
     <string name="template_text_total_pedido">Total %1$s</string>
     <string name="template_text_data_pedido">Data %1$s</string>
