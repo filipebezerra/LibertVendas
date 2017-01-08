@@ -79,11 +79,35 @@ public class SyncTaskService extends GcmTaskService {
     private int doSyncCustomers() {
         Timber.d("syncing customers");
 
-        RealmResults<ClienteEntity> newCustomers = getRealm().where(ClienteEntity.class)
-                .equalTo("cnpjEmpresa", getLoggedUser().getEmpresaSelecionada().getCnpj())
-                .equalTo("cpfCnpjVendedor", getLoggedUser().getCpfCnpj())
-                .equalTo("status", Cliente.STATUS_CRIADO)
-                .findAll();
+        try {
+            //region post
+            final RealmResults<ClienteEntity> newCustomers = queryNewCustomers();
+
+            if (!newCustomers.isEmpty()) {
+                Timber.d("found %d new customers to sync", newCustomers.size());
+
+                for (ClienteEntity newCustomer : newCustomers) {
+                    try {
+                        Response<ClienteDto> response = executePost(newCustomer);
+
+                        if (!response.isSuccessful()) {
+                            Timber.e("post customer request was not successful with %d %s",
+                                    response.code(), response.message());
+
+                            return GcmNetworkManager.RESULT_FAILURE;
+                        }
+
+                        Timber.d("post customer request done successfully");
+                        updateNewCustomer(newCustomer, response);
+                    } catch (IOException e) {
+                        Timber.e(e, "could not done post customer request");
+                        return GcmNetworkManager.RESULT_FAILURE;
+                    }
+                }
+            } else {
+                Timber.d("no new customers found to sync", newCustomers.size());
+            }
+            //endregion
 
             //region patch
             final RealmResults<ClienteEntity> changedCustomers = queryChangedCustomers();
