@@ -85,92 +85,101 @@ public class SyncTaskService extends GcmTaskService {
                 .equalTo("status", Cliente.STATUS_CRIADO)
                 .findAll();
 
-        if (!newCustomers.isEmpty()) {
-            Timber.d("found %d new customers to sync", newCustomers.size());
+            //region patch
+            final RealmResults<ClienteEntity> changedCustomers = queryChangedCustomers();
 
-            for (ClienteEntity customer : newCustomers) {
+            if (!changedCustomers.isEmpty()) {
+                Timber.d("found %d changed customers to sync", changedCustomers.size());
+
                 try {
-                    Response<ClienteDto> response = getClienteService()
-                            .post(
-                                    getLoggedUser().getEmpresaSelecionada().getCnpj(),
-                                    ClienteFactory.createDto(customer))
-                            .execute();
+                    Response<List<ClienteDto>> response = executePatch(changedCustomers);
 
                     if (!response.isSuccessful()) {
-                        Timber.e("post request for customers was not successful with %d %s",
+                        Timber.e("patch customers request was not successful with %d %s",
                                 response.code(), response.message());
 
                         return GcmNetworkManager.RESULT_FAILURE;
                     }
 
-                    Timber.d("post request for customers done successfully");
-                    ClienteDto body = response.body();
-
-                    Timber.d("committing changes to customers dated from %s to local "
-                            + "database with id %d", body.ultimaAlteracao, body.idCliente);
-                    getRealm().beginTransaction();
-                    customer.setIdCliente(body.idCliente);
-                    customer.setUltimaAlteracao(body.ultimaAlteracao);
-                    customer.setStatus(Cliente.STATUS_SINCRONIZADO);
-                    getRealm().copyToRealmOrUpdate(customer);
-                    getRealm().commitTransaction();
-                    Timber.d("commit done successfully");
+                    Timber.d("patch customers request done successfully");
+                    updateChangedCustomers(response);
                 } catch (IOException e) {
-                    Timber.e(e, "could not done post request for new customer");
+                    Timber.e(e, "could not done patch customers request");
                     return GcmNetworkManager.RESULT_FAILURE;
                 }
+            } else {
+                Timber.d("no changed customers found to sync", changedCustomers.size());
             }
-        } else {
-            Timber.d("no new customers found to sync", newCustomers.size());
+            //endregion
+        } finally {
+            closeRealm();
         }
 
-        RealmResults<ClienteEntity> changedCustomers = getRealm().where(ClienteEntity.class)
+        return GcmNetworkManager.RESULT_SUCCESS;
+    }
+
+    private RealmResults<ClienteEntity> queryNewCustomers() {
+        return getRealm().where(ClienteEntity.class)
+                .equalTo("cnpjEmpresa", getLoggedUser().getEmpresaSelecionada().getCnpj())
+                .equalTo("cpfCnpjVendedor", getLoggedUser().getCpfCnpj())
+                .equalTo("status", Cliente.STATUS_CRIADO)
+                .findAll();
+    }
+
+    private Response<ClienteDto> executePost(ClienteEntity newCustomer) throws IOException {
+        return getClienteService()
+                .post(
+                        getLoggedUser().getEmpresaSelecionada().getCnpj(),
+                        ClienteFactory.createDto(newCustomer))
+                .execute();
+    }
+
+    private void updateNewCustomer(ClienteEntity newCustomer, Response<ClienteDto> response) {
+        final ClienteDto body = response.body();
+
+        Timber.d("committing changes to customers dated from %s to local database with id %d",
+                body.ultimaAlteracao, body.idCliente);
+
+        newCustomer.setIdCliente(body.idCliente);
+        newCustomer.setUltimaAlteracao(body.ultimaAlteracao);
+        newCustomer.setStatus(Cliente.STATUS_SINCRONIZADO);
+
+        getRealm().executeTransaction(realm -> realm.copyToRealmOrUpdate(newCustomer));
+        Timber.d("commit done successfully");
+    }
+
+    private RealmResults<ClienteEntity> queryChangedCustomers() {
+        return getRealm().where(ClienteEntity.class)
                 .equalTo("cnpjEmpresa", getLoggedUser().getEmpresaSelecionada().getCnpj())
                 .equalTo("cpfCnpjVendedor", getLoggedUser().getCpfCnpj())
                 .equalTo("status", Cliente.STATUS_MODIFICADO)
                 .findAll();
+    }
 
-        if (!changedCustomers.isEmpty()) {
-            Timber.d("found %d changed customers to sync", changedCustomers.size());
+    private Response<List<ClienteDto>> executePatch(RealmResults<ClienteEntity> changedCustomers)
+            throws IOException {
+        return getClienteService()
+                .patch(
+                        getLoggedUser().getEmpresaSelecionada().getCnpj(),
+                        ClienteFactory.createListDto(changedCustomers))
+                .execute();
+    }
 
-            try {
-                Response<List<ClienteDto>> response = getClienteService()
-                        .patch(
-                                getLoggedUser().getEmpresaSelecionada().getCnpj(),
-                                ClienteFactory.createListDto(changedCustomers))
-                        .execute();
+    private void updateChangedCustomers(Response<List<ClienteDto>> response) {
+        for (ClienteDto dto : response.body()) {
+            ClienteEntity customer = getRealm().where(ClienteEntity.class)
+                    .equalTo("idCliente", dto.idCliente)
+                    .findFirst();
 
-                if (!response.isSuccessful()) {
-                    Timber.e("patch request for customers was not successful with %d %s",
-                            response.code(), response.message());
+            Timber.d("committing changes to customers dated from %s to local database with id %id",
+                    dto.ultimaAlteracao, dto.idCliente);
 
-                    return GcmNetworkManager.RESULT_FAILURE;
-                }
+            customer.setUltimaAlteracao(dto.ultimaAlteracao);
+            customer.setStatus(Cliente.STATUS_SINCRONIZADO);
 
-                Timber.d("patch request for customers done successfully");
-                for (ClienteDto dto : response.body()) {
-                    ClienteEntity customer = getRealm().where(ClienteEntity.class)
-                            .equalTo("idCliente", dto.idCliente)
-                            .findFirst();
-
-                    Timber.d("committing changes to customers dated from %s to local database "
-                            + "with id %id", dto.ultimaAlteracao, dto.idCliente);
-                    getRealm().beginTransaction();
-                    customer.setUltimaAlteracao(dto.ultimaAlteracao);
-                    customer.setStatus(Cliente.STATUS_SINCRONIZADO);
-                    getRealm().copyToRealmOrUpdate(customer);
-                    getRealm().commitTransaction();
-                    Timber.d("commit done successfully");
-                }
-            } catch (IOException e) {
-                Timber.e(e, "could not done patch request for changes in customers");
-                return GcmNetworkManager.RESULT_FAILURE;
-            }
-        } else {
-            Timber.d("no changed customers found to sync", newCustomers.size());
+            getRealm().executeTransaction(realm -> realm.copyToRealmOrUpdate(customer));
+            Timber.d("commit done successfully");
         }
-
-        return GcmNetworkManager.RESULT_SUCCESS;
     }
 
     private int doSyncOrders() {
@@ -199,6 +208,12 @@ public class SyncTaskService extends GcmTaskService {
             mRealm = Realm.getDefaultInstance();
         }
         return mRealm;
+    }
+
+    private void closeRealm() {
+        if (mRealm != null && !mRealm.isClosed()) {
+            mRealm.close();
+        }
     }
 
     private ClienteService getClienteService() {
