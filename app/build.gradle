@@ -4,6 +4,12 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'realm-android'
 
+//noinspection GroovyAssignabilityCheck
+if (project.hasProperty("LibertVendas.signing")
+        && new File(project.property("LibertVendas.signing") + ".gradle").exists()) {
+    apply from: project.property("LibertVendas.signing") + ".gradle";
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
