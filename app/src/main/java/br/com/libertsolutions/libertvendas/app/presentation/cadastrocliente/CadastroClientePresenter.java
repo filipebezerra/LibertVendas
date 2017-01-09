@@ -303,8 +303,7 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
             EventBus.getDefault().post(newEvent(cliente));
             getView().finishView();
         }
-        SyncTaskService.schedule(PresentationInjection.provideContext(),
-                SyncTaskService.SYNC_CUSTOMERS);
+        SyncTaskService.schedule(PresentationInjection.provideContext());
     }
 
     @Override public void handleTipoPessoaSelected(final int position) {

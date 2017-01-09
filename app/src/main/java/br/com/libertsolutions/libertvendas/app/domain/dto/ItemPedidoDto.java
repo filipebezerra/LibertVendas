@@ -8,17 +8,17 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ItemPedidoDto {
 
-    @SerializedName("item") @Expose public int item;
+    @SerializedName("appKey") @Expose public String appKey;
 
     @SerializedName("prcVenda") @Expose public double prcVenda;
 
     @SerializedName("subTotal") @Expose public double subTotal;
 
-    @SerializedName("desconto") @Expose public double desconto;
-
     @SerializedName("quantidade") @Expose public float quantidade;
 
-    @SerializedName("observacao") @Expose public String observacao;
-
     @SerializedName("idProduto") @Expose public int idProduto;
+
+    @SerializedName("idItem") @Expose public int idItem;
+
+    @SerializedName("ultimaAlteracao") @Expose public String ultimaAlteracao;
 }

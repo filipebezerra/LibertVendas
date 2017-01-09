@@ -2,18 +2,21 @@ package br.com.libertsolutions.libertvendas.app.data.sync;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
 import br.com.libertsolutions.libertvendas.app.BuildConfig;
-import br.com.libertsolutions.libertvendas.app.DataInjection;
 import br.com.libertsolutions.libertvendas.app.PresentationInjection;
-import br.com.libertsolutions.libertvendas.app.data.cliente.ClienteService;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepositories;
 import br.com.libertsolutions.libertvendas.app.domain.dto.ClienteDto;
+import br.com.libertsolutions.libertvendas.app.domain.dto.ItemPedidoDto;
+import br.com.libertsolutions.libertvendas.app.domain.dto.PedidoDto;
 import br.com.libertsolutions.libertvendas.app.domain.entity.ClienteEntity;
+import br.com.libertsolutions.libertvendas.app.domain.entity.ItemPedidoEntity;
+import br.com.libertsolutions.libertvendas.app.domain.entity.PedidoEntity;
 import br.com.libertsolutions.libertvendas.app.domain.entity.VendedorEntity;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ClienteFactory;
+import br.com.libertsolutions.libertvendas.app.domain.factory.PedidoFactory;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
@@ -29,23 +32,19 @@ import org.greenrobot.eventbus.EventBus;
 import retrofit2.Response;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.DataInjection.RemoteRepositories.provideClienteService;
+import static br.com.libertsolutions.libertvendas.app.DataInjection.RemoteRepositories.providePedidoService;
+
 /**
  * @author Filipe Bezerra
  */
 public class SyncTaskService extends GcmTaskService {
-
-    public static final String SYNC_CUSTOMERS = "sync_customers";
-    public static final String SYNC_ORDERS = "sync_orders";
-
-    @StringDef({ SYNC_CUSTOMERS, SYNC_ORDERS }) public @interface SyncType {}
 
     private static final long TASK_PERIOD_IN_SECONDS = TimeUnit.MINUTES.toSeconds(30);
 
     private Vendedor mVendedorLogado;
 
     private Realm mRealm;
-
-    private ClienteService mClienteService;
 
     private SettingsRepository mSettingsRepository;
 
@@ -54,25 +53,18 @@ public class SyncTaskService extends GcmTaskService {
     }
 
     @Override public int onRunTask(final TaskParams taskParams) {
-        final String tag = taskParams.getTag();
-        Timber.d("running sync service with tag %s", tag);
+        Timber.d("running sync service");
 
-        int result = GcmNetworkManager.RESULT_SUCCESS;
+        int result = doSyncCustomers();
 
-        switch (tag) {
-            case SYNC_CUSTOMERS: {
-                result = doSyncCustomers();
-                break;
-            }
-
-            case SYNC_ORDERS: {
-                result = doSyncOrders();
-                break;
-            }
+        if (result != GcmNetworkManager.RESULT_SUCCESS) {
+            EventBus.getDefault().post(SyncEvent.newEvent(result));
+            return result;
         }
 
-        EventBus.getDefault().post(SyncEvent.newEvent(tag, result));
+        result = doSyncOrders();
 
+        EventBus.getDefault().post(SyncEvent.newEvent(result));
         return result;
     }
 
@@ -91,21 +83,25 @@ public class SyncTaskService extends GcmTaskService {
                         Response<ClienteDto> response = executePost(newCustomer);
 
                         if (!response.isSuccessful()) {
-                            Timber.e("post customer request was not successful with %d %s",
+                            Timber.e("customer post request failure: %d %s",
                                     response.code(), response.message());
 
                             return GcmNetworkManager.RESULT_FAILURE;
                         }
 
-                        Timber.d("post customer request done successfully");
+                        Timber.d("customer post request done successfully");
                         updateNewCustomer(newCustomer, response);
+                    } catch (RuntimeException e) {
+                        Timber.e(e, "error creating the request or decoding the response "
+                                + "from customer post request");
+                        return GcmNetworkManager.RESULT_FAILURE;
                     } catch (IOException e) {
-                        Timber.e(e, "could not done post customer request");
+                        Timber.e(e, "server failure while doing customer post request");
                         return GcmNetworkManager.RESULT_FAILURE;
                     }
                 }
             } else {
-                Timber.d("no new customers found to sync", newCustomers.size());
+                Timber.d("no new customers found to sync");
             }
             //endregion
 
@@ -119,20 +115,24 @@ public class SyncTaskService extends GcmTaskService {
                     Response<List<ClienteDto>> response = executePatch(changedCustomers);
 
                     if (!response.isSuccessful()) {
-                        Timber.e("patch customers request was not successful with %d %s",
+                        Timber.e("customers patch request failure: %d %s",
                                 response.code(), response.message());
 
                         return GcmNetworkManager.RESULT_FAILURE;
                     }
 
-                    Timber.d("patch customers request done successfully");
+                    Timber.d("customers patch request done successfully");
                     updateChangedCustomers(response);
+                } catch (RuntimeException e) {
+                    Timber.e(e, "error creating the request or decoding the response "
+                            + "from customers patch request");
+                    return GcmNetworkManager.RESULT_FAILURE;
                 } catch (IOException e) {
-                    Timber.e(e, "could not done patch customers request");
+                    Timber.e(e, "server failure while doing customers patch request");
                     return GcmNetworkManager.RESULT_FAILURE;
                 }
             } else {
-                Timber.d("no changed customers found to sync", changedCustomers.size());
+                Timber.d("no changed customers found to sync");
             }
             //endregion
         } finally {
@@ -151,7 +151,7 @@ public class SyncTaskService extends GcmTaskService {
     }
 
     private Response<ClienteDto> executePost(ClienteEntity newCustomer) throws IOException {
-        return getClienteService()
+        return provideClienteService()
                 .post(
                         getLoggedUser().getEmpresaSelecionada().getCnpj(),
                         ClienteFactory.createDto(newCustomer))
@@ -164,11 +164,13 @@ public class SyncTaskService extends GcmTaskService {
         Timber.d("committing changes to customers dated from %s to local database with id %d",
                 body.ultimaAlteracao, body.idCliente);
 
-        newCustomer.setIdCliente(body.idCliente);
-        newCustomer.setUltimaAlteracao(body.ultimaAlteracao);
-        newCustomer.setStatus(Cliente.STATUS_SINCRONIZADO);
+        getRealm().executeTransaction(realm -> {
+            newCustomer.setIdCliente(body.idCliente);
+            newCustomer.setUltimaAlteracao(body.ultimaAlteracao);
+            newCustomer.setStatus(Cliente.STATUS_SINCRONIZADO);
 
-        getRealm().executeTransaction(realm -> realm.copyToRealmOrUpdate(newCustomer));
+            realm.copyToRealmOrUpdate(newCustomer);
+        });
         Timber.d("commit done successfully");
     }
 
@@ -182,7 +184,7 @@ public class SyncTaskService extends GcmTaskService {
 
     private Response<List<ClienteDto>> executePatch(RealmResults<ClienteEntity> changedCustomers)
             throws IOException {
-        return getClienteService()
+        return provideClienteService()
                 .patch(
                         getLoggedUser().getEmpresaSelecionada().getCnpj(),
                         ClienteFactory.createListDto(changedCustomers))
@@ -195,19 +197,105 @@ public class SyncTaskService extends GcmTaskService {
                     .equalTo("idCliente", dto.idCliente)
                     .findFirst();
 
-            Timber.d("committing changes to customers dated from %s to local database with id %id",
+            Timber.d("committing changes to customers dated from %s to local database with id %d",
                     dto.ultimaAlteracao, dto.idCliente);
 
-            customer.setUltimaAlteracao(dto.ultimaAlteracao);
-            customer.setStatus(Cliente.STATUS_SINCRONIZADO);
+            getRealm().executeTransaction(new Realm.Transaction() {
+                @Override public void execute(final Realm realm) {
+                    customer.setUltimaAlteracao(dto.ultimaAlteracao);
+                    customer.setStatus(Cliente.STATUS_SINCRONIZADO);
 
-            getRealm().executeTransaction(realm -> realm.copyToRealmOrUpdate(customer));
+                    realm.copyToRealmOrUpdate(customer);
+                }
+            });
             Timber.d("commit done successfully");
         }
     }
 
     private int doSyncOrders() {
+        Timber.d("syncing orders");
+
+        try {
+            //region post
+            final RealmResults<PedidoEntity> pendingOrders = queryPendingOrders();
+
+            if (!pendingOrders.isEmpty()) {
+                Timber.d("found %d pending orders to sync", pendingOrders.size());
+
+                for (PedidoEntity order : pendingOrders) {
+                    try {
+                        Response<PedidoDto> response = executePost(order);
+
+                        if (!response.isSuccessful()) {
+                            Timber.e("order post request failure: %d %s",
+                                    response.code(), response.message());
+
+                            return GcmNetworkManager.RESULT_FAILURE;
+                        }
+
+                        Timber.d("order post request done successfully");
+                        updatePendingOrder(order, response);
+                    } catch (RuntimeException e) {
+                        Timber.e(e, "error creating the request or decoding the response "
+                                + "from order post request");
+                        return GcmNetworkManager.RESULT_FAILURE;
+                    } catch (IOException e) {
+                        Timber.e(e, "server failure while doing order post request");
+                        return GcmNetworkManager.RESULT_FAILURE;
+                    }
+                }
+            } else {
+                Timber.d("no pending orders found to sync");
+            }
+            //endregion
+        } finally {
+            closeRealm();
+        }
+
         return GcmNetworkManager.RESULT_SUCCESS;
+    }
+
+    private RealmResults<PedidoEntity> queryPendingOrders() {
+        return getRealm().where(PedidoEntity.class)
+                .equalTo("cnpjEmpresa", getLoggedUser().getEmpresaSelecionada().getCnpj())
+                .equalTo("cpfCnpjVendedor", getLoggedUser().getCpfCnpj())
+                .equalTo("status", Pedido.STATUS_PENDENTE)
+                .findAll();
+    }
+
+    private Response<PedidoDto> executePost(PedidoEntity order) throws IOException {
+        return providePedidoService()
+                .post(
+                        getLoggedUser().getEmpresaSelecionada().getCnpj(),
+                        getLoggedUser().getCpfCnpj(),
+                        PedidoFactory.createDto(order))
+                .execute();
+    }
+
+    private void updatePendingOrder(PedidoEntity order, Response<PedidoDto> response) {
+        final PedidoDto body = response.body();
+
+        Timber.d("committing changes to orders dated from %s to local database with id %d",
+                body.ultimaAlteracao, body.idPedido);
+
+        getRealm().executeTransaction(realm -> {
+            order.setIdPedido(body.idPedido);
+            order.setUltimaAlteracao(body.ultimaAlteracao);
+            order.setStatus(Pedido.STATUS_ENVIADO);
+
+            for (ItemPedidoDto itemDto : body.itens) {
+                for(ItemPedidoEntity orderItem : order.getItens()) {
+                    if (itemDto.appKey.equals(orderItem.getId())) {
+                        orderItem.setIdItem(itemDto.idItem);
+                        orderItem.setUltimaAlteracao(itemDto.ultimaAlteracao);
+                        break;
+                    }
+                }
+            }
+
+            realm.copyToRealmOrUpdate(order);
+        });
+        Timber.d("commit done successfully");
     }
 
     private Vendedor getLoggedUser() {
@@ -228,7 +316,7 @@ public class SyncTaskService extends GcmTaskService {
     }
 
     private Realm getRealm() {
-        if (mRealm == null) {
+        if (mRealm == null || mRealm.isClosed()) {
             mRealm = Realm.getDefaultInstance();
         }
         return mRealm;
@@ -240,21 +328,14 @@ public class SyncTaskService extends GcmTaskService {
         }
     }
 
-    private ClienteService getClienteService() {
-        if (mClienteService == null) {
-            mClienteService = DataInjection.RemoteRepositories.provideClienteService();
-        }
-        return mClienteService;
-    }
-
-    public static boolean schedule(@NonNull Context context, @SyncType String syncType) {
+    public static boolean schedule(@NonNull Context context) {
         try {
             PeriodicTask periodic = new PeriodicTask.Builder()
                     .setService(SyncTaskService.class)
-                    //repeat every 120 seconds
+                    //repeat every 30 minutes
                     .setPeriod(BuildConfig.DEBUG ? 30 : TASK_PERIOD_IN_SECONDS)
                     //tag that is unique to this task (can be used to cancel task)
-                    .setTag(syncType)
+                    .setTag(SyncTaskService.class.getSimpleName())
                     //whether the task persists after device reboot
                     .setPersisted(true)
                     //if another task with same tag is already scheduled, replace it with this task

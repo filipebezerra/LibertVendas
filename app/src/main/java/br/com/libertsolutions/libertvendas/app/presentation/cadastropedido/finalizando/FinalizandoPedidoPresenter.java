@@ -1,7 +1,9 @@
 package br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.finalizando;
 
+import br.com.libertsolutions.libertvendas.app.PresentationInjection;
 import br.com.libertsolutions.libertvendas.app.data.formapagamento.FormaPagamentoRepository;
 import br.com.libertsolutions.libertvendas.app.data.pedido.PedidoRepository;
+import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.data.utils.ApiUtils;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
@@ -307,6 +309,7 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
             EventBus.getDefault().post(newEvent(pPedido));
             getView().finishView();
         }
+        SyncTaskService.schedule(PresentationInjection.provideContext());
     }
 
     @Override public void handleDataEmissaoTouched() {

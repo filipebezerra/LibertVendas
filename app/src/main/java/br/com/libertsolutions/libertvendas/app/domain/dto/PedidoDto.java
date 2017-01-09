@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.domain.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,9 +10,9 @@ import java.util.List;
  */
 public class PedidoDto {
 
-    @SerializedName("tipo") @Expose public int tipo;
+    @SerializedName("appKey") @Expose public String appKey;
 
-    @SerializedName("numero") @Expose public String numero;
+    @SerializedName("tipo") @Expose public int tipo;
 
     @SerializedName("dtEmissao") @Expose public String dtEmissao;
 
@@ -27,5 +28,11 @@ public class PedidoDto {
 
     @SerializedName("idTabela") @Expose public int idTabela;
 
-    @SerializedName("Itens") @Expose public List<ItemPedidoDto> itens;
+    @SerializedName("status") @Expose public int status;
+
+    @SerializedName("Itens") @Expose public List<ItemPedidoDto> itens = new ArrayList<>();
+
+    @SerializedName("idPedido") @Expose public int idPedido;
+
+    @SerializedName("ultimaAlteracao") @Expose public String ultimaAlteracao;
 }

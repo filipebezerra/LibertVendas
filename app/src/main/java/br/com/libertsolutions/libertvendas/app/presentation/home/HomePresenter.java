@@ -115,8 +115,7 @@ class HomePresenter extends BasePresenter<HomeContract.View>
                 }));
 
         if (mSettingsRepository.loadSettings().isAutoSync()) {
-            SyncTaskService.schedule(PresentationInjection.provideContext(),
-                    SyncTaskService.SYNC_CUSTOMERS);
+            SyncTaskService.schedule(PresentationInjection.provideContext());
         }
     }
 
