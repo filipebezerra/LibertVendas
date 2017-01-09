@@ -179,6 +179,7 @@
     <string name="message_vendedor_nao_permitido_aplicar_desconto">Você não está autorizado à conceder desconto!</string>
     <string name="message_valor_desconto_nao_permitido">Valor de desconto acima do permitido!</string>
     <string name="title_activity_cadastro_pedido_editando">Editando pedido</string>
+    <string name="message_unable_to_save">Este pedido já foi processado, não é possível editar!</string>
 
     <!-- Orders strings -->
     <string name="title_fragment_lista_pedidos">Pedidos</string>

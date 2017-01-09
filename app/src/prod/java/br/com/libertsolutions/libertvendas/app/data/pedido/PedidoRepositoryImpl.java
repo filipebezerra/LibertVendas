@@ -49,4 +49,14 @@ public class PedidoRepositoryImpl extends RealmRepositoryImpl<Pedido, String, Pe
                 })
                 .map(mMapper::toViewObjectList);
     }
+
+    @Override public Observable<Boolean> canUpdate(final String id) {
+        return RealmObservable
+                .object(realm -> realm
+                        .where(mEntityClass)
+                        .equalTo(idFieldName(), id)
+                        .findFirst())
+                .flatMap(pedidoEntity -> Observable.defer(() ->
+                        Observable.just(pedidoEntity.getStatus() == Pedido.STATUS_PENDENTE)));
+    }
 }

@@ -11,4 +11,6 @@ import rx.Observable;
 public interface PedidoRepository extends Repository<Pedido, String> {
 
     Observable<List<Pedido>> findByStatus(int status);
+
+    Observable<Boolean> canUpdate(String id);
 }

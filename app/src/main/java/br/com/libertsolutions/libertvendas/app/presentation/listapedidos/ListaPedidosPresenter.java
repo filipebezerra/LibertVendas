@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listapedidos;
 
 import br.com.libertsolutions.libertvendas.app.data.pedido.PedidoRepository;
+import br.com.libertsolutions.libertvendas.app.data.sync.SyncOrdersEvent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.finalizando.NovoPedidoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
@@ -12,6 +13,7 @@ import rx.Subscriber;
 import timber.log.Timber;
 
 import static java.util.Collections.emptyList;
+import static org.greenrobot.eventbus.ThreadMode.BACKGROUND;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -24,11 +26,14 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
 
     private List<Pedido> mPedidos;
 
+    private boolean mIsShowingOrdersNotSent;
+
     ListaPedidosPresenter(final PedidoRepository pedidoRepository) {
         mPedidoRepository = pedidoRepository;
     }
 
     @Override public void loadPedidos(final boolean showOrdersNotSent) {
+        mIsShowingOrdersNotSent = showOrdersNotSent;
         Observable<List<Pedido>> pedidosFromMemoryCache = ObservableUtils.toObservable(mPedidos);
 
         Observable<List<Pedido>> pedidosFromDiskCache;
@@ -89,5 +94,9 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
         final int position = mPedidos.size();
         mPedidos.add(pedido);
         getView().updateInsertedItemAtPosition(position);
+    }
+
+    @Subscribe(threadMode = BACKGROUND) public void onSyncEvent(SyncOrdersEvent event) {
+        loadPedidos(mIsShowingOrdersNotSent);
     }
 }

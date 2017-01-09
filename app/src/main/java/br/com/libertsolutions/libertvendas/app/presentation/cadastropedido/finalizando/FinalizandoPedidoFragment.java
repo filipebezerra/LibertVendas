@@ -21,6 +21,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.CadastroPedidoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.AndroidUtils;
+import br.com.libertsolutions.libertvendas.app.presentation.utils.FeedbackHelper;
 import br.com.libertsolutions.libertvendas.app.presentation.widget.FormasPagamentoAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -234,6 +235,10 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
 
     @Override public void displayValidationErrorForDesconto(String validationMessage) {
         mDescontoTextInputLayout.setError(validationMessage);
+    }
+
+    @Override public void showUnableToSaveMessages() {
+        FeedbackHelper.showMessageDialog(getActivity(), R.string.message_unable_to_save);
     }
 
     @Override public void resultPedidoEditado(Pedido pedido) {

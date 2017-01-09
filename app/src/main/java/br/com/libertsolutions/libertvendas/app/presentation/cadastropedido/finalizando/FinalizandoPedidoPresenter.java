@@ -1,9 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.finalizando;
 
-import br.com.libertsolutions.libertvendas.app.PresentationInjection;
 import br.com.libertsolutions.libertvendas.app.data.formapagamento.FormaPagamentoRepository;
 import br.com.libertsolutions.libertvendas.app.data.pedido.PedidoRepository;
-import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.data.utils.ApiUtils;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
@@ -174,18 +172,38 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
 
         if (!getView().hasEmptyRequiredFields()) {
             if (validateDesconto()) {
-                addSubscription(mPedidoRepository.save(pedidoFromFields())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                this::notifyPedidoSalvo,
+                if (isEditing()) {
+                    mPedidoRepository.canUpdate(mPedidoEmEdicao.getId())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    canUpdate -> {
+                                        if (canUpdate)  {
+                                            save();
+                                        } else {
+                                            getView().showUnableToSaveMessages();
+                                        }
+                                    },
 
-                                Timber::e
-                        )
-                );
+                                    Timber::e
+                            );
+                } else {
+                    save();
+                }
             }
         } else {
             getView().displayRequiredFieldMessages();
         }
+    }
+
+    private void save() {
+        addSubscription(mPedidoRepository.save(pedidoFromFields())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        this::notifyPedidoSalvo,
+
+                        Timber::e
+                )
+        );
     }
 
     private boolean validateDesconto() {
@@ -309,7 +327,6 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
             EventBus.getDefault().post(newEvent(pPedido));
             getView().finishView();
         }
-        SyncTaskService.schedule(PresentationInjection.provideContext());
     }
 
     @Override public void handleDataEmissaoTouched() {

@@ -1,10 +1,8 @@
 package br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente;
 
-import br.com.libertsolutions.libertvendas.app.PresentationInjection;
 import br.com.libertsolutions.libertvendas.app.data.cidade.CidadeRepository;
 import br.com.libertsolutions.libertvendas.app.data.cidade.EstadoRepository;
 import br.com.libertsolutions.libertvendas.app.data.cliente.ClienteRepository;
-import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.data.utils.ApiUtils;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
@@ -303,7 +301,6 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
             EventBus.getDefault().post(newEvent(cliente));
             getView().finishView();
         }
-        SyncTaskService.schedule(PresentationInjection.provideContext());
     }
 
     @Override public void handleTipoPessoaSelected(final int position) {
