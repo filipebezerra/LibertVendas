@@ -36,7 +36,11 @@ public abstract class LibertVendasActivity extends AppCompatActivity {
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
+            if (getParentActivityIntent() == null) {
+                finish();
+            } else {
+                NavUtils.navigateUpFromSameTask(this);
+            }
             return true;
         }
 
