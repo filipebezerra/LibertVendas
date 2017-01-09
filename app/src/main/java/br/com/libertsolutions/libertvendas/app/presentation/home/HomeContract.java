@@ -29,6 +29,10 @@ interface HomeContract {
 
         void setAutoSyncCheckState(boolean autoSync);
 
+        boolean isViewingDashboard();
+
+        void navigateToDashboard();
+
         boolean isViewingOrders();
 
         void navigateToOrders();
@@ -51,6 +55,8 @@ interface HomeContract {
         void handleAutoSyncChanged(boolean isChecked);
 
         void handleViewAfterResulted(int requestCode, int resultCode);
+
+        void handleDashboardNavigationItemSelected();
 
         void handleOrdersNavigationItemSelected();
 

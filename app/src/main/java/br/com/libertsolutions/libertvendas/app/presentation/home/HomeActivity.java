@@ -12,6 +12,7 @@ import br.com.libertsolutions.libertvendas.app.PresentationInjection;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
+import br.com.libertsolutions.libertvendas.app.presentation.dashboard.DashboardFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
@@ -41,7 +42,7 @@ import java.util.List;
 public class HomeActivity extends LibertVendasActivity
         implements HomeContract.View, Drawer.OnDrawerItemClickListener {
 
-    private static final int DRAWER_ITEM_HOME = 1;
+    private static final int DRAWER_ITEM_DASHBOARD = 1;
     private static final int DRAWER_ITEM_ORDERS = 2;
     private static final int DRAWER_ITEM_CUSTOMERS = 3;
     private static final int DRAWER_ITEM_PRODUCTS = 4;
@@ -63,7 +64,7 @@ public class HomeActivity extends LibertVendasActivity
 
     private AccountHeader mAccountHeader;
 
-    private PrimaryDrawerItem mHomeDrawerItem;
+    private PrimaryDrawerItem mDashboardDrawerItem;
 
     private PrimaryDrawerItem mOrdersDrawerItem;
 
@@ -125,9 +126,9 @@ public class HomeActivity extends LibertVendasActivity
     }
 
     @Override public void initializeDrawer(final boolean autoSync) {
-        mHomeDrawerItem = new PrimaryDrawerItem()
-                .withIdentifier(DRAWER_ITEM_HOME)
-                .withName(R.string.drawer_item_home)
+        mDashboardDrawerItem = new PrimaryDrawerItem()
+                .withIdentifier(DRAWER_ITEM_DASHBOARD)
+                .withName(R.string.drawer_item_dashboard)
                 .withIcon(VectorDrawableCompat
                         .create(getResources(), R.drawable.ic_home, getTheme()))
                 .withSelectedIconColorRes(R.color.color_primary)
@@ -182,7 +183,7 @@ public class HomeActivity extends LibertVendasActivity
                 .withToolbar(mToolbar)
                 .withAccountHeader(mAccountHeader)
                 .addDrawerItems(
-                        mHomeDrawerItem,
+                        mDashboardDrawerItem,
                         mOrdersDrawerItem,
                         mCustomersDrawerItem,
                         mProductsDrawerItem,
@@ -193,7 +194,7 @@ public class HomeActivity extends LibertVendasActivity
                 .withSavedInstance(mInState)
                 .withShowDrawerOnFirstLaunch(true)
                 .withOnDrawerItemClickListener(this)
-                .withSelectedItem(DRAWER_ITEM_HOME)
+                .withSelectedItem(DRAWER_ITEM_DASHBOARD)
                 .withFireOnInitialOnClick(true)
                 .build();
     }
@@ -201,6 +202,7 @@ public class HomeActivity extends LibertVendasActivity
     @Override public void initializeViews() {
         mMaterialSheetFab = new MaterialSheetFab<>(
                 mFloatingActionButton, mFabSheet, mFabOverlay, mFabSheetColor, mAccentColor);
+        navigate().toDashboard();
     }
 
     @Override public void initializeDrawerBadgeOrdersCounter(final int count) {
@@ -211,6 +213,10 @@ public class HomeActivity extends LibertVendasActivity
     @Override public boolean onItemClick(
             final View view, final int position, final IDrawerItem drawerItem) {
         switch ((int) drawerItem.getIdentifier()) {
+            case DRAWER_ITEM_DASHBOARD: {
+                mPresenter.handleDashboardNavigationItemSelected();
+                break;
+            }
             case DRAWER_ITEM_ORDERS: {
                 mPresenter.handleOrdersNavigationItemSelected();
                 break;
@@ -248,6 +254,14 @@ public class HomeActivity extends LibertVendasActivity
     @Override public void setAutoSyncCheckState(final boolean autoSync) {
         mAutoSyncDrawerItem.withChecked(autoSync);
         mDrawer.updateItem(mAutoSyncDrawerItem);
+    }
+
+    @Override public boolean isViewingDashboard() {
+        return isViewingFragmentByTag(DashboardFragment.TAG);
+    }
+
+    @Override public void navigateToDashboard() {
+        navigate().toDashboard();
     }
 
     @Override public boolean isViewingOrders() {

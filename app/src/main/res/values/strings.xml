@@ -28,7 +28,7 @@
     <string name="title_activity_home">Libert Vendas</string>
     <string name="fab_sheet_item_novo_pedido">Novo pedido</string>
     <string name="fab_sheet_item_novo_cliente">Novo cliente</string>
-    <string name="drawer_item_home">Início</string>
+    <string name="drawer_item_dashboard">Início</string>
     <string name="drawer_item_pedidos">Seus pedidos</string>
     <string name="drawer_item_clientes">Clientes conquistados</string>
     <string name="drawer_item_produtos">Produtos cadastrados</string>
@@ -193,4 +193,7 @@
     <string name="loading_pedidos">Carregando lista de pedidos, por favor aguarde…</string>
     <string name="title_fragment_todos_pedidos">Todos Pedidos</string>
     <string name="title_fragment_pedidos_nao_enviados">Não Enviados</string>
+
+    <!-- Dashboard strings -->
+    <string name="title_fragment_dashboard">Início</string>
 </resources>

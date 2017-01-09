@@ -10,6 +10,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.CadastroClienteActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.CadastroPedidoActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.dashboard.DashboardFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.importacao.ImportacaoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
@@ -68,6 +69,15 @@ public final class Navigator {
         final Intent importationIntent = new Intent(mActivity, ImportacaoActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         ActivityCompat.startActivity(mActivity, importationIntent, null);
+    }
+
+    public void toDashboard() {
+        mActivity.getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container,
+                        DashboardFragment.newInstance(), DashboardFragment.TAG)
+                .commit();
+        mActivity.setTitle(R.string.title_fragment_dashboard);
     }
 
     public void toCustomers() {

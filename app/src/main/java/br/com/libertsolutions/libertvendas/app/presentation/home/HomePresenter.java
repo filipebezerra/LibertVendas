@@ -135,6 +135,12 @@ class HomePresenter extends BasePresenter<HomeContract.View>
         }
     }
 
+    @Override public void handleDashboardNavigationItemSelected() {
+        if (!getView().isViewingDashboard()) {
+            getView().navigateToDashboard();
+        }
+    }
+
     @Override public void handleOrdersNavigationItemSelected() {
         if (!getView().isViewingOrders()) {
             getView().navigateToOrders();
