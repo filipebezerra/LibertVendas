@@ -145,6 +145,10 @@ public class ListaPedidosFragment extends LibertVendasFragment
         mRecyclerViewPedidos.smoothScrollToPosition(position);
     }
 
+    @Override public void navigateToOrderDetail(final Pedido order) {
+        hostActivity().navigate().toOrderDetail(order);
+    }
+
     @Override public void onDestroyView() {
         mPresenter.unregisterEventBus();
         mPresenter.detach();

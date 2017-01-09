@@ -21,6 +21,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.CadastroPedidoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.AndroidUtils;
+import br.com.libertsolutions.libertvendas.app.presentation.widget.FormasPagamentoAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnTouch;

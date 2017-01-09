@@ -23,6 +23,8 @@ interface ListaPedidosContract {
         void updateInsertedItemAtPosition(int position);
 
         void updateChangedItemAtPosition(int position);
+
+        void navigateToOrderDetail(Pedido order);
     }
 
     interface Presenter extends MvpPresenter<View> {

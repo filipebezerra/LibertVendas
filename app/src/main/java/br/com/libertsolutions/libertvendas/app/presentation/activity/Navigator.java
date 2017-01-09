@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.activity;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.IntentCompat;
@@ -17,6 +18,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaC
 import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoginActivity;
+import br.com.libertsolutions.libertvendas.app.presentation.orderdetail.OrderDetailActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsActivity;
 
 /**
@@ -128,5 +130,9 @@ public final class Navigator {
             ActivityCompat.startActivityForResult(
                     mActivity, cadastroPedidoIntent, REQUEST_EDITAR_PEDIDO, null);
         }
+    }
+
+    public void toOrderDetail(@NonNull final Pedido order) {
+        OrderDetailActivity.create(mActivity, order);
     }
 }

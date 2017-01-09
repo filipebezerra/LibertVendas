@@ -66,8 +66,13 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
 
     @Override public void handleItemSelected(final int position) {
         if (position >= 0 && position < mPedidos.size()) {
-            final Pedido pedido = mPedidos.get(position);
-            getView().navigateToCadastroPedido(pedido);
+            final Pedido order = mPedidos.get(position);
+
+            if (order.getStatus() == Pedido.STATUS_PENDENTE) {
+                getView().navigateToCadastroPedido(order);
+            } else {
+                getView().navigateToOrderDetail(order);
+            }
         }
     }
 

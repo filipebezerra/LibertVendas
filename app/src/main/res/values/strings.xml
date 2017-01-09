@@ -196,4 +196,10 @@
 
     <!-- Dashboard strings -->
     <string name="title_fragment_dashboard">Início</string>
+
+    <!-- Order Detail strings -->
+    <string name="title_activity_order_detail">Visualizando pedido</string>
+    <string name="new_title_activity_order_detail">Visualizando pedido %1$d</string>
+    <string name="title_fragment_order_items">Itens do pedido</string>
+    <string name="title_fragment_order_info">Detalhes do pedido</string>
 </resources>

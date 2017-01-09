@@ -1,18 +1,17 @@
-package br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.finalizando;
+package br.com.libertsolutions.libertvendas.app.presentation.widget;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
-import br.com.libertsolutions.libertvendas.app.presentation.widget.SingleTextViewAdapter;
 import java.util.List;
 
 /**
  * @author Filipe Bezerra
  */
-class FormasPagamentoAdapter extends SingleTextViewAdapter<FormaPagamento> {
+public class FormasPagamentoAdapter extends SingleTextViewAdapter<FormaPagamento> {
 
-    public FormasPagamentoAdapter(@NonNull Context pContext, @NonNull List<FormaPagamento> pList) {
-        super(pContext, pList);
+    public FormasPagamentoAdapter(@NonNull Context context, @NonNull List<FormaPagamento> list) {
+        super(context, list);
     }
 
     @Override protected String getText(int pPosition) {

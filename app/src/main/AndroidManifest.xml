@@ -97,6 +97,21 @@
                 />
         </activity>
 
+        <!-- Order Detail screen -->
+        <activity
+            android:name=".presentation.orderdetail.OrderDetailActivity"
+            android:label="@string/title_activity_order_detail"
+            android:theme="@style/LibertApp.Theme.NoActionBar"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
+            android:parentActivityName=".presentation.home.HomeActivity"
+            >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".presentation.home.HomeActivity"
+                />
+        </activity>
+
         <service
             android:name=".data.sync.SyncTaskService"
             android:exported="true"
