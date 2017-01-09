@@ -38,6 +38,7 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
     public static final String EXTRA_PEDIDO_EDICAO
             = FinalizandoPedidoFragment.class.getSimpleName() + ".argExtraPedidoEdicao";
 
+    @BindView(R.id.input_layout_desconto) protected TextInputLayout mDescontoTextInputLayout;
     @BindView(R.id.spinner_forma_pagamento) protected MaterialSpinner mSpinnerFormaPagamento;
 
     private FinalizandoPedidoContract.Presenter mPresenter;
@@ -231,7 +232,7 @@ public class FinalizandoPedidoFragment extends LibertVendasFragment
     }
 
     @Override public void displayValidationErrorForDesconto(String validationMessage) {
-        mSpinnerFormaPagamento.setError(validationMessage);
+        mDescontoTextInputLayout.setError(validationMessage);
     }
 
     @Override public void resultPedidoEditado(Pedido pedido) {
