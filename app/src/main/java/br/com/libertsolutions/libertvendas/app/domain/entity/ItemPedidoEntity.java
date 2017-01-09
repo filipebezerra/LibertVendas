@@ -1,7 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.domain.entity;
 
 import br.com.libertsolutions.libertvendas.app.data.repository.Entity;
-import br.com.libertsolutions.libertvendas.app.data.utils.RealmAutoIncrement;
 import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
@@ -9,10 +8,9 @@ import io.realm.annotations.RealmClass;
 /**
  * @author Filipe Bezerra
  */
-@RealmClass public class ItemPedidoEntity implements Entity<Integer>, RealmModel {
+@RealmClass public class ItemPedidoEntity implements Entity<String>, RealmModel {
 
-    @PrimaryKey private Integer id
-            = RealmAutoIncrement.getInstance(this.getClass()).getNextIdFromModel();
+    @PrimaryKey private String id;
 
     private Integer idItem;
 
@@ -20,24 +18,18 @@ import io.realm.annotations.RealmClass;
 
     private Float quantidade;
 
-    private Double desconto;
-
     private Double subTotal;
-
-    private String observacao;
 
     private ProdutoEntity produto;
 
     private String ultimaAlteracao;
 
-    @Override public ItemPedidoEntity setId(final Integer id) {
-        if (id > 0) {
-            this.id = id;
-        }
+    @Override public ItemPedidoEntity setId(final String id) {
+        this.id = id;
         return this;
     }
 
-    @Override public Integer getId() {
+    @Override public String getId() {
         return id;
     }
 
@@ -68,30 +60,12 @@ import io.realm.annotations.RealmClass;
         return this;
     }
 
-    public Double getDesconto() {
-        return desconto;
-    }
-
-    public ItemPedidoEntity setDesconto(final Double desconto) {
-        this.desconto = desconto;
-        return this;
-    }
-
     public Double getSubTotal() {
         return subTotal;
     }
 
     public ItemPedidoEntity setSubTotal(final Double subTotal) {
         this.subTotal = subTotal;
-        return this;
-    }
-
-    public String getObservacao() {
-        return observacao;
-    }
-
-    public ItemPedidoEntity setObservacao(final String observacao) {
-        this.observacao = observacao;
         return this;
     }
 

@@ -24,27 +24,22 @@ class ItemPedidoMapper extends RealmMapper<ItemPedido, ItemPedidoEntity> {
                 .setIdItem(object.getIdItem())
                 .setPrecoVenda(object.getPrecoVenda())
                 .setQuantidade(object.getQuantidade())
-                .setDesconto(object.getDesconto())
                 .setSubTotal(object.getSubTotal())
-                .setObservacao(object.getObservacao())
                 .setProduto(mProdutoMapper.toEntity(object.getProduto()))
                 .setUltimaAlteracao(object.getUltimaAlteracao());
     }
 
     @Override public ItemPedido toViewObject(final ItemPedidoEntity entity) {
-        Integer id = entity.getId();
+        String id = entity.getId();
         Integer idItem = entity.getIdItem();
         Double precoVenda = entity.getPrecoVenda();
         Float quantidade = entity.getQuantidade();
-        Double desconto = entity.getDesconto();
         Double subTotal = entity.getSubTotal();
-        String observacao = entity.getObservacao();
         Produto produto = mProdutoMapper.toViewObject(entity.getProduto());
         String ultimaAlteracao = entity.getUltimaAlteracao();
 
         return ItemPedido.map(
-                id, idItem, precoVenda, quantidade, desconto, subTotal, observacao,
-                produto, ultimaAlteracao
+                id, idItem, precoVenda, quantidade, subTotal, produto, ultimaAlteracao
         );
     }
 }
