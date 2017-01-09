@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Beta 0.8.3 (09/01/2017)
+* **NOVO** Visualização do pedido enviado
+* **CORREÇÃO** Visualização da aba Home sem conteúdo (temporário)
+* **NOVO** Sincronização dos cadastros editados e novos de clientes e novos pedidos
+* **NOVO** Menu lateral com perfis do vendedor
+* **NOVO** Cadastros de clientes e dos pedidos podem ser editados
+* **MELHORIA** Lista de clientes com CPF/CNPJ
+
 Beta 5,1 - Versão 0.5.1 *(17/11/2016)*
 --------------------------------------
 * **CORREÇÃO** Corrigido crash do app por falta de plugin da integração com Crashlytics.
