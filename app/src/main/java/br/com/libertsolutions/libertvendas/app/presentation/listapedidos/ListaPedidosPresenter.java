@@ -4,9 +4,11 @@ import br.com.libertsolutions.libertvendas.app.data.pedido.PedidoRepository;
 import br.com.libertsolutions.libertvendas.app.data.sync.SyncOrdersEvent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.finalizando.NovoPedidoEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.ObservableUtils;
 import java.util.List;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
 import rx.Subscriber;
@@ -36,14 +38,18 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
         mIsShowingOrdersNotSent = showOrdersNotSent;
         Observable<List<Pedido>> pedidosFromMemoryCache = ObservableUtils.toObservable(mPedidos);
 
+        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        final String cpfCnpjVendedor = event.getVendedor().getCpfCnpj();
+        final String cnpjEmpresa = event.getVendedor().getEmpresaSelecionada().getCnpj();
+
         Observable<List<Pedido>> pedidosFromDiskCache;
         if (showOrdersNotSent) {
             pedidosFromDiskCache = mPedidoRepository
-                    .findByStatus(Pedido.STATUS_PENDENTE)
+                    .findByStatus(Pedido.STATUS_PENDENTE, cpfCnpjVendedor, cnpjEmpresa)
                     .doOnNext(pedidos -> mPedidos = pedidos);
         } else {
             pedidosFromDiskCache = mPedidoRepository
-                    .findAll()
+                    .findByVendedorAndEmpresa(cpfCnpjVendedor, cnpjEmpresa)
                     .doOnNext(pedidos -> mPedidos = pedidos);
         }
 

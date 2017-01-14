@@ -46,6 +46,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
     @Override public void loadProdutos() {
         LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
         int idTabela = event.getVendedor().getIdTabela();
+
         addSubscription(mTabelaRepository.findById(idTabela)
                 .observeOn(mainThread())
                 .flatMap(new Func1<Tabela, Observable<List<ItemTabela>>>() {

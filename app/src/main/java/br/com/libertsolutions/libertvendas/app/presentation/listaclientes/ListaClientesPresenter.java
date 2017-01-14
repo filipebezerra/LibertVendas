@@ -4,6 +4,7 @@ import br.com.libertsolutions.libertvendas.app.data.cliente.ClienteRepository;
 import br.com.libertsolutions.libertvendas.app.data.sync.SyncCustomersEvent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.NewCustomerEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.ObservableUtils;
 import java.util.List;
@@ -42,8 +43,12 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
     @Override public void loadClientes() {
         Observable<List<Cliente>> clientesFromMemoryCache = ObservableUtils.toObservable(mClientes);
 
+        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        final String cpfCnpjVendedor = event.getVendedor().getCpfCnpj();
+        final String cnpjEmpresa = event.getVendedor().getEmpresaSelecionada().getCnpj();
+
         Observable<List<Cliente>> clientesFromDiskCache = mClienteRepository
-                .findAll()
+                .findByVendedorAndEmpresa(cpfCnpjVendedor, cnpjEmpresa)
                 .doOnNext(clientes -> mClientes = clientes);
 
         addSubscription(Observable

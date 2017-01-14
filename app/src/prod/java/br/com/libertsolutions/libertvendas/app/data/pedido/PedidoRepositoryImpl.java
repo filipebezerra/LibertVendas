@@ -36,12 +36,15 @@ public class PedidoRepositoryImpl extends RealmRepositoryImpl<Pedido, String, Pe
                 .map(mMapper::toViewObject);
     }
 
-    @Override public Observable<List<Pedido>> findByStatus(final int status) {
+    @Override public Observable<List<Pedido>> findByStatus(
+            final int status, final String cpfCnpjVendedor, final String cnpjEmpresa) {
         return RealmObservable
                 .results(realm -> {
                     RealmResults<PedidoEntity> pedidos = realm
                             .where(mEntityClass)
                             .equalTo("status", status)
+                            .equalTo("cpfCnpjVendedor", cpfCnpjVendedor)
+                            .equalTo("cnpjEmpresa", cnpjEmpresa)
                             .findAll();
                     Timber.i("%s.findByStatus() results %s", mEntityClass.getSimpleName(),
                             pedidos.size());

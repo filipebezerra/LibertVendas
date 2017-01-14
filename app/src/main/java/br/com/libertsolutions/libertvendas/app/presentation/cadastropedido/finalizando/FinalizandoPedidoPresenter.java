@@ -71,9 +71,9 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         initializeViewFields();
         initializeViewRequiredFields();
         displayDataEmissao();
+        getLoggedUser();
         loadFormasPagamento();
         initializeFieldsIfEmEdicao();
-        getLoggedUser();
     }
 
     private void initializeViewFields() {
@@ -99,8 +99,11 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         Observable<List<FormaPagamento>> formasPagamentoFromMemoryCache = ObservableUtils
                 .toObservable(mFormasPagamento);
 
+        final String cpfCnpjVendedor = mVendedorLogado.getCpfCnpj();
+        final String cnpjEmpresa = mVendedorLogado.getEmpresaSelecionada().getCnpj();
+
         Observable<List<FormaPagamento>> formasPagamentoFromDiskCache = mFormaPagamentoRepository
-                .findAll()
+                .findByVendedorAndEmpresa(cpfCnpjVendedor, cnpjEmpresa)
                 .doOnNext(pFormasPagamentoList -> mFormasPagamento = pFormasPagamentoList);
 
         addSubscription(Observable
@@ -302,8 +305,8 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
                     formaPagamento,
                     itensPedido,
                     ApiUtils.formatApiDateTime(System.currentTimeMillis()),
-                    mVendedorLogado.getEmpresaSelecionada().getCnpj(),
-                    mVendedorLogado.getCpfCnpj()
+                    mVendedorLogado.getCpfCnpj(),
+                    mVendedorLogado.getEmpresaSelecionada().getCnpj()
             );
         } else {
             return Pedido.createNew(
@@ -314,8 +317,8 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
                     mClienteSelecionado,
                     mTabelaPadrao,
                     itensPedido,
-                    mVendedorLogado.getEmpresaSelecionada().getCnpj(),
-                    mVendedorLogado.getCpfCnpj()
+                    mVendedorLogado.getCpfCnpj(),
+                    mVendedorLogado.getEmpresaSelecionada().getCnpj()
             );
         }
     }

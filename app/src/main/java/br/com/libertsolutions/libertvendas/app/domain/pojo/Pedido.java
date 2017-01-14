@@ -46,9 +46,9 @@ public final class Pedido implements Parcelable {
 
     private final String ultimaAlteracao;
 
-    private final String cnpjEmpresa;
-
     private final String cpfCnpjVendedor;
+
+    private final String cnpjEmpresa;
 
     public static final Creator<Pedido> CREATOR = new Creator<Pedido>() {
         @Override public Pedido createFromParcel(Parcel in) {
@@ -61,14 +61,33 @@ public final class Pedido implements Parcelable {
     };
 
     public static Pedido createNew(
-            final long dataEmissao, final double desconto, final FormaPagamento formaPagamento,
-            final String observacao, final Cliente cliente, final Tabela tabela,
-            final List<ItemPedido> itens, final String cnpjEmpresa, final String cpfCnpjVendedor) {
-
+            final long dataEmissao,
+            final double desconto,
+            final FormaPagamento formaPagamento,
+            final String observacao,
+            final Cliente cliente,
+            final Tabela tabela,
+            final List<ItemPedido> itens,
+            final String cpfCnpjVendedor,
+            final String cnpjEmpresa
+    ) {
         return new Pedido(
-                generateId(), SEM_ID_PEDIDO, TIPO_NORMAL, STATUS_PENDENTE, dataEmissao,
-                desconto, formaPagamento.getPercentualDesconto(), observacao, cliente,
-                formaPagamento, tabela, itens, SEM_ALTERACAO, cnpjEmpresa, cpfCnpjVendedor);
+                generateId(),
+                SEM_ID_PEDIDO,
+                TIPO_NORMAL,
+                STATUS_PENDENTE,
+                dataEmissao,
+                desconto,
+                formaPagamento.getPercentualDesconto(),
+                observacao,
+                cliente,
+                formaPagamento,
+                tabela,
+                itens,
+                SEM_ALTERACAO,
+                cpfCnpjVendedor,
+                cnpjEmpresa
+        );
     }
 
     private static String generateId() {
@@ -76,34 +95,75 @@ public final class Pedido implements Parcelable {
     }
 
     public static Pedido changed(
-            Pedido pedidoEdited, final long dataEmissao, final double desconto,
-            final String observacao, final Cliente cliente, final FormaPagamento formaPagamento,
-            final List<ItemPedido> itens, final String ultimaAlteracao, final String cnpjEmpresa,
-            final String cpfCnpjVendedor) {
-
+            final Pedido pedidoEdited,
+            final long dataEmissao,
+            final double desconto,
+            final String observacao,
+            final Cliente cliente,
+            final FormaPagamento formaPagamento,
+            final List<ItemPedido> itens,
+            final String ultimaAlteracao,
+            final String cpfCnpjVendedor,
+            final String cnpjEmpresa
+    ) {
         if (pedidoEdited.getStatus() == STATUS_ENVIADO) {
             throw new IllegalStateException(
                     "Pedido já enviado para servidor, não pode ser alterado");
         }
 
         return new Pedido(
-                pedidoEdited.getId(), pedidoEdited.getIdPedido(), pedidoEdited.getTipo(),
-                pedidoEdited.getStatus(), dataEmissao, desconto,
-                formaPagamento.getPercentualDesconto(), observacao, cliente, formaPagamento,
-                pedidoEdited.getTabela(), itens, ultimaAlteracao, cnpjEmpresa, cpfCnpjVendedor);
+                pedidoEdited.getId(),
+                pedidoEdited.getIdPedido(),
+                pedidoEdited.getTipo(),
+                pedidoEdited.getStatus(),
+                dataEmissao,
+                desconto,
+                formaPagamento.getPercentualDesconto(),
+                observacao,
+                cliente,
+                formaPagamento,
+                pedidoEdited.getTabela(),
+                itens,
+                ultimaAlteracao,
+                cpfCnpjVendedor,
+                cnpjEmpresa
+        );
     }
 
     public static Pedido map(
-            final String id, final int idPedido, final int tipo, final int status,
-            final long dataEmissao, final double desconto, final float percentualDesconto,
-            final String observacao, final Cliente cliente, final FormaPagamento formaPagamento,
-            final Tabela tabela, final List<ItemPedido> itens, final String ultimaAlteracao,
-            final String cnpjEmpresa, final String cpfCnpjVendedor) {
-
+            final String id,
+            final int idPedido,
+            final int tipo,
+            final int status,
+            final long dataEmissao,
+            final double desconto,
+            final float percentualDesconto,
+            final String observacao,
+            final Cliente cliente,
+            final FormaPagamento formaPagamento,
+            final Tabela tabela,
+            final List<ItemPedido> itens,
+            final String ultimaAlteracao,
+            final String cpfCnpjVendedor,
+            final String cnpjEmpresa
+    ) {
         return new Pedido(
-                id, idPedido, tipo, status, dataEmissao, desconto, percentualDesconto,
-                observacao, cliente, formaPagamento, tabela, itens, ultimaAlteracao, cnpjEmpresa,
-                cpfCnpjVendedor);
+                id,
+                idPedido,
+                tipo,
+                status,
+                dataEmissao,
+                desconto,
+                percentualDesconto,
+                observacao,
+                cliente,
+                formaPagamento,
+                tabela,
+                itens,
+                ultimaAlteracao,
+                cpfCnpjVendedor,
+                cnpjEmpresa
+        );
     }
 
     private Pedido(Parcel in) {
@@ -120,17 +180,27 @@ public final class Pedido implements Parcelable {
         tabela = in.readParcelable(Tabela.class.getClassLoader());
         itens = in.createTypedArrayList(ItemPedido.CREATOR);
         ultimaAlteracao = in.readString();
-        cnpjEmpresa = in.readString();
         cpfCnpjVendedor = in.readString();
+        cnpjEmpresa = in.readString();
     }
 
     private Pedido(
-            final String id, final int idPedido, final int tipo, final int status,
-            final long dataEmissao, final double desconto, final float percentualDesconto,
-            final String observacao, final Cliente cliente, final FormaPagamento formaPagamento,
-            final Tabela tabela, final List<ItemPedido> itens, final String ultimaAlteracao,
-            final String cnpjEmpresa, final String cpfCnpjVendedor) {
-
+            String id,
+            int idPedido,
+            int tipo,
+            int status,
+            long dataEmissao,
+            double desconto,
+            float percentualDesconto,
+            String observacao,
+            Cliente cliente,
+            FormaPagamento formaPagamento,
+            Tabela tabela,
+            List<ItemPedido> itens,
+            String ultimaAlteracao,
+            String cpfCnpjVendedor,
+            String cnpjEmpresa
+    ) {
         this.id = id;
         this.idPedido = idPedido;
         this.tipo = tipo;
@@ -144,8 +214,8 @@ public final class Pedido implements Parcelable {
         this.tabela = tabela;
         this.itens = itens;
         this.ultimaAlteracao = ultimaAlteracao;
-        this.cnpjEmpresa = cnpjEmpresa;
         this.cpfCnpjVendedor = cpfCnpjVendedor;
+        this.cnpjEmpresa = cnpjEmpresa;
     }
 
     public String getId() {
@@ -200,12 +270,12 @@ public final class Pedido implements Parcelable {
         return ultimaAlteracao;
     }
 
-    public String getCnpjEmpresa() {
-        return cnpjEmpresa;
-    }
-
     public String getCpfCnpjVendedor() {
         return cpfCnpjVendedor;
+    }
+
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
     }
 
     @Override public boolean equals(final Object o) {
@@ -240,8 +310,8 @@ public final class Pedido implements Parcelable {
         sb.append(", tabela=").append(tabela);
         sb.append(", itens=").append(itens);
         sb.append(", ultimaAlteracao='").append(ultimaAlteracao).append('\'');
-        sb.append(", cnpjEmpresa='").append(cnpjEmpresa).append('\'');
         sb.append(", cpfCnpjVendedor='").append(cpfCnpjVendedor).append('\'');
+        sb.append(", cnpjEmpresa='").append(cnpjEmpresa).append('\'');
         sb.append('}');
         return sb.toString();
     }
@@ -264,7 +334,7 @@ public final class Pedido implements Parcelable {
         out.writeParcelable(tabela, flags);
         out.writeTypedList(itens);
         out.writeString(ultimaAlteracao);
-        out.writeString(cnpjEmpresa);
         out.writeString(cpfCnpjVendedor);
+        out.writeString(cnpjEmpresa);
     }
 }

@@ -49,8 +49,8 @@ public class PedidoMapper extends RealmMapper<Pedido, PedidoEntity> {
                 .setTabela(mTabelaEntityMapper.toEntity(object.getTabela()))
                 .setItens(mItemPedidoEntityMapper.toEntityList(object.getItens()))
                 .setUltimaAlteracao(object.getUltimaAlteracao())
-                .setCnpjEmpresa(object.getCnpjEmpresa())
-                .setCpfCnpjVendedor(object.getCpfCnpjVendedor());
+                .setCpfCnpjVendedor(object.getCpfCnpjVendedor())
+                .setCnpjEmpresa(object.getCnpjEmpresa());
     }
 
     @Override public Pedido toViewObject(final PedidoEntity entity) {
@@ -68,13 +68,13 @@ public class PedidoMapper extends RealmMapper<Pedido, PedidoEntity> {
         Tabela tabelaPreco = mTabelaEntityMapper.toViewObject(entity.getTabela());
         List<ItemPedido> itemPedidos = mItemPedidoEntityMapper.toViewObjectList(entity.getItens());
         String ultimaAlteracao = entity.getUltimaAlteracao();
-        String cnpjEmpresa = entity.getCnpjEmpresa();
         String cpfCnpjVendedor = entity.getCpfCnpjVendedor();
+        String cnpjEmpresa = entity.getCnpjEmpresa();
 
         return Pedido.map(
                 id, idPedido, tipo, status, dataEmissao, desconto, percentualDesconto,
                 observacao, cliente, formaPagamento, tabelaPreco, itemPedidos, ultimaAlteracao,
-                cnpjEmpresa, cpfCnpjVendedor
+                cpfCnpjVendedor, cnpjEmpresa
         );
     }
 }
