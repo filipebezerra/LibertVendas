@@ -13,22 +13,23 @@ public class TabelaFactory {
 
     private TabelaFactory() {/* No instances */}
 
-    public static List<Tabela> createListTabelaPreco(List<TabelaDto> pDtos) {
+    public static List<Tabela> toPojoList(
+            final List<TabelaDto> tabelaDtos, final String cpfCnpjVendedor,
+            final String cnpjEmpresa) {
         List<Tabela> tabelaPrecoList = new ArrayList<>();
 
-        for (TabelaDto dto : pDtos) {
-            tabelaPrecoList.add(createTabelaPreco(dto));
+        for (TabelaDto dto : tabelaDtos) {
+            tabelaPrecoList.add(toPojo(dto, cpfCnpjVendedor, cnpjEmpresa));
         }
         return tabelaPrecoList;
     }
 
-    private static Tabela createTabelaPreco(TabelaDto pDto) {
-        final List<ItemTabela> itensTabela = ItemTabelaFactory
-                .createListItemTabela(pDto.itensTabela);
+    private static Tabela toPojo(TabelaDto tabelaDto, String cpfCnpjVendedor, String cnpjEmpresa) {
+        final List<ItemTabela> itensTabela = ItemTabelaFactory.toPojoList(tabelaDto.itensTabela);
 
         return Tabela.create(
-                pDto.idTabela, pDto.codigo, pDto.nome, pDto.ativo,
-                pDto.ultimaAlteracao, itensTabela
+                tabelaDto.idTabela, tabelaDto.codigo, tabelaDto.nome, tabelaDto.ativo,
+                tabelaDto.ultimaAlteracao, itensTabela, cpfCnpjVendedor, cnpjEmpresa
         );
     }
 }

@@ -13,20 +13,21 @@ class ItemTabelaFactory {
 
     private ItemTabelaFactory() {/* No instances */}
 
-    static List<ItemTabela> createListItemTabela(List<ItemTabelaDto> pDtos) {
+    static List<ItemTabela> toPojoList(List<ItemTabelaDto> itemTabelaDtos) {
         List<ItemTabela> itemTabelaList = new ArrayList<>();
 
-        for (ItemTabelaDto dto : pDtos) {
-            itemTabelaList.add(createItemTabela(dto));
+        for (ItemTabelaDto dto : itemTabelaDtos) {
+            itemTabelaList.add(toPojo(dto));
         }
         return itemTabelaList;
     }
 
-    private static ItemTabela createItemTabela(ItemTabelaDto pDto) {
-        Produto produto = ProdutoFactories.createProduto(pDto.produto);
+    private static ItemTabela toPojo(ItemTabelaDto itemTabelaDto) {
+        Produto produto = ProdutoFactories.createProduto(itemTabelaDto.produto);
 
         return ItemTabela.create(
-                pDto.idItensTabela, pDto.prcVenda, pDto.idProduto, pDto.ultimaAlteracao, produto
+                itemTabelaDto.idItensTabela, itemTabelaDto.prcVenda,
+                itemTabelaDto.idProduto, itemTabelaDto.ultimaAlteracao, produto
         );
     }
 }

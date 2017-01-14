@@ -12,19 +12,24 @@ public final class FormaPagamentoFactory {
 
     private FormaPagamentoFactory() {/* No instances */}
 
-    public static List<FormaPagamento> createListFormaPagamento(List<FormaPagamentoDto> pDtos) {
+    public static List<FormaPagamento> toPojoList(
+            final List<FormaPagamentoDto> formaPagamentoDtos, final String cpfCnpjVendedor,
+            final String cnpjEmpresa) {
         List<FormaPagamento> formaPagamentoList = new ArrayList<>();
 
-        for (FormaPagamentoDto dto : pDtos) {
-            formaPagamentoList.add(createFormaPagamento(dto));
+        for (FormaPagamentoDto dto : formaPagamentoDtos) {
+            formaPagamentoList.add(toPojo(dto, cpfCnpjVendedor, cnpjEmpresa));
         }
         return formaPagamentoList;
     }
 
-    public static FormaPagamento createFormaPagamento(FormaPagamentoDto pDto) {
+    private static FormaPagamento toPojo(
+            FormaPagamentoDto formaPagamentoDto, String cpfCnpjVendedor, String cnpjEmpresa) {
         return FormaPagamento.create(
-                pDto.idFormPgto, pDto.codigo, pDto.descricao, pDto.perDesc, pDto.idEmpresa,
-                pDto.ultimaAlteracao, pDto.ativo
+                formaPagamentoDto.idFormPgto, formaPagamentoDto.codigo, formaPagamentoDto.descricao,
+                formaPagamentoDto.perDesc, formaPagamentoDto.idEmpresa,
+                formaPagamentoDto.ultimaAlteracao, formaPagamentoDto.ativo,
+                cpfCnpjVendedor, cnpjEmpresa
         );
     }
 }

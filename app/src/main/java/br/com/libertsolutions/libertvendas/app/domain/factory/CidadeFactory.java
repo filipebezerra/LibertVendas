@@ -14,11 +14,11 @@ public final class CidadeFactory {
 
     private CidadeFactory() {/* No instances */}
 
-    public static List<Cidade> createListCidade(List<CidadeDto> pDtos) {
+    public static List<Cidade> toPojoList(final List<CidadeDto> cidadeDtos) {
         List<Cidade> cidadeList = new ArrayList<>();
 
-        for (CidadeDto dto : pDtos) {
-            Cidade cidade = createCidade(dto);
+        for (CidadeDto dto : cidadeDtos) {
+            Cidade cidade = toPojo(dto);
             if (cidade != null) {
                 cidadeList.add(cidade);
             }
@@ -26,20 +26,20 @@ public final class CidadeFactory {
         return cidadeList;
     }
 
-    public static Cidade createCidade(CidadeDto pDto) {
-        final Estado estado = EstadoFactory.createEstado(pDto.estado);
+    static Cidade toPojo(final CidadeDto cidadeDto) {
+        final Estado estado = EstadoFactory.toPojo(cidadeDto.estado);
 
         return Cidade.create(
-                pDto.idCidade, pDto.codMunicipio, pDto.nome, estado
+                cidadeDto.idCidade, cidadeDto.codMunicipio, cidadeDto.nome, estado
         );
     }
 
-    public static CidadeDto createDto(CidadeEntity cidadeEntity) {
+    static CidadeDto toDto(final CidadeEntity cidadeEntity) {
         CidadeDto cidadeDto = new CidadeDto();
         cidadeDto.idCidade = cidadeEntity.getId();
         cidadeDto.nome = cidadeEntity.getNome();
         cidadeDto.codMunicipio = cidadeEntity.getCodMunicipio();
-        cidadeDto.estado = EstadoFactory.createDto(cidadeEntity.getEstado());
+        cidadeDto.estado = EstadoFactory.toDto(cidadeEntity.getEstado());
         return cidadeDto;
     }
 }

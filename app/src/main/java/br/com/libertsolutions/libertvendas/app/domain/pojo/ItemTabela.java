@@ -29,9 +29,19 @@ public final class ItemTabela implements Parcelable {
     };
 
     public static ItemTabela create(
-            final int idItemTabela, final double precoVenda, final int idProduto,
-            final String ultimaAlteracao, final Produto produto) {
-        return new ItemTabela(idItemTabela, precoVenda, idProduto, ultimaAlteracao, produto);
+            final int idItemTabela,
+            final double precoVenda,
+            final int idProduto,
+            final String ultimaAlteracao,
+            final Produto produto
+    ) {
+        return new ItemTabela(
+                idItemTabela,
+                precoVenda,
+                idProduto,
+                ultimaAlteracao,
+                produto
+        );
     }
 
     private ItemTabela(Parcel in) {
@@ -43,8 +53,12 @@ public final class ItemTabela implements Parcelable {
     }
 
     private ItemTabela(
-            final int idItemTabela, final double precoVenda, final int idProduto,
-            final String ultimaAlteracao, final Produto produto) {
+            final int idItemTabela,
+            final double precoVenda,
+            final int idProduto,
+            final String ultimaAlteracao,
+            final Produto produto
+    ) {
         this.idItemTabela = idItemTabela;
         this.precoVenda = precoVenda;
         this.idProduto = idProduto;
@@ -70,6 +84,34 @@ public final class ItemTabela implements Parcelable {
 
     public Produto getProduto() {
         return produto;
+    }
+
+    @Override public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ItemTabela that = (ItemTabela) o;
+
+        return getIdItemTabela() == that.getIdItemTabela();
+    }
+
+    @Override public int hashCode() {
+        return getIdItemTabela();
+    }
+
+    @Override public String toString() {
+        final StringBuilder sb = new StringBuilder("ItemTabela{");
+        sb.append("idItemTabela=").append(idItemTabela);
+        sb.append(", precoVenda=").append(precoVenda);
+        sb.append(", idProduto=").append(idProduto);
+        sb.append(", ultimaAlteracao='").append(ultimaAlteracao).append('\'');
+        sb.append(", produto=").append(produto);
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override public int describeContents() {

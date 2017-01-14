@@ -24,6 +24,10 @@ import io.realm.annotations.Required;
 
     private RealmList<ItemTabelaEntity> itensTabela;
 
+    private String cnpjEmpresa;
+
+    private String cpfCnpjVendedor;
+
     @Override public TabelaEntity setId(final Integer id) {
         idTabela = id;
         return this;
@@ -75,6 +79,24 @@ import io.realm.annotations.Required;
 
     public TabelaEntity setItensTabela(final RealmList<ItemTabelaEntity> itensTabela) {
         this.itensTabela = itensTabela;
+        return this;
+    }
+
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
+    }
+
+    public TabelaEntity setCnpjEmpresa(final String cnpjEmpresa) {
+        this.cnpjEmpresa = cnpjEmpresa;
+        return this;
+    }
+
+    public String getCpfCnpjVendedor() {
+        return cpfCnpjVendedor;
+    }
+
+    public TabelaEntity setCpfCnpjVendedor(final String cpfCnpjVendedor) {
+        this.cpfCnpjVendedor = cpfCnpjVendedor;
         return this;
     }
 }

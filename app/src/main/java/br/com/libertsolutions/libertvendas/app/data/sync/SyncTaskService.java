@@ -225,7 +225,7 @@ public class SyncTaskService extends GcmTaskService {
             return provideClienteService()
                     .patch(
                             getLoggedUser().getEmpresaSelecionada().getCnpj(),
-                            ClienteFactory.createListDto(changedCustomers))
+                            ClienteFactory.toDtoList(changedCustomers))
                     .execute();
         } catch (IOException e) {
             Timber.e(e, "server failure while doing customers patch request");
@@ -273,7 +273,7 @@ public class SyncTaskService extends GcmTaskService {
             return provideClienteService()
                     .post(
                             getLoggedUser().getEmpresaSelecionada().getCnpj(),
-                            ClienteFactory.createDto(newCustomer))
+                            ClienteFactory.toDto(newCustomer))
                     .execute();
         } catch (IOException e) {
             Timber.e(e, "server failure while doing customer post request");

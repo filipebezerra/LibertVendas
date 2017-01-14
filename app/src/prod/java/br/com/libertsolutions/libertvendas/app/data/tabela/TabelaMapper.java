@@ -36,9 +36,12 @@ class TabelaMapper extends RealmMapper<Tabela, TabelaEntity> {
         final String ultimaAlteracao = entity.getUltimaAlteracao();
         final List<ItemTabela> itensTabela
                 = mItemTabelaMapper.toViewObjectList(entity.getItensTabela());
+        String cpfCnpjVendedor = entity.getCpfCnpjVendedor();
+        String cnpjEmpresa = entity.getCnpjEmpresa();
 
         return Tabela.create(
-                idTabela, codigo, nome, ativo, ultimaAlteracao, itensTabela
+                idTabela, codigo, nome, ativo, ultimaAlteracao, itensTabela, cpfCnpjVendedor,
+                cnpjEmpresa
         );
     }
 }

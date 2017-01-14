@@ -3,8 +3,6 @@ package br.com.libertsolutions.libertvendas.app.domain.factory;
 import br.com.libertsolutions.libertvendas.app.domain.dto.EstadoDto;
 import br.com.libertsolutions.libertvendas.app.domain.entity.EstadoEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Filipe Bezerra
@@ -13,22 +11,13 @@ class EstadoFactory {
 
     private EstadoFactory() {/* No instances */}
 
-    public static List<Estado> createListEstado(List<EstadoDto> pDtos) {
-        List<Estado> estadoList = new ArrayList<>();
-
-        for (EstadoDto dto : pDtos) {
-            estadoList.add(createEstado(dto));
-        }
-        return estadoList;
-    }
-
-    public static Estado createEstado(EstadoDto pDto) {
+    static Estado toPojo(final EstadoDto estadoDto) {
         return Estado.create(
-                pDto.idEstado, pDto.uf, pDto.nome
+                estadoDto.idEstado, estadoDto.uf, estadoDto.nome
         );
     }
 
-    public static EstadoDto createDto(EstadoEntity estadoEntity) {
+    static EstadoDto toDto(final EstadoEntity estadoEntity) {
         EstadoDto estadoDto = new EstadoDto();
         estadoDto.idEstado = estadoEntity.getId();
         estadoDto.nome = estadoEntity.getNome();

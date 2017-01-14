@@ -14,26 +14,31 @@ public final class ClienteFactory {
 
     private ClienteFactory() {/* No instances */}
 
-    public static List<Cliente> createListCliente(List<ClienteDto> pDtos) {
+    public static List<Cliente> toPojoList(
+            final List<ClienteDto> clienteDtos, final String cpfCnpjVendedor,
+            final String cnpjEmpresa) {
         List<Cliente> clienteList = new ArrayList<>();
 
-        for (ClienteDto dto : pDtos) {
-            clienteList.add(createCliente(dto));
+        for (ClienteDto dto : clienteDtos) {
+            clienteList.add(toPojo(dto, cpfCnpjVendedor, cnpjEmpresa));
         }
         return clienteList;
     }
 
-    private static Cliente createCliente(ClienteDto pDto) {
-        final Cidade cidade = CidadeFactory.createCidade(pDto.cidade);
+    private static Cliente toPojo(
+            ClienteDto clienteDto, String cpfCnpjVendedor, String cnpjEmpresa) {
+        final Cidade cidade = CidadeFactory.toPojo(clienteDto.cidade);
 
         return Cliente.create(
-                pDto.idCliente, pDto.codigo, pDto.nome, pDto.tipo, pDto.cpfCnpj, pDto.contato,
-                pDto.email, pDto.telefone, pDto.telefone2, pDto.endereco, pDto.cep, cidade,
-                pDto.bairro, pDto.numero, pDto.complemento, pDto.ultimaAlteracao, pDto.ativo
+                clienteDto.idCliente, clienteDto.codigo, clienteDto.nome, clienteDto.tipo,
+                clienteDto.cpfCnpj, clienteDto.contato, clienteDto.email, clienteDto.telefone,
+                clienteDto.telefone2, clienteDto.endereco, clienteDto.cep, cidade,
+                clienteDto.bairro, clienteDto.numero, clienteDto.complemento,
+                clienteDto.ultimaAlteracao, clienteDto.ativo, cpfCnpjVendedor, cnpjEmpresa
         );
     }
 
-    public static ClienteDto createDto(ClienteEntity clienteEntity) {
+    public static ClienteDto toDto(ClienteEntity clienteEntity) {
         ClienteDto clienteDto = new ClienteDto();
         clienteDto.idCliente = clienteEntity.getIdCliente();
         clienteDto.codigo = clienteEntity.getCodigo();
@@ -46,7 +51,7 @@ public final class ClienteFactory {
         clienteDto.telefone2 = clienteEntity.getTelefone2();
         clienteDto.endereco = clienteEntity.getEndereco();
         clienteDto.cep = clienteEntity.getCep();
-        clienteDto.cidade = CidadeFactory.createDto(clienteEntity.getCidade());
+        clienteDto.cidade = CidadeFactory.toDto(clienteEntity.getCidade());
         clienteDto.bairro = clienteEntity.getBairro();
         clienteDto.numero = clienteEntity.getNumero();
         clienteDto.complemento = clienteEntity.getComplemento();
@@ -55,11 +60,11 @@ public final class ClienteFactory {
         return clienteDto;
     }
 
-    public static List<ClienteDto> createListDto(List<ClienteEntity> clientes) {
+    public static List<ClienteDto> toDtoList(List<ClienteEntity> clienteEntities) {
         List<ClienteDto> clienteList = new ArrayList<>();
 
-        for (ClienteEntity cliente : clientes) {
-            clienteList.add(createDto(cliente));
+        for (ClienteEntity cliente : clienteEntities) {
+            clienteList.add(toDto(cliente));
         }
         return clienteList;
     }

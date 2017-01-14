@@ -17,7 +17,9 @@ class FormaPagamentoMapper extends RealmMapper<FormaPagamento, FormaPagamentoEnt
                 .setPercentualDesconto(object.getPercentualDesconto())
                 .setIdEmpresa(object.getIdEmpresa())
                 .setUltimaAlteracao(object.getUltimaAlteracao())
-                .setAtivo(object.isAtivo());
+                .setAtivo(object.isAtivo())
+                .setCpfCnpjVendedor(object.getCpfCnpjVendedor())
+                .setCnpjEmpresa(object.getCnpjEmpresa());
     }
 
     @Override public FormaPagamento toViewObject(final FormaPagamentoEntity entity) {
@@ -28,9 +30,12 @@ class FormaPagamentoMapper extends RealmMapper<FormaPagamento, FormaPagamentoEnt
         Integer idEmpresa = entity.getIdEmpresa();
         String ultimaAlteracao = entity.getUltimaAlteracao();
         Boolean ativo = entity.isAtivo();
+        String cpfCnpjVendedor = entity.getCpfCnpjVendedor();
+        String cnpjEmpresa = entity.getCnpjEmpresa();
 
         return FormaPagamento.create(
-                id, codigo, descricao, percentualDesconto, idEmpresa, ultimaAlteracao, ativo
+                id, codigo, descricao, percentualDesconto, idEmpresa, ultimaAlteracao, ativo,
+                cpfCnpjVendedor, cnpjEmpresa
         );
     }
 }

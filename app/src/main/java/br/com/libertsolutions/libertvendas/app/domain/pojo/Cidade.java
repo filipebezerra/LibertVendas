@@ -27,8 +27,17 @@ public final class Cidade implements Parcelable {
     };
 
     public static Cidade create(
-            final int idCidade, final String codMunicipio, final String nome, final Estado estado) {
-        return new Cidade(idCidade, codMunicipio, nome, estado);
+            final int idCidade,
+            final String codMunicipio,
+            final String nome,
+            final Estado estado
+    ) {
+        return new Cidade(
+                idCidade,
+                codMunicipio,
+                nome,
+                estado
+        );
     }
 
     private Cidade(Parcel in) {
@@ -39,7 +48,11 @@ public final class Cidade implements Parcelable {
     }
 
     private Cidade(
-            final int idCidade, final String codMunicipio, final String nome, final Estado estado) {
+            final int idCidade,
+            final String codMunicipio,
+            final String nome,
+            final Estado estado
+    ) {
         this.idCidade = idCidade;
         this.codMunicipio = codMunicipio;
         this.nome = nome;
@@ -62,15 +75,15 @@ public final class Cidade implements Parcelable {
         return estado;
     }
 
-    @Override public boolean equals(Object anotherCidade) {
-        if (this == anotherCidade) {
+    @Override public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (anotherCidade == null || getClass() != anotherCidade.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
-        Cidade cidade = (Cidade) anotherCidade;
+        Cidade cidade = (Cidade) o;
 
         return getIdCidade() == cidade.getIdCidade();
     }
@@ -80,7 +93,13 @@ public final class Cidade implements Parcelable {
     }
 
     @Override public String toString() {
-        return getNome();
+        final StringBuilder sb = new StringBuilder("Cidade{");
+        sb.append("idCidade=").append(idCidade);
+        sb.append(", codMunicipio='").append(codMunicipio).append('\'');
+        sb.append(", nome='").append(nome).append('\'');
+        sb.append(", estado=").append(estado);
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override public int describeContents() {

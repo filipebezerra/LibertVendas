@@ -39,11 +39,29 @@ public final class Produto implements Parcelable {
     };
 
     public static Produto create(
-            final int idProduto, final String codigo, final String codigoBarras,
-            final String descricao, final String unidade, final String grupo, final float quantidade,
-            final String observacao, final boolean ativo, final String ultimaAlteracao) {
-        return new Produto(idProduto, codigo, codigoBarras, descricao, unidade, grupo,
-                quantidade, observacao, ativo, ultimaAlteracao);
+            final int idProduto,
+            final String codigo,
+            final String codigoBarras,
+            final String descricao,
+            final String unidade,
+            final String grupo,
+            final float quantidade,
+            final String observacao,
+            final boolean ativo,
+            final String ultimaAlteracao
+    ) {
+        return new Produto(
+                idProduto,
+                codigo,
+                codigoBarras,
+                descricao,
+                unidade,
+                grupo,
+                quantidade,
+                observacao,
+                ativo,
+                ultimaAlteracao
+        );
     }
 
     private Produto(Parcel in) {
@@ -60,10 +78,17 @@ public final class Produto implements Parcelable {
     }
 
     private Produto(
-            final int idProduto, final String codigo, final String codigoBarras,
-            final String descricao, final String unidade, final String grupo,
-            final float quantidade, final String observacao, final boolean ativo,
-            final String ultimaAlteracao) {
+            final int idProduto,
+            final String codigo,
+            final String codigoBarras,
+            final String descricao,
+            final String unidade,
+            final String grupo,
+            final float quantidade,
+            final String observacao,
+            final boolean ativo,
+            final String ultimaAlteracao
+    ) {
         this.idProduto = idProduto;
         this.codigo = codigo;
         this.codigoBarras = codigoBarras;
@@ -134,7 +159,19 @@ public final class Produto implements Parcelable {
     }
 
     @Override public String toString() {
-        return getDescricao();
+        final StringBuilder sb = new StringBuilder("Produto{");
+        sb.append("idProduto=").append(idProduto);
+        sb.append(", codigo='").append(codigo).append('\'');
+        sb.append(", codigoBarras='").append(codigoBarras).append('\'');
+        sb.append(", descricao='").append(descricao).append('\'');
+        sb.append(", unidade='").append(unidade).append('\'');
+        sb.append(", grupo='").append(grupo).append('\'');
+        sb.append(", quantidade=").append(quantidade);
+        sb.append(", observacao='").append(observacao).append('\'');
+        sb.append(", ativo=").append(ativo);
+        sb.append(", ultimaAlteracao='").append(ultimaAlteracao).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override public int describeContents() {

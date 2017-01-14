@@ -9,10 +9,6 @@ import br.com.libertsolutions.libertvendas.app.data.formapagamento.FormaPagament
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.tabela.TabelaRepository;
 import br.com.libertsolutions.libertvendas.app.data.tabela.TabelaService;
-import br.com.libertsolutions.libertvendas.app.domain.factory.CidadeFactory;
-import br.com.libertsolutions.libertvendas.app.domain.factory.ClienteFactory;
-import br.com.libertsolutions.libertvendas.app.domain.factory.FormaPagamentoFactory;
-import br.com.libertsolutions.libertvendas.app.domain.factory.TabelaFactory;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
@@ -27,6 +23,10 @@ import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.domain.factory.CidadeFactory.toPojoList;
+import static br.com.libertsolutions.libertvendas.app.domain.factory.ClienteFactory.toPojoList;
+import static br.com.libertsolutions.libertvendas.app.domain.factory.FormaPagamentoFactory.toPojoList;
+import static br.com.libertsolutions.libertvendas.app.domain.factory.TabelaFactory.toPojoList;
 import static java.util.Collections.emptyList;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -95,38 +95,42 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
         getView().showLoading();
 
         LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        final String cpfCnpjVendedor = event.getVendedor().getCpfCnpj();
         final String cnpjEmpresa = event.getVendedor().getEmpresaSelecionada().getCnpj();
 
         Observable<List<FormaPagamento>> getFormasPagamento = mFormaPagamentoService
                 .get(cnpjEmpresa)
-                .filter(list -> !list.isEmpty())
-                .flatMap(data -> mFormaPagamentoRepository
-                        .saveAll(FormaPagamentoFactory.createListFormaPagamento(data)));
+                .filter(dtoList -> !dtoList.isEmpty())
+                .flatMap(dtoList ->
+                        mFormaPagamentoRepository.saveAll(
+                                toPojoList(dtoList, cpfCnpjVendedor, cnpjEmpresa)));
 
         Observable<List<Cidade>> getCidades = mCidadeService
                 .get()
-                .filter(list -> !list.isEmpty())
-                .flatMap(data -> mCidadeRepository
-                        .saveAll(CidadeFactory.createListCidade(data)));
+                .filter(dtoList -> !dtoList.isEmpty())
+                .flatMap(dtoList ->
+                        mCidadeRepository.saveAll(toPojoList(dtoList)));
 
         Observable<List<Cliente>> getClientes = mClienteService
                 .get(cnpjEmpresa)
-                .filter(list -> !list.isEmpty())
-                .flatMap(data -> mClienteRepository
-                        .saveAll(ClienteFactory.createListCliente(data)));
+                .filter(dtoList -> !dtoList.isEmpty())
+                .flatMap(dtoList ->
+                        mClienteRepository.saveAll(
+                                toPojoList(dtoList, cpfCnpjVendedor, cnpjEmpresa)));
 
         Observable<List<Tabela>> getTabelas = mTabelaService
                 .get(cnpjEmpresa)
-                .filter(list -> !list.isEmpty())
-                .flatMap(data -> mTabelaRepository
-                        .saveAll(TabelaFactory.createListTabelaPreco(data)));
+                .filter(dtoList -> !dtoList.isEmpty())
+                .flatMap(dtoList ->
+                        mTabelaRepository.saveAll(
+                                toPojoList(dtoList, cpfCnpjVendedor, cnpjEmpresa)));
 
         addSubscription(Observable
                 .merge(getFormasPagamento, getCidades, getClientes, getTabelas)
                 .observeOn(mainThread())
                 .lastOrDefault(emptyList())
                 .subscribe(
-                        pResult -> {
+                        result -> {
                             mSettingsRepository.setInitialDataImportationDone();
                             getView().hideLoadingWithSuccess();
                         },

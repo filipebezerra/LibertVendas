@@ -55,9 +55,9 @@ public final class Cliente implements Parcelable {
 
     private final boolean ativo;
 
-    private final String cnpjEmpresa;
-
     private final String cpfCnpjVendedor;
+
+    private final String cnpjEmpresa;
 
     private final int status;
 
@@ -72,55 +72,180 @@ public final class Cliente implements Parcelable {
     };
 
     public static Cliente createNew(
-            final String newNome, final int newTipo, final String newCfCnpj, final String newEmail,
-            final String newTelefone, final String newTelefone2, final String newEndereco,
-            final String newCep, final Cidade newCidade, final String newBairro,
-            final String newNumero, final String newComplemento, final String cnpjEmpresa,
-            final String cpfCnpjVendedor) {
+            final String newNome,
+            final int newTipo,
+            final String newCfCnpj,
+            final String newEmail,
+            final String newTelefone,
+            final String newTelefone2,
+            final String newEndereco,
+            final String newCep,
+            final Cidade newCidade,
+            final String newBairro,
+            final String newNumero,
+            final String newComplemento,
+            final String cpfCnpjVendedor,
+            final String cnpjEmpresa
+    ) {
         return new Cliente(
-                SEM_ID, SEM_ID, SEM_CODIGO, newNome, newTipo, newCfCnpj, SEM_CONTATO, newEmail,
-                newTelefone, newTelefone2, newEndereco, newCep, newCidade, newBairro, newNumero,
-                newComplemento, NAO_FOI_ALTERADO, ATIVO, cnpjEmpresa, cpfCnpjVendedor,
-                STATUS_CRIADO);
+                SEM_ID, SEM_ID,
+                SEM_CODIGO,
+                newNome,
+                newTipo,
+                newCfCnpj,
+                SEM_CONTATO,
+                newEmail,
+                newTelefone,
+                newTelefone2,
+                newEndereco,
+                newCep,
+                newCidade,
+                newBairro,
+                newNumero,
+                newComplemento,
+                NAO_FOI_ALTERADO,
+                ATIVO,
+                cpfCnpjVendedor,
+                cnpjEmpresa,
+                STATUS_CRIADO
+        );
     }
 
     public static Cliente changed(
-            Cliente clienteEdited, final String newNome, final int newTipo, final String newCfCnpj,
-            final String newEmail, final String newTelefone, final String newTelefone2,
-            final String newEndereco, final String newCep, final Cidade newCidade,
-            final String newBairro, final String newNumero, final String newComplemento,
-            final String ultimaAlteracao, final String cnpjEmpresa, final String cpfCnpjVendedor) {
+            final Cliente clienteEdited,
+            final String newNome,
+            final int newTipo,
+            final String newCfCnpj,
+            final String newEmail,
+            final String newTelefone,
+            final String newTelefone2,
+            final String newEndereco,
+            final String newCep,
+            final Cidade newCidade,
+            final String newBairro,
+            final String newNumero,
+            final String newComplemento,
+            final String ultimaAlteracao,
+            final String cpfCnpjVendedor,
+            final String cnpjEmpresa
+    ) {
         return new Cliente(
-                clienteEdited.getId(), clienteEdited.getIdCliente(), clienteEdited.getCodigo(),
-                newNome, newTipo, newCfCnpj, clienteEdited.getContato(), newEmail, newTelefone,
-                newTelefone2, newEndereco, newCep, newCidade, newBairro, newNumero, newComplemento,
-                ultimaAlteracao, clienteEdited.isAtivo(), cnpjEmpresa, cpfCnpjVendedor,
-                STATUS_MODIFICADO);
+                clienteEdited.getId(),
+                clienteEdited.getIdCliente(),
+                clienteEdited.getCodigo(),
+                newNome,
+                newTipo,
+                newCfCnpj,
+                clienteEdited.getContato(),
+                newEmail,
+                newTelefone,
+                newTelefone2,
+                newEndereco,
+                newCep,
+                newCidade,
+                newBairro,
+                newNumero,
+                newComplemento,
+                ultimaAlteracao,
+                clienteEdited.isAtivo(),
+                cpfCnpjVendedor,
+                cnpjEmpresa,
+                STATUS_MODIFICADO
+        );
     }
 
     public static Cliente create(
-            final int idCliente, final String codigo, final String nome,
-            final int tipo, final String cpfCnpj, final String contato, final String email,
-            final String telefone, final String telefone2, final String endereco, final String cep,
-            final Cidade cidade, final String bairro, final String numero, final String complemento,
-            final String ultimaAlteracao, final boolean ativo) {
+            final int idCliente,
+            final String codigo,
+            final String nome,
+            final int tipo,
+            final String cpfCnpj,
+            final String contato,
+            final String email,
+            final String telefone,
+            final String telefone2,
+            final String endereco,
+            final String cep,
+            final Cidade cidade,
+            final String bairro,
+            final String numero,
+            final String complemento,
+            final String ultimaAlteracao,
+            final boolean ativo,
+            final String cpfCnpjVendedor,
+            final String cnpjEmpresa
+    ) {
         return new Cliente(
-                SEM_ID, idCliente, codigo, nome, tipo, cpfCnpj, contato, email, telefone, telefone2,
-                endereco, cep, cidade, bairro, numero, complemento, ultimaAlteracao, ativo, null,
-                null, STATUS_IMPORTADO);
+                SEM_ID,
+                idCliente,
+                codigo,
+                nome,
+                tipo,
+                cpfCnpj,
+                contato,
+                email,
+                telefone,
+                telefone2,
+                endereco,
+                cep,
+                cidade,
+                bairro,
+                numero,
+                complemento,
+                ultimaAlteracao,
+                ativo,
+                cpfCnpjVendedor,
+                cnpjEmpresa,
+                STATUS_IMPORTADO
+        );
     }
 
     public static Cliente map(
-            final int id, final int idCliente, final String codigo, final String nome,
-            final int tipo, final String cpfCnpj, final String contato, final String email,
-            final String telefone, final String telefone2, final String endereco, final String cep,
-            final Cidade cidade, final String bairro, final String numero, final String complemento,
-            final String ultimaAlteracao, final boolean ativo, final String cnpjEmpresa,
-            final String cpfCnpjVendedor, int status) {
+            final int id,
+            final int idCliente,
+            final String codigo,
+            final String nome,
+            final int tipo,
+            final String cpfCnpj,
+            final String contato,
+            final String email,
+            final String telefone,
+            final String telefone2,
+            final String endereco,
+            final String cep,
+            final Cidade cidade,
+            final String bairro,
+            final String numero,
+            final String complemento,
+            final String ultimaAlteracao,
+            final boolean ativo,
+            final String cnpjEmpresa,
+            final String cpfCnpjVendedor,
+            int status
+    ) {
         return new Cliente(
-                id, idCliente, codigo, nome, tipo, cpfCnpj, contato, email, telefone, telefone2,
-                endereco, cep, cidade, bairro, numero, complemento, ultimaAlteracao, ativo,
-                cnpjEmpresa, cpfCnpjVendedor, status);
+                id,
+                idCliente,
+                codigo,
+                nome,
+                tipo,
+                cpfCnpj,
+                contato,
+                email,
+                telefone,
+                telefone2,
+                endereco,
+                cep,
+                cidade,
+                bairro,
+                numero,
+                complemento,
+                ultimaAlteracao,
+                ativo,
+                cpfCnpjVendedor,
+                cnpjEmpresa,
+                status
+        );
     }
 
     private Cliente(Parcel in) {
@@ -142,18 +267,34 @@ public final class Cliente implements Parcelable {
         complemento = in.readString();
         ultimaAlteracao = in.readString();
         ativo = in.readByte() == 1;
-        cnpjEmpresa = in.readString();
         cpfCnpjVendedor = in.readString();
+        cnpjEmpresa = in.readString();
         status = in.readInt();
     }
 
     private Cliente(
-            final int id, final int idCliente, final String codigo, final String nome,
-            final int tipo, final String cpfCnpj, final String contato, final String email,
-            final String telefone, final String telefone2, final String endereco, final String cep,
-            final Cidade cidade, final String bairro, final String numero, final String complemento,
-            final String ultimaAlteracao, final boolean ativo, final String cnpjEmpresa,
-            final String cpfCnpjVendedor, final int status) {
+            final int id,
+            final int idCliente,
+            final String codigo,
+            final String nome,
+            final int tipo,
+            final String cpfCnpj,
+            final String contato,
+            final String email,
+            final String telefone,
+            final String telefone2,
+            final String endereco,
+            final String cep,
+            final Cidade cidade,
+            final String bairro,
+            final String numero,
+            final String complemento,
+            final String ultimaAlteracao,
+            final boolean ativo,
+            final String cpfCnpjVendedor,
+            final String cnpjEmpresa,
+            final int status
+    ) {
         this.id = id;
         this.idCliente = idCliente;
         this.codigo = codigo;
@@ -172,8 +313,8 @@ public final class Cliente implements Parcelable {
         this.complemento = complemento;
         this.ultimaAlteracao = ultimaAlteracao;
         this.ativo = ativo;
-        this.cnpjEmpresa = cnpjEmpresa;
         this.cpfCnpjVendedor = cpfCnpjVendedor;
+        this.cnpjEmpresa = cnpjEmpresa;
         this.status = status;
     }
 
@@ -249,33 +390,69 @@ public final class Cliente implements Parcelable {
         return ativo;
     }
 
-    public String getCnpjEmpresa() {
-        return cnpjEmpresa;
-    }
-
     public String getCpfCnpjVendedor() {
         return cpfCnpjVendedor;
+    }
+
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
     }
 
     public int getStatus() {
         return status;
     }
 
-    @Override public boolean equals(Object anotherCliente) {
-        if (this == anotherCliente) {
+    @Override public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (anotherCliente == null || getClass() != anotherCliente.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
-        Cliente cliente = (Cliente) anotherCliente;
+        Cliente cliente = (Cliente) o;
 
-        return getIdCliente() == cliente.getIdCliente();
+        if (getId() != cliente.getId()) {
+            return false;
+        }
+        if (!getCnpjEmpresa().equals(cliente.getCnpjEmpresa())) {
+            return false;
+        }
+        return getCpfCnpjVendedor().equals(cliente.getCpfCnpjVendedor());
     }
 
     @Override public int hashCode() {
-        return getIdCliente();
+        int result = getId();
+        result = 31 * result + getCnpjEmpresa().hashCode();
+        result = 31 * result + getCpfCnpjVendedor().hashCode();
+        return result;
+    }
+
+    @Override public String toString() {
+        final StringBuilder sb = new StringBuilder("Cliente{");
+        sb.append("id=").append(id);
+        sb.append(", idCliente=").append(idCliente);
+        sb.append(", codigo='").append(codigo).append('\'');
+        sb.append(", nome='").append(nome).append('\'');
+        sb.append(", tipo=").append(tipo);
+        sb.append(", cpfCnpj='").append(cpfCnpj).append('\'');
+        sb.append(", contato='").append(contato).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", telefone='").append(telefone).append('\'');
+        sb.append(", telefone2='").append(telefone2).append('\'');
+        sb.append(", endereco='").append(endereco).append('\'');
+        sb.append(", cep='").append(cep).append('\'');
+        sb.append(", cidade=").append(cidade);
+        sb.append(", bairro='").append(bairro).append('\'');
+        sb.append(", numero='").append(numero).append('\'');
+        sb.append(", complemento='").append(complemento).append('\'');
+        sb.append(", ultimaAlteracao='").append(ultimaAlteracao).append('\'');
+        sb.append(", ativo=").append(ativo);
+        sb.append(", cpfCnpjVendedor='").append(cpfCnpjVendedor).append('\'');
+        sb.append(", cnpjEmpresa='").append(cnpjEmpresa).append('\'');
+        sb.append(", status=").append(status);
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override public int describeContents() {
@@ -301,8 +478,8 @@ public final class Cliente implements Parcelable {
         out.writeString(complemento);
         out.writeString(ultimaAlteracao);
         out.writeByte((byte) (ativo ? 1 : 0));
-        out.writeString(cnpjEmpresa);
         out.writeString(cpfCnpjVendedor);
+        out.writeString(cnpjEmpresa);
         out.writeInt(status);
     }
 }

@@ -271,8 +271,8 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
                     numero,
                     complemento,
                     ApiUtils.formatApiDateTime(System.currentTimeMillis()),
-                    mVendedorLogado.getEmpresaSelecionada().getCnpj(),
-                    mVendedorLogado.getCpfCnpj()
+                    mVendedorLogado.getCpfCnpj(),
+                    mVendedorLogado.getEmpresaSelecionada().getCnpj()
             );
         } else {
             return Cliente.createNew(
@@ -288,8 +288,8 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
                     bairro,
                     numero,
                     complemento,
-                    mVendedorLogado.getEmpresaSelecionada().getCnpj(),
-                    mVendedorLogado.getCpfCnpj()
+                    mVendedorLogado.getCpfCnpj(),
+                    mVendedorLogado.getEmpresaSelecionada().getCnpj()
             );
         }
     }

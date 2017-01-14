@@ -25,6 +25,10 @@ import io.realm.annotations.Required;
 
     private Boolean ativo;
 
+    private String cnpjEmpresa;
+
+    private String cpfCnpjVendedor;
+
     @Override public FormaPagamentoEntity setId(final Integer id) {
         idFormaPagamento = id;
         return this;
@@ -85,6 +89,24 @@ import io.realm.annotations.Required;
 
     public FormaPagamentoEntity setAtivo(final Boolean ativo) {
         this.ativo = ativo;
+        return this;
+    }
+
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
+    }
+
+    public FormaPagamentoEntity setCnpjEmpresa(final String cnpjEmpresa) {
+        this.cnpjEmpresa = cnpjEmpresa;
+        return this;
+    }
+
+    public String getCpfCnpjVendedor() {
+        return cpfCnpjVendedor;
+    }
+
+    public FormaPagamentoEntity setCpfCnpjVendedor(final String cpfCnpjVendedor) {
+        this.cpfCnpjVendedor = cpfCnpjVendedor;
         return this;
     }
 }
