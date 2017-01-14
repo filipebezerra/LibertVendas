@@ -47,6 +47,22 @@ public abstract class SingleTextViewAdapter<T> extends ArrayAdapter<T> {
         return convertView;
     }
 
+    @Override public View getDropDownView(
+            int position, View convertView, @NonNull ViewGroup parent) {
+        SingleTextViewViewHolder holder;
+
+        if (convertView == null) {
+            convertView = mInflater.inflate(RES_SIMPLE_SPINNER_DROPDOWN_ITEM_LAYOUT, parent, false);
+            holder = new SingleTextViewViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (SingleTextViewViewHolder) convertView.getTag();
+        }
+
+        holder.textViewNome.setText(getText(position));
+        return convertView;
+    }
+
     protected abstract String getText(final int pPosition);
 
     @SuppressWarnings("WeakerAccess") static class SingleTextViewViewHolder {
