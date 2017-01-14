@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.data.cidade;
 
+import br.com.libertsolutions.libertvendas.app.data.repository.MethodNotApplicableException;
 import br.com.libertsolutions.libertvendas.app.data.repository.RealmMapper;
 import br.com.libertsolutions.libertvendas.app.data.repository.RealmRepositoryImpl;
 import br.com.libertsolutions.libertvendas.app.data.utils.RealmObservable;
@@ -46,5 +47,10 @@ public class CidadeRepositoryImpl extends RealmRepositoryImpl<Cidade, Integer, C
                     return cidades;
                 })
                 .map(mMapper::toViewObjectList);
+    }
+
+    @Override public Observable<List<Cidade>> findByVendedorAndEmpresa(
+            final String cpfCnpjVendedor, final String cnpjEmpresa) {
+        throw new MethodNotApplicableException("findByVendedorAndEmpresa()");
     }
 }

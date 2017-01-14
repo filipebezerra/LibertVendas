@@ -62,9 +62,25 @@ public abstract class RealmRepositoryImpl<T, ID extends Serializable, E extends 
     @Override public Observable<List<T>> findAll() {
         return RealmObservable
                 .results(realm -> {
-                    RealmResults<E> list = realm.where(mEntityClass).findAll();
-                    Timber.i("%s.list() results %s", mEntityClass.getSimpleName(), list.size());
-                    return list;
+                    RealmResults<E> results = realm.where(mEntityClass).findAll();
+                    Timber.i("%s.findAll() results %s",
+                            mEntityClass.getSimpleName(), results.size());
+                    return results;
+                })
+                .map(mMapper::toViewObjectList);
+    }
+
+    @Override public Observable<List<T>> findByVendedorAndEmpresa(final String cpfCnpjVendedor,
+            final String cnpjEmpresa) {
+        return RealmObservable
+                .results(realm -> {
+                    RealmResults<E> results = realm.where(mEntityClass)
+                            .equalTo("cpfCnpjVendedor", cpfCnpjVendedor)
+                            .equalTo("cnpjEmpresa", cnpjEmpresa)
+                            .findAll();
+                    Timber.i("%s.findByVendedorAndEmpresa() results %s",
+                            mEntityClass.getSimpleName(), results.size());
+                    return results;
                 })
                 .map(mMapper::toViewObjectList);
     }

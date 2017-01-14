@@ -1,10 +1,12 @@
 package br.com.libertsolutions.libertvendas.app.data.vendedor;
 
+import br.com.libertsolutions.libertvendas.app.data.repository.MethodNotApplicableException;
 import br.com.libertsolutions.libertvendas.app.data.repository.RealmMapper;
 import br.com.libertsolutions.libertvendas.app.data.repository.RealmRepositoryImpl;
 import br.com.libertsolutions.libertvendas.app.data.utils.RealmObservable;
 import br.com.libertsolutions.libertvendas.app.domain.entity.VendedorEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
+import java.util.List;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -32,5 +34,10 @@ class VendedorRepositoryImpl extends RealmRepositoryImpl<Vendedor, Integer, Vend
                     return first;
                 })
                 .map(mMapper::toViewObject);
+    }
+
+    @Override public Observable<List<Vendedor>> findByVendedorAndEmpresa(
+            final String cpfCnpjVendedor, final String cnpjEmpresa) {
+        throw new MethodNotApplicableException("findByVendedorAndEmpresa()");
     }
 }

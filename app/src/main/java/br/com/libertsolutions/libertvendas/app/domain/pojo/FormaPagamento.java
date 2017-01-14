@@ -22,9 +22,9 @@ public final class FormaPagamento implements Parcelable {
 
     private final boolean ativo;
 
-    private final String cnpjEmpresa;
-
     private final String cpfCnpjVendedor;
+
+    private final String cnpjEmpresa;
 
     public static final Creator<FormaPagamento> CREATOR = new Creator<FormaPagamento>() {
         @Override
@@ -167,8 +167,8 @@ public final class FormaPagamento implements Parcelable {
         sb.append(", idEmpresa=").append(idEmpresa);
         sb.append(", ultimaAlteracao='").append(ultimaAlteracao).append('\'');
         sb.append(", ativo=").append(ativo);
-        sb.append(", cnpjEmpresa='").append(cnpjEmpresa).append('\'');
         sb.append(", cpfCnpjVendedor='").append(cpfCnpjVendedor).append('\'');
+        sb.append(", cnpjEmpresa='").append(cnpjEmpresa).append('\'');
         sb.append('}');
         return sb.toString();
     }

@@ -16,4 +16,6 @@ public interface Repository<T, ID extends Serializable> {
     Observable<List<T>> findAll();
 
     Observable<T> findById(ID id);
+
+    Observable<List<T>> findByVendedorAndEmpresa(String cpfCnpjVendedor, String cnpjEmpresa);
 }

@@ -1,10 +1,12 @@
 package br.com.libertsolutions.libertvendas.app.data.cidade;
 
+import br.com.libertsolutions.libertvendas.app.data.repository.MethodNotApplicableException;
 import br.com.libertsolutions.libertvendas.app.data.repository.RealmMapper;
 import br.com.libertsolutions.libertvendas.app.data.repository.RealmRepositoryImpl;
 import br.com.libertsolutions.libertvendas.app.data.utils.RealmObservable;
 import br.com.libertsolutions.libertvendas.app.domain.entity.EstadoEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Estado;
+import java.util.List;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -32,5 +34,10 @@ public class EstadoRepositoryImpl extends RealmRepositoryImpl<Estado, Integer, E
                     return first;
                 })
                 .map(mMapper::toViewObject);
+    }
+
+    @Override public Observable<List<Estado>> findByVendedorAndEmpresa(
+            final String cpfCnpjVendedor, final String cnpjEmpresa) {
+        throw new MethodNotApplicableException("findByVendedorAndEmpresa()");
     }
 }
