@@ -32,6 +32,7 @@ import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.DataInjection.RemoteRepositories.provideClienteService;
 import static br.com.libertsolutions.libertvendas.app.DataInjection.RemoteRepositories.providePedidoService;
+import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideContext;
 import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideSettingsRepository;
 
 /**
@@ -95,6 +96,12 @@ public class SyncTaskService extends GcmTaskService {
 
     @Override public int onRunTask(final TaskParams taskParams) {
         Timber.d("running sync service");
+
+        if (!provideSettingsRepository().isUserLoggedIn()) {
+            Timber.i("No user logged, sync will be cancelled");
+            SyncTaskService.cancelAll(provideContext());
+            return GcmNetworkManager.RESULT_FAILURE;
+        }
 
         try {
             //region sync changes in customers database
