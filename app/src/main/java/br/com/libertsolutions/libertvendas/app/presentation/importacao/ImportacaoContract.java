@@ -1,7 +1,9 @@
 package br.com.libertsolutions.libertvendas.app.presentation.importacao;
 
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.MvpPresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.MvpView;
+import java.util.List;
 
 /**
  * @author Filipe Bezerra
@@ -10,7 +12,17 @@ interface ImportacaoContract {
 
     interface View extends MvpView {
 
-        void showLoading();
+        void showSyncItems(List<Empresa> syncItems);
+
+        void showSyncCitiesStarted();
+
+        void showSyncCitiesDone();
+
+        void showSyncDone(Empresa syncItem);
+
+        void showSyncCitiesError();
+
+        void showSyncError(Empresa syncItem);
 
         void showOfflineMessage();
 
@@ -34,6 +46,8 @@ interface ImportacaoContract {
     }
 
     interface Presenter extends MvpPresenter<View> {
+
+        void initializeView();
 
         boolean handleMenuVisibility();
 

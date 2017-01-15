@@ -44,12 +44,33 @@ public final class Vendedor implements Parcelable {
     };
 
     public static Vendedor create(
-            final int idVendedor, final String codigo, final String nome, final String cpfCnpj,
-            final String telefone, final String email, final boolean ativo, final int idTabela,
-            final String ultimaAlteracao, final boolean aplicaDesconto, List<Empresa> empresas,
-            final Empresa empresaSelecionada) {
-        return new Vendedor(idVendedor, codigo, nome, cpfCnpj, telefone, email, ativo, idTabela,
-                ultimaAlteracao, aplicaDesconto, empresas, empresaSelecionada);
+            final int idVendedor,
+            final String codigo,
+            final String nome,
+            final String cpfCnpj,
+            final String telefone,
+            final String email,
+            final boolean ativo,
+            final int idTabela,
+            final String ultimaAlteracao,
+            final boolean aplicaDesconto,
+            List<Empresa> empresas,
+            final Empresa empresaSelecionada
+    ) {
+        return new Vendedor(
+                idVendedor,
+                codigo,
+                nome,
+                cpfCnpj,
+                telefone,
+                email,
+                ativo,
+                idTabela,
+                ultimaAlteracao,
+                aplicaDesconto,
+                empresas,
+                empresaSelecionada
+        );
     }
 
     private Vendedor(Parcel in) {
@@ -68,10 +89,19 @@ public final class Vendedor implements Parcelable {
     }
 
     private Vendedor(
-            final int idVendedor, final String codigo, final String nome, final String cpfCnpj,
-            final String telefone, final String email, final boolean ativo, final int idTabela,
-            final String ultimaAlteracao, final boolean aplicaDesconto, List<Empresa> empresas,
-            final Empresa empresaSelecionada) {
+            int idVendedor,
+            String codigo,
+            String nome,
+            String cpfCnpj,
+            String telefone,
+            String email,
+            boolean ativo,
+            int idTabela,
+            String ultimaAlteracao,
+            boolean aplicaDesconto,
+            List<Empresa> empresas,
+            Empresa empresaSelecionada
+    ) {
         this.idVendedor = idVendedor;
         this.codigo = codigo;
         this.nome = nome;
@@ -132,6 +162,41 @@ public final class Vendedor implements Parcelable {
 
     public Empresa getEmpresaSelecionada() {
         return empresaSelecionada;
+    }
+
+    @Override public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Vendedor vendedor = (Vendedor) o;
+
+        return getIdVendedor() == vendedor.getIdVendedor();
+    }
+
+    @Override public int hashCode() {
+        return getIdVendedor();
+    }
+
+    @Override public String toString() {
+        final StringBuilder sb = new StringBuilder("Vendedor{");
+        sb.append("idVendedor=").append(idVendedor);
+        sb.append(", codigo='").append(codigo).append('\'');
+        sb.append(", nome='").append(nome).append('\'');
+        sb.append(", cpfCnpj='").append(cpfCnpj).append('\'');
+        sb.append(", telefone='").append(telefone).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", ativo=").append(ativo);
+        sb.append(", idTabela=").append(idTabela);
+        sb.append(", ultimaAlteracao='").append(ultimaAlteracao).append('\'');
+        sb.append(", aplicaDesconto=").append(aplicaDesconto);
+        sb.append(", empresas=").append(empresas);
+        sb.append(", empresaSelecionada=").append(empresaSelecionada);
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override public int describeContents() {

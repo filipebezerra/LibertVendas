@@ -36,7 +36,7 @@ public final class Empresa implements Parcelable {
         cnpj = in.readString();
     }
 
-    private Empresa(final int idEmpresa, final String nome, final String cnpj) {
+    private Empresa(int idEmpresa, String nome, String cnpj) {
         this.idEmpresa = idEmpresa;
         this.nome = nome;
         this.cnpj = cnpj;
@@ -54,30 +54,30 @@ public final class Empresa implements Parcelable {
         return cnpj;
     }
 
-    @Override public boolean equals(Object pAnotherEmpresa) {
-        if (this == pAnotherEmpresa) {
+    @Override public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (pAnotherEmpresa == null || getClass() != pAnotherEmpresa.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
-        Empresa empresa = (Empresa) pAnotherEmpresa;
+        Empresa empresa = (Empresa) o;
 
-        if (getIdEmpresa() != empresa.getIdEmpresa()) {
-            return false;
-        }
-        return getCnpj().equals(empresa.getCnpj());
+        return getIdEmpresa() == empresa.getIdEmpresa();
     }
 
     @Override public int hashCode() {
-        int result = getIdEmpresa();
-        result = 31 * result + getCnpj().hashCode();
-        return result;
+        return getIdEmpresa();
     }
 
     @Override public String toString() {
-        return getNome();
+        final StringBuilder sb = new StringBuilder("Empresa{");
+        sb.append("idEmpresa=").append(idEmpresa);
+        sb.append(", nome='").append(nome).append('\'');
+        sb.append(", cnpj='").append(cnpj).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override public int describeContents() {

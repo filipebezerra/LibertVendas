@@ -116,6 +116,11 @@
     <!-- Data Importation screen strings -->
     <string name="title_activity_importacao">Importando seus dados</string>
     <string name="message_importacao_completada">Importação completada com sucesso!</string>
+    <string name="text_ready_to_sync">Aguardando</string>
+    <string name="text_sync_error">Falhou</string>
+    <string name="text_sync_complete">Sucesso</string>
+    <string name="text_sync_in_progress">Importando…</string>
+    <string name="sync_cities">Cidades e Estados</string>
 
     <!-- Customers screen strings -->
     <string name="title_fragment_lista_clientes">Clientes</string>

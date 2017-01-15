@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.importacao;
 
+import android.os.Parcelable;
 import br.com.libertsolutions.libertvendas.app.data.cidade.CidadeRepository;
 import br.com.libertsolutions.libertvendas.app.data.cidade.CidadeService;
 import br.com.libertsolutions.libertvendas.app.data.cliente.ClienteRepository;
@@ -11,8 +12,10 @@ import br.com.libertsolutions.libertvendas.app.data.tabela.TabelaRepository;
 import br.com.libertsolutions.libertvendas.app.data.tabela.TabelaService;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.FormaPagamento;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Tabela;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.ConnectivityServices;
@@ -21,6 +24,7 @@ import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
+import rx.Subscriber;
 import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.domain.factory.CidadeFactory.toPojoList;
@@ -56,6 +60,8 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
 
     private final TabelaRepository mTabelaRepository;
 
+    private Vendedor mLoggedUser;
+
     private Throwable mErrorMakingNetworkCall;
 
     ImportacaoPresenter(
@@ -78,6 +84,12 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
         mTabelaRepository = tabelaRepository;
     }
 
+    @Override public void initializeView() {
+        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        mLoggedUser = event.getVendedor();
+        getView().showSyncItems(mLoggedUser.getEmpresas());
+    }
+
     @Override public boolean handleMenuVisibility() {
         return mSettingsRepository.isInitialDataImportationDone();
     }
@@ -92,55 +104,91 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
             return;
         }
 
-        getView().showLoading();
+        syncCities();
 
-        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
-        final String cpfCnpjVendedor = event.getVendedor().getCpfCnpj();
-        final String cnpjEmpresa = event.getVendedor().getEmpresaSelecionada().getCnpj();
+        for (Empresa empresa : mLoggedUser.getEmpresas()) {
+            syncItem(empresa);
+        }
+    }
 
-        Observable<List<FormaPagamento>> getFormasPagamento = mFormaPagamentoService
-                .get(cnpjEmpresa)
+    private void syncCities() {
+        addSubscription(mCidadeService.get()
                 .filter(dtoList -> !dtoList.isEmpty())
-                .flatMap(dtoList ->
-                        mFormaPagamentoRepository.saveAll(
-                                toPojoList(dtoList, cpfCnpjVendedor, cnpjEmpresa)));
+                .flatMap(dtoList -> mCidadeRepository.saveAll(toPojoList(dtoList)))
+                .observeOn(mainThread())
+                .subscribe(
+                        new Subscriber<List<Cidade>>() {
+                            @Override public void onStart() {
+                                getView().showSyncCitiesStarted();
+                            }
 
-        Observable<List<Cidade>> getCidades = mCidadeService
-                .get()
-                .filter(dtoList -> !dtoList.isEmpty())
-                .flatMap(dtoList ->
-                        mCidadeRepository.saveAll(toPojoList(dtoList)));
+                            @Override public void onError(final Throwable e) {
+                                Timber.e(e, "Could not sync cities");
+                                getView().showSyncCitiesError();
+                            }
 
-        Observable<List<Cliente>> getClientes = mClienteService
-                .get(cnpjEmpresa)
+                            @Override public void onNext(final List<Cidade> cidades) {}
+
+                            @Override public void onCompleted() {
+                                getView().showSyncCitiesDone();
+                            }
+                        }
+                ));
+    }
+
+    private void syncItem(Empresa empresa) {
+        addSubscription(Observable
+                .merge(getFormasPagamento(empresa), getClientes(empresa), getTabelas(empresa))
+                .lastOrDefault(emptyList())
+                .observeOn(mainThread())
+                .subscribe(
+                        new Subscriber<List<? extends Parcelable>>() {
+                            @Override public void onError(final Throwable e) {
+                                Timber.e(e);
+                                //mErrorMakingNetworkCall = e;
+                                //getView().hideLoadingWithFail();
+                                getView().showSyncError(empresa);
+                            }
+
+                            @Override public void onNext(
+                                    final List<? extends Parcelable> parcelables) {
+
+                            }
+
+                            @Override public void onCompleted() {
+                                //mSettingsRepository.setInitialDataImportationDone();
+                                //getView().hideLoadingWithSuccess();
+                                getView().showSyncDone(empresa);
+                            }
+                        }
+                ));
+    }
+
+    private Observable<List<FormaPagamento>> getFormasPagamento(Empresa empresa) {
+       return  mFormaPagamentoService
+               .get(empresa.getCnpj())
+               .filter(dtoList -> !dtoList.isEmpty())
+               .flatMap(dtoList ->
+                       mFormaPagamentoRepository.saveAll(
+                               toPojoList(dtoList, mLoggedUser.getCpfCnpj(), empresa.getCnpj())));
+    }
+
+    private Observable<List<Cliente>> getClientes(Empresa empresa) {
+        return mClienteService
+                .get(empresa.getCnpj())
                 .filter(dtoList -> !dtoList.isEmpty())
                 .flatMap(dtoList ->
                         mClienteRepository.saveAll(
-                                toPojoList(dtoList, cpfCnpjVendedor, cnpjEmpresa)));
+                                toPojoList(dtoList, mLoggedUser.getCpfCnpj(), empresa.getCnpj())));
+    }
 
-        Observable<List<Tabela>> getTabelas = mTabelaService
-                .get(cnpjEmpresa)
+    private Observable<List<Tabela>> getTabelas(Empresa empresa) {
+        return mTabelaService
+                .get(empresa.getCnpj())
                 .filter(dtoList -> !dtoList.isEmpty())
                 .flatMap(dtoList ->
                         mTabelaRepository.saveAll(
-                                toPojoList(dtoList, cpfCnpjVendedor, cnpjEmpresa)));
-
-        addSubscription(Observable
-                .merge(getFormasPagamento, getCidades, getClientes, getTabelas)
-                .observeOn(mainThread())
-                .lastOrDefault(emptyList())
-                .subscribe(
-                        result -> {
-                            mSettingsRepository.setInitialDataImportationDone();
-                            getView().hideLoadingWithSuccess();
-                        },
-
-                        e -> {
-                            Timber.e(e);
-                            mErrorMakingNetworkCall = e;
-                            getView().hideLoadingWithFail();
-                        }
-                ));
+                                toPojoList(dtoList, mLoggedUser.getCpfCnpj(), empresa.getCnpj())));
     }
 
     @Override public void handleAnimationEnd(final boolean success) {
