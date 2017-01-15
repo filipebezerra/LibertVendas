@@ -26,4 +26,6 @@ public interface SettingsRepository {
     void setInitialDataImportationDone();
 
     void setAutoSync(boolean isEnabled);
+
+    int getSyncPeriod();
 }

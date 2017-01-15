@@ -28,6 +28,16 @@
             android:defaultValue="true"
             android:summary="@string/summary_pref_sincronizar_pedido_automaticamente"
             />
+
+        <EditTextPreference
+            android:key="@string/key_pref_sync_period"
+            android:title="@string/title_pref_sync_period"
+            android:inputType="numberSigned"
+            android:defaultValue="@integer/default_value_pref_sync_period"
+            android:dialogTitle="@string/dialog_title_pref_sync_period"
+            android:dialogMessage="@string/dialog_message_pref_sync_period"
+            android:dependency="@string/key_pref_sincronizar_pedido_automaticamente"
+            />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_pref_category_pedido">

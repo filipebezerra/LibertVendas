@@ -85,6 +85,12 @@
     <string name="title_pref_tabela_preco_padrao">Tabela de preço padrão</string>
     <string name="summary_pref_tabela_preco_padrao">Sem definição</string>
 
+    <string name="key_pref_sync_period" translatable="false">sync_period</string>
+    <string name="title_pref_sync_period">Período de execução da sincronização</string>
+    <string name="dialog_title_pref_sync_period">Define o período da sincronização</string>
+    <string name="dialog_message_pref_sync_period">Informe um valor numérico em minutos</string>
+    <string name="summary_pref_sync_period">A cada %1$s minutos</string>
+
     <string name="message_settings_required">
         Desculpe, antes é necessário informar <![CDATA[<b>a url do servidor e a chave de autenticação</b>]]>.
         <![CDATA[<br><br>]]> Se tiver dúvidas pergunte ao administrador do sistema!

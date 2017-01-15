@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item type="integer" format="integer" name="action_login">6</item>
+    <integer name="default_value_pref_sync_period">30</integer>
 </resources>

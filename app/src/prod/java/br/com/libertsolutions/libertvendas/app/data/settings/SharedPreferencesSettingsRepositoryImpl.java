@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
 
+import static br.com.libertsolutions.libertvendas.app.R.integer.default_value_pref_sync_period;
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_chave_autenticacao;
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_endereco_servidor;
 import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_sincronizar_pedido_automaticamente;
+import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_sync_period;
 
 /**
  * @author Filipe Bezerra
@@ -79,6 +81,15 @@ public class SharedPreferencesSettingsRepositoryImpl implements SettingsReposito
     @Override public void setAutoSync(final boolean isEnabled) {
         putBooleanPreference(mContext.getString(key_pref_sincronizar_pedido_automaticamente),
                 isEnabled);
+    }
+
+    @Override public int getSyncPeriod() {
+        final int defaultSyncPeriod
+                = mContext.getResources().getInteger(default_value_pref_sync_period);
+        String syncPeriodValue
+                = mSharedPreferences.getString(mContext.getString(key_pref_sync_period),
+                String.valueOf(defaultSyncPeriod));
+        return Integer.valueOf(syncPeriodValue);
     }
 
     private boolean getBooleanPreference(final String key, final boolean defaultValue) {

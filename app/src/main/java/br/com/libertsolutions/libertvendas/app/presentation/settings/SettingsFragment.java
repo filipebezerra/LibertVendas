@@ -35,7 +35,12 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers
         if (preference instanceof EditTextPreference) {
             final String stringValue = newValue.toString();
             if (!TextUtils.isEmpty(stringValue)) {
-                preference.setSummary(stringValue);
+                if (preference.getKey().equals(getString(R.string.key_pref_sync_period))) {
+                    preference.setSummary(getString(R.string.summary_pref_sync_period, stringValue));
+                } else {
+                    preference.setSummary(stringValue);
+                }
+
                 ((EditTextPreference) preference).setText(stringValue);
             }
         }
@@ -73,6 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers
         bindSettingValueToSummary(findPreference(getString(key_pref_endereco_servidor)));
         bindSettingValueToSummary(findPreference(getString(key_pref_chave_autenticacao)));
         bindSettingValueToSummary(findPreference(getString(key_pref_tabela_preco_padrao)));
+        bindSettingValueToSummary(findPreference(getString(R.string.key_pref_sync_period)));
     }
 
     private void bindSettingValueToSummary(Preference preference) {

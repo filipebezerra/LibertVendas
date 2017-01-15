@@ -2,7 +2,7 @@ package br.com.libertsolutions.libertvendas.app.data.sync;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import br.com.libertsolutions.libertvendas.app.BuildConfig;
+import br.com.libertsolutions.libertvendas.app.PresentationInjection;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepositories;
 import br.com.libertsolutions.libertvendas.app.domain.dto.ClienteDto;
 import br.com.libertsolutions.libertvendas.app.domain.dto.ItemPedidoDto;
@@ -39,14 +39,15 @@ import static br.com.libertsolutions.libertvendas.app.PresentationInjection.prov
  */
 public class SyncTaskService extends GcmTaskService {
 
-    private static final long TASK_PERIOD_IN_SECONDS = TimeUnit.MINUTES.toSeconds(30);
-
     public static boolean schedule(@NonNull Context context) {
         try {
+            final long syncPeriod = TimeUnit.MINUTES.toSeconds(
+                    PresentationInjection.provideSettingsRepository().getSyncPeriod());
+
             PeriodicTask periodic = new PeriodicTask.Builder()
                     .setService(SyncTaskService.class)
-                    //repeat every 30 minutes
-                    .setPeriod(BuildConfig.DEBUG ? 30 : TASK_PERIOD_IN_SECONDS)
+                    //repeat every 'n' minutes (default 30 minutes)
+                    .setPeriod(syncPeriod)
                     //tag that is unique to this task (can be used to cancel task)
                     .setTag(SyncTaskService.class.getSimpleName())
                     //whether the task persists after device reboot
@@ -62,7 +63,8 @@ public class SyncTaskService extends GcmTaskService {
             GcmNetworkManager
                     .getInstance(context.getApplicationContext())
                     .schedule(periodic);
-            Timber.v("sync service scheduled");
+            Timber.v("sync service scheduled with period of %d minutes",
+                    TimeUnit.SECONDS.toMinutes(periodic.getPeriod()));
             return true;
         } catch (Exception e) {
             Timber.e(e, "scheduling sync service failed");
