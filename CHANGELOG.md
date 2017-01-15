@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Beta 0.9.0 (15/01/2017)
+-----------------------
+* **NOVO** Troca de perfil do vendedor (empresas),
+* **NOVO** Configuração do período da sincronização,
+* **NOVO** Integração com Crashlytics,
+* **MELHORIA** Comunicação com servidor, com 3 tentativas automáticas quando falha por timeout.
+
 Beta 0.8.3 (09/01/2017)
 -----------------------
 * **NOVO** Visualização do pedido enviado
