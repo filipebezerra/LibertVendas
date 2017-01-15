@@ -7,7 +7,6 @@ import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Settings;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
@@ -122,6 +121,7 @@ class HomePresenter extends BasePresenter<HomeContract.View>
         getView().initializeDrawer(settings.isAutoSync());
         getView().initializeViews();
 
+        /* TODO: https://github.com/filipebezerra/LibertVendas/issues/30
         addSubscription(mPedidoRepository.findAll()
                 .observeOn(mainThread())
                 .subscribe(new Subscriber<List<Pedido>>() {
@@ -135,6 +135,7 @@ class HomePresenter extends BasePresenter<HomeContract.View>
 
                     @Override public void onCompleted() {}
                 }));
+        */
 
         if (mSettingsRepository.loadSettings().isAutoSync()) {
             SyncTaskService.schedule(PresentationInjection.provideContext());
