@@ -62,6 +62,8 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
 
     private Vendedor mLoggedUser;
 
+    private int mSyncCompletedCounter;
+
     private Throwable mErrorMakingNetworkCall;
 
     ImportacaoPresenter(
@@ -104,6 +106,7 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
             return;
         }
 
+        mSyncCompletedCounter = 0;
         syncCities();
 
         for (Empresa empresa : mLoggedUser.getEmpresas()) {
@@ -131,6 +134,8 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
 
                             @Override public void onCompleted() {
                                 getView().showSyncCitiesDone();
+                                mSyncCompletedCounter++;
+                                checkAllSyncCompleted();
                             }
                         }
                 ));
@@ -144,21 +149,20 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
                 .subscribe(
                         new Subscriber<List<? extends Parcelable>>() {
                             @Override public void onError(final Throwable e) {
-                                Timber.e(e);
+                                Timber.e(e, "Could not sync data from %s", empresa.getNome());
                                 //mErrorMakingNetworkCall = e;
                                 //getView().hideLoadingWithFail();
                                 getView().showSyncError(empresa);
                             }
 
                             @Override public void onNext(
-                                    final List<? extends Parcelable> parcelables) {
-
-                            }
+                                    final List<? extends Parcelable> parcelables) {}
 
                             @Override public void onCompleted() {
-                                //mSettingsRepository.setInitialDataImportationDone();
                                 //getView().hideLoadingWithSuccess();
                                 getView().showSyncDone(empresa);
+                                mSyncCompletedCounter++;
+                                checkAllSyncCompleted();
                             }
                         }
                 ));
@@ -189,6 +193,13 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
                 .flatMap(dtoList ->
                         mTabelaRepository.saveAll(
                                 toPojoList(dtoList, mLoggedUser.getCpfCnpj(), empresa.getCnpj())));
+    }
+
+    private void checkAllSyncCompleted() {
+        if (mSyncCompletedCounter == (mLoggedUser.getEmpresas().size() + 1)) {
+            mSettingsRepository.setInitialDataImportationDone();
+            getView().showMenu();
+        }
     }
 
     @Override public void handleAnimationEnd(final boolean success) {
