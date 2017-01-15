@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.home;
 
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.MvpPresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.MvpView;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ interface HomeContract {
 
         void startDataImportation();
 
-        void initializeDrawerHeader(String userName, List<String> companyNames);
+        void initializeDrawerHeader(List<IProfile> profiles);
 
         void initializeDrawer(boolean autoSync);
 
@@ -65,5 +66,7 @@ interface HomeContract {
         void handleProductsNavigationItemSelected();
 
         void handleSettingsNavigationItemSelected();
+
+        void handleProfileChanged(IProfile profile, boolean current);
     }
 }

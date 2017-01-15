@@ -43,6 +43,23 @@ public final class Vendedor implements Parcelable {
         }
     };
 
+    public static Vendedor selectCompany(final Vendedor vendedor, Empresa companySelected) {
+        return create(
+                vendedor.getIdVendedor(),
+                vendedor.getCodigo(),
+                vendedor.getNome(),
+                vendedor.getCpfCnpj(),
+                vendedor.getTelefone(),
+                vendedor.getEmail(),
+                vendedor.isAtivo(),
+                vendedor.getIdTabela(),
+                vendedor.getUltimaAlteracao(),
+                vendedor.isAplicaDesconto(),
+                vendedor.getEmpresas(),
+                companySelected
+        );
+    }
+
     public static Vendedor create(
             final int idVendedor,
             final String codigo,

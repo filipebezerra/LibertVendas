@@ -28,12 +28,10 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondarySwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -105,23 +103,24 @@ public class HomeActivity extends LibertVendasActivity
         navigate().toImportacao();
     }
 
-    @Override public void initializeDrawerHeader(
-            final String userName, final List<String> companyNames) {
-        List<IProfile> profiles = new ArrayList<>();
-        for (String company : companyNames) {
-            profiles.add(new ProfileDrawerItem()
-                    .withName(userName)
-                    .withEmail(company)
-                    .withIcon(VectorDrawableCompat
-                            .create(getResources(), R.drawable.ic_user, getTheme())));
+    @Override public void initializeDrawerHeader(final List<IProfile> profiles) {
+        for (IProfile profile : profiles) {
+            profile.withIcon(
+                    VectorDrawableCompat.create(getResources(), R.drawable.ic_user, getTheme()));
         }
 
         mAccountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.header_background)
-                .withProfiles(profiles)
                 .withSavedInstance(mInState)
+                .withProfiles(profiles)
                 .withOnlyMainProfileImageVisible(true)
+                .withCurrentProfileHiddenInList(true)
+                .withSelectionListEnabledForSingleProfile(false)
+                .withOnAccountHeaderListener((view, profile, current) -> {
+                    mPresenter.handleProfileChanged(profile, current);
+                    return false;
+                })
                 .build();
     }
 

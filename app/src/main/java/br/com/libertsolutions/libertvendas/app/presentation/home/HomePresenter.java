@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.home;
 
+import android.os.Build;
 import br.com.libertsolutions.libertvendas.app.PresentationInjection;
 import br.com.libertsolutions.libertvendas.app.data.pedido.PedidoRepository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
@@ -12,8 +13,11 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.greenrobot.eventbus.EventBus;
 import rx.Subscriber;
 import timber.log.Timber;
@@ -86,17 +90,35 @@ class HomePresenter extends BasePresenter<HomeContract.View>
     }
 
     private void initializeView() {
-        List<Empresa> empresas = mVendedor.getEmpresas();
-        List<String> nomeEmpresas = new ArrayList<>();
-        nomeEmpresas.add(mVendedor.getEmpresaSelecionada().getNome());
-        for (Empresa e : empresas) {
-            if (mVendedor.getEmpresaSelecionada().getIdEmpresa() != e.getIdEmpresa()) {
-                nomeEmpresas.add(e.getNome());
+        List<IProfile> profiles = new ArrayList<>();
+        final Empresa empresaSelecionada = mVendedor.getEmpresaSelecionada();
+        profiles.add(new ProfileDrawerItem()
+                .withName(mVendedor.getNome())
+                .withEmail(empresaSelecionada.getNome())
+                .withIdentifier(empresaSelecionada.getIdEmpresa()));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            profiles.addAll(mVendedor.getEmpresas()
+                    .stream()
+                    .filter(empresa -> empresa.getIdEmpresa() != empresaSelecionada.getIdEmpresa())
+                    .map(empresa -> new ProfileDrawerItem()
+                            .withName(mVendedor.getNome())
+                            .withEmail(empresa.getNome())
+                            .withIdentifier(empresa.getIdEmpresa()))
+                    .collect(Collectors.toList()));
+        } else {
+            for (Empresa empresa : mVendedor.getEmpresas()) {
+                if (empresa.getIdEmpresa() != empresaSelecionada.getIdEmpresa()) {
+                    profiles.add(new ProfileDrawerItem()
+                            .withName(mVendedor.getNome())
+                            .withEmail(empresa.getNome())
+                            .withIdentifier(empresa.getIdEmpresa()));
+                }
             }
         }
+        getView().initializeDrawerHeader(profiles);
 
         Settings settings = mSettingsRepository.loadSettings();
-        getView().initializeDrawerHeader(mVendedor.getNome(), nomeEmpresas);
         getView().initializeDrawer(settings.isAutoSync());
         getView().initializeViews();
 
@@ -161,5 +183,38 @@ class HomePresenter extends BasePresenter<HomeContract.View>
 
     @Override public void handleSettingsNavigationItemSelected() {
         getView().navigateToSettings();
+    }
+
+    @Override public void handleProfileChanged(final IProfile profile, final boolean current) {
+        if (!current) {
+            for (Empresa empresa : mVendedor.getEmpresas()) {
+                if (empresa.getIdEmpresa() == profile.getIdentifier()) {
+                    changeCompanySelected(empresa);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void changeCompanySelected(Empresa companySelected) {
+        Vendedor vendedorWithAnotherCompany = Vendedor.selectCompany(mVendedor, companySelected);
+        addSubscription(mVendedorRepository.save(vendedorWithAnotherCompany)
+                .observeOn(mainThread())
+                .subscribe(
+                        new Subscriber<Vendedor>() {
+                            @Override public void onError(final Throwable e) {
+                                Timber.e(e, "Could not save changed company selected");
+                            }
+
+                            @Override public void onNext(final Vendedor vendedor) {
+                                mVendedor = vendedor;
+                            }
+
+                            @Override public void onCompleted() {
+                                EventBus.getDefault().postSticky(newEvent(mVendedor));
+                            }
+                        }
+                )
+        );
     }
 }
