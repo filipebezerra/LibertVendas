@@ -72,12 +72,7 @@ public final class Empresa implements Parcelable {
     }
 
     @Override public String toString() {
-        final StringBuilder sb = new StringBuilder("Empresa{");
-        sb.append("idEmpresa=").append(idEmpresa);
-        sb.append(", nome='").append(nome).append('\'');
-        sb.append(", cnpj='").append(cnpj).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return getNome();
     }
 
     @Override public int describeContents() {
