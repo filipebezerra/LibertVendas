@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import br.com.libertsolutions.libertvendas.app.PresentationInjection;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompatDividers;
@@ -35,13 +36,16 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers
         if (preference instanceof EditTextPreference) {
             final String stringValue = newValue.toString();
             if (!TextUtils.isEmpty(stringValue)) {
+                ((EditTextPreference) preference).setText(stringValue);
+
                 if (preference.getKey().equals(getString(R.string.key_pref_sync_period))) {
                     preference.setSummary(getString(R.string.summary_pref_sync_period, stringValue));
+
+                    SyncTaskService.cancelAll(preference.getContext());
+                    SyncTaskService.schedule(preference.getContext());
                 } else {
                     preference.setSummary(stringValue);
                 }
-
-                ((EditTextPreference) preference).setText(stringValue);
             }
         }
 
@@ -52,7 +56,6 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers
         preference.setPersistent(true);
         return true;
     };
-
 
     private LibertVendasActivity mLibertVendasActivity;
 
