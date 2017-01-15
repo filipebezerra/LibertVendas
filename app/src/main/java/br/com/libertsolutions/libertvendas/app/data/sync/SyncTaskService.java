@@ -177,7 +177,7 @@ public class SyncTaskService extends GcmTaskService {
                             Timber.e("order post request failure: %d %s",
                                     response.code(), response.message());
 
-                            return GcmNetworkManager.RESULT_FAILURE;
+                            return GcmNetworkManager.RESULT_RESCHEDULE;
                         }
 
                         Timber.d("order post request done successfully");
@@ -185,7 +185,7 @@ public class SyncTaskService extends GcmTaskService {
                             notifyChanges = true;
                         }
                     } else {
-                        return GcmNetworkManager.RESULT_FAILURE;
+                        return GcmNetworkManager.RESULT_RESCHEDULE;
                     }
                 }
 
