@@ -1,6 +1,9 @@
 package br.com.libertsolutions.libertvendas.app;
 
 import android.app.Application;
+import br.com.libertsolutions.libertvendas.app.presentation.utils.ReleaseTree;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import timber.log.Timber;
@@ -14,8 +17,9 @@ public class LibertVendasApplication extends Application {
 
     @Override public void onCreate() {
         super.onCreate();
-
         mInstance = this;
+
+        Fabric.with(this, new Crashlytics());
 
         initializeLogging();
         initializeDataStorageWithRealm();
@@ -25,7 +29,7 @@ public class LibertVendasApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         } else {
-
+            Timber.plant(new ReleaseTree());
         }
     }
 

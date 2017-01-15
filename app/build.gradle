@@ -1,8 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.21.5'
+    }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'realm-android'
+apply plugin: 'io.fabric'
 
 //noinspection GroovyAssignabilityCheck
 if (project.hasProperty("LibertVendas.signing")
@@ -24,6 +35,10 @@ android {
         setProperty("archivesBaseName", "LibertVendas-$versionName")
     }
     buildTypes {
+        debug {
+            applicationIdSuffix '.dev'
+            versionNameSuffix '-dev'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -59,6 +74,7 @@ ext {
 repositories {
     maven { url "https://jitpack.io" }
     maven { url "http://dl.bintray.com/jlmd/maven" }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
@@ -118,6 +134,11 @@ dependencies {
 
     // Phone number formatting library
     compile 'com.googlecode.libphonenumber:libphonenumber:8.0.0'
+
+    // Crash reporting
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
 }
 
 retrolambda {

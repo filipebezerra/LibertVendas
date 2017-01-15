@@ -14,6 +14,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.exceptions.ValidationError;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.ConnectivityServices;
+import com.crashlytics.android.Crashlytics;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -133,9 +134,16 @@ class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginC
 
                     @Override public void onNext(final Vendedor vendedor) {
                         mSettingsRepository.setLoggedInUser(mVendedor.idVendedor);
+                        setupCrashlyticsWithLoggedUser(vendedor);
                         EventBus.getDefault().postSticky(newEvent(vendedor));
                     }
                 }));
+    }
+
+    private void setupCrashlyticsWithLoggedUser(Vendedor vendedor) {
+        Crashlytics.setUserIdentifier(String.valueOf(vendedor.getIdVendedor()));
+        Crashlytics.setUserEmail(vendedor.getEmail());
+        Crashlytics.setUserName(vendedor.getNome());
     }
 
     private void onLoginError(final Throwable error) {

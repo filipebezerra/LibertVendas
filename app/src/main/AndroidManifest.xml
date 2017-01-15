@@ -123,6 +123,10 @@
                 <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
             </intent-filter>
         </service>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="88453d956cd483a917c0c313a6a47582a0853bcf" />
     </application>
 
 </manifest>
