@@ -10,6 +10,7 @@ import br.com.libertsolutions.libertvendas.app.data.formapagamento.FormaPagament
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.tabela.TabelaRepository;
 import br.com.libertsolutions.libertvendas.app.data.tabela.TabelaService;
+import br.com.libertsolutions.libertvendas.app.data.utils.RxUtils;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cidade;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
@@ -21,6 +22,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.ConnectivityServices;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.greenrobot.eventbus.EventBus;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
@@ -116,6 +118,8 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
 
     private void syncCities() {
         addSubscription(mCidadeService.get()
+                .retryWhen(RxUtils.timeoutException())
+                .retryWhen(RxUtils.exponentialBackoff(3, 5, TimeUnit.SECONDS))
                 .filter(dtoList -> !dtoList.isEmpty())
                 .flatMap(dtoList -> mCidadeRepository.saveAll(toPojoList(dtoList)))
                 .observeOn(mainThread())
@@ -169,8 +173,10 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
     }
 
     private Observable<List<FormaPagamento>> getFormasPagamento(Empresa empresa) {
-       return  mFormaPagamentoService
+       return mFormaPagamentoService
                .get(empresa.getCnpj())
+               .retryWhen(RxUtils.timeoutException())
+               .retryWhen(RxUtils.exponentialBackoff(3, 5, TimeUnit.SECONDS))
                .filter(dtoList -> !dtoList.isEmpty())
                .flatMap(dtoList ->
                        mFormaPagamentoRepository.saveAll(
@@ -180,6 +186,8 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
     private Observable<List<Cliente>> getClientes(Empresa empresa) {
         return mClienteService
                 .get(empresa.getCnpj())
+                .retryWhen(RxUtils.timeoutException())
+                .retryWhen(RxUtils.exponentialBackoff(3, 5, TimeUnit.SECONDS))
                 .filter(dtoList -> !dtoList.isEmpty())
                 .flatMap(dtoList ->
                         mClienteRepository.saveAll(
@@ -189,6 +197,8 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
     private Observable<List<Tabela>> getTabelas(Empresa empresa) {
         return mTabelaService
                 .get(empresa.getCnpj())
+                .retryWhen(RxUtils.timeoutException())
+                .retryWhen(RxUtils.exponentialBackoff(3, 5, TimeUnit.SECONDS))
                 .filter(dtoList -> !dtoList.isEmpty())
                 .flatMap(dtoList ->
                         mTabelaRepository.saveAll(

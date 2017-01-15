@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.login;
 
 import android.support.v4.util.Pair;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
+import br.com.libertsolutions.libertvendas.app.data.utils.RxUtils;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepository;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
 import br.com.libertsolutions.libertvendas.app.domain.dto.EmpresaDto;
@@ -15,6 +16,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.ConnectivityServices;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.greenrobot.eventbus.EventBus;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
@@ -66,7 +68,10 @@ class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginC
         if (validateInputValues()) {
             getView().blockInputFields();
             getView().showLoading();
-            addSubscription(mVendedorService.get(mInputValues.cpfCnpj, mInputValues.senha)
+            addSubscription(mVendedorService
+                    .get(mInputValues.cpfCnpj, mInputValues.senha)
+                    .retryWhen(RxUtils.timeoutException())
+                    .retryWhen(RxUtils.exponentialBackoff(3, 5, TimeUnit.SECONDS))
                     .flatMap(pVendedorDto -> {
                         if (pVendedorDto.error) {
                             return Observable
