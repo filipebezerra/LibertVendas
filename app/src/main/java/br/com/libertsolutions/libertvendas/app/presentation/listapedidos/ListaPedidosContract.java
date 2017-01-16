@@ -16,6 +16,8 @@ interface ListaPedidosContract {
 
         void showLoading();
 
+        void showEmptyView();
+
         void hideLoading();
 
         void navigateToCadastroPedido(Pedido pedido);

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
@@ -31,7 +32,8 @@ public class ListaPedidosFragment extends LibertVendasFragment
             = ListaPedidosFragment.class.getSimpleName() + ".argListaPedidosNaoEnviados";
 
     @BindView(R.id.recycler_view_pedidos) protected RecyclerView mRecyclerViewPedidos;
-    @BindView(R.id.swipe_container) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.swipe_container) protected SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.empty_state) protected LinearLayout mEmptyView;
 
     private ListaPedidosContract.Presenter mPresenter;
 
@@ -79,6 +81,15 @@ public class ListaPedidosFragment extends LibertVendasFragment
         mSwipeRefreshLayout.setRefreshing(true);
     }
 
+    @Override public void showEmptyView() {
+        if (mRecyclerViewPedidos.getVisibility() == View.VISIBLE) {
+            mRecyclerViewPedidos.setVisibility(View.GONE);
+        }
+        if (mEmptyView.getVisibility() == View.GONE) {
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override public void hideLoading() {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
@@ -86,6 +97,13 @@ public class ListaPedidosFragment extends LibertVendasFragment
     }
 
     @Override public void showPedidos(List<Pedido> pedidos) {
+        if (mRecyclerViewPedidos.getVisibility() == View.GONE) {
+            mRecyclerViewPedidos.setVisibility(View.VISIBLE);
+        }
+        if (mEmptyView.getVisibility() == View.VISIBLE) {
+            mEmptyView.setVisibility(View.GONE);
+        }
+
         mRecyclerViewPedidos.setAdapter(
                 mRecyclerViewAdapter = new ListaPedidosAdapter(
                         getContext(), !mShowOrdersNotSent, pedidos));

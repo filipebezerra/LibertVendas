@@ -206,6 +206,7 @@
     <string name="title_fragment_todos_pedidos">Todos Pedidos</string>
     <string name="title_fragment_pedidos_nao_enviados">Não Enviados</string>
     <string name="text_quantidade">Qtde</string>
+    <string name="text_empty_tagline_pedidos">Nenhum pedido aqui!</string>
 
     <!-- Dashboard strings -->
     <string name="title_fragment_dashboard">Início</string>

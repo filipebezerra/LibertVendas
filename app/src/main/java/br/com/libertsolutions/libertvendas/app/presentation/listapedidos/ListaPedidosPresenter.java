@@ -33,6 +33,7 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
     }
 
     @Override public void loadPedidos(final boolean showOrdersNotSent) {
+        Timber.d("loadPedidos(showOrdersNotSent = %b)", showOrdersNotSent);
         mIsShowingOrdersNotSent = showOrdersNotSent;
         Observable<List<Pedido>> pedidosFromMemoryCache = ObservableUtils.toObservable(mPedidos);
 
@@ -57,6 +58,7 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
                 .observeOn(mainThread())
                 .subscribe(new Subscriber<List<Pedido>>() {
                     @Override public void onStart() {
+                        Timber.d("onStart() -> loadPedidos()");
                         getView().showLoading();
                     }
 
@@ -66,10 +68,19 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
                     }
 
                     @Override public void onNext(List<Pedido> pPedidos) {
-                        getView().showPedidos(mPedidos);
+                        Timber.d("onNext() -> loadPedidos()");
                     }
 
-                    @Override public void onCompleted() {}
+                    @Override public void onCompleted() {
+                        if (!mPedidos.isEmpty()) {
+                            Timber.d("onCompleted() -> loadPedidos() = %d", mPedidos.size());
+                            getView().showPedidos(mPedidos);
+                        } else {
+                            Timber.d("onCompleted() -> loadPedidos() = empty");
+                            getView().hideLoading();
+                            getView().showEmptyView();
+                        }
+                    }
                 }));
     }
 
@@ -98,6 +109,7 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
     }
 
     @Subscribe public void onNewOrderEvent(NovoPedidoEvent event) {
+        Timber.d("onNewOrderEvent()");
         final Pedido pedido = event.getPedido();
         final int position = mPedidos.size();
         mPedidos.add(pedido);
