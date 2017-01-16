@@ -22,7 +22,7 @@
             android:theme="@style/LibertApp.Theme.NoActionBar"
             android:launchMode="singleTop"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize"
-            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:windowSoftInputMode="stateAlwaysHidden"
             >
 
             <intent-filter>
