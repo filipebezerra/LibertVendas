@@ -18,7 +18,9 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     @Override public void registerEventBus() {
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override public void unregisterEventBus() {
