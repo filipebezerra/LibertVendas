@@ -60,6 +60,7 @@ class SettingsPresenter extends BasePresenter<SettingsContract.View>
             final int newPeriod = NumberUtils.toInt(newPeriodValue);
 
             if (newPeriod != mLastKnownSyncPeriod) {
+                mLastKnownSyncPeriod = newPeriod;
                 SyncTaskService.cancelAll(PresentationInjection.provideContext());
                 SyncTaskService.schedule(PresentationInjection.provideContext());
             }
