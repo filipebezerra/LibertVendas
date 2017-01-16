@@ -145,4 +145,8 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
 
         EventBus.getDefault().postSticky(newEvent(produtosSelecionados, mTabelaPadrao));
     }
+
+    @Override public void refreshProductList() {
+        loadProdutos();
+    }
 }

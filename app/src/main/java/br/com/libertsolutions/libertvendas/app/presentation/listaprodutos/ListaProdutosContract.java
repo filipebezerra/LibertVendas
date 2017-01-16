@@ -36,5 +36,7 @@ interface ListaProdutosContract {
         void handleQuantidadeItemModificada(int position, float quantidade);
 
         void handleActionDone();
+
+        void refreshProductList();
     }
 }

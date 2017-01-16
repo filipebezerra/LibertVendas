@@ -3,6 +3,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.listaprodutos;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -19,7 +20,6 @@ import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVendasFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.FeedbackHelper;
 import butterknife.BindView;
-import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +27,8 @@ import java.util.List;
  * @author Filipe Bezerra
  */
 public class ListaProdutosFragment extends LibertVendasFragment
-        implements ListaProdutosContract.View, ListaProdutosAdapter.ListaProdutosCallbacks {
+        implements ListaProdutosContract.View, ListaProdutosAdapter.ListaProdutosCallbacks,
+        SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = ListaProdutosFragment.class.getName();
 
@@ -36,12 +37,11 @@ public class ListaProdutosFragment extends LibertVendasFragment
 
     @BindView(R.id.container_lista_produtos) protected FrameLayout mContainerListaProdutos;
     @BindView(R.id.recycler_view_produtos) protected RecyclerView mRecyclerViewProdutos;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ListaProdutosContract.Presenter mPresenter;
 
     private ListaProdutosAdapter mRecyclerViewAdapter;
-
-    private MaterialDialog mProgressDialog;
 
     private OnGlobalLayoutListener sRecyclerViewLayoutListener = null;
 
@@ -72,8 +72,18 @@ public class ListaProdutosFragment extends LibertVendasFragment
         mRecyclerViewProdutos.setHasFixedSize(true);
         mRecyclerViewProdutos.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
+
+        final boolean isSelectionMode = getArguments().getBoolean(ARG_EXTRA_IS_SELECTION_MODE);
+
+        if (isSelectionMode) {
+            mSwipeRefreshLayout.setEnabled(false);
+        }
+
         mPresenter = new ListaProdutosPresenter(
-                getArguments().getBoolean(ARG_EXTRA_IS_SELECTION_MODE),
+                isSelectionMode,
                 getArguments().getParcelableArrayList(ARG_EXTRA_ITENS_PEDIDO),
                 DataInjection.LocalRepositories.provideTabelaRepository());
         mPresenter.attachView(this);
@@ -111,16 +121,12 @@ public class ListaProdutosFragment extends LibertVendasFragment
     }
 
     @Override public void showLoading() {
-        mProgressDialog = new MaterialDialog.Builder(getContext())
-                .content(getString(R.string.loading_produtos))
-                .progress(true, 0)
-                .cancelable(false)
-                .show();
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override public void hideLoading() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -163,6 +169,10 @@ public class ListaProdutosFragment extends LibertVendasFragment
 
     @Override public void onQuantidadeModificada(final int position, final float quantidade) {
         mPresenter.handleQuantidadeItemModificada(position, quantidade);
+    }
+
+    @Override public void onRefresh() {
+        mPresenter.refreshProductList();
     }
 
     @Override public void onDestroyView() {
