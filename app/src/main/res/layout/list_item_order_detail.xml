@@ -61,11 +61,23 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/text_view_produto"
-                android:layout_alignBottom="@id/text_view_total"
+                android:layout_alignBaseline="@id/text_view_total"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                android:textStyle="bold"
-                android:layout_gravity="center"
                 android:text="@string/text_qtde_inicial_produto"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/text_view_quantidade"
+                android:layout_toStartOf="@id/text_view_quantidade"
+                android:layout_alignBaseline="@id/text_view_total"
+                android:paddingLeft="@dimen/keyline_medium"
+                android:paddingStart="@dimen/keyline_medium"
+                android:paddingRight="@dimen/keyline_medium"
+                android:paddingEnd="@dimen/keyline_medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:text="@string/text_quantidade"
                 />
 
         </RelativeLayout>

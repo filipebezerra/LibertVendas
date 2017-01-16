@@ -205,6 +205,7 @@
     <string name="loading_pedidos">Carregando lista de pedidos, por favor aguarde…</string>
     <string name="title_fragment_todos_pedidos">Todos Pedidos</string>
     <string name="title_fragment_pedidos_nao_enviados">Não Enviados</string>
+    <string name="text_quantidade">Qtde</string>
 
     <!-- Dashboard strings -->
     <string name="title_fragment_dashboard">Início</string>
