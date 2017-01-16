@@ -95,7 +95,7 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
         }
     }
 
-    @Override public void refreshOrdersList() {
+    @Override public void refreshOrderList() {
         loadPedidos(mIsShowingOrdersNotSent);
     }
 

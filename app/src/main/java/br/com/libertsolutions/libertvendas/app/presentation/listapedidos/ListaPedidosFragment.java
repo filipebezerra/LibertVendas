@@ -16,7 +16,6 @@ import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVenda
 import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemClickListener;
 import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemTouchListener;
 import butterknife.BindView;
-import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.List;
 
 import static br.com.libertsolutions.libertvendas.app.DataInjection.LocalRepositories.providePedidoRepository;
@@ -37,8 +36,6 @@ public class ListaPedidosFragment extends LibertVendasFragment
     private ListaPedidosContract.Presenter mPresenter;
 
     private ListaPedidosAdapter mRecyclerViewAdapter;
-
-    private MaterialDialog mProgressDialog;
 
     private boolean mShowOrdersNotSent;
 
@@ -64,6 +61,10 @@ public class ListaPedidosFragment extends LibertVendasFragment
         mRecyclerViewPedidos.setHasFixedSize(true);
         mRecyclerViewPedidos.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
+
         Bundle arguments = getArguments();
         if (arguments != null && arguments.containsKey(ARG_LISTA_PEDIDOS_NAO_ENVIADOS)) {
             mShowOrdersNotSent = arguments.getBoolean(ARG_LISTA_PEDIDOS_NAO_ENVIADOS);
@@ -72,23 +73,15 @@ public class ListaPedidosFragment extends LibertVendasFragment
         mPresenter = new ListaPedidosPresenter(providePedidoRepository());
         mPresenter.attachView(this);
         mPresenter.loadPedidos(mShowOrdersNotSent);
-
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
     }
 
     @Override public void showLoading() {
-        mProgressDialog = new MaterialDialog.Builder(getContext())
-                .content(getString(R.string.loading_pedidos))
-                .progress(true, 0)
-                .cancelable(false)
-                .show();
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override public void hideLoading() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -119,13 +112,6 @@ public class ListaPedidosFragment extends LibertVendasFragment
 
         mPresenter.registerEventBus();
         hideLoading();
-        stopRefreshingProgress();
-    }
-
-    private void stopRefreshingProgress() {
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
     }
 
     @Override public void onSingleTapUp(final View view, final int position) {
@@ -164,7 +150,7 @@ public class ListaPedidosFragment extends LibertVendasFragment
     }
 
     @Override public void onRefresh() {
-        mPresenter.refreshOrdersList();
+        mPresenter.refreshOrderList();
     }
 
     @Override public void onDestroyView() {
