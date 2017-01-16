@@ -38,8 +38,10 @@ android {
         debug {
             applicationIdSuffix '.dev'
             versionNameSuffix '-dev'
+            ext.enableCrashlytics = false
         }
         release {
+            ext.enableCrashlytics = true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

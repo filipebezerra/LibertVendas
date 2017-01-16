@@ -3,6 +3,7 @@ package br.com.libertsolutions.libertvendas.app;
 import android.app.Application;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.ReleaseTree;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -19,10 +20,17 @@ public class LibertVendasApplication extends Application {
         super.onCreate();
         mInstance = this;
 
-        Fabric.with(this, new Crashlytics());
-
+        initializeCrashlytics();
         initializeLogging();
         initializeDataStorageWithRealm();
+    }
+
+    private void initializeCrashlytics() {
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+                .build();
+
+        Fabric.with(this, crashlyticsKit);
     }
 
     private void initializeLogging() {
