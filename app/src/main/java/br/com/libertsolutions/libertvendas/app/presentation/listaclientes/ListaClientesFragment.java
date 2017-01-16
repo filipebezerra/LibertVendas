@@ -82,6 +82,11 @@ public class ListaClientesFragment extends LibertVendasFragment
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
 
         final boolean isSelectionMode = getArguments().getBoolean(ARG_EXTRA_IS_SELECTION_MODE);
+
+        if (isSelectionMode) {
+            mSwipeRefreshLayout.setEnabled(false);
+        }
+
         final Cliente clientePedidoEmEdicao
                 = getArguments().getParcelable(ARG_EXTRA_CLIENTE_PEDIDO_EM_EDICAO);
         mPresenter = new ListaClientesPresenter(
