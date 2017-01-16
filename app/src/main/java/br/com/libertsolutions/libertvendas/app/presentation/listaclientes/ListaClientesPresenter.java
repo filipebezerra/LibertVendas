@@ -52,8 +52,8 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
                 .doOnNext(clientes -> mClientes = clientes);
 
         addSubscription(Observable
-                .concat(clientesFromMemoryCache, clientesFromDiskCache)
-                .firstOrDefault(emptyList())
+                .merge(clientesFromMemoryCache, clientesFromDiskCache)
+                .lastOrDefault(emptyList())
                 .observeOn(mainThread())
                 .subscribe(new Subscriber<List<Cliente>>() {
                     @Override public void onStart() {
@@ -103,6 +103,10 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
             mClientes.set(position, clienteEditado);
             getView().updateChangedItemAtPosition(position);
         }
+    }
+
+    @Override public void refreshCustomerList() {
+        loadClientes();
     }
 
     @Subscribe public void onNewCustomerEvent(NewCustomerEvent event) {

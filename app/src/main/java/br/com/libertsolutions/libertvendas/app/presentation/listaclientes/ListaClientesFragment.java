@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -20,7 +21,6 @@ import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVenda
 import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemClickListener;
 import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemTouchListener;
 import butterknife.BindView;
-import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.List;
 
 import static br.com.libertsolutions.libertvendas.app.DataInjection.LocalRepositories.provideClienteRepository;
@@ -29,7 +29,8 @@ import static br.com.libertsolutions.libertvendas.app.DataInjection.LocalReposit
  * @author Filipe Bezerra
  */
 public class ListaClientesFragment extends LibertVendasFragment
-        implements ListaClientesContract.View, OnItemClickListener {
+        implements ListaClientesContract.View, OnItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = ListaClientesFragment.class.getName();
 
@@ -39,12 +40,11 @@ public class ListaClientesFragment extends LibertVendasFragment
             = TAG  + ".argExtraClientePedidoEmEdicao";
 
     @BindView(R.id.recycler_view_clientes) protected RecyclerView mRecyclerViewClientes;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ListaClientesContract.Presenter mPresenter;
 
     private ListaClientesAdapter mRecyclerViewAdapter;
-
-    private MaterialDialog mProgressDialog;
 
     private OnGlobalLayoutListener mRecyclerViewLayoutListener = null;
 
@@ -77,6 +77,10 @@ public class ListaClientesFragment extends LibertVendasFragment
         mRecyclerViewClientes.setHasFixedSize(true);
         mRecyclerViewClientes.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
+
         final boolean isSelectionMode = getArguments().getBoolean(ARG_EXTRA_IS_SELECTION_MODE);
         final Cliente clientePedidoEmEdicao
                 = getArguments().getParcelable(ARG_EXTRA_CLIENTE_PEDIDO_EM_EDICAO);
@@ -104,16 +108,12 @@ public class ListaClientesFragment extends LibertVendasFragment
     }
 
     @Override public void showLoading() {
-        mProgressDialog = new MaterialDialog.Builder(getContext())
-                .content(getString(R.string.loading_clientes))
-                .progress(true, 0)
-                .cancelable(false)
-                .show();
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override public void hideLoading() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -175,6 +175,10 @@ public class ListaClientesFragment extends LibertVendasFragment
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override public void onRefresh() {
+        mPresenter.refreshCustomerList();
     }
 
     @Override public void onDestroyView() {

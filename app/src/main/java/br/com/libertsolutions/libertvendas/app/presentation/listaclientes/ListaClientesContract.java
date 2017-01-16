@@ -32,5 +32,7 @@ interface ListaClientesContract {
         void handleItemSelected(int position);
 
         void handleResultClienteEditado(Cliente clienteEditado);
+
+        void refreshCustomerList();
     }
 }

@@ -5,10 +5,17 @@
     tools:context=".presentation.listaclientes.ListaClientesFragment"
     >
 
-    <android.support.v7.widget.RecyclerView
-        style="@style/Widget.LibertApp.RecyclerView"
-        android:id="@+id/recycler_view_clientes"
-        tools:listitem="@layout/list_item_cliente"
-        />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            style="@style/Widget.LibertApp.RecyclerView"
+            android:id="@+id/recycler_view_clientes"
+            tools:listitem="@layout/list_item_cliente"
+            />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>
