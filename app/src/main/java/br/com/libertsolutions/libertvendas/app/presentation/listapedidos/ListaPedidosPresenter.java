@@ -54,8 +54,8 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
         }
 
         addSubscription(Observable
-                .concat(pedidosFromMemoryCache, pedidosFromDiskCache)
-                .firstOrDefault(emptyList())
+                .merge(pedidosFromMemoryCache, pedidosFromDiskCache)
+                .lastOrDefault(emptyList())
                 .observeOn(mainThread())
                 .subscribe(new Subscriber<List<Pedido>>() {
                     @Override public void onStart() {
@@ -93,6 +93,10 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
             mPedidos.set(position, pedidoEditado);
             getView().updateChangedItemAtPosition(position);
         }
+    }
+
+    @Override public void refreshOrdersList() {
+        loadPedidos(mIsShowingOrdersNotSent);
     }
 
     @Subscribe public void onNewOrderEvent(NovoPedidoEvent event) {

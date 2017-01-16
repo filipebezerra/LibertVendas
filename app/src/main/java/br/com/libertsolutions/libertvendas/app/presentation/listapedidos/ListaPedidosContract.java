@@ -34,5 +34,7 @@ interface ListaPedidosContract {
         void handleItemSelected(int position);
 
         void handleResultPedidoEditado(Pedido pedidoEditado);
+
+        void refreshOrdersList();
     }
 }

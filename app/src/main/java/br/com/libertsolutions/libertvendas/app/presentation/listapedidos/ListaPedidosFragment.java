@@ -3,6 +3,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.listapedidos;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,12 +25,14 @@ import static br.com.libertsolutions.libertvendas.app.DataInjection.LocalReposit
  * @author Filipe Bezerra
  */
 public class ListaPedidosFragment extends LibertVendasFragment
-        implements ListaPedidosContract.View, OnItemClickListener {
+        implements ListaPedidosContract.View, OnItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener  {
 
     private static final String ARG_LISTA_PEDIDOS_NAO_ENVIADOS
             = ListaPedidosFragment.class.getSimpleName() + ".argListaPedidosNaoEnviados";
 
     @BindView(R.id.recycler_view_pedidos) protected RecyclerView mRecyclerViewPedidos;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ListaPedidosContract.Presenter mPresenter;
 
@@ -69,6 +72,10 @@ public class ListaPedidosFragment extends LibertVendasFragment
         mPresenter = new ListaPedidosPresenter(providePedidoRepository());
         mPresenter.attachView(this);
         mPresenter.loadPedidos(mShowOrdersNotSent);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
     }
 
     @Override public void showLoading() {
@@ -112,6 +119,13 @@ public class ListaPedidosFragment extends LibertVendasFragment
 
         mPresenter.registerEventBus();
         hideLoading();
+        stopRefreshingProgress();
+    }
+
+    private void stopRefreshingProgress() {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override public void onSingleTapUp(final View view, final int position) {
@@ -147,6 +161,10 @@ public class ListaPedidosFragment extends LibertVendasFragment
 
     @Override public void navigateToOrderDetail(final Pedido order) {
         hostActivity().navigate().toOrderDetail(order);
+    }
+
+    @Override public void onRefresh() {
+        mPresenter.refreshOrdersList();
     }
 
     @Override public void onDestroyView() {
