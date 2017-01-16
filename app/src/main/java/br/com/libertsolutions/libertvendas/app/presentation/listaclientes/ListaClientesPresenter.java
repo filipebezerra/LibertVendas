@@ -1,7 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listaclientes;
 
 import br.com.libertsolutions.libertvendas.app.data.cliente.ClienteRepository;
-import br.com.libertsolutions.libertvendas.app.data.sync.SyncCustomersEvent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.NewCustomerEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
@@ -16,7 +15,6 @@ import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent.newEvent;
 import static java.util.Collections.emptyList;
-import static org.greenrobot.eventbus.ThreadMode.BACKGROUND;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -114,9 +112,5 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
         final int position = mClientes.size();
         mClientes.add(cliente);
         getView().updateInsertedItemAtPosition(position);
-    }
-
-    @Subscribe(threadMode = BACKGROUND) public void onSyncEvent(SyncCustomersEvent event) {
-        loadClientes();
     }
 }

@@ -1,7 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listapedidos;
 
 import br.com.libertsolutions.libertvendas.app.data.pedido.PedidoRepository;
-import br.com.libertsolutions.libertvendas.app.data.sync.SyncOrdersEvent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Pedido;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.finalizando.NovoPedidoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
@@ -15,7 +14,6 @@ import rx.Subscriber;
 import timber.log.Timber;
 
 import static java.util.Collections.emptyList;
-import static org.greenrobot.eventbus.ThreadMode.BACKGROUND;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -104,9 +102,5 @@ class ListaPedidosPresenter extends BasePresenter<ListaPedidosContract.View>
         final int position = mPedidos.size();
         mPedidos.add(pedido);
         getView().updateInsertedItemAtPosition(position);
-    }
-
-    @Subscribe(threadMode = BACKGROUND) public void onSyncEvent(SyncOrdersEvent event) {
-        loadPedidos(mIsShowingOrdersNotSent);
     }
 }
