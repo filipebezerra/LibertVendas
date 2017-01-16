@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import br.com.libertsolutions.libertvendas.app.PresentationInjection;
 import br.com.libertsolutions.libertvendas.app.R;
-import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVendasActivity;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompatDividers;
@@ -32,6 +31,10 @@ import static br.com.libertsolutions.libertvendas.app.R.string.key_pref_tabela_p
 public class SettingsFragment extends PreferenceFragmentCompatDividers
         implements SettingsContract.View {
 
+    private LibertVendasActivity mLibertVendasActivity;
+
+    private SettingsContract.Presenter mPresenter;
+
     private OnPreferenceChangeListener mPreferenceChangeListener = (preference, newValue) -> {
         if (preference instanceof EditTextPreference) {
             final String stringValue = newValue.toString();
@@ -41,8 +44,9 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers
                 if (preference.getKey().equals(getString(R.string.key_pref_sync_period))) {
                     preference.setSummary(getString(R.string.summary_pref_sync_period, stringValue));
 
-                    SyncTaskService.cancelAll(preference.getContext());
-                    SyncTaskService.schedule(preference.getContext());
+                    if (mPresenter != null) {
+                        mPresenter.handleSyncPeriodPreferenceChanged(stringValue);
+                    }
                 } else {
                     preference.setSummary(stringValue);
                 }
@@ -56,10 +60,6 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers
         preference.setPersistent(true);
         return true;
     };
-
-    private LibertVendasActivity mLibertVendasActivity;
-
-    private SettingsContract.Presenter mPresenter;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();

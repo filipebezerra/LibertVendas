@@ -26,5 +26,7 @@ interface SettingsContract {
         boolean handleActionDoneVisibility();
 
         void handleActionDone();
+
+        void handleSyncPeriodPreferenceChanged(String newPeriodValue);
     }
 }
