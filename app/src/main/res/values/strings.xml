@@ -203,10 +203,13 @@
     <string name="template_text_total_pedido">Total %1$s</string>
     <string name="template_text_data_pedido">Data %1$s</string>
     <string name="loading_pedidos">Carregando lista de pedidos, por favor aguarde…</string>
-    <string name="title_fragment_todos_pedidos">Todos Pedidos</string>
-    <string name="title_fragment_pedidos_nao_enviados">Não Enviados</string>
+    <string name="title_fragment_orders_list">Todos Pedidos</string>
+    <string name="title_fragment_pending_orders_list">Não Enviados</string>
     <string name="text_quantidade">Qtde</string>
-    <string name="text_empty_tagline_pedidos">Nenhum pedido aqui!</string>
+    <string name="text_empty_tagline_pedidos">Seus pedidos são listados aqui</string>
+    <string name="error_loading_order_list">
+        Desculpe, houve uma falha quando tentamos carregar seus pedidos. Por favor tente novamente!
+    </string>
 
     <!-- Dashboard strings -->
     <string name="title_fragment_dashboard">Início</string>

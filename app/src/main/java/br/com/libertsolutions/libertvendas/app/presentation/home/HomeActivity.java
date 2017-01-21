@@ -14,7 +14,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.activity.LibertVenda
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.dashboard.DashboardFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
-import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.OrderListPageFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.view.SheetFloatingActionButton;
 import butterknife.BindColor;
@@ -264,7 +264,7 @@ public class HomeActivity extends LibertVendasActivity
     }
 
     @Override public boolean isViewingOrders() {
-        return isViewingFragmentByTag(TabsFragment.TAG);
+        return isViewingFragmentByTag(OrderListPageFragment.TAG);
     }
 
     @Override public void navigateToOrders() {

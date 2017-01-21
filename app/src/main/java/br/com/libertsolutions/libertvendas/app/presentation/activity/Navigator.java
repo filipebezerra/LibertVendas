@@ -15,7 +15,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.dashboard.DashboardF
 import br.com.libertsolutions.libertvendas.app.presentation.home.HomeActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.importacao.ImportacaoActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ListaClientesFragment;
-import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.TabsFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.listapedidos.OrderListPageFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ListaProdutosFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoginActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.orderdetail.OrderDetailActivity;
@@ -103,7 +103,8 @@ public final class Navigator {
     public void toOrders() {
         mActivity.getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, TabsFragment.newInstance(), TabsFragment.TAG)
+                .replace(R.id.fragment_container,
+                        OrderListPageFragment.newInstance(), OrderListPageFragment.TAG)
                 .commit();
         mActivity.setTitle(R.string.title_fragment_lista_pedidos);
     }

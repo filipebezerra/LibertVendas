@@ -4,7 +4,7 @@
     android:id="@id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.listapedidos.ListaPedidosFragment"
+    tools:context=".presentation.listapedidos.OrderListFragment"
     >
 
     <FrameLayout
@@ -14,10 +14,10 @@
 
         <android.support.v7.widget.RecyclerView
             style="@style/Widget.LibertApp.RecyclerView"
-            android:id="@+id/recycler_view_pedidos"
+            android:id="@+id/recycler_view_orders"
             android:visibility="visible"
             tools:visibility="gone"
-            tools:listitem="@layout/list_item_pedido"
+            tools:listitem="@layout/list_item_order"
             />
 
         <LinearLayout
@@ -38,7 +38,8 @@
                 android:layout_width="144dp"
                 android:layout_height="144dp"
                 android:contentDescription="@string/text_empty_tagline_pedidos"
-                app:srcCompat="@drawable/ic_list"
+                android:layout_marginBottom="@dimen/keyline_large"
+                app:srcCompat="@drawable/ic_empty_list"
                 />
 
             <TextView
@@ -48,7 +49,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="@string/text_empty_tagline_pedidos"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 />
         </LinearLayout>
     </FrameLayout>

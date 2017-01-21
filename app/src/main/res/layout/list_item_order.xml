@@ -17,7 +17,7 @@
             >
 
             <View
-                android:id="@+id/view_status_pedido"
+                android:id="@+id/view_order_status"
                 android:layout_width="@dimen/keyline_large"
                 android:layout_height="@dimen/keyline_large"
                 android:layout_marginLeft="@dimen/keyline_medium"
@@ -31,12 +31,12 @@
                 />
 
             <TextView
-                android:id="@+id/text_view_numero_pedido"
+                android:id="@+id/text_view_order_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/keyline_medium"
-                android:layout_toLeftOf="@id/view_status_pedido"
-                android:layout_toStartOf="@id/view_status_pedido"
+                android:layout_toLeftOf="@id/view_order_status"
+                android:layout_toStartOf="@id/view_order_status"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
@@ -44,11 +44,11 @@
                 />
 
             <TextView
-                android:id="@+id/text_view_nome_cliente"
+                android:id="@+id/text_view_customer_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/keyline_medium"
-                android:layout_below="@id/text_view_numero_pedido"
+                android:layout_below="@id/text_view_order_number"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
@@ -57,10 +57,10 @@
                 />
 
             <TextView
-                android:id="@+id/text_view_total_pedido"
+                android:id="@+id/text_view_order_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/text_view_nome_cliente"
+                android:layout_below="@id/text_view_customer_name"
                 android:paddingBottom="@dimen/keyline_medium"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:maxLines="1"
@@ -71,10 +71,10 @@
                 />
 
             <TextView
-                android:id="@+id/text_view_data_pedido"
+                android:id="@+id/text_view_order_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/text_view_total_pedido"
+                android:layout_below="@id/text_view_order_amount"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:maxLines="1"
                 android:ellipsize="end"

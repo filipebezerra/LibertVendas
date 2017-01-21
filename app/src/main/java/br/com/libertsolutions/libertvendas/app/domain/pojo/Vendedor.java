@@ -191,11 +191,16 @@ public final class Vendedor implements Parcelable {
 
         Vendedor vendedor = (Vendedor) o;
 
-        return getIdVendedor() == vendedor.getIdVendedor();
+        if (getIdVendedor() != vendedor.getIdVendedor()) {
+            return false;
+        }
+        return getEmpresaSelecionada().equals(vendedor.getEmpresaSelecionada());
     }
 
     @Override public int hashCode() {
-        return getIdVendedor();
+        int result = getIdVendedor();
+        result = 31 * result + getEmpresaSelecionada().hashCode();
+        return result;
     }
 
     @Override public String toString() {

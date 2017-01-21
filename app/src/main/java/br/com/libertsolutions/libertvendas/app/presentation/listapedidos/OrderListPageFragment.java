@@ -17,9 +17,9 @@ import butterknife.ButterKnife;
 /**
  * @author Filipe Bezerra
  */
-public class TabsFragment extends LibertVendasFragment {
+public class OrderListPageFragment extends LibertVendasFragment {
 
-    public static final String TAG = TabsFragment.class.getName();
+    public static final String TAG = OrderListPageFragment.class.getName();
 
     @BindView(R.id.view_pager) protected ViewPager mViewPager;
 
@@ -29,15 +29,15 @@ public class TabsFragment extends LibertVendasFragment {
 
     private TabAdapter mTabAdapter;
 
-    public static TabsFragment newInstance() {
-        return new TabsFragment();
+    public static OrderListPageFragment newInstance() {
+        return new OrderListPageFragment();
     }
 
     @Override protected int provideContentViewResource() {
         return R.layout.fragment_tabs;
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         if (mAppBarLayoutActivity == null) {
@@ -49,11 +49,12 @@ public class TabsFragment extends LibertVendasFragment {
                     .inflate(R.layout.tab_layout, mAppBarLayoutActivity, false);
 
             mTabAdapter = new TabAdapter(getChildFragmentManager());
-            mTabAdapter.addFragment(ListaPedidosFragment.newInstance(false),
-                    getString(R.string.title_fragment_todos_pedidos));
-            mTabAdapter.addFragment(ListaPedidosFragment.newInstance(true),
-                    getString(R.string.title_fragment_pedidos_nao_enviados));
+            mTabAdapter.addFragment(OrderListFragment.newInstance(false),
+                    getString(R.string.title_fragment_orders_list));
+            mTabAdapter.addFragment(OrderListFragment.newInstance(true),
+                    getString(R.string.title_fragment_pending_orders_list));
             mViewPager.setAdapter(mTabAdapter);
+            mViewPager.setOffscreenPageLimit(2);
 
             mTabLayout.setupWithViewPager(mViewPager);
         }
@@ -61,8 +62,8 @@ public class TabsFragment extends LibertVendasFragment {
         mAppBarLayoutActivity.addView(mTabLayout);
     }
 
-    @Override public void onActivityResult(final int requestCode, final int resultCode,
-            final Intent data) {
+    @Override public void onActivityResult(
+            final int requestCode, final int resultCode, final Intent data) {
         for (Fragment fragment : mTabAdapter.getFragments()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
