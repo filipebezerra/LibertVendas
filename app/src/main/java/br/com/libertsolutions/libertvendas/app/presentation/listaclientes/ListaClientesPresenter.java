@@ -113,4 +113,8 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
         mClientes.add(cliente);
         getView().updateInsertedItemAtPosition(position);
     }
+
+    @Subscribe(sticky = true) public void onUserLogin(LoggedUserEvent event) {
+        loadClientes();
+    }
 }

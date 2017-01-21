@@ -11,6 +11,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import java.util.ArrayList;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
@@ -147,6 +148,10 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
     }
 
     @Override public void refreshProductList() {
+        loadProdutos();
+    }
+
+    @Subscribe(sticky = true) public void onUserLogin(LoggedUserEvent event) {
         loadProdutos();
     }
 }

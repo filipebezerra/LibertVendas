@@ -133,4 +133,8 @@ abstract class BaseOrderListPresenter extends BasePresenter<OrderListContract.Vi
             getView().displayOrderList(mOrderList, isStatusIndicatorVisible());
         }
     }
+
+    @Subscribe(sticky = true) public void onUserLogin(LoggedUserEvent event) {
+        loadOrderList();
+    }
 }
