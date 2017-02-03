@@ -26,13 +26,13 @@ import io.realm.RealmResults;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.greenrobot.eventbus.EventBus;
 import retrofit2.Response;
 import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.DataInjection.RemoteRepositories.provideClienteService;
 import static br.com.libertsolutions.libertvendas.app.DataInjection.RemoteRepositories.providePedidoService;
 import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideContext;
+import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideSettingsRepository;
 
 /**
@@ -118,7 +118,7 @@ public class SyncTaskService extends GcmTaskService {
                     } else {
                         Timber.d("customers patch request done successfully");
                         updateChangedCustomers(response);
-                        EventBus.getDefault().post(SyncCustomersEvent.newEvent());
+                        provideEventBus().post(SyncCustomersEvent.newEvent());
                     }
                 }
             } else {
@@ -149,7 +149,7 @@ public class SyncTaskService extends GcmTaskService {
                 }
 
                 if (notifyChanges) {
-                    EventBus.getDefault().post(SyncCustomersEvent.newEvent());
+                    provideEventBus().post(SyncCustomersEvent.newEvent());
                 }
             } else {
                 Timber.d("no new customers found to sync");
@@ -190,7 +190,7 @@ public class SyncTaskService extends GcmTaskService {
                 }
 
                 if (notifyChanges) {
-                    EventBus.getDefault().post(SyncOrdersEvent.newEvent());
+                    provideEventBus().post(SyncOrdersEvent.newEvent());
                 }
             } else {
                 Timber.d("no pending orders found to sync");

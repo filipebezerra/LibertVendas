@@ -21,12 +21,12 @@ import br.com.libertsolutions.libertvendas.app.presentation.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.cadastropedido.finalizando.NovoPedidoEvent.newEvent;
 import static java.util.Collections.emptyList;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
@@ -152,7 +152,7 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
     }
 
     private void getLoggedUser() {
-        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        LoggedUserEvent event = provideEventBus().getStickyEvent(LoggedUserEvent.class);
         mVendedorLogado = event.getVendedor();
     }
 
@@ -160,14 +160,14 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         mClienteSelecionado = event.getCliente();
         getView().setViewValue(mResourcesRepository.obtainClienteViewId(),
                 mClienteSelecionado.getNome());
-        EventBus.getDefault().removeStickyEvent(event);
+        provideEventBus().removeStickyEvent(event);
     }
 
     @Subscribe(sticky = true) public void onProdutosSelecionadosEvent(ProdutosSelecionadosEvent event) {
         mProdutosSelecionados = event.getProdutos();
         mTabelaPadrao = event.getTabela();
         displayTotalProdutos(calculateTotalProdutosSelecionados());
-        EventBus.getDefault().removeStickyEvent(event);
+        provideEventBus().removeStickyEvent(event);
     }
 
     @Override public void handleActionSave() {
@@ -327,7 +327,7 @@ class FinalizandoPedidoPresenter extends BasePresenter<FinalizandoPedidoContract
         if (isEditing()) {
             getView().resultPedidoEditado(pPedido);
         } else {
-            EventBus.getDefault().post(newEvent(pPedido));
+            provideEventBus().post(newEvent(pPedido));
             getView().finishView();
         }
     }

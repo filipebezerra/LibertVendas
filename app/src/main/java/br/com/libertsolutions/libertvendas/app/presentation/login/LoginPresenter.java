@@ -24,6 +24,7 @@ import rx.Observable;
 import rx.Subscriber;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent.newEvent;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -135,7 +136,7 @@ class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginC
                     @Override public void onNext(final Vendedor vendedor) {
                         mSettingsRepository.setLoggedInUser(mVendedor.idVendedor);
                         setupCrashlyticsWithLoggedUser(vendedor);
-                        EventBus.getDefault().postSticky(newEvent(vendedor));
+                        provideEventBus().postSticky(newEvent(vendedor));
                     }
                 }));
     }

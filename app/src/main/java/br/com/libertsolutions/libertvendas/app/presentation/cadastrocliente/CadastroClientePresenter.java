@@ -17,11 +17,11 @@ import br.com.libertsolutions.libertvendas.app.presentation.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.greenrobot.eventbus.EventBus;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.NewCustomerEvent.newEvent;
 import static br.com.libertsolutions.libertvendas.app.presentation.utils.StringUtils.equalsIgnoringNullOrWhitespace;
 import static java.util.Collections.emptyList;
@@ -198,7 +198,7 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
     }
 
     private void getLoggedUser() {
-        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        LoggedUserEvent event = provideEventBus().getStickyEvent(LoggedUserEvent.class);
         mVendedorLogado = event.getVendedor();
     }
 
@@ -298,7 +298,7 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
         if (isEditing()) {
             getView().resultClienteEditado(cliente);
         } else {
-            EventBus.getDefault().post(newEvent(cliente));
+            provideEventBus().post(newEvent(cliente));
             getView().finishView();
         }
     }

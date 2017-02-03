@@ -10,13 +10,13 @@ import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEven
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import java.util.ArrayList;
 import java.util.List;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.listaprodutos.ProdutosSelecionadosEvent.newEvent;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -45,7 +45,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
     }
 
     @Override public void loadProdutos() {
-        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        LoggedUserEvent event = provideEventBus().getStickyEvent(LoggedUserEvent.class);
         int idTabela = event.getVendedor().getIdTabela();
 
         addSubscription(mTabelaRepository.findById(idTabela)
@@ -97,7 +97,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
                 }
             }
 
-            EventBus.getDefault().postSticky(newEvent(produtoPreSelecionados, mTabelaPadrao));
+            provideEventBus().postSticky(newEvent(produtoPreSelecionados, mTabelaPadrao));
         }
     }
 
@@ -144,7 +144,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
             return;
         }
 
-        EventBus.getDefault().postSticky(newEvent(produtosSelecionados, mTabelaPadrao));
+        provideEventBus().postSticky(newEvent(produtosSelecionados, mTabelaPadrao));
     }
 
     @Override public void refreshProductList() {

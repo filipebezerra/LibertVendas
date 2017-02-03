@@ -7,12 +7,12 @@ import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEven
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import br.com.libertsolutions.libertvendas.app.presentation.utils.ObservableUtils;
 import java.util.List;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
 import rx.Subscriber;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent.newEvent;
 import static java.util.Collections.emptyList;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
@@ -41,7 +41,7 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
     @Override public void loadClientes() {
         Observable<List<Cliente>> clientesFromMemoryCache = ObservableUtils.toObservable(mClientes);
 
-        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        LoggedUserEvent event = provideEventBus().getStickyEvent(LoggedUserEvent.class);
         final String cpfCnpjVendedor = event.getVendedor().getCpfCnpj();
         final String cnpjEmpresa = event.getVendedor().getEmpresaSelecionada().getCnpj();
 
@@ -79,7 +79,7 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
             if (indexOf != -1) {
                 getView().updateChangedItemAtPosition(indexOf);
             }
-            EventBus.getDefault().postSticky(newEvent(mClientePedidoEmEdicao));
+            provideEventBus().postSticky(newEvent(mClientePedidoEmEdicao));
         }
     }
 
@@ -88,7 +88,7 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
             final Cliente cliente = mClientes.get(position);
 
             if (mIsSelectionMode) {
-                EventBus.getDefault().postSticky(newEvent(cliente));
+                provideEventBus().postSticky(newEvent(cliente));
             } else {
                 getView().navigateToCadastroCliente(cliente);
             }

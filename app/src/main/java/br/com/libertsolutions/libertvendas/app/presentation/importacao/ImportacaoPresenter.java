@@ -23,12 +23,12 @@ import br.com.libertsolutions.libertvendas.app.presentation.utils.ConnectivitySe
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.greenrobot.eventbus.EventBus;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.domain.factory.CidadeFactory.toPojoList;
 import static br.com.libertsolutions.libertvendas.app.domain.factory.ClienteFactory.toPojoList;
 import static br.com.libertsolutions.libertvendas.app.domain.factory.FormaPagamentoFactory.toPojoList;
@@ -89,7 +89,7 @@ class ImportacaoPresenter extends BasePresenter<ImportacaoContract.View>
     }
 
     @Override public void initializeView() {
-        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        LoggedUserEvent event = provideEventBus().getStickyEvent(LoggedUserEvent.class);
         mLoggedUser = event.getVendedor();
         getView().showSyncItems(mLoggedUser.getEmpresas());
     }
