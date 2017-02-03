@@ -202,7 +202,7 @@ public final class FeedbackHelper {
         }
 
         static DialogCallback retry(SingleButtonCallback retryCallback) {
-            return from(R.string.retry, retryCallback);
+            return from(R.string.all_retry, retryCallback);
         }
 
         static DialogCallback yes(SingleButtonCallback yesCallback) {

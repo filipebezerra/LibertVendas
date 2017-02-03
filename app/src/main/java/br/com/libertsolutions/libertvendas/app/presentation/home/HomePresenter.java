@@ -17,10 +17,10 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.greenrobot.eventbus.EventBus;
 import rx.Subscriber;
 import timber.log.Timber;
 
+import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent.newEvent;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -57,14 +57,14 @@ class HomePresenter extends BasePresenter<HomeContract.View>
             return;
         }
 
-        LoggedUserEvent event = EventBus.getDefault().getStickyEvent(LoggedUserEvent.class);
+        LoggedUserEvent event = provideEventBus().getStickyEvent(LoggedUserEvent.class);
         if (event == null) {
             addSubscription(mVendedorRepository.findById(mSettingsRepository.getLoggedInUser())
                     .observeOn(mainThread())
                     .subscribe(
                             vendedor -> {
                                 mVendedor = vendedor;
-                                EventBus.getDefault().postSticky(newEvent(mVendedor));
+                                provideEventBus().postSticky(newEvent(mVendedor));
 
                                 if (!mSettingsRepository.isInitialDataImportationDone()) {
                                     getView().startDataImportation();
@@ -212,7 +212,7 @@ class HomePresenter extends BasePresenter<HomeContract.View>
                             }
 
                             @Override public void onCompleted() {
-                                EventBus.getDefault().postSticky(newEvent(mVendedor));
+                                provideEventBus().postSticky(newEvent(mVendedor));
                             }
                         }
                 )

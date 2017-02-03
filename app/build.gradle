@@ -141,6 +141,9 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
+
+    // Chart
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
 }
 
 retrolambda {

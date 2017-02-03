@@ -1,8 +1,9 @@
 package br.com.libertsolutions.libertvendas.app.presentation.mvp;
 
-import org.greenrobot.eventbus.EventBus;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
+
+import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideEventBus;
 
 /**
  * @author Filipe Bezerra
@@ -18,14 +19,14 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     @Override public void registerEventBus() {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
+        if (!provideEventBus().isRegistered(this)) {
+            provideEventBus().register(this);
         }
     }
 
     @Override public void unregisterEventBus() {
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
+        if (provideEventBus().isRegistered(this)) {
+            provideEventBus().unregister(this);
         }
     }
 

@@ -5,7 +5,7 @@
     <string name="action_done">Pronto</string>
     <string name="action_search">Pesquisar</string>
     <string name="action_save">Salvar</string>
-    <string name="retry">Tente novamente</string>
+    <string name="all_retry">Tente novamente</string>
     <string name="offline_message_title">Você está offline</string>
     <string name="offline_message">
         Não é possível continuar, detectamos que o aparelho está offline. Verifique a conexão
@@ -213,6 +213,10 @@
 
     <!-- Dashboard strings -->
     <string name="title_fragment_dashboard">Início</string>
+    <string name="error_loading_orders_grouped">
+        Desculpe, houve uma falha quando tentamos carregar os dados do gráfico. Por favor tente novamente!
+    </string>
+    <string name="dashboard_no_orders">Seus pedidos são representados em gráfico aqui</string>
 
     <!-- Order Detail strings -->
     <string name="title_activity_order_detail">Visualizando pedido</string>

@@ -13,4 +13,12 @@
     <item name="empty_state" type="id" />
     <item name="empty_image" type="id" />
     <item name="empty_title" type="id" />
+
+    <item name="progress_bar_all_loading" type="id" />
+    <item name="linear_layout_all_error_state" type="id" />
+    <item name="button_all_retry" type="id" />
+    <item name="linear_layout_all_empty_state" type="id" />
+    <item name="image_view_all_empty_state" type="id" />
+    <item name="text_view_all_empty_state" type="id" />
+
 </resources>
