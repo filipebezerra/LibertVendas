@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Beta 0.10.0 (03/02/2017)
+-----------------------
+* **NOVO** Gráficos dos pedidos por cliente
+
+Beta 0.9.1 (21/01/2017)
+-----------------------
+* **CORREÇÃO** Teclado sempre aberto voltando do cadastro de pedido
+* **CORREÇÃO** Recarregando os dados na troca de perfil
+* **MELHORIA** Gesto swipe (PullToRefresh) para atualizar as listas
+
 Beta 0.9.0 (15/01/2017)
 -----------------------
 * **NOVO** Troca de perfil do vendedor (empresas)
