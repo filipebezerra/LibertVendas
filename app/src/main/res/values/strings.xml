@@ -41,9 +41,6 @@
     <string name="title_pref_category_sincronizacao">Sincronização</string>
     <string name="key_pref_endereco_servidor" translatable="false">endereco_servidor</string>
     <string name="title_pref_endereco_servidor">Url do servidor</string>
-    <string name="default_value_pref_endereco_servidor" translatable="false">
-        http://187.32.187.153:8085
-    </string>
     <string name="dialog_title_pref_endereco_servidor">Digite a url do servidor</string>
     <string name="summary_pref_endereco_servidor">
         Endereço web do servidor para troca de dados
