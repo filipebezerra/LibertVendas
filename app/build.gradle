@@ -67,7 +67,7 @@ android {
 }
 
 ext {
-    support = '25.1.0'
+    support = '25.1.1'
     butterknife = '8.5.1'
     retrofit = '2.1.0'
     okhttp = '3.5.0'
@@ -93,7 +93,7 @@ dependencies {
     compile "com.android.support:design:${support}"
     compile "com.android.support:recyclerview-v7:${support}"
     compile "com.android.support:cardview-v7:${support}"
-    compile ("com.takisoft.fix:preference-v7:${support}.2", {
+    compile ("com.takisoft.fix:preference-v7:${support}.0", {
         exclude group: 'android.support.annotation', module: 'support-annotations'
     })
 
