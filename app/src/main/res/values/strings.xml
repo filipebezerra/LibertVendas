@@ -136,6 +136,8 @@
     <string name="text_sem_email">Sem e-mail</string>
     <string name="hint_busca_cliente">Use CPF, CNPJ, nome ou contato</string>
     <string name="loading_clientes">Carregando lista de clientes, por favor aguarde…</string>
+    <string name="example_nome_fantasia">Waldomiro Martins Braga</string>
+    <string name="text_sem_nome_fantasia">Sem nome fantasia</string>
 
     <!-- Products screen strings -->
     <string name="title_fragment_lista_produtos">Produtos</string>

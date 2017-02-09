@@ -16,6 +16,7 @@ class ListaClientesViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.text_view_cpf_ou_cnpj) TextView textViewCpfOuCnpj;
     @BindView(R.id.text_view_telefone) TextView textViewTelefone;
     @BindView(R.id.text_view_email) TextView textViewEmail;
+    @BindView(R.id.text_view_nome_fantasia) TextView textViewNomeFantasia;
 
     ListaClientesViewHolder(View itemView) {
         super(itemView);

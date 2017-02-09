@@ -66,6 +66,12 @@ class ListaClientesAdapter extends RecyclerView.Adapter<ListaClientesViewHolder>
         } else {
             holder.textViewEmail.setText(mContext.getString(R.string.text_sem_email));
         }
+
+        if (!TextUtils.isEmpty(cliente.getNomeFantasia())) {
+            holder.textViewNomeFantasia.setText(cliente.getNomeFantasia());
+        } else {
+            holder.textViewNomeFantasia.setText(mContext.getString(R.string.text_sem_nome_fantasia));
+        }
     }
 
     @Override public int getItemCount() {

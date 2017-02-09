@@ -28,6 +28,17 @@
                 />
 
             <TextView
+                android:id="@+id/text_view_nome_fantasia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/keyline_medium"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                tools:text="@string/example_nome_fantasia"
+                />
+
+            <TextView
                 android:id="@+id/text_view_cpf_ou_cnpj"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
