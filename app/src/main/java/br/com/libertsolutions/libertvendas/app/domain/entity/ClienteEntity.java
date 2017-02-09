@@ -55,6 +55,8 @@ import io.realm.annotations.Required;
 
     private int status;
 
+    private String nomeFantasia;
+
     @Override public ClienteEntity setId(final Integer id) {
         if (id > 0) {
             this.id = id;
@@ -244,6 +246,15 @@ import io.realm.annotations.Required;
 
     public ClienteEntity setStatus(final int status) {
         this.status = status;
+        return this;
+    }
+
+    public String getNomeFantasia() {
+        return nomeFantasia;
+    }
+
+    public ClienteEntity setNomeFantasia(final String nomeFantasia) {
+        this.nomeFantasia = nomeFantasia;
         return this;
     }
 }

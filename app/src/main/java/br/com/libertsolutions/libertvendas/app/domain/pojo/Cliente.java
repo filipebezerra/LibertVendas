@@ -61,6 +61,8 @@ public final class Cliente implements Parcelable {
 
     private final int status;
 
+    private final String nomeFantasia;
+
     public static final Creator<Cliente> CREATOR = new Creator<Cliente>() {
         @Override public Cliente createFromParcel(Parcel in) {
             return new Cliente(in);
@@ -85,7 +87,8 @@ public final class Cliente implements Parcelable {
             final String newNumero,
             final String newComplemento,
             final String cpfCnpjVendedor,
-            final String cnpjEmpresa
+            final String cnpjEmpresa,
+            final String nomeFantasia
     ) {
         return new Cliente(
                 SEM_ID, SEM_ID,
@@ -107,7 +110,8 @@ public final class Cliente implements Parcelable {
                 ATIVO,
                 cpfCnpjVendedor,
                 cnpjEmpresa,
-                STATUS_CRIADO
+                STATUS_CRIADO,
+                nomeFantasia
         );
     }
 
@@ -127,7 +131,8 @@ public final class Cliente implements Parcelable {
             final String newComplemento,
             final String ultimaAlteracao,
             final String cpfCnpjVendedor,
-            final String cnpjEmpresa
+            final String cnpjEmpresa,
+            final String nomeFantasia
     ) {
         return new Cliente(
                 clienteEdited.getId(),
@@ -150,7 +155,8 @@ public final class Cliente implements Parcelable {
                 clienteEdited.isAtivo(),
                 cpfCnpjVendedor,
                 cnpjEmpresa,
-                STATUS_MODIFICADO
+                STATUS_MODIFICADO,
+                nomeFantasia
         );
     }
 
@@ -173,7 +179,8 @@ public final class Cliente implements Parcelable {
             final String ultimaAlteracao,
             final boolean ativo,
             final String cpfCnpjVendedor,
-            final String cnpjEmpresa
+            final String cnpjEmpresa,
+            final String nomeFantasia
     ) {
         return new Cliente(
                 SEM_ID,
@@ -196,7 +203,8 @@ public final class Cliente implements Parcelable {
                 ativo,
                 cpfCnpjVendedor,
                 cnpjEmpresa,
-                STATUS_IMPORTADO
+                STATUS_IMPORTADO,
+                nomeFantasia
         );
     }
 
@@ -221,7 +229,8 @@ public final class Cliente implements Parcelable {
             final boolean ativo,
             final String cnpjEmpresa,
             final String cpfCnpjVendedor,
-            int status
+            final int status,
+            final String nomeFantasia
     ) {
         return new Cliente(
                 id,
@@ -244,7 +253,8 @@ public final class Cliente implements Parcelable {
                 ativo,
                 cpfCnpjVendedor,
                 cnpjEmpresa,
-                status
+                status,
+                nomeFantasia
         );
     }
 
@@ -270,6 +280,7 @@ public final class Cliente implements Parcelable {
         cpfCnpjVendedor = in.readString();
         cnpjEmpresa = in.readString();
         status = in.readInt();
+        nomeFantasia = in.readString();
     }
 
     private Cliente(
@@ -293,7 +304,8 @@ public final class Cliente implements Parcelable {
             final boolean ativo,
             final String cpfCnpjVendedor,
             final String cnpjEmpresa,
-            final int status
+            final int status,
+            final String nomeFantasia
     ) {
         this.id = id;
         this.idCliente = idCliente;
@@ -316,6 +328,7 @@ public final class Cliente implements Parcelable {
         this.cpfCnpjVendedor = cpfCnpjVendedor;
         this.cnpjEmpresa = cnpjEmpresa;
         this.status = status;
+        this.nomeFantasia = nomeFantasia;
     }
 
     public int getId() {
@@ -402,6 +415,10 @@ public final class Cliente implements Parcelable {
         return status;
     }
 
+    public String getNomeFantasia() {
+        return nomeFantasia;
+    }
+
     @Override public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -451,6 +468,7 @@ public final class Cliente implements Parcelable {
         sb.append(", cpfCnpjVendedor='").append(cpfCnpjVendedor).append('\'');
         sb.append(", cnpjEmpresa='").append(cnpjEmpresa).append('\'');
         sb.append(", status=").append(status);
+        sb.append(", nomeFantasia=").append(nomeFantasia);
         sb.append('}');
         return sb.toString();
     }
@@ -481,5 +499,6 @@ public final class Cliente implements Parcelable {
         out.writeString(cpfCnpjVendedor);
         out.writeString(cnpjEmpresa);
         out.writeInt(status);
+        out.writeString(nomeFantasia);
     }
 }

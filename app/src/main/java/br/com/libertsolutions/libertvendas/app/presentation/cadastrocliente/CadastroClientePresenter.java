@@ -86,6 +86,7 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
         viewIds.add(mResourcesRepository.obtainComplementoViewId());
         viewIds.add(mResourcesRepository.obtainTelefoneViewId());
         viewIds.add(mResourcesRepository.obtainCelularViewId());
+        viewIds.add(mResourcesRepository.obtainNomeFantasiaViewId());
         getView().setViewFields(viewIds);
     }
 
@@ -194,6 +195,12 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
                         mResourcesRepository.obtainCelularViewId(),
                         mClienteEmEdicao.getTelefone2());
             }
+
+            if (!StringUtils.isNullOrEmpty(mClienteEmEdicao.getNomeFantasia())) {
+                getView().setViewValue(
+                        mResourcesRepository.obtainNomeFantasiaViewId(),
+                        mClienteEmEdicao.getNomeFantasia());
+            }
         }
     }
 
@@ -255,6 +262,9 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
         final String complemento = getView().getViewStringValue(
                 mResourcesRepository.obtainComplementoViewId());
 
+        final String nomeFantasia = getView().getViewStringValue(
+                mResourcesRepository.obtainNomeFantasiaViewId());
+
         if (isEditing()) {
             return Cliente.changed(
                     mClienteEmEdicao,
@@ -272,7 +282,8 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
                     complemento,
                     ApiUtils.formatApiDateTime(System.currentTimeMillis()),
                     mVendedorLogado.getCpfCnpj(),
-                    mVendedorLogado.getEmpresaSelecionada().getCnpj()
+                    mVendedorLogado.getEmpresaSelecionada().getCnpj(),
+                    nomeFantasia
             );
         } else {
             return Cliente.createNew(
@@ -289,7 +300,8 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
                     numero,
                     complemento,
                     mVendedorLogado.getCpfCnpj(),
-                    mVendedorLogado.getEmpresaSelecionada().getCnpj()
+                    mVendedorLogado.getEmpresaSelecionada().getCnpj(),
+                    nomeFantasia
             );
         }
     }
@@ -387,7 +399,10 @@ class CadastroClientePresenter extends BasePresenter<CadastroClienteContract.Vie
                 equalsIgnoringNullOrWhitespace(
                         clienteFromFields.getTelefone(), mClienteEmEdicao.getTelefone()) &&
                 equalsIgnoringNullOrWhitespace(
-                        clienteFromFields.getTelefone2(), mClienteEmEdicao.getTelefone2());
+                        clienteFromFields.getTelefone2(), mClienteEmEdicao.getTelefone2()) &&
+                equalsIgnoringNullOrWhitespace(
+                        clienteFromFields.getNomeFantasia(), mClienteEmEdicao.getNomeFantasia()
+                );
     }
 
     private <T> T getItemFromList(List<T> list, int position) {

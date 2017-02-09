@@ -57,6 +57,7 @@ public class CadastroClienteActivity extends LibertVendasActivity
     @BindView(R.id.input_layout_complemento) protected TextInputLayout mComplementoInputLayout;
     @BindView(R.id.input_layout_telefone) protected TextInputLayout mTelefoneInputLayout;
     @BindView(R.id.input_layout_celular) protected TextInputLayout mCelularInputLayout;
+    @BindView(R.id.input_layout_nome_fantasia) protected TextInputLayout mNomeFantasiaInputLayout;
 
     private CadastroClienteContract.Presenter mPresenter;
 
@@ -283,7 +284,8 @@ public class CadastroClienteActivity extends LibertVendasActivity
                 && TextUtils.isEmpty(mCepInputLayout.getEditText().getText())
                 && TextUtils.isEmpty(mComplementoInputLayout.getEditText().getText())
                 && TextUtils.isEmpty(mTelefoneInputLayout.getEditText().getText())
-                && TextUtils.isEmpty(mCelularInputLayout.getEditText().getText());
+                && TextUtils.isEmpty(mCelularInputLayout.getEditText().getText())
+                && TextUtils.isEmpty(mNomeFantasiaInputLayout.getEditText().getText());
     }
 
     @Override public void showExitViewQuestion() {

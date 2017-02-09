@@ -172,6 +172,7 @@
     <string name="hint_email">E-mail</string>
     <string name="title_activity_cadastro_cliente_editando">Editando cliente</string>
     <string name="title_fragment_selecione_cliente">Selecione o cliente</string>
+    <string name="hint_nome_fantasia">Nome fantasia</string>
 
     <!-- New Order strings -->
     <string name="title_activity_pedido">Novo pedido</string>

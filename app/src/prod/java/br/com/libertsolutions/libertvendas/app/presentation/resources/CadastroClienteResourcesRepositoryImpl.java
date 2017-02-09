@@ -68,4 +68,8 @@ public class CadastroClienteResourcesRepositoryImpl extends CommonResourcesRepos
     @Override public String obtainStringTitleEditandoCliente() {
         return getResources().getString(R.string.title_activity_cadastro_cliente_editando);
     }
+
+    @Override public int obtainNomeFantasiaViewId() {
+        return R.id.input_layout_nome_fantasia;
+    }
 }
