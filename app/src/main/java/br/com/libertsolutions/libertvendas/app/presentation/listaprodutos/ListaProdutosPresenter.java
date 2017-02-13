@@ -5,6 +5,7 @@ import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemTabela;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Tabela;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
@@ -36,6 +37,8 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
 
     private Tabela mTabelaPadrao;
 
+    private Vendedor mLoggedUser;
+
     ListaProdutosPresenter(
             final boolean isSelectionMode, List<ItemPedido> itensPedido,
             final TabelaRepository tabelaRepository) {
@@ -44,11 +47,15 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
         mTabelaRepository = tabelaRepository;
     }
 
-    @Override public void loadProdutos() {
-        LoggedUserEvent event = provideEventBus().getStickyEvent(LoggedUserEvent.class);
-        int idTabela = event.getVendedor().getEmpresaSelecionada().getIdTabela();
+    @Subscribe(sticky = true) public void onLoginEvent(LoggedUserEvent event) {
+        if (mLoggedUser != null && !mLoggedUser.equals(event.getVendedor())) {
+            mLoggedUser = event.getVendedor();
+            loadProdutos();
+        }
+    }
 
-        addSubscription(mTabelaRepository.findById(idTabela)
+    @Override public void loadProdutos() {
+        addSubscription(getTabelaAsObservable()
                 .flatMap(new Func1<Tabela, Observable<List<ItemTabela>>>() {
                     @Override public Observable<List<ItemTabela>> call(final Tabela tabela) {
                         mTabelaPadrao = tabela;
@@ -69,7 +76,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
                     }
 
                     @Override public void onError(final Throwable e) {
-                        Timber.e(e, "Could not load products from local database");
+                        Timber.e(e, "Could not load products");
                         getView().hideLoading();
                     }
 
@@ -82,6 +89,21 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
                         getView().showProdutos(mProdutos, mIsSelectionMode);
                     }
                 }));
+    }
+
+    private Observable<Tabela> getTabelaAsObservable() {
+        return mTabelaRepository.findById(getTabelaEmpresaSelecionada());
+    }
+
+    private int getTabelaEmpresaSelecionada() {
+        return getLoggedUser().getEmpresaSelecionada().getIdTabela();
+    }
+
+    private Vendedor getLoggedUser() {
+        if (mLoggedUser == null) {
+            mLoggedUser = provideEventBus().getStickyEvent(LoggedUserEvent.class).getVendedor();
+        }
+        return mLoggedUser;
     }
 
     private void setProdutosPreSelecionados() {
@@ -148,10 +170,6 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
     }
 
     @Override public void refreshProductList() {
-        loadProdutos();
-    }
-
-    @Subscribe(sticky = true) public void onUserLogin(LoggedUserEvent event) {
         loadProdutos();
     }
 }

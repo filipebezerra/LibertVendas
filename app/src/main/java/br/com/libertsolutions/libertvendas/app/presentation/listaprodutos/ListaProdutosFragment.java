@@ -78,15 +78,14 @@ public class ListaProdutosFragment extends LibertVendasFragment
 
         final boolean isSelectionMode = getArguments().getBoolean(ARG_EXTRA_IS_SELECTION_MODE);
 
-        if (isSelectionMode) {
-            mSwipeRefreshLayout.setEnabled(false);
-        }
+        mSwipeRefreshLayout.setEnabled(!isSelectionMode);
 
         mPresenter = new ListaProdutosPresenter(
                 isSelectionMode,
                 getArguments().getParcelableArrayList(ARG_EXTRA_ITENS_PEDIDO),
                 DataInjection.LocalRepositories.provideTabelaRepository());
         mPresenter.attachView(this);
+        mPresenter.registerEventBus();
         mPresenter.loadProdutos();
     }
 
@@ -147,7 +146,6 @@ public class ListaProdutosFragment extends LibertVendasFragment
                 .removeOnGlobalLayoutListener(sRecyclerViewLayoutListener);
         sRecyclerViewLayoutListener = null;
 
-        mPresenter.registerEventBus();
         hideLoading();
     }
 
