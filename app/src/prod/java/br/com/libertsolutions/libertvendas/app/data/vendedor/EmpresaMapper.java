@@ -13,14 +13,16 @@ class EmpresaMapper extends RealmMapper<Empresa, EmpresaEntity> {
         return new EmpresaEntity()
                 .setId(object.getIdEmpresa())
                 .setNome(object.getNome())
-                .setCnpj(object.getCnpj());
+                .setCnpj(object.getCnpj())
+                .setIdTabela(object.getIdTabela());
     }
 
     @Override public Empresa toViewObject(final EmpresaEntity entity) {
-        Integer id = entity.getId();
-        String nome = entity.getNome();
-        String cnpj = entity.getCnpj();
-
-        return Empresa.create(id, nome, cnpj);
+        return Empresa.create(
+                entity.getId(),
+                entity.getNome(),
+                entity.getCnpj(),
+                entity.getIdTabela()
+        );
     }
 }

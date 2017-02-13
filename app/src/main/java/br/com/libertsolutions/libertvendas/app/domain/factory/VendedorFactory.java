@@ -15,8 +15,17 @@ public final class VendedorFactory {
     public static Vendedor createVendedor(
             VendedorDto vendedor, List<Empresa> empresas, Empresa empresaSelecionada) {
         return Vendedor.create(
-                vendedor.idVendedor, vendedor.codigo, vendedor.nome, vendedor.cpfCnpj,
-                vendedor.telefone, vendedor.email, vendedor.ativo, vendedor.idTabela,
-                vendedor.ultimaAlteracao, vendedor.aplicaDesconto, empresas, empresaSelecionada);
+                vendedor.idVendedor,
+                vendedor.codigo,
+                vendedor.nome,
+                vendedor.cpfCnpj,
+                vendedor.telefone,
+                vendedor.email,
+                vendedor.ativo,
+                vendedor.ultimaAlteracao,
+                vendedor.aplicaDesconto,
+                empresas,
+                empresaSelecionada
+        );
     }
 }

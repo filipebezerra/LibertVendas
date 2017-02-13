@@ -26,8 +26,6 @@ import io.realm.annotations.Required;
 
     private Boolean ativo;
 
-    @Required private Integer idTabela;
-
     private String ultimaAlteracao;
 
     private Boolean aplicaDesconto;
@@ -96,15 +94,6 @@ import io.realm.annotations.Required;
 
     public VendedorEntity setAtivo(final Boolean ativo) {
         this.ativo = ativo;
-        return this;
-    }
-
-    public Integer getIdTabela() {
-        return idTabela;
-    }
-
-    public VendedorEntity setIdTabela(final Integer idTabela) {
-        this.idTabela = idTabela;
         return this;
     }
 

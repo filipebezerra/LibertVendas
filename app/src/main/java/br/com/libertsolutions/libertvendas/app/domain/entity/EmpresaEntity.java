@@ -17,6 +17,8 @@ import io.realm.annotations.Required;
 
     @Required private String cnpj;
 
+    @Required private Integer idTabela;
+
     @Override public EmpresaEntity setId(final Integer id) {
         idEmpresa = id;
         return this;
@@ -41,6 +43,15 @@ import io.realm.annotations.Required;
 
     public EmpresaEntity setCnpj(final String cnpj) {
         this.cnpj = cnpj;
+        return this;
+    }
+
+    public Integer getIdTabela() {
+        return idTabela;
+    }
+
+    public EmpresaEntity setIdTabela(final Integer idTabela) {
+        this.idTabela = idTabela;
         return this;
     }
 }

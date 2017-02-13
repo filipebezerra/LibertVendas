@@ -1,7 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.cadastropedido;
 
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import br.com.libertsolutions.libertvendas.app.R;
@@ -22,12 +21,9 @@ import java.util.List;
 public class CadastroPedidoActivity extends LibertVendasActivity
         implements CadastroPedidoContract.View {
 
-    private static final int PAGE_LISTA_PRODUTOS = 0;
-    private static final int PAGE_LISTA_CLIENTES = 1;
+    private static final int PAGE_LISTA_CLIENTES = 0;
+    private static final int PAGE_LISTA_PRODUTOS = 1;
     private static final int PAGE_FINALIZANDO_PEDIDO = 2;
-
-    @IntDef({ PAGE_LISTA_PRODUTOS, PAGE_LISTA_CLIENTES, PAGE_FINALIZANDO_PEDIDO })
-    private @interface Step {}
 
     public static final String EXTRA_PEDIDO_EDICAO
             = CadastroPedidoActivity.class.getSimpleName() + ".extraPedidoEdicao";
@@ -91,8 +87,8 @@ public class CadastroPedidoActivity extends LibertVendasActivity
     }
 
     @Override public void initializeSteps(List<ItemPedido> itensPedido, Cliente cliente) {
-        addStepListaProdutos(itensPedido);
         addStepListaClientes(cliente);
+        addStepListaProdutos(itensPedido);
         addStepFinalizandoPedido();
     }
 

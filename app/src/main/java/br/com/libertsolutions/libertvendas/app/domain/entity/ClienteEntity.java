@@ -53,9 +53,11 @@ import io.realm.annotations.Required;
 
     private String cpfCnpjVendedor;
 
-    private int status;
+    private Integer status;
 
     private String nomeFantasia;
+
+    private Integer tabelaPadrao;
 
     @Override public ClienteEntity setId(final Integer id) {
         if (id > 0) {
@@ -240,11 +242,11 @@ import io.realm.annotations.Required;
         return this;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public ClienteEntity setStatus(final int status) {
+    public ClienteEntity setStatus(final Integer status) {
         this.status = status;
         return this;
     }
@@ -255,6 +257,15 @@ import io.realm.annotations.Required;
 
     public ClienteEntity setNomeFantasia(final String nomeFantasia) {
         this.nomeFantasia = nomeFantasia;
+        return this;
+    }
+
+    public Integer getTabelaPadrao() {
+        return tabelaPadrao;
+    }
+
+    public ClienteEntity setTabelaPadrao(final Integer tabelaPadrao) {
+        this.tabelaPadrao = tabelaPadrao;
         return this;
     }
 }

@@ -147,6 +147,7 @@ public class ListaProdutosFragment extends LibertVendasFragment
                 .removeOnGlobalLayoutListener(sRecyclerViewLayoutListener);
         sRecyclerViewLayoutListener = null;
 
+        mPresenter.registerEventBus();
         hideLoading();
     }
 

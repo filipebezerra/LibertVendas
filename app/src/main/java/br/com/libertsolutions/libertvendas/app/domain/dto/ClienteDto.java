@@ -45,4 +45,6 @@ public class ClienteDto {
     @SerializedName("appKey") @Expose public String appKey;
 
     @SerializedName("nomeFantasia") @Expose public String nomeFantasia;
+
+    @SerializedName("tabelaPadrao") @Expose public int tabelaPadrao;
 }

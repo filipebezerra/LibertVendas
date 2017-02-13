@@ -12,18 +12,18 @@ public final class EmpresaFactory {
 
     private EmpresaFactory() {/* No instances */}
 
-    public static List<Empresa> createListEmpresa(List<EmpresaDto> pDtos) {
+    public static List<Empresa> createListEmpresa(List<EmpresaDto> dtoList) {
         List<Empresa> empresaList = new ArrayList<>();
 
-        for (EmpresaDto dto : pDtos) {
+        for (EmpresaDto dto : dtoList) {
             empresaList.add(createEmpresa(dto));
         }
         return empresaList;
     }
 
-    private static Empresa createEmpresa(EmpresaDto pDto) {
+    private static Empresa createEmpresa(EmpresaDto dto) {
         return Empresa.create(
-                pDto.idEmpresa, pDto.nome, pDto.cnpj
+                dto.idEmpresa, dto.nome, dto.cnpj, dto.idTabela
         );
     }
 }

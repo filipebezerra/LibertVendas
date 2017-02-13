@@ -14,6 +14,8 @@ public final class Empresa implements Parcelable {
 
     private final String cnpj;
 
+    private final int idTabela;
+
     public static final Creator<Empresa> CREATOR = new Creator<Empresa>() {
         @Override
         public Empresa createFromParcel(Parcel in) {
@@ -26,20 +28,23 @@ public final class Empresa implements Parcelable {
         }
     };
 
-    public static Empresa create(final int idEmpresa, final String nome, final String cnpj) {
-        return new Empresa(idEmpresa, nome, cnpj);
+    public static Empresa create(
+            final int idEmpresa, final String nome, final String cnpj, final int idTabela) {
+        return new Empresa(idEmpresa, nome, cnpj, idTabela);
     }
 
     private Empresa(Parcel in) {
         idEmpresa = in.readInt();
         nome = in.readString();
         cnpj = in.readString();
+        idTabela = in.readInt();
     }
 
-    private Empresa(int idEmpresa, String nome, String cnpj) {
+    private Empresa(int idEmpresa, String nome, String cnpj, int idTabela) {
         this.idEmpresa = idEmpresa;
         this.nome = nome;
         this.cnpj = cnpj;
+        this.idTabela = idTabela;
     }
 
     public int getIdEmpresa() {
@@ -52,6 +57,10 @@ public final class Empresa implements Parcelable {
 
     public String getCnpj() {
         return cnpj;
+    }
+
+    public int getIdTabela() {
+        return idTabela;
     }
 
     @Override public boolean equals(final Object o) {
@@ -83,5 +92,6 @@ public final class Empresa implements Parcelable {
         out.writeInt(idEmpresa);
         out.writeString(nome);
         out.writeString(cnpj);
+        out.writeInt(idTabela);
     }
 }

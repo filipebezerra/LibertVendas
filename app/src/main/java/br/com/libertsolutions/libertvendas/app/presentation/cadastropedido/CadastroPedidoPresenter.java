@@ -14,17 +14,17 @@ public class CadastroPedidoPresenter extends BasePresenter<CadastroPedidoContrac
 
     @Override public void initializeView(final Pedido pedidoEmEdicao) {
         if (pedidoEmEdicao == null) {
-            getView().navigateToStepListaProdutos();
+            getView().navigateToStepListaClientes();
         } else {
             getView().initializeSteps(pedidoEmEdicao.getItens(), pedidoEmEdicao.getCliente());
         }
     }
 
-    @Subscribe(sticky = true, priority = 1) public void onEvent(ProdutosSelecionadosEvent event) {
-        getView().navigateToStepListaClientes();
+    @Subscribe(sticky = true, priority = 1) public void onEvent(ClienteSelecionadoEvent event) {
+        getView().navigateToStepListaProdutos();
     }
 
-    @Subscribe(sticky = true, priority = 1) public void onEvent(ClienteSelecionadoEvent event) {
-        getView().navigateToStepFinalizandoPedido();
+    @Subscribe(sticky = true, priority = 1) public void onEvent(ProdutosSelecionadosEvent event) {
+        getView().navigateToStepListaClientes();
     }
 }

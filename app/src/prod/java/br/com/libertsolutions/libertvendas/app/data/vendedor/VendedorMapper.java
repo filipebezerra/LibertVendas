@@ -5,7 +5,6 @@ import br.com.libertsolutions.libertvendas.app.domain.entity.EmpresaEntity;
 import br.com.libertsolutions.libertvendas.app.domain.entity.VendedorEntity;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Empresa;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
-import java.util.List;
 
 /**
  * @author Filipe Bezerra
@@ -27,7 +26,6 @@ class VendedorMapper extends RealmMapper<Vendedor, VendedorEntity> {
                 .setTelefone(object.getTelefone())
                 .setEmail(object.getEmail())
                 .setAtivo(object.isAtivo())
-                .setIdTabela(object.getIdTabela())
                 .setUltimaAlteracao(object.getUltimaAlteracao())
                 .setAplicaDesconto(object.isAplicaDesconto())
                 .setEmpresas(mEmpresaMapper.toEntityList(object.getEmpresas()))
@@ -35,22 +33,18 @@ class VendedorMapper extends RealmMapper<Vendedor, VendedorEntity> {
     }
 
     @Override public Vendedor toViewObject(final VendedorEntity entity) {
-        Integer id = entity.getId();
-        String codigo = entity.getCodigo();
-        String nome = entity.getNome();
-        String cpfCnpj = entity.getCpfCnpj();
-        String telefone = entity.getTelefone();
-        String email = entity.getEmail();
-        Boolean ativo = entity.isAtivo();
-        Integer idTabela = entity.getIdTabela();
-        String ultimaAlteracao = entity.getUltimaAlteracao();
-        Boolean aplicaDesconto = entity.isAplicaDesconto();
-        List<Empresa> empresas = mEmpresaMapper.toViewObjectList(entity.getEmpresas());
-        Empresa empresaSelecionada = mEmpresaMapper.toViewObject(entity.getEmpresaSelecionada());
-
         return Vendedor.create(
-                id, codigo, nome, cpfCnpj, telefone, email, ativo, idTabela, ultimaAlteracao,
-                aplicaDesconto, empresas, empresaSelecionada
+                entity.getId(),
+                entity.getCodigo(),
+                entity.getNome(),
+                entity.getCpfCnpj(),
+                entity.getTelefone(),
+                entity.getEmail(),
+                entity.isAtivo(),
+                entity.getUltimaAlteracao(),
+                entity.isAplicaDesconto(),
+                mEmpresaMapper.toViewObjectList(entity.getEmpresas()),
+                mEmpresaMapper.toViewObject(entity.getEmpresaSelecionada())
         );
     }
 }

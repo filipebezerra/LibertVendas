@@ -23,8 +23,6 @@ public final class Vendedor implements Parcelable {
 
     private final boolean ativo;
 
-    private final int idTabela;
-
     private final String ultimaAlteracao;
 
     private final boolean aplicaDesconto;
@@ -52,7 +50,6 @@ public final class Vendedor implements Parcelable {
                 vendedor.getTelefone(),
                 vendedor.getEmail(),
                 vendedor.isAtivo(),
-                vendedor.getIdTabela(),
                 vendedor.getUltimaAlteracao(),
                 vendedor.isAplicaDesconto(),
                 vendedor.getEmpresas(),
@@ -68,7 +65,6 @@ public final class Vendedor implements Parcelable {
             final String telefone,
             final String email,
             final boolean ativo,
-            final int idTabela,
             final String ultimaAlteracao,
             final boolean aplicaDesconto,
             List<Empresa> empresas,
@@ -82,7 +78,6 @@ public final class Vendedor implements Parcelable {
                 telefone,
                 email,
                 ativo,
-                idTabela,
                 ultimaAlteracao,
                 aplicaDesconto,
                 empresas,
@@ -98,7 +93,6 @@ public final class Vendedor implements Parcelable {
         telefone = in.readString();
         email = in.readString();
         ativo = in.readByte() == 1;
-        idTabela = in.readInt();
         ultimaAlteracao = in.readString();
         aplicaDesconto = in.readByte() == 1;
         empresas = in.createTypedArrayList(Empresa.CREATOR);
@@ -113,7 +107,6 @@ public final class Vendedor implements Parcelable {
             String telefone,
             String email,
             boolean ativo,
-            int idTabela,
             String ultimaAlteracao,
             boolean aplicaDesconto,
             List<Empresa> empresas,
@@ -126,7 +119,6 @@ public final class Vendedor implements Parcelable {
         this.telefone = telefone;
         this.email = email;
         this.ativo = ativo;
-        this.idTabela = idTabela;
         this.ultimaAlteracao = ultimaAlteracao;
         this.aplicaDesconto = aplicaDesconto;
         this.empresas = empresas;
@@ -159,10 +151,6 @@ public final class Vendedor implements Parcelable {
 
     public boolean isAtivo() {
         return ativo;
-    }
-
-    public int getIdTabela() {
-        return idTabela;
     }
 
     public String getUltimaAlteracao() {
@@ -212,7 +200,6 @@ public final class Vendedor implements Parcelable {
         sb.append(", telefone='").append(telefone).append('\'');
         sb.append(", email='").append(email).append('\'');
         sb.append(", ativo=").append(ativo);
-        sb.append(", idTabela=").append(idTabela);
         sb.append(", ultimaAlteracao='").append(ultimaAlteracao).append('\'');
         sb.append(", aplicaDesconto=").append(aplicaDesconto);
         sb.append(", empresas=").append(empresas);
@@ -233,7 +220,6 @@ public final class Vendedor implements Parcelable {
         out.writeString(telefone);
         out.writeString(email);
         out.writeByte((byte)(ativo ? 1 : 0));
-        out.writeInt(idTabela);
         out.writeString(ultimaAlteracao);
         out.writeByte((byte)(aplicaDesconto ? 1 : 0));
         out.writeTypedList(empresas);

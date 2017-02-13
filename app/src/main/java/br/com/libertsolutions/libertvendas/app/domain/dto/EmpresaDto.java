@@ -13,4 +13,6 @@ public class EmpresaDto {
     @SerializedName("nome") @Expose public String nome;
 
     @SerializedName("cnpj") @Expose public String cnpj;
+
+    @SerializedName("idTabela") @Expose public int idTabela;
 }

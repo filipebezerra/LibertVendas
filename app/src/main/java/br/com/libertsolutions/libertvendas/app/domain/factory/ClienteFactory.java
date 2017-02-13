@@ -35,7 +35,7 @@ public final class ClienteFactory {
                 clienteDto.telefone2, clienteDto.endereco, clienteDto.cep, cidade,
                 clienteDto.bairro, clienteDto.numero, clienteDto.complemento,
                 clienteDto.ultimaAlteracao, clienteDto.ativo, cpfCnpjVendedor, cnpjEmpresa,
-                clienteDto.nomeFantasia
+                clienteDto.nomeFantasia, clienteDto.tabelaPadrao
         );
     }
 

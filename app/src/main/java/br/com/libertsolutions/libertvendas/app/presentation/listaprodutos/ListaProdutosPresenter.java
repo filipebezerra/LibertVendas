@@ -46,10 +46,9 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
 
     @Override public void loadProdutos() {
         LoggedUserEvent event = provideEventBus().getStickyEvent(LoggedUserEvent.class);
-        int idTabela = event.getVendedor().getIdTabela();
+        int idTabela = event.getVendedor().getEmpresaSelecionada().getIdTabela();
 
         addSubscription(mTabelaRepository.findById(idTabela)
-                .observeOn(mainThread())
                 .flatMap(new Func1<Tabela, Observable<List<ItemTabela>>>() {
                     @Override public Observable<List<ItemTabela>> call(final Tabela tabela) {
                         mTabelaPadrao = tabela;
@@ -62,6 +61,7 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
                         return Observable.just(ProdutoFactories.createProdutoVo(itemTabela));
                     }
                 })
+                .observeOn(mainThread())
                 .subscribe(new Subscriber<ProdutoVo>() {
                     @Override public void onStart() {
                         getView().showLoading();

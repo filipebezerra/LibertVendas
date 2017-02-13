@@ -187,7 +187,6 @@ public class ListaClientesFragment extends LibertVendasFragment
     }
 
     @Override public void onDestroyView() {
-        mPresenter.unregisterEventBus();
         mPresenter.detach();
         super.onDestroyView();
     }

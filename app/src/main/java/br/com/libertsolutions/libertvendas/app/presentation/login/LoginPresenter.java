@@ -1,11 +1,9 @@
 package br.com.libertsolutions.libertvendas.app.presentation.login;
 
-import android.support.v4.util.Pair;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.data.utils.RxUtils;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorRepository;
 import br.com.libertsolutions.libertvendas.app.data.vendedor.VendedorService;
-import br.com.libertsolutions.libertvendas.app.domain.dto.EmpresaDto;
 import br.com.libertsolutions.libertvendas.app.domain.dto.VendedorDto;
 import br.com.libertsolutions.libertvendas.app.domain.factory.EmpresaFactory;
 import br.com.libertsolutions.libertvendas.app.domain.factory.VendedorFactory;
@@ -18,7 +16,6 @@ import com.crashlytics.android.Crashlytics;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.greenrobot.eventbus.EventBus;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
@@ -74,13 +71,11 @@ class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginC
                     .get(mInputValues.cpfCnpj, mInputValues.senha)
                     .retryWhen(RxUtils.timeoutException())
                     .retryWhen(RxUtils.exponentialBackoff(3, 5, TimeUnit.SECONDS))
-                    .flatMap(pVendedorDto -> {
-                        if (pVendedorDto.error) {
-                            return Observable
-                                    .error(ValidationError.newError(pVendedorDto.mensagem));
+                    .flatMap(dto -> {
+                        if (dto.error) {
+                            return Observable.error(ValidationError.newError(dto.mensagem));
                         } else {
-                            return Observable
-                                    .just(Pair.create(pVendedorDto.vendedor, pVendedorDto.empresas));
+                            return Observable.just(dto.vendedor);
                         }
                     })
                     .observeOn(mainThread())
@@ -107,10 +102,10 @@ class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginC
         }
     }
 
-    private void onLoginResult(final Pair<VendedorDto, List<EmpresaDto>> vendedorDtoListPair) {
-        if (vendedorDtoListPair.second != null && !vendedorDtoListPair.second.isEmpty()) {
-            mVendedor = vendedorDtoListPair.first;
-            mEmpresas = EmpresaFactory.createListEmpresa(vendedorDtoListPair.second);
+    private void onLoginResult(final VendedorDto vendedorDto) {
+        if (vendedorDto.empresas != null && !vendedorDto.empresas.isEmpty()) {
+            mVendedor = vendedorDto;
+            mEmpresas = EmpresaFactory.createListEmpresa(vendedorDto.empresas);
             getView().showSelectCompany(mEmpresas);
         } else {
             getView().displayErrorIndicator();
