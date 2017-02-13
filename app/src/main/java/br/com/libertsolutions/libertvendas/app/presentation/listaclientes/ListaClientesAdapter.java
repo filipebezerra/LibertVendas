@@ -78,6 +78,10 @@ class ListaClientesAdapter extends RecyclerView.Adapter<ListaClientesViewHolder>
         return mClientes.size();
     }
 
+    boolean isEmpty() {
+        return getItemCount() == 0;
+    }
+
     @Override public Filter getFilter() {
         if (mFilter == null) {
             mFilter = new ListaClientesFilter();

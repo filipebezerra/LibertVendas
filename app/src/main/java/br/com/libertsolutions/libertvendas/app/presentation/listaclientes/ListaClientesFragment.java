@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.LinearLayout;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.presentation.activity.Navigator;
@@ -21,6 +22,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.fragment.LibertVenda
 import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemClickListener;
 import br.com.libertsolutions.libertvendas.app.presentation.view.recyclerview.OnItemTouchListener;
 import butterknife.BindView;
+import butterknife.OnClick;
 import java.util.List;
 
 import static br.com.libertsolutions.libertvendas.app.DataInjection.LocalRepositories.provideClienteRepository;
@@ -41,6 +43,8 @@ public class ListaClientesFragment extends LibertVendasFragment
 
     @BindView(R.id.recycler_view_clientes) protected RecyclerView mRecyclerViewClientes;
     @BindView(R.id.swipe_container) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.linear_layout_all_error_state) protected LinearLayout mLinearLayoutErrorState;
+    @BindView(R.id.linear_layout_all_empty_state) protected LinearLayout mLinearLayoutEmptyState;
 
     private ListaClientesContract.Presenter mPresenter;
 
@@ -112,6 +116,11 @@ public class ListaClientesFragment extends LibertVendasFragment
         });
     }
 
+    @Override public void onPrepareOptionsMenu(final Menu menu) {
+        menu.findItem(R.id.action_search)
+                .setVisible(mRecyclerViewAdapter != null && !mRecyclerViewAdapter.isEmpty());
+    }
+
     @Override public void showLoading() {
         mSwipeRefreshLayout.setRefreshing(true);
     }
@@ -120,6 +129,26 @@ public class ListaClientesFragment extends LibertVendasFragment
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override public void showError() {
+        mLinearLayoutErrorState.setVisibility(View.VISIBLE);
+    }
+
+    @Override public void hideError() {
+        mLinearLayoutErrorState.setVisibility(View.GONE);
+    }
+
+    @Override public void showEmpty() {
+        mLinearLayoutEmptyState.setVisibility(View.VISIBLE);
+    }
+
+    @Override public void hideEmpty() {
+        mLinearLayoutEmptyState.setVisibility(View.GONE);
+    }
+
+    @Override public void hideList() {
+        mRecyclerViewClientes.setVisibility(View.GONE);
     }
 
     @Override public boolean hasActiveSearch() {
@@ -132,6 +161,7 @@ public class ListaClientesFragment extends LibertVendasFragment
     }
 
     @Override public void showClientes(final List<Cliente> clientes) {
+        mRecyclerViewClientes.setVisibility(View.VISIBLE);
         mRecyclerViewClientes.setAdapter(
                 mRecyclerViewAdapter = new ListaClientesAdapter(getContext(), clientes));
         mRecyclerViewClientes
@@ -155,7 +185,12 @@ public class ListaClientesFragment extends LibertVendasFragment
                 mRecyclerViewItemTouchListener
                         = new OnItemTouchListener(getContext(), mRecyclerViewClientes, this));
 
+        getActivity().invalidateOptionsMenu();
         hideLoading();
+    }
+
+    @OnClick(R.id.button_all_retry) void onButtonRetryClicked() {
+        mPresenter.retryLoadClientes();
     }
 
     @Override public void navigateToCadastroCliente(final Cliente cliente) {

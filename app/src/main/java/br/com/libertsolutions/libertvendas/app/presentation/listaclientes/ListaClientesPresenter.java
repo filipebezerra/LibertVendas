@@ -52,25 +52,38 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
                 .observeOn(mainThread())
                 .subscribe(new Subscriber<List<Cliente>>() {
                     @Override public void onStart() {
+                        getView().hideList();
+                        getView().hideEmpty();
                         getView().showLoading();
                     }
 
                     @Override public void onError(Throwable e) {
                         Timber.e(e, "Could not load customers");
                         getView().hideLoading();
+                        getView().showError();
                     }
 
                     @Override public void onNext(List<Cliente> clientes) {
                         if (getView().hasActiveSearch()) {
                             getView().clearActiveSearch();
                         }
-                        getView().showClientes(mClientes = clientes);
+                        if (!clientes.isEmpty()) {
+                            getView().showClientes(mClientes = clientes);
+                        } else {
+                            getView().hideLoading();
+                            getView().showEmpty();
+                        }
                     }
 
                     @Override public void onCompleted() {
                         preSelectCliente();
                     }
                 }));
+    }
+
+    @Override public void retryLoadClientes() {
+        getView().hideError();
+        loadClientes();
     }
 
     private Observable<List<Cliente>> getClienteAsObservable() {

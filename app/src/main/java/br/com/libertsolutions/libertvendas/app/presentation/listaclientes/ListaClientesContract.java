@@ -16,6 +16,16 @@ interface ListaClientesContract {
 
         void hideLoading();
 
+        void showError();
+
+        void hideError();
+
+        void showEmpty();
+
+        void hideEmpty();
+
+        void hideList();
+
         boolean hasActiveSearch();
 
         void clearActiveSearch();
@@ -32,6 +42,8 @@ interface ListaClientesContract {
     interface Presenter extends MvpPresenter<View> {
 
         void loadClientes();
+
+        void retryLoadClientes();
 
         void handleItemSelected(int position);
 
