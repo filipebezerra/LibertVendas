@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -75,7 +74,6 @@ public class ListaClientesFragment extends LibertVendasFragment
         super.onViewCreated(view, savedInstanceState);
 
         mRecyclerViewClientes.setHasFixedSize(true);
-        mRecyclerViewClientes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -83,15 +81,14 @@ public class ListaClientesFragment extends LibertVendasFragment
 
         final boolean isSelectionMode = getArguments().getBoolean(ARG_EXTRA_IS_SELECTION_MODE);
 
-        if (isSelectionMode) {
-            mSwipeRefreshLayout.setEnabled(false);
-        }
+        mSwipeRefreshLayout.setEnabled(!isSelectionMode);
 
         final Cliente clientePedidoEmEdicao
                 = getArguments().getParcelable(ARG_EXTRA_CLIENTE_PEDIDO_EM_EDICAO);
         mPresenter = new ListaClientesPresenter(
                 provideClienteRepository(), isSelectionMode, clientePedidoEmEdicao);
         mPresenter.attachView(this);
+        mPresenter.registerEventBus();
         mPresenter.loadClientes();
     }
 
@@ -146,7 +143,6 @@ public class ListaClientesFragment extends LibertVendasFragment
                 mRecyclerViewItemTouchListener
                         = new OnItemTouchListener(getContext(), mRecyclerViewClientes, this));
 
-        mPresenter.registerEventBus();
         hideLoading();
     }
 
@@ -168,9 +164,7 @@ public class ListaClientesFragment extends LibertVendasFragment
         mPresenter.handleItemSelected(position);
     }
 
-    @Override public void onLongPress(final View view, final int position) {
-
-    }
+    @Override public void onLongPress(final View view, final int position) {}
 
     @Override public void onActivityResult(
             final int requestCode, final int resultCode, final Intent data) {

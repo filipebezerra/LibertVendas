@@ -2,10 +2,10 @@ package br.com.libertsolutions.libertvendas.app.presentation.listaclientes;
 
 import br.com.libertsolutions.libertvendas.app.data.cliente.ClienteRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.presentation.cadastrocliente.NewCustomerEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
-import br.com.libertsolutions.libertvendas.app.presentation.utils.ObservableUtils;
 import java.util.List;
 import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
@@ -14,7 +14,6 @@ import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.PresentationInjection.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent.newEvent;
-import static java.util.Collections.emptyList;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -26,9 +25,12 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
     private final ClienteRepository mClienteRepository;
 
     private final boolean mIsSelectionMode;
+
     private final Cliente mClientePedidoEmEdicao;
 
     private List<Cliente> mClientes;
+
+    private Vendedor mLoggedUser;
 
     ListaClientesPresenter(
             final ClienteRepository clienteRepository,
@@ -38,20 +40,15 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
         mClientePedidoEmEdicao = clientePedidoEmEdicao;
     }
 
+    @Subscribe(sticky = true) public void onLoginEvent(LoggedUserEvent event) {
+        if (mLoggedUser != null && !mLoggedUser.equals(event.getVendedor())) {
+            mLoggedUser = event.getVendedor();
+            loadClientes();
+        }
+    }
+
     @Override public void loadClientes() {
-        Observable<List<Cliente>> clientesFromMemoryCache = ObservableUtils.toObservable(mClientes);
-
-        LoggedUserEvent event = provideEventBus().getStickyEvent(LoggedUserEvent.class);
-        final String cpfCnpjVendedor = event.getVendedor().getCpfCnpj();
-        final String cnpjEmpresa = event.getVendedor().getEmpresaSelecionada().getCnpj();
-
-        Observable<List<Cliente>> clientesFromDiskCache = mClienteRepository
-                .findByVendedorAndEmpresa(cpfCnpjVendedor, cnpjEmpresa)
-                .doOnNext(clientes -> mClientes = clientes);
-
-        addSubscription(Observable
-                .merge(clientesFromMemoryCache, clientesFromDiskCache)
-                .lastOrDefault(emptyList())
+        addSubscription(getClienteAsObservable()
                 .observeOn(mainThread())
                 .subscribe(new Subscriber<List<Cliente>>() {
                     @Override public void onStart() {
@@ -59,11 +56,12 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
                     }
 
                     @Override public void onError(Throwable e) {
-                        Timber.e(e, "Could not load customers list from local database");
+                        Timber.e(e, "Could not load customers");
                         getView().hideLoading();
                     }
 
-                    @Override public void onNext(List<Cliente> pClienteList) {
+                    @Override public void onNext(List<Cliente> clientes) {
+                        mClientes = clientes;
                         getView().showClientes(mClientes);
                     }
 
@@ -71,6 +69,26 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
                         preSelectCliente();
                     }
                 }));
+    }
+
+    private Observable<List<Cliente>> getClienteAsObservable() {
+        return mClienteRepository
+                .findByVendedorAndEmpresa(getCpfCnpjVendedor(), getCnpjEmpresaSelecionada());
+    }
+
+    private String getCpfCnpjVendedor() {
+        return getLoggedUser().getCpfCnpj();
+    }
+
+    private String getCnpjEmpresaSelecionada() {
+        return getLoggedUser().getEmpresaSelecionada().getCnpj();
+    }
+
+    private Vendedor getLoggedUser() {
+        if (mLoggedUser == null) {
+            mLoggedUser = provideEventBus().getStickyEvent(LoggedUserEvent.class).getVendedor();
+        }
+        return mLoggedUser;
     }
 
     private void preSelectCliente() {
@@ -112,9 +130,5 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
         final int position = mClientes.size();
         mClientes.add(cliente);
         getView().updateInsertedItemAtPosition(position);
-    }
-
-    @Subscribe(sticky = true) public void onUserLogin(LoggedUserEvent event) {
-        loadClientes();
     }
 }
