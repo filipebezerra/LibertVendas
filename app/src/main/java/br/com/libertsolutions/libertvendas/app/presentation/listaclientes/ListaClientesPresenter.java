@@ -61,8 +61,10 @@ class ListaClientesPresenter extends BasePresenter<ListaClientesContract.View>
                     }
 
                     @Override public void onNext(List<Cliente> clientes) {
-                        mClientes = clientes;
-                        getView().showClientes(mClientes);
+                        if (getView().hasActiveSearch()) {
+                            getView().clearActiveSearch();
+                        }
+                        getView().showClientes(mClientes = clientes);
                     }
 
                     @Override public void onCompleted() {

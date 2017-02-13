@@ -7,6 +7,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,6 +49,8 @@ public class ListaClientesFragment extends LibertVendasFragment
     private OnGlobalLayoutListener mRecyclerViewLayoutListener = null;
 
     private OnItemTouchListener mRecyclerViewItemTouchListener = null;
+
+    private SearchView mSearchView;
 
     public static ListaClientesFragment newInstance(
             boolean isSelectionMode, @Nullable Cliente cliente) {
@@ -95,9 +98,9 @@ public class ListaClientesFragment extends LibertVendasFragment
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_lista_clientes, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setQueryHint(getString(R.string.hint_busca_cliente));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView.setQueryHint(getString(R.string.hint_busca_cliente));
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override public boolean onQueryTextSubmit(String query) {
                 return false;
             }
@@ -117,6 +120,15 @@ public class ListaClientesFragment extends LibertVendasFragment
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override public boolean hasActiveSearch() {
+        return !TextUtils.isEmpty(mSearchView.getQuery());
+    }
+
+    @Override public void clearActiveSearch() {
+        mSearchView.setQuery("", false);
+        mSearchView.clearFocus();
     }
 
     @Override public void showClientes(final List<Cliente> clientes) {

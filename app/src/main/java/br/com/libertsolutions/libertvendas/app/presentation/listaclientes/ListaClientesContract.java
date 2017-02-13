@@ -16,6 +16,10 @@ interface ListaClientesContract {
 
         void hideLoading();
 
+        boolean hasActiveSearch();
+
+        void clearActiveSearch();
+
         void showClientes(List<Cliente> clientes);
 
         void navigateToCadastroCliente(Cliente cliente);
