@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.Subscribe;
 /**
  * @author Filipe Bezerra
  */
-public class CadastroPedidoPresenter extends BasePresenter<CadastroPedidoContract.View>
+class CadastroPedidoPresenter extends BasePresenter<CadastroPedidoContract.View>
         implements CadastroPedidoContract.Presenter {
 
     @Override public void initializeView(final Pedido pedidoEmEdicao) {
@@ -25,6 +25,6 @@ public class CadastroPedidoPresenter extends BasePresenter<CadastroPedidoContrac
     }
 
     @Subscribe(sticky = true, priority = 1) public void onEvent(ProdutosSelecionadosEvent event) {
-        getView().navigateToStepListaClientes();
+        getView().navigateToStepFinalizandoPedido();
     }
 }
