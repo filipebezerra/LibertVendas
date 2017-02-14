@@ -44,6 +44,12 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
         mCompositeSubscription.clear();
     }
 
+    public void removeSubscription(Subscription subscription) {
+        if (subscription != null) {
+            mCompositeSubscription.remove(subscription);
+        }
+    }
+
     public V getView() {
         return mView;
     }

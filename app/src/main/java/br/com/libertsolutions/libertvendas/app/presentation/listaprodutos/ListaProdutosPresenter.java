@@ -17,6 +17,7 @@ import java.util.List;
 import org.greenrobot.eventbus.Subscribe;
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.functions.Func1;
 import timber.log.Timber;
 
@@ -44,6 +45,8 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
 
     private Cliente mClienteSelecionadoNoPedido;
 
+    private Subscription mLoadProdutosSubscription;
+
     ListaProdutosPresenter(
             final boolean isSelectionMode, List<ItemPedido> itensPedido,
             final TabelaRepository tabelaRepository) {
@@ -69,19 +72,8 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
     }
 
     @Override public void loadProdutos() {
-        addSubscription(getTabelaAsObservable()
-                .flatMap(new Func1<Tabela, Observable<List<ItemTabela>>>() {
-                    @Override public Observable<List<ItemTabela>> call(final Tabela tabela) {
-                        mTabelaPadrao = tabela;
-                        return Observable.just(tabela.getItensTabela());
-                    }
-                })
-                .flatMapIterable(item -> item)
-                .flatMap(new Func1<ItemTabela, Observable<ProdutoVo>>() {
-                    @Override public Observable<ProdutoVo> call(final ItemTabela itemTabela) {
-                        return Observable.just(ProdutoFactories.createProdutoVo(itemTabela));
-                    }
-                })
+        removeSubscription(mLoadProdutosSubscription);
+        mLoadProdutosSubscription = getProdutosAsObservable()
                 .observeOn(mainThread())
                 .subscribe(new Subscriber<ProdutoVo>() {
                     @Override public void onStart() {
@@ -102,11 +94,24 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
                         setProdutosPreSelecionados();
                         getView().showProdutos(mProdutos, mIsSelectionMode);
                     }
-                }));
+                });
+        addSubscription(mLoadProdutosSubscription);
     }
 
-    private Observable<Tabela> getTabelaAsObservable() {
-        return mTabelaRepository.findById(getTabelaSelecionada());
+    private Observable<ProdutoVo> getProdutosAsObservable() {
+        return mTabelaRepository.findById(getTabelaSelecionada())
+                .flatMap(new Func1<Tabela, Observable<List<ItemTabela>>>() {
+                    @Override public Observable<List<ItemTabela>> call(final Tabela tabela) {
+                        mTabelaPadrao = tabela;
+                        return Observable.just(tabela.getItensTabela());
+                    }
+                })
+                .flatMapIterable(item -> item)
+                .flatMap(new Func1<ItemTabela, Observable<ProdutoVo>>() {
+                    @Override public Observable<ProdutoVo> call(final ItemTabela itemTabela) {
+                        return Observable.just(ProdutoFactories.createProdutoVo(itemTabela));
+                    }
+                });
     }
 
     private int getTabelaSelecionada() {
