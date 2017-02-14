@@ -117,7 +117,7 @@ public class DashboardFragment extends LibertVendasFragment implements Dashboard
             entries.add(new PieEntry(item.getAmount(), item.getName()));
         }
 
-        PieDataSet ds1 = new PieDataSet(entries, "Todos Pedidos realizados");
+        PieDataSet ds1 = new PieDataSet(entries, getString(R.string.dashboard_chart_label));
         ds1.setColors(ColorTemplate.MATERIAL_COLORS);
         ds1.setSliceSpace(2f);
         ds1.setValueTextColor(Color.WHITE);
@@ -147,7 +147,7 @@ public class DashboardFragment extends LibertVendasFragment implements Dashboard
     }
 
     private SpannableString generateCenterText() {
-        SpannableString s = new SpannableString("Pedidos\nPor Cliente");
+        SpannableString s = new SpannableString(getString(R.string.dashboard_chart_center_text));
         s.setSpan(new RelativeSizeSpan(2f), 0, 7, 0);
         s.setSpan(new ForegroundColorSpan(Color.GRAY), 8, s.length(), 0);
         return s;

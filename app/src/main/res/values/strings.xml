@@ -222,6 +222,8 @@
         Desculpe, houve uma falha quando tentamos carregar os dados do gráfico. Por favor tente novamente!
     </string>
     <string name="dashboard_no_orders">Seus pedidos são representados em gráfico aqui</string>
+    <string name="dashboard_chart_label">Todos Pedidos realizados</string>
+    <string name="dashboard_chart_center_text">Pedidos\nPor Cliente</string>
 
     <!-- Order Detail strings -->
     <string name="title_activity_order_detail">Visualizando pedido</string>
