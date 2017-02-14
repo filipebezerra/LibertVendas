@@ -19,6 +19,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.DefaultValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.List;
@@ -126,6 +127,7 @@ public class DashboardFragment extends LibertVendasFragment implements Dashboard
 
         PieData pieData = new PieData(ds1);
         //pieData.setValueTypeface(tf);
+        pieData.setValueFormatter(new DefaultValueFormatter(2));
 
         mPieChart.setData(pieData);
         mPieChart.setDrawEntryLabels(false);
