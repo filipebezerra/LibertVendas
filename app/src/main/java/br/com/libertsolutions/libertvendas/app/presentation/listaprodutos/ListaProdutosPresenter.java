@@ -1,12 +1,15 @@
 package br.com.libertsolutions.libertvendas.app.presentation.listaprodutos;
 
+import android.text.TextUtils;
 import br.com.libertsolutions.libertvendas.app.data.tabela.TabelaRepository;
 import br.com.libertsolutions.libertvendas.app.domain.factory.ProdutoFactories;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Cliente;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemPedido;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.ItemTabela;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Tabela;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Vendedor;
 import br.com.libertsolutions.libertvendas.app.domain.vo.ProdutoVo;
+import br.com.libertsolutions.libertvendas.app.presentation.listaclientes.ClienteSelecionadoEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.login.LoggedUserEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.mvp.BasePresenter;
 import java.util.ArrayList;
@@ -39,6 +42,8 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
 
     private Vendedor mLoggedUser;
 
+    private Cliente mClienteSelecionadoNoPedido;
+
     ListaProdutosPresenter(
             final boolean isSelectionMode, List<ItemPedido> itensPedido,
             final TabelaRepository tabelaRepository) {
@@ -52,6 +57,15 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
             mLoggedUser = event.getVendedor();
             loadProdutos();
         }
+    }
+
+    @Subscribe(sticky = true) public void onEvent(ClienteSelecionadoEvent event) {
+        if (!TextUtils.isEmpty(event.getCliente().getTabelaPadrao())) {
+            mClienteSelecionadoNoPedido = event.getCliente();
+        } else {
+            mClienteSelecionadoNoPedido = null;
+        }
+        loadProdutos();
     }
 
     @Override public void loadProdutos() {
@@ -92,11 +106,20 @@ class ListaProdutosPresenter extends BasePresenter<ListaProdutosContract.View>
     }
 
     private Observable<Tabela> getTabelaAsObservable() {
-        return mTabelaRepository.findById(getTabelaEmpresaSelecionada());
+        return mTabelaRepository.findById(getTabelaSelecionada());
+    }
+
+    private int getTabelaSelecionada() {
+        return mClienteSelecionadoNoPedido == null ?
+                getTabelaEmpresaSelecionada() : getTabelaClienteSelecionadoNoPedido();
     }
 
     private int getTabelaEmpresaSelecionada() {
         return getLoggedUser().getEmpresaSelecionada().getIdTabela();
+    }
+
+    private int getTabelaClienteSelecionadoNoPedido() {
+        return Integer.valueOf(mClienteSelecionadoNoPedido.getTabelaPadrao());
     }
 
     private Vendedor getLoggedUser() {
