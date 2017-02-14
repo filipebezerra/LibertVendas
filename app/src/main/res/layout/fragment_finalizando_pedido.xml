@@ -89,7 +89,6 @@
                     android:layout_marginLeft="@dimen/keyline_large"
                     android:layout_marginStart="@dimen/keyline_large"
                     android:hint="@string/hint_total_produtos"
-                    android:text="@string/text_total_produtos"
                     />
 
             </android.support.design.widget.TextInputLayout>

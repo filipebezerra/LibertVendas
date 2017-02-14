@@ -189,7 +189,6 @@
     <string name="label_forma_pagamento">Forma de pagamento</string>
     <string name="hint_data_emissao">Data de emissão</string>
     <string name="hint_total_produtos">Total dos Produtos:</string>
-    <string name="text_total_produtos">0,00</string>
     <string name="hint_desconto">Desconto</string>
     <string name="hint_observacao">Observação</string>
     <string name="message_vendedor_nao_permitido_aplicar_desconto">Você não está autorizado à conceder desconto!</string>
