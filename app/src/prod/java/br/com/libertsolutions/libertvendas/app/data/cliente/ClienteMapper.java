@@ -45,34 +45,30 @@ class ClienteMapper extends RealmMapper<Cliente, ClienteEntity> {
     }
 
     @Override public Cliente toViewObject(final ClienteEntity entity) {
-        final int id = entity.getId();
-        final int idCliente = entity.getIdCliente();
-        final String codigo = entity.getCodigo();
-        final String nome = entity.getNome();
-        final int tipo = entity.getTipo();
-        final String cpfCnpj = entity.getCpfCnpj();
-        final String contato = entity.getContato();
-        final String email = entity.getEmail();
-        final String telefone = entity.getTelefone();
-        final String telefone2 = entity.getTelefone2();
-        final String endereco = entity.getEndereco();
-        final String cep = entity.getCep();
-        final Cidade cidade = mCidadeMapper.toViewObject(entity.getCidade());
-        final String bairro = entity.getBairro();
-        final String numero = entity.getNumero();
-        final String complemento = entity.getComplemento();
-        final String ultimaAlteracao = entity.getUltimaAlteracao();
-        final boolean ativo = entity.isAtivo();
-        final String cnpjEmpresa = entity.getCnpjEmpresa();
-        final String cpfCnpjVendedor = entity.getCpfCnpjVendedor();
-        final int status = entity.getStatus();
-        final String nomeFantasia = entity.getNomeFantasia();
-        final int tabelaPadrao = entity.getTabelaPadrao();
-
         return Cliente.map(
-                id, idCliente, codigo, nome, tipo, cpfCnpj, contato, email, telefone, telefone2,
-                endereco, cep, cidade, bairro, numero, complemento, ultimaAlteracao, ativo,
-                cnpjEmpresa, cpfCnpjVendedor, status, nomeFantasia, tabelaPadrao
+                entity.getId(),
+                entity.getIdCliente(),
+                entity.getCodigo(),
+                entity.getNome(),
+                entity.getTipo(),
+                entity.getCpfCnpj(),
+                entity.getContato(),
+                entity.getEmail(),
+                entity.getTelefone(),
+                entity.getTelefone2(),
+                entity.getEndereco(),
+                entity.getCep(),
+                mCidadeMapper.toViewObject(entity.getCidade()),
+                entity.getBairro(),
+                entity.getNumero(),
+                entity.getComplemento(),
+                entity.getUltimaAlteracao(),
+                entity.isAtivo(),
+                entity.getCnpjEmpresa(),
+                entity.getCpfCnpjVendedor(),
+                entity.getStatus(),
+                entity.getNomeFantasia(),
+                entity.getTabelaPadrao()
         );
     }
 }

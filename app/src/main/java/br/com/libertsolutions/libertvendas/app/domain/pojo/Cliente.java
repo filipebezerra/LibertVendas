@@ -13,7 +13,7 @@ public final class Cliente implements Parcelable {
     private static final boolean ATIVO = true;
     private static final String NAO_FOI_ALTERADO = "";
     private static final String SEM_CONTATO = "";
-    private static final int SEM_TABELA_PADRAO = 0;
+    private static final String SEM_TABELA_PADRAO = null;
 
     public static final int STATUS_IMPORTADO = 1;
     public static final int STATUS_CRIADO = 2;
@@ -64,7 +64,7 @@ public final class Cliente implements Parcelable {
 
     private final String nomeFantasia;
 
-    private final int tabelaPadrao;
+    private final String tabelaPadrao;
 
     public static final Creator<Cliente> CREATOR = new Creator<Cliente>() {
         @Override public Cliente createFromParcel(Parcel in) {
@@ -186,7 +186,7 @@ public final class Cliente implements Parcelable {
             final String cpfCnpjVendedor,
             final String cnpjEmpresa,
             final String nomeFantasia,
-            final int tabelaPadrao
+            final String tabelaPadrao
     ) {
         return new Cliente(
                 SEM_ID,
@@ -238,7 +238,7 @@ public final class Cliente implements Parcelable {
             final String cpfCnpjVendedor,
             final int status,
             final String nomeFantasia,
-            final int tabelaPadrao
+            final String tabelaPadrao
     ) {
         return new Cliente(
                 id,
@@ -290,7 +290,7 @@ public final class Cliente implements Parcelable {
         cnpjEmpresa = in.readString();
         status = in.readInt();
         nomeFantasia = in.readString();
-        tabelaPadrao = in.readInt();
+        tabelaPadrao = in.readString();
     }
 
     private Cliente(
@@ -316,7 +316,7 @@ public final class Cliente implements Parcelable {
             final String cnpjEmpresa,
             final int status,
             final String nomeFantasia,
-            final int tabelaPadrao
+            final String tabelaPadrao
     ) {
         this.id = id;
         this.idCliente = idCliente;
@@ -431,7 +431,7 @@ public final class Cliente implements Parcelable {
         return nomeFantasia;
     }
 
-    public int getTabelaPadrao() {
+    public String getTabelaPadrao() {
         return tabelaPadrao;
     }
 
@@ -517,6 +517,6 @@ public final class Cliente implements Parcelable {
         out.writeString(cnpjEmpresa);
         out.writeInt(status);
         out.writeString(nomeFantasia);
-        out.writeInt(tabelaPadrao);
+        out.writeString(tabelaPadrao);
     }
 }

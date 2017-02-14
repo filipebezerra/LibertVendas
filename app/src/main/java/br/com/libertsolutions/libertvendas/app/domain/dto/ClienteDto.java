@@ -46,5 +46,5 @@ public class ClienteDto {
 
     @SerializedName("nomeFantasia") @Expose public String nomeFantasia;
 
-    @SerializedName("tabelaPadrao") @Expose public int tabelaPadrao;
+    @SerializedName("tabelaPadrao") @Expose public String tabelaPadrao;
 }

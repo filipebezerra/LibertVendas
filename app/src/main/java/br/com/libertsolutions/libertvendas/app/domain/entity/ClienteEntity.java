@@ -57,7 +57,7 @@ import io.realm.annotations.Required;
 
     private String nomeFantasia;
 
-    private Integer tabelaPadrao;
+    private String tabelaPadrao;
 
     @Override public ClienteEntity setId(final Integer id) {
         if (id > 0) {
@@ -260,11 +260,11 @@ import io.realm.annotations.Required;
         return this;
     }
 
-    public Integer getTabelaPadrao() {
+    public String getTabelaPadrao() {
         return tabelaPadrao;
     }
 
-    public ClienteEntity setTabelaPadrao(final Integer tabelaPadrao) {
+    public ClienteEntity setTabelaPadrao(final String tabelaPadrao) {
         this.tabelaPadrao = tabelaPadrao;
         return this;
     }
