@@ -27,6 +27,10 @@ public final class CidadeFactory {
     }
 
     static Cidade toPojo(final CidadeDto cidadeDto) {
+        if (cidadeDto == null) {
+            return null;
+        }
+
         final Estado estado = EstadoFactory.toPojo(cidadeDto.estado);
 
         return Cidade.create(

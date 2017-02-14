@@ -12,6 +12,10 @@ class EstadoFactory {
     private EstadoFactory() {/* No instances */}
 
     static Estado toPojo(final EstadoDto estadoDto) {
+        if (estadoDto == null) {
+            return null;
+        }
+
         return Estado.create(
                 estadoDto.idEstado, estadoDto.uf, estadoDto.nome
         );
