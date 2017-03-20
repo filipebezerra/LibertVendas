@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="br.com.libertsolutions.libertvendas.app"
+    >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:name=".ApplicationImpl"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/LibertApp.Theme"
+        >
+
+        <!-- Main screen -->
+        <activity
+            android:name=".presentation.main.MainActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize"
+            android:label="@string/main_title"
+            android:launchMode="singleTop"
+            android:theme="@style/LibertApp.Theme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Initial Flow screen -->
+        <activity
+            android:name=".presentation.initialflow.InitialFlowActivity"
+            android:label="@string/initial_flow_title"
+            android:theme="@style/LibertApp.Theme.NoActionBar.Settings"
+            />
+
+        <!-- Settings screen -->
+        <activity
+            android:name=".presentation.settings.SettingsActivity"
+            android:label="@string/settings_title"
+            android:parentActivityName=".presentation.main.MainActivity"
+            android:theme="@style/LibertApp.Theme.NoActionBar.Settings"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".presentation.main.MainActivity"
+                />
+        </activity>
+
+        <!-- Add Customer screen -->
+        <activity
+            android:name=".presentation.addcustomer.AddCustomerActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
+            android:label="@string/add_customer_title"
+            android:parentActivityName=".presentation.main.MainActivity"
+            android:theme="@style/LibertApp.Theme.NoActionBar"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".presentation.main.MainActivity"
+                />
+        </activity>
+
+        <!-- City List screen -->
+        <activity
+            android:name=".presentation.citylist.CityListActivity"
+            android:label="@string/city_list_title"
+            android:theme="@style/LibertApp.Theme.NoActionBar"
+            />
+
+        <!-- Add Order screen -->
+        <activity
+            android:name=".presentation.addorder.AddOrderActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
+            android:label="@string/add_order_title"
+            android:parentActivityName=".presentation.main.MainActivity"
+            android:theme="@style/LibertApp.Theme.NoActionBar"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.libertsolutions.libertvendas.app.presentation.main.MainActivity"
+                />
+        </activity>
+
+        <!-- View Order screen -->
+        <activity
+            android:name=".presentation.vieworder.ViewOrderActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
+            android:label="@string/title_activity_view_order"
+            android:parentActivityName=".presentation.main.MainActivity"
+            android:theme="@style/LibertApp.Theme.NoActionBar"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.libertsolutions.libertvendas.app.presentation.main.MainActivity"
+                />
+        </activity>
+    </application>
+
+</manifest>

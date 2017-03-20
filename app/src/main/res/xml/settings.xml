@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_sync_preference_category_title">
+
+        <EditTextPreference
+            android:key="@string/settings_server_address_preference_key"
+            android:title="@string/settings_server_address_preference_title"
+            android:inputType="textUri"
+            android:persistent="false"
+            android:defaultValue="@string/settings_server_address_preference_default_value"
+            android:dialogTitle="@string/settings_server_address_preference_dialog_title"
+            android:summary="@string/settings_server_address_preference_summary"
+            />
+
+        <EditTextPreference
+            android:key="@string/settings_auth_key_preference_key"
+            android:title="@string/settings_auth_key_preference_title"
+            android:inputType="text"
+            android:persistent="false"
+            android:defaultValue="@string/settings_auth_key_preference_default_value"
+            android:dialogTitle="@string/settings_auth_key_preference_dialog_title"
+            android:dialogMessage="@string/settings_auth_key_preference_dialog_message"
+            android:summary="@string/settings_auth_key_preference_summary"
+            />
+
+        <SwitchPreference
+            android:key="@string/settings_automatically_sync_orders_preference_key"
+            android:title="@string/settings_automatically_sync_orders_preference_title"
+            android:defaultValue="true"
+            android:summary="@string/settings_automatically_sync_orders_preference_summary"
+            />
+
+        <EditTextPreference
+            android:key="@string/settings_sync_periodicity_preference_key"
+            android:title="@string/settings_sync_periodicity_preference_title"
+            android:inputType="numberSigned"
+            android:defaultValue="@integer/settings_sync_periodicity_preference_default_value"
+            android:dialogTitle="@string/settings_sync_periodicity_preference_dialog_title"
+            android:dialogMessage="@string/settings_sync_periodicity_preference_dialog_message"
+            android:summary="@string/settings_sync_periodicity_preference_summary"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

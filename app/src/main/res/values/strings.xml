@@ -1,0 +1,314 @@
+<resources>
+    <string name="app_name">Libert Vendas</string>
+
+    <!-- Main strings -->
+    <string name="main_title">Libert Vendas</string>
+    <string name="main_new_order_sheet_text">Novo pedido</string>
+    <string name="main_new_customer_sheet_text">Novo cliente</string>
+    <string name="main_drawer_item_dashboard">Início</string>
+    <string name="main_drawer_item_orders_report">Relatório pedidos</string>
+    <string name="main_drawer_item_orders">Seus pedidos</string>
+    <string name="main_drawer_item_customers">Clientes conquistados</string>
+    <string name="main_drawer_item_products">Produtos cadastrados</string>
+    <string name="main_drawer_item_auto_sync">Sinc. automática</string>
+    <string name="main_drawer_item_settings">Configurações</string>
+
+    <!-- Initial Flow strings -->
+    <string name="initial_flow_title">Faça a configuração</string>
+    <string name="initial_flow_login_title">Entre com seu usuário</string>
+    <string name="initial_flow_importation_title">Importe seus cadastros</string>
+
+    <!-- Settings strings -->
+    <string name="settings_title">Configurações</string>
+
+    <string name="settings_sync_preference_category_title">Sincronização</string>
+
+    <string name="settings_server_address_preference_key" translatable="false">
+        server_address
+    </string>
+    <string name="settings_server_address_preference_title">Url do servidor</string>
+    <string name="settings_server_address_preference_dialog_title">Digite a url do servidor</string>
+    <string name="settings_server_address_preference_summary">
+        Endereço web do servidor para troca de dados
+    </string>
+
+    <string name="settings_auth_key_preference_key" translatable="false">auth_key</string>
+    <string name="settings_auth_key_preference_title">Chave de autenticação</string>
+    <string name="settings_auth_key_preference_default_value" translatable="false">
+        626c6f63736b696e
+    </string>
+    <string name="settings_auth_key_preference_dialog_title">
+        Confirme a chave de autenticação
+    </string>
+    <string name="settings_auth_key_preference_dialog_message">
+        Informe o valor da chave de autenticação para conceder acesso ao servidor
+    </string>
+    <string name="settings_auth_key_preference_summary">
+        Chave para autenticar sua identidade e obter acesso ao servidor
+    </string>
+
+    <string name="settings_automatically_sync_orders_preference_key" translatable="false">
+        automatically_sync_orders
+    </string>
+    <string name="settings_automatically_sync_orders_preference_title">
+        Sincronizar pedido automaticamente
+    </string>
+    <string name="settings_automatically_sync_orders_preference_summary">
+        A sincronizaçao será executada automaticamente após cada pedido salvo
+    </string>
+
+    <string name="settings_sync_periodicity_preference_key" translatable="false">
+        sync_periodicity
+    </string>
+    <string name="settings_sync_periodicity_preference_title">
+        Periodicidade da sincronização
+    </string>
+    <string name="settings_sync_periodicity_preference_dialog_title">
+        Defina o periodicidade da sincronização
+    </string>
+    <string name="settings_sync_periodicity_preference_dialog_message">
+        Informe um valor numérico em minutos
+    </string>
+    <string name="settings_sync_periodicity_preference_summary">A cada %1$s minutos</string>
+
+    <string name="settings_invalid_setting_title">Configuração inválida</string>
+    <string name="settings_invalid_server_address_message">
+        Desculpe, a url do servidor informada é inválida.
+    </string>
+    <string name="settings_invalid_server_address_with_path_api_message">
+        Desculpe, a url do servidor informada não deve conter a palavra API.
+    </string>
+    <string name="settings_invalid_auth_key_message">
+        Desculpe, a chave de autenticação informada não deve conter espaços.
+    </string>
+    <string name="settings_invalid_sync_periodicity_message">
+        Desculpe, a periodicidade da sincronização informada deve conter somente números.
+    </string>
+    <string name="settings_invalid_sync_periodicity_value_message">
+        Desculpe, a periodicidade da sincronização deve ser acima de 0.
+    </string>
+
+    <!-- Login strings -->
+    <string name="login_user_identity_hint">Informe seu CPF ou CNPJ</string>
+    <string name="login_user_password_hint">Informe sua senha</string>
+    <string name="login_action">Entrar</string>
+    <string name="login_logging_in_fail_text">Falhou</string>
+    <string name="login_logging_in_completed_text">Sucesso</string>
+    <string name="login_logging_in_progress_text">Logando…</string>
+    <string name="login_user_identity_not_set_error">Precisamos do seu CPF ou CNPJ</string>
+    <string name="login_user_password_not_set_error">A senha está vazia</string>
+    <string name="login_salesman_with_no_companies_error">
+        Este vendedor não possui empresas cadastradas. Peça ao administrador do sistema
+        para cadastrar e tente novamente!
+    </string>
+    <string name="login_working_progress_message">Estamos fazendo seu login…</string>
+    <string name="login_select_default_company">
+        Selecione qual empresa será usada por padrão.
+    </string>
+
+    <!-- Importation strings -->
+    <string name="importation_states_and_cities">Estados e Cidades</string>
+    <string name="importation_company_name_example">Verdeshop DF</string>
+    <string name="importation_completed">Importação completada</string>
+    <string name="importation_completed_message">
+        Seus cadastros foram importados com sucesso. Vamos prosseguir!
+    </string>
+
+    <!-- Dashboard strings -->
+    <string name="dashboard_fragment_title">Início</string>
+    <string name="dashboard_error_loading_orders_grouped">
+        Desculpe, houve uma falha quando tentamos carregar os dados do gráfico.
+        Por favor tente novamente!
+    </string>
+    <string name="dashboard_no_orders">Seus pedidos são representados em gráfico aqui</string>
+    <string name="dashboard_chart_label">Todos Pedidos realizados</string>
+    <string name="dashboard_chart_center_text">Pedidos\nPor Cliente</string>
+
+    <!-- Order List strings -->
+    <string name="order_list_example_order_number">Nº 200852</string>
+    <string name="order_list_example_customer_name">Cliente Gustavo Costa Alves</string>
+    <string name="order_list_example_total_order">Total R$ 204.89</string>
+    <string name="order_list_example_order_date">Data 14/09/2016</string>
+    <string name="order_list_no_orders">Seus pedidos são listados aqui</string>
+    <string name="order_list_all_orders_fragment_title">Todos pedidos</string>
+    <string name="order_list_pending_orders_fragment_title">Pedidos não enviados</string>
+    <string name="order_list_fragment_title">Seus pedidos</string>
+    <string name="order_list_search_hint">Use o nome do cliente</string>
+    <string name="order_list_template_text_order_date">Data %1$s</string>
+    <string name="order_list_template_text_order_number">Nº %1$d</string>
+    <string name="order_list_template_text_order_total">Total %1$s</string>
+    <string name="order_list_duplicate_item">Duplicar pedido</string>
+
+    <!-- Customer List strings -->
+    <string name="customer_list_error_loading_customers">
+        Desculpe, houve uma falha quando tentamos carregar os dados de seus clientes.
+        Por favor tente novamente!
+    </string>
+    <string name="customer_list_no_customers">Seus clientes são listados aqui</string>
+    <string name="customer_list_example_social_name">Waldomiro Martins Braga</string>
+    <string name="customer_list_example_fantasy_name">Waldomiro Martins Braga</string>
+    <string name="customer_list_example_cpf_or_cnpj">04561366000190</string>
+    <string name="customer_list_example_phone">(62) 3524 – 1936</string>
+    <string name="customer_list_example_email">waldomiro.martins.braga@mail.com</string>
+    <string name="customer_list_fragment_title">Seus clientes</string>
+    <string name="customer_list_search_hint">Use CPF, CNPJ, nome ou contato</string>
+    <string name="customer_list_template_text_phones">%1$s &#47; %2$s</string>
+    <string name="customer_list_text_no_phone">Sem telefone</string>
+    <string name="customer_list_text_no_email">Sem e-mail</string>
+    <string name="customer_list_text_no_fantasy_name">Sem nome fantasia</string>
+
+    <!-- Product List strings -->
+    <string name="product_list_error_loading_products">
+        Desculpe, houve uma falha quando tentamos carregar os dados de seus produtos.
+        Por favor tente novamente!
+    </string>
+    <string name="product_list_no_products">Seus produtos são listados aqui</string>
+    <string name="product_list_example_product_name">Achocolatado 200g</string>
+    <string name="product_list_example_product_price">Preço R$ 4.49</string>
+    <string name="product_list_example_stock_quantity">Quantidade 100</string>
+    <string name="product_list_fragment_title">Seus produtos</string>
+    <string name="product_list_search_hint">Use descrição ou código barras</string>
+    <string name="product_list_template_product_price">Preço %1$s</string>
+    <string name="product_list_template_product_stock_quantity">Quantidade %1$s</string>
+
+    <!-- Orders Report strings -->
+    <string name="orders_report_list_error_loading_report">
+        Desculpe, houve uma falha quando tentamos carregar os dados de seus clientes.
+        Por favor tente novamente!
+    </string>
+    <string name="orders_report_fragment_title">Relatório pedidos</string>
+    <string name="orders_report_no_orders">Seu relatório dos pedidos é visualizado aqui</string>
+
+    <!-- Add Customer strings -->
+    <string name="add_customer_title">Novo cliente</string>
+    <string name="add_customer_editing_title">Editando cliente</string>
+    <string name="add_customer_select_type_of_person_hint">Selecione o tipo de pessoa</string>
+    <string name="add_customer_type_of_person_label">Tipo de pessoa selecionado</string>
+    <string name="add_customer_cpf_or_cnpj_hint">CPF&#47;CNPJ</string>
+    <string name="add_customer_customer_name_hint">Nome</string>
+    <string name="add_customer_fantasy_name_hint">Nome fantasia</string>
+    <string name="add_customer_email_hint">E-mail</string>
+    <string name="add_customer_address_hint">Endereço</string>
+    <string name="add_customer_address_number_hint">Número</string>
+    <string name="add_customer_district_hint">Bairro</string>
+    <string name="add_customer_select_state_hint">Selecione o estado</string>
+    <string name="add_customer_state_label">Estado selecionado</string>
+    <string name="add_customer_select_city_hint">Selecione a cidade</string>
+    <string name="add_customer_city_selected_hint">Cidade selecionada</string>
+    <string name="add_customer_postal_code_hint">CEP</string>
+    <string name="add_customer_address_complement_hint">Complemento</string>
+    <string name="add_customer_main_phone_hint">Telefone principal</string>
+    <string name="add_customer_another_phone_hint">Outro telefone</string>
+    <string name="add_customer_search">Pesquisa</string>
+    <string name="add_customer_zip_code_search_hint">Digite o CEP sem pontuação</string>
+    <string name="add_customer_zip_code_search_title">Consulta de endereço por CEP</string>
+    <string name="add_customer_select_state_error">Selecione o estado primeiramente!</string>
+    <string name="add_customer_searching_postal_code_message">
+        Estamos buscando o cep informado…
+    </string>
+    <string name="add_customer_invalid_cpf">CPF inválido</string>
+    <string name="add_customer_invalid_cnpj">CNPJ inválido</string>
+    <string name="add_customer_invalid_email">E-mail inválido</string>
+    <string name="add_customer_invalid_phone_number">Telefone inválido</string>
+    <string name="add_customer_invalid_postal_code">CEP inválido</string>
+    <string name="add_customer_unknown_error_loading_states">
+        Desculpe, houve um erro desconhecido e a lista dos estados não pôde ser carregada.
+        Por favor tente novamente.
+    </string>
+    <string name="add_customer_saved_successfully">Cliente salvo com sucesso!</string>
+    <string name="add_customer_unknown_error_loading_city">
+        Desculpe, houve um erro desconhecido e a cidade obtida pelo CEP não pôde ser carregada.
+        Por favor tente novamente.
+    </string>
+
+    <!-- City List strings -->
+    <string name="city_list_title">Cidades</string>
+    <string name="city_list_example_city_name">Goiânia</string>
+    <string name="city_list_error_loading_cities">
+        Desculpe, houve uma falha quando tentamos carregar as cidades.
+        Por favor tente novamente!
+    </string>
+    <string name="city_list_no_cities">As cidades cadastradas são listadas aqui</string>
+    <string name="city_list_search_hint">Pesquise por uma cidade…</string>
+
+    <!-- Add Order screen -->
+    <string name="add_order_title">Novo pedido</string>
+    <string name="add_order_editing_title">Editando pedido</string>
+    <string name="add_order_select_customer_step">Selecione o cliente</string>
+    <string name="add_order_select_items_step">Adicione os itens</string>
+    <string name="add_order_form_step">Finalizando pedido</string>
+    <string name="add_order_button_back_text">Anterior</string>
+    <string name="add_order_button_next_text">Próximo</string>
+    <string name="add_order_button_complete_text">Finalizar</string>
+
+    <!-- Select Customer screen -->
+    <string name="select_customer_step_not_selected_error">
+        É necessário selecionar o cliente!
+    </string>
+
+    <!-- Select Order Items screen -->
+    <string name="select_order_items_initial_quantity_text">0</string>
+    <string name="select_order_items_edit_quantity_hint">Outra qtde</string>
+    <string name="select_order_items_button_add_item_accessibility">Adicione um item</string>
+    <string name="select_order_items_button_remove_item_accessibility">Remova um item</string>
+    <string name="select_order_items_example_product_name">Achocolatado 200g</string>
+    <string name="select_order_items_example_product_price">Preço R$ 4.49</string>
+    <string name="select_order_items_example_item_total">Total R$ 204.89</string>
+    <string name="select_order_items_no_items">Os itens do pedido são listados aqui</string>
+    <string name="select_order_items_no_order_items">É necessário adicionar itens ao pedido!</string>
+    <string name="select_order_items_invalid_quantity">Quantidade inválida!</string>
+
+    <!-- Order Form screen -->
+    <string name="order_form_issue_date_hint">Data de emissão</string>
+    <string name="order_form_customer_name_hint">Nome do cliente</string>
+    <string name="order_form_total_items_hint">Total dos itens</string>
+    <string name="order_form_discount_hint">Desconto</string>
+    <string name="order_form_payment_method_hint">Selecione a forma de pagamento</string>
+    <string name="order_form_payment_method_label">Forma de pagamento</string>
+    <string name="order_form_observation_hint">Observação</string>
+    <string name="order_form_unknown_error_loading_payment_methods">
+        Desculpe, houve um erro desconhecido e a lista das formas de pagamento não pôde ser carregada.
+        Por favor tente novamente.
+    </string>
+    <string name="order_form_salesman_cant_apply_discount">
+        Você não está autorizado à conceder desconto!
+    </string>
+    <string name="order_form_discount_value_not_allowed">
+        Valor de desconto acima do permitido!
+    </string>
+    <string name="order_form_saved_successfully">Pedido salvo com sucesso!</string>
+
+    <!-- View Order screen -->
+    <string name="title_activity_view_order">Visualizando pedido</string>
+
+    <!-- Common strings -->
+    <string name="all_done">Pronto</string>
+    <string name="all_retry">Tente novamente</string>
+    <string name="all_search">Pesquisar</string>
+    <string name="all_show_filters">Monstrar filtros</string>
+    <string name="all_please_wait">Por favor aguarde</string>
+    <string name="all_offline_message_title">Você está offline</string>
+    <string name="all_offline_message">
+        Não é possível continuar, detectamos que o aparelho está offline. Verifique a conexão
+        de rede ou tente novamente.
+    </string>
+    <string name="all_server_error_message">
+        Desculpe, o servidor apresentou um erro. Por favor tente novamente.
+    </string>
+    <string name="all_network_error_message">
+        Desculpe, houve um erro de rede. Por favor tente novamente.
+    </string>
+    <string name="all_unknown_error_message">
+        Desculpe, houve um erro desconhecido. Por favor tente novamente.
+    </string>
+    <string name="all_required_field_error">Campo obrigatório</string>
+    <string name="all_saving_message">Salvando…</string>
+    <string name="all_correct_required_fields_error">
+        Por favor, preencha os campos obrigatórios
+    </string>
+    <string name="all_correct_fields_error">Por favor, corrija os campos com erros!</string>
+    <string name="all_unknown_error_saving_form">
+        Desculpe, houve um erro desconhecido e o cadastro não foi salvo. Por favor tente novamente!
+    </string>
+
+</resources>

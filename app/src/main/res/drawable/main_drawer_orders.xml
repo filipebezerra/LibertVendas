@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="297dp"
+    android:height="297dp"
+    android:viewportWidth="297"
+    android:viewportHeight="297">
+
+    <path
+        android:fillColor="#D95459"
+        android:pathData="M 148.5 0 C 230.51428535 0 297 66.4857146501 297 148.5 C 297 230.51428535 230.51428535 297 148.5 297 C 66.4857146501 297 0 230.51428535 0 148.5 C 0 66.4857146501 66.4857146501 0 148.5 0 Z" />
+    <path
+        android:fillColor="#C14851"
+        android:pathData="M295.122,172.118l-74.53-74.53L75.5,245.833l48.824,49.197c7.869,1.289,15.942,1.97,24.176,1.97
+C222.475,297,283.808,242.906,295.122,172.118z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 174.226 51.167 L 75.5 51.167 L 75.5 245.833 L 221.5 245.833 L 221.5 98.44 Z" />
+    <path
+        android:fillColor="#D0D5D9"
+        android:pathData="M 174.226 98.44 L 221.5 98.44 L 174.226 51.167 Z" />
+    <path
+        android:fillColor="#FFCD02"
+        android:pathData="M 87.389 99.833 H 103.611 V 116.055 H 87.389 V 99.833 Z" />
+    <path
+        android:fillColor="#F4AF30"
+        android:pathData="M 120.726 109.173 H 197.167 V 116.055 H 120.726 V 109.173 Z" />
+    <path
+        android:fillColor="#F4AF30"
+        android:pathData="M 120.726 174.062 H 197.167 V 180.944 H 120.726 V 174.062 Z" />
+    <path
+        android:fillColor="#F4AF30"
+        android:pathData="M 120.726 206.507 H 197.167 V 213.389 H 120.726 V 206.507 Z" />
+    <path
+        android:fillColor="#F4AF30"
+        android:pathData="M 120.726 141.618 H 197.167 V 148.5 H 120.726 V 141.618 Z" />
+    <path
+        android:fillColor="#FFCD02"
+        android:pathData="M 87.389 132.278 H 103.611 V 148.5 H 87.389 V 132.278 Z" />
+    <path
+        android:fillColor="#FFCD02"
+        android:pathData="M 87.389 164.722 H 103.611 V 180.944 H 87.389 V 164.722 Z" />
+    <path
+        android:fillColor="#FFCD02"
+        android:pathData="M 87.389 197.167 H 103.611 V 213.389 H 87.389 V 197.167 Z" />
+</vector>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@id/action_all_done"
+        android:title="@string/all_done"
+        android:icon="@drawable/all_done_24dp"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_add_customer_search"
+        android:title="@string/add_customer_search"
+        android:icon="@drawable/all_search_white_24dp"
+        app:showAsAction="ifRoom"
+        />
+</menu>

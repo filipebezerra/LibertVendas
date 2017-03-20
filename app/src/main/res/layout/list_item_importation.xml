@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/keyline_large"
+    android:paddingRight="@dimen/keyline_large"
+    android:layout_marginBottom="@dimen/keyline_medium"
+    >
+
+    <Button
+        android:id="@id/button_all_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/all_retry"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+    <com.dd.CircularProgressButton
+        android:id="@+id/button_importation_importation_progress"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:textColor="@android:color/white"
+        android:clickable="false"
+        android:layout_marginRight="@dimen/keyline_medium"
+        android:layout_marginEnd="@dimen/keyline_medium"
+        app:cpb_iconError="@drawable/all_clear_24dp"
+        app:cpb_iconComplete="@drawable/all_done_24dp"
+        app:cpb_colorIndicator="?attr/colorAccent"
+        app:cpb_colorIndicatorBackground="@android:color/transparent"
+        app:cpb_colorProgress="@android:color/transparent"
+        />
+
+    <TextView
+        android:id="@+id/text_view_importation_company_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/button_importation_importation_progress"
+        android:layout_toEndOf="@id/button_importation_importation_progress"
+        android:layout_toStartOf="@id/button_all_retry"
+        android:layout_toLeftOf="@id/button_all_retry"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        tools:text="@string/importation_company_name_example"
+        />
+
+</RelativeLayout>

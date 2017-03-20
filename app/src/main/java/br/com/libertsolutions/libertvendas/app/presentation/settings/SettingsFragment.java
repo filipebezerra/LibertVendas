@@ -1,0 +1,155 @@
+package br.com.libertsolutions.libertvendas.app.presentation.settings;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.Preference.OnPreferenceChangeListener;
+import android.support.v7.preference.Preference.OnPreferenceClickListener;
+import android.support.v7.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import br.com.libertsolutions.libertvendas.app.R;
+import butterknife.BindString;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompatDividers;
+
+import static br.com.libertsolutions.libertvendas.app.R.string.settings_auth_key_preference_key;
+import static br.com.libertsolutions.libertvendas.app.R.string.settings_server_address_preference_key;
+import static br.com.libertsolutions.libertvendas.app.R.string.settings_sync_periodicity_preference_key;
+import static br.com.libertsolutions.libertvendas.app.R.string.settings_sync_periodicity_preference_summary;
+import static br.com.libertsolutions.libertvendas.app.R.xml.settings;
+import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideEventBus;
+import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
+
+/**
+ * @author Filipe Bezerra
+ */
+public class SettingsFragment extends PreferenceFragmentCompatDividers {
+
+    public static final String TAG = SettingsFragment.class.getName();
+
+    private static final String ARG_IN_INITIAL_FLOW = TAG + "arg.inInitialFlow";
+
+    public static SettingsFragment newInstance() {
+        return new SettingsFragment();
+    }
+
+    public static SettingsFragment newInstanceForInitialFlow() {
+        SettingsFragment fragment = newInstance();
+        Bundle arguments = new Bundle();
+        arguments.putBoolean(ARG_IN_INITIAL_FLOW, true);
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
+    private OnPreferenceChangeListener mPreferenceChangeListener = this::handlePreferenceChanged;
+
+    private OnPreferenceClickListener mPreferenceClickListener = this::handlePreferenceClicked;
+
+    private Unbinder mUnbinder;
+
+    @BindString(settings_server_address_preference_key) String mServerAddressPreferenceKey;
+
+    @BindString(settings_auth_key_preference_key) String mAuthKeyPreferenceKey;
+
+    @BindString(settings_sync_periodicity_preference_key) String mSyncPeriodicityPreferenceKey;
+
+    @Override public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            setHasOptionsMenu(getArguments().getBoolean(ARG_IN_INITIAL_FLOW, false));
+        }
+    }
+
+    @Override public void onCreatePreferencesFix(
+            @Nullable final Bundle inState, final String rootKey) {
+        setPreferencesFromResource(settings, rootKey);
+    }
+
+    @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_done, menu);
+    }
+
+    @Override public void onPrepareOptionsMenu(final Menu menu) {
+        menu.findItem(R.id.action_all_done)
+                .setVisible(provideSettingsRepository().isAllSettingsPresent());
+    }
+
+    @Override public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.action_all_done) {
+            provideEventBus().post(CompletedSettingsEvent.newEvent());
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, @Nullable Bundle inState) {
+        try {
+            View view = super.onCreateView(inflater, container, inState);
+            mUnbinder = ButterKnife.bind(this, view);
+            return view;
+        } finally {
+            setDividerPreferences(
+                    DIVIDER_PADDING_CHILD | DIVIDER_CATEGORY_AFTER_LAST | DIVIDER_CATEGORY_BETWEEN);
+        }
+    }
+
+    @Override public void onViewCreated(
+            final View view, @Nullable final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        bindSettingValueToSummary(findPreference(mServerAddressPreferenceKey));
+        bindSettingValueToSummary(findPreference(mAuthKeyPreferenceKey));
+        bindSettingValueToSummary(findPreference(mSyncPeriodicityPreferenceKey));
+    }
+
+    @Override public void onDestroyView() {
+        mUnbinder.unbind();
+        super.onDestroyView();
+    }
+
+    private void bindSettingValueToSummary(Preference preference) {
+        preference.setOnPreferenceChangeListener(mPreferenceChangeListener);
+        preference.setOnPreferenceClickListener(mPreferenceClickListener);
+
+        mPreferenceChangeListener.onPreferenceChange(preference,
+                PreferenceManager.getDefaultSharedPreferences(preference.getContext())
+                        .getString(preference.getKey(), ""));
+    }
+
+    private boolean handlePreferenceChanged(Preference preference, Object newValue) {
+        if (preference instanceof EditTextPreference) {
+            final String stringValue = newValue.toString();
+            if (!TextUtils.isEmpty(stringValue)) {
+                ((EditTextPreference) preference).setText(stringValue);
+
+                if (preference.getKey()
+                        .equals(getString(settings_sync_periodicity_preference_key))) {
+                    preference.setSummary(
+                            getString(settings_sync_periodicity_preference_summary, stringValue));
+                } else {
+                    preference.setSummary(stringValue);
+                }
+            }
+        }
+
+        getActivity().supportInvalidateOptionsMenu();
+
+        return false;
+    }
+
+    private boolean handlePreferenceClicked(Preference preference) {
+        if (!preference.isPersistent()) {
+            preference.setPersistent(true);
+        }
+        return true;
+    }
+}

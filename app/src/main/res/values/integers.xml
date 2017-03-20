@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item type="integer" format="integer" name="login_action_login">6</item>
+    <integer name="settings_sync_periodicity_preference_default_value">30</integer>
+
+</resources>

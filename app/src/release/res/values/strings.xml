@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Setting screen strings -->
+    <string name="settings_server_address_preference_default_value" translatable="false">
+        http://187.32.187.153:8085
+    </string>
+
+</resources>

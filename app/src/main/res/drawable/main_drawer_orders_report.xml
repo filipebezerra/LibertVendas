@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="505dp"
+    android:height="505dp"
+    android:viewportWidth="505"
+    android:viewportHeight="505">
+
+    <path
+        android:fillColor="#324A5E"
+        android:pathData="M 252.5 0 C 391.951899332 0 505 113.048100668 505 252.5 C 505 391.951899332 391.951899332 505 252.5 505 C 113.048100668 505 0 391.951899332 0 252.5 C 0 113.048100668 113.048100668 0 252.5 0 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 325.6 86.1 L 325.6 139.7 L 379.1 139.7 L 379.1 418.9 L 125.9 418.9 L 125.9 86.1 Z" />
+    <path
+        android:fillColor="#E6E9EE"
+        android:pathData="M 325.6 86.1 L 379.1 139.7 L 325.6 139.7 Z" />
+    <path
+        android:fillColor="#E6E9EE"
+        android:pathData="M 148.8 112.8 H 285.4 V 128.2 H 148.8 V 112.8 Z" />
+    <path
+        android:fillColor="#E6E9EE"
+        android:pathData="M 148.8 146.3 H 228.6 V 161.7 H 148.8 V 146.3 Z" />
+    <path
+        android:fillColor="#E6E9EE"
+        android:pathData="M 249.9 215.5 H 349.9 V 226.5 H 249.9 V 215.5 Z" />
+    <path
+        android:fillColor="#E6E9EE"
+        android:pathData="M 249.9 239.3 H 349.9 V 250.3 H 249.9 V 239.3 Z" />
+    <path
+        android:fillColor="#E6E9EE"
+        android:pathData="M 249.9 263.2 H 312.4 V 274.2 H 249.9 V 263.2 Z" />
+    <path
+        android:fillColor="#E6E9EE"
+        android:pathData="M 249.9 308.6 H 349.9 V 319.6 H 249.9 V 308.6 Z" />
+    <path
+        android:fillColor="#E6E9EE"
+        android:pathData="M 249.9 332.5 H 349.9 V 343.5 H 249.9 V 332.5 Z" />
+    <path
+        android:fillColor="#E6E9EE"
+        android:pathData="M 249.9 356.3 H 312.4 V 367.3 H 249.9 V 356.3 Z" />
+    <path
+        android:fillColor="#4CDBC4"
+        android:pathData="M 155.1 215.5 H 223.6 V 284 H 155.1 V 215.5 Z" />
+    <path
+        android:fillColor="#FFD05B"
+        android:pathData="M 155.1 308.6 H 223.6 V 377.1 H 155.1 V 308.6 Z" />
+</vector>

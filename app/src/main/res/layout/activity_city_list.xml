@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="?attr/colorPrimary"
+    tools:context=".presentation.citylist.CityListActivity"
+    >
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@id/swipe_container_all_pull_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="65dp"
+                android:background="@color/color_window_background"
+                >
+
+                <android.support.v7.widget.RecyclerView
+                    style="@style/Widget.LibertApp.RecyclerView"
+                    android:id="@+id/recycler_view_cities"
+                    android:visibility="visible"
+                    tools:visibility="gone"
+                    tools:listitem="@layout/list_item_city"
+                    />
+
+                <LinearLayout
+                    android:id="@id/linear_layout_all_error_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/keyline_xlarge"
+                    android:visibility="gone"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/city_list_error_loading_cities"
+                        android:gravity="center"
+                        android:layout_marginBottom="@dimen/keyline_medium"
+                        />
+
+                    <Button
+                        android:id="@id/button_all_retry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/all_retry"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@id/linear_layout_all_empty_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    >
+
+                    <ImageView
+                        android:id="@id/image_view_all_empty_state"
+                        android:layout_width="144dp"
+                        android:layout_height="144dp"
+                        android:contentDescription="@string/city_list_no_cities"
+                        android:layout_marginBottom="@dimen/keyline_large"
+                        app:srcCompat="@drawable/city_list_empty_list"
+                        />
+
+                    <TextView
+                        android:id="@id/text_view_all_empty_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="@string/city_list_no_cities"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        />
+                </LinearLayout>
+            </FrameLayout>
+
+            <com.arlib.floatingsearchview.FloatingSearchView
+                android:id="@id/floating_search_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:floatingSearch_searchBarMarginLeft="@dimen/padding_city_list_search_view_inset"
+                app:floatingSearch_searchBarMarginRight="@dimen/padding_city_list_search_view_inset"
+                app:floatingSearch_searchBarMarginTop="@dimen/padding_city_list_search_view_inset"
+                app:floatingSearch_leftActionMode="showHome"
+                app:floatingSearch_dimBackground="false"
+                app:floatingSearch_searchHint="@string/city_list_search_hint"
+                app:floatingSearch_showSearchKey="true"
+                />
+        </FrameLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="toolbar_all_actionbar" type="id" />
+    <item name="frame_layout_all_fragment_container" type="id" />
+    <item name="action_all_done" type="id" />
+    <item name="fab_all_main_action" type="id" />
+    <item name="view_pager_all_container" type="id" />
+    <item name="app_bar_all_actionbar" type="id" />
+    <item name="tab_layout_all_tabs" type="id" />
+    <item name="swipe_container_all_pull_refresh" type="id" />
+    <item name="card_view_all_item_card" type="id" />
+    <item name="action_all_search" type="id" />
+    <item name="action_all_filter" type="id" />
+    <item name="stepper_layout" type="id" />
+    <item name="coordinator_layout_container" type="id" />
+
+    <item name="progress_bar_all_loading" type="id" />
+    <item name="linear_layout_all_error_state" type="id" />
+    <item name="button_all_retry" type="id" />
+    <item name="linear_layout_all_empty_state" type="id" />
+    <item name="image_view_all_empty_state" type="id" />
+    <item name="text_view_all_empty_state" type="id" />
+
+    <item name="floating_search_view" type="id" />
+
+    <item name="view_pager_add_order_fragment_container" type="id" />
+
+    <item name="text_view_product_name" type="id" />
+    <item name="text_view_product_price" type="id" />
+
+    <item name="input_layout_customer_name" type="id" />
+    <item name="edit_text_customer_name" type="id" />
+
+    <item name="recycler_view_customers" type="id" />
+</resources>

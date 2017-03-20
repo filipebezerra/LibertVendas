@@ -1,0 +1,113 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'realm-android'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "br.com.libertsolutions.libertvendas.app"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 25100
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        setProperty("archivesBaseName", "LibertVendas-$versionName")
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+ext {
+    support = '25.2.0'
+    butterknife = '8.5.1'
+    retrofit = '2.2.0'
+    okhttp = '3.6.0'
+}
+
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    // Android Testing
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    // JVM Testing
+    testCompile 'junit:junit:4.12'
+
+    // Support library
+    compile "com.android.support:appcompat-v7:${support}"
+    compile "com.android.support:design:${support}"
+    compile "com.android.support:recyclerview-v7:${support}"
+    compile "com.android.support:cardview-v7:${support}"
+    compile ("com.takisoft.fix:preference-v7:${support}.0", {
+        exclude group: 'android.support.annotation', module: 'support-annotations'
+    })
+
+    // View Injection
+    compile "com.jakewharton:butterknife:${butterknife}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknife}"
+
+    //Reactive Extensions
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.2.6'
+
+    // Http
+    compile ("com.squareup.retrofit2:retrofit:${retrofit}", {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    })
+    compile "com.squareup.retrofit2:adapter-rxjava:${retrofit}"
+    compile "com.squareup.retrofit2:converter-gson:${retrofit}"
+    compile "com.squareup.okhttp3:okhttp:${okhttp}"
+    compile "com.squareup.okhttp3:logging-interceptor:${okhttp}"
+
+    // Progress indicator
+    compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
+
+    //Event Bus
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+    // Logging
+    compile 'com.jakewharton.timber:timber:4.5.1'
+
+    // Material
+    compile 'com.gordonwong:material-sheet-fab:1.2.1'
+    compile('com.mikepenz:materialdrawer:5.8.2@aar') { transitive = true }
+    compile 'com.afollestad.material-dialogs:core:0.9.4.1'
+    compile 'com.github.arimorty:floatingsearchview:2.0.3'
+    compile 'com.stepstone.stepper:material-stepper:3.2.0'
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    compile 'com.code-troopers.betterpickers:library:3.1.0'
+
+    // Chart
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+
+    // Phone number parsing, formatting, and validating
+    compile 'com.googlecode.libphonenumber:libphonenumber:8.3.3'
+}
+
+retrolambda {
+    jdk System.getenv("JAVA_HOME")
+    oldJdk System.getenv("JAVA7_HOME")
+    javaVersion JavaVersion.VERSION_1_7
+}
+
+dexcount {
+    format = "json"
+    includeFieldCount = true
+    includeTotalMethodCount = true
+    orderByMethodCount = true
+}

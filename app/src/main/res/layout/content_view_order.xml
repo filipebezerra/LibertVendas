@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_view_order"
+    tools:context=".presentation.vieworder.ViewOrderActivity"
+    >
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/keyline_xlarge"
+        android:paddingRight="@dimen/keyline_xlarge"
+        android:paddingTop="@dimen/keyline_large"
+        android:paddingBottom="@dimen/keyline_large"
+        android:stretchColumns="1"
+        >
+
+        <TableRow>
+            <ImageView
+                android:layout_width="@dimen/size_all_left_icon_size"
+                android:layout_height="@dimen/size_all_left_icon_size"
+                android:layout_gravity="center_vertical"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/order_form_event_grey_24dp"
+                />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.LibertApp.FormInputLayout"
+                android:id="@+id/input_layout_issue_date"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.LibertApp.NonEditableField"
+                    android:id="@+id/edit_text_issue_date"
+                    android:layout_marginLeft="@dimen/keyline_large"
+                    android:layout_marginStart="@dimen/keyline_large"
+                    android:hint="@string/order_form_issue_date_hint"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </TableRow>
+
+        <TableRow>
+            <ImageView
+                android:layout_width="@dimen/size_all_left_icon_size"
+                android:layout_height="@dimen/size_all_left_icon_size"
+                android:layout_gravity="center_vertical"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/order_form_people_grey_24dp"
+                />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.LibertApp.FormInputLayout"
+                android:id="@id/input_layout_customer_name"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.LibertApp.NonEditableField"
+                    android:id="@+id/edit_text_customer_name"
+                    android:layout_marginLeft="@dimen/keyline_large"
+                    android:layout_marginStart="@dimen/keyline_large"
+                    android:hint="@string/order_form_customer_name_hint"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </TableRow>
+
+        <TableRow>
+            <ImageView
+                android:layout_width="@dimen/size_all_left_icon_size"
+                android:layout_height="@dimen/size_all_left_icon_size"
+                android:layout_gravity="center_vertical"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/order_form_money_grey_24dp"
+                />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.LibertApp.FormInputLayout"
+                android:id="@+id/input_layout_total_items"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.LibertApp.NonEditableField"
+                    android:id="@+id/edit_text_total_items"
+                    android:layout_marginLeft="@dimen/keyline_large"
+                    android:layout_marginStart="@dimen/keyline_large"
+                    android:hint="@string/order_form_total_items_hint"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </TableRow>
+
+        <TableRow>
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.LibertApp.FormInputLayout"
+                android:id="@+id/input_layout_discount"
+                android:layout_marginLeft="@dimen/keyline_large"
+                android:layout_marginStart="@dimen/keyline_large"
+                android:layout_column="1"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.LibertApp.NonEditableField"
+                    android:id="@+id/edit_text_discount"
+                    android:hint="@string/order_form_discount_hint"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </TableRow>
+
+        <TableRow>
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.LibertApp.FormInputLayout"
+                android:id="@+id/input_layout_payment_method"
+                android:layout_marginLeft="@dimen/keyline_large"
+                android:layout_marginStart="@dimen/keyline_large"
+                android:layout_column="1"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.LibertApp.NonEditableField"
+                    android:id="@+id/edit_text_payment_method"
+                    android:hint="@string/order_form_payment_method_label"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </TableRow>
+
+        <TableRow>
+            <ImageView
+                android:layout_width="@dimen/size_all_left_icon_size"
+                android:layout_height="@dimen/size_all_left_icon_size"
+                android:layout_gravity="center_vertical"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/order_form_note_text_24dp"
+                />
+
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.LibertApp.FormInputLayout"
+                android:id="@+id/input_layout_observation"
+                android:layout_marginLeft="@dimen/keyline_large"
+                android:layout_marginStart="@dimen/keyline_large"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.LibertApp.NonEditableField"
+                    android:id="@+id/edit_text_observation"
+                    android:hint="@string/order_form_observation_hint"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </TableRow>
+    </TableLayout>
+
+</android.support.v4.widget.NestedScrollView>

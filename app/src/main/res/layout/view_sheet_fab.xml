@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:showIn="@layout/activity_main"
+    >
+
+    <br.com.libertsolutions.libertvendas.app.presentation.widget.SheetFloatingActionButton
+        style="@style/Widget.LibertApp.FloatingActionButton"
+        android:id="@id/fab_all_main_action"
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@drawable/main_add_24dp"
+        />
+
+    <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <io.codetail.widget.RevealLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|bottom"
+        android:orientation="vertical"
+        >
+
+        <android.support.v7.widget.CardView
+            style="@style/Widget.LibertApp.Sheet"
+            android:id="@+id/fab_sheet"
+            >
+
+            <!-- Sheet items -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    style="@style/TextAppearance.LibertApp.Sheet.Item"
+                    android:id="@+id/main_new_order_sheet"
+                    android:drawableLeft="@drawable/main_vector_create_24dp"
+                    android:drawableStart="@drawable/main_vector_create_24dp"
+                    android:text="@string/main_new_order_sheet_text"
+                    android:background="?attr/colorAccent"
+                    />
+
+                <TextView
+                    style="@style/TextAppearance.LibertApp.Sheet.Item"
+                    android:id="@+id/main_new_customer_sheet"
+                    android:drawableLeft="@drawable/main_vector_account_star_24dp"
+                    android:drawableStart="@drawable/main_vector_account_star_24dp"
+                    android:text="@string/main_new_customer_sheet_text"
+                    />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </io.codetail.widget.RevealLinearLayout>
+</merge>
