@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Setting screen strings -->
-    <string name="default_value_pref_endereco_servidor" translatable="false">
-        http://187.32.187.153:8085
-    </string>
-</resources>
