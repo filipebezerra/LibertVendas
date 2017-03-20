@@ -1,10 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.util;
 
-import java.util.Calendar;
 import org.joda.time.LocalDate;
-
-import static java.util.Calendar.MONTH;
-import static java.util.Calendar.YEAR;
 
 /**
  * @author Filipe Bezerra
@@ -13,25 +9,44 @@ public class DateUtils {
 
     private DateUtils() {}
 
+    /**
+     * Gets the current local date-time in milliseconds.
+     *
+     * @return the milliseconds
+     */
     public static long getCurrentDateInMillis() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        return calendar.getTimeInMillis();
+        return LocalDate.now().toDate().getTime();
     }
 
+    /**
+     * Gets the year from milliseconds.
+     *
+     * @param dateInMillis the milliseconds
+     * @return the year
+     */
     public static int getYear(long dateInMillis) {
-        return calendar(dateInMillis).get(YEAR);
+        return getYear(new LocalDate(dateInMillis));
     }
 
+    /**
+     * Gets the month of the from milliseconds.
+     * Important: Month value is 0-based. e.g., 0 for January
+     *
+     * @param dateInMillis the milliseconds
+     * @return the month of the year
+     */
     public static int getMonth(long dateInMillis) {
-        return calendar(dateInMillis).get(MONTH);
+        return getMonth(new LocalDate(dateInMillis));
     }
 
+    /**
+     * Gets the day of the month from milliseconds.
+     *
+     * @param dateInMillis the milliseconds
+     * @return the day of the month
+     */
     public static int getDay(long dateInMillis) {
-        return calendar(dateInMillis).get(Calendar.DAY_OF_MONTH);
+        return getDay(new LocalDate(dateInMillis));
     }
 
     /**
@@ -87,11 +102,5 @@ public class DateUtils {
      */
     public static LocalDate toLocalDate(final int year, final int month, final int day) {
         return new LocalDate(year, month + 1, day);
-    }
-
-    private static Calendar calendar(final long millis) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(millis);
-        return calendar;
     }
 }
