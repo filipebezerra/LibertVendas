@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app;
 
 import android.app.Application;
+import net.danlew.android.joda.JodaTimeAndroid;
 
 /**
  * @author Filipe Bezerra
@@ -15,6 +16,7 @@ public abstract class BaseApplication extends Application {
         initializeLogging();
         initializePicasso();
         initializeRealm();
+        initializeJodaTime();
     }
 
     public static BaseApplication getInstance() {
@@ -26,4 +28,8 @@ public abstract class BaseApplication extends Application {
     protected abstract void initializePicasso();
 
     protected abstract void initializeRealm();
+
+    private void initializeJodaTime() {
+        JodaTimeAndroid.init(this);
+    }
 }

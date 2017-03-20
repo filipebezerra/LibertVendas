@@ -17,14 +17,17 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderedOrdersBySalesmanAndCompanySpecification;
+import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderChartData;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderform.SavedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
@@ -36,11 +39,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.LocalDate;
 import rx.Subscriber;
 import rx.Subscription;
 import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getYear;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.toLocalDate;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -48,7 +56,7 @@ import static rx.android.schedulers.AndroidSchedulers.mainThread;
  * @author Filipe Bezerra
  */
 public class DashboardFragment extends BaseFragment
-        implements SwipeRefreshLayout.OnRefreshListener {
+        implements SwipeRefreshLayout.OnRefreshListener, DatePickerDialog.OnDateSetListener {
 
     public static final String TAG = DashboardFragment.class.getName();
 
@@ -59,6 +67,10 @@ public class DashboardFragment extends BaseFragment
     private LoggedUser mLoggedUser;
 
     private OnGlobalLayoutListener mPieChartLayoutListener = null;
+
+    private LocalDate mInitialDateFilter = LocalDate.now();
+
+    private LocalDate mFinalDateFilter = LocalDate.now();
 
     @BindView(R.id.swipe_container_all_pull_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.pie_chart_orders_by_customer) PieChart mPieChart;
@@ -98,10 +110,19 @@ public class DashboardFragment extends BaseFragment
 
     @Override public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == R.id.action_all_filter) {
+            showFilterDialog();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override public void onDateSet(final DatePickerDialog view,
+            final int year, final int monthOfYear, final int dayOfMonth,
+            final int yearEnd, final int monthOfYearEnd, final int dayOfMonthEnd) {
+        mInitialDateFilter = toLocalDate(year, monthOfYear, dayOfMonth);
+        mFinalDateFilter = toLocalDate(yearEnd, monthOfYearEnd, dayOfMonthEnd);
+        queryByIssueDate(year, monthOfYear, dayOfMonth, yearEnd, monthOfYearEnd, dayOfMonthEnd);
     }
 
     @Override public void onRefresh() {
@@ -220,7 +241,8 @@ public class DashboardFragment extends BaseFragment
                 showOrderedOrders(orders);
             }
 
-            @Override public void onCompleted() {}
+            @Override public void onCompleted() {
+            }
         };
     }
 
@@ -252,7 +274,7 @@ public class DashboardFragment extends BaseFragment
     private void convertToPieData(List<OrderChartData> data) {
         ArrayList<PieEntry> entries = new ArrayList<>();
 
-        for(OrderChartData item : data) {
+        for (OrderChartData item : data) {
             entries.add(new PieEntry(item.getAmount(), item.getName()));
         }
 
@@ -286,6 +308,34 @@ public class DashboardFragment extends BaseFragment
             mSwipeRefreshLayout.setRefreshing(false);
             mLinearLayoutEmptyState.setVisibility(View.GONE);
         }
+    }
+
+    private void showFilterDialog() {
+        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this,
+                getYear(mInitialDateFilter), getMonth(mInitialDateFilter), getDay(mInitialDateFilter),
+                getYear(mFinalDateFilter), getMonth(mFinalDateFilter), getDay(mFinalDateFilter));
+
+        datePickerDialog.setStartTitle(
+                getString(R.string.dashboard_filter_by_issue_date_start_title));
+        datePickerDialog.setEndTitle(
+                getString(R.string.dashboard_filter_by_issue_date_end_title));
+        datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
+    }
+
+    private void queryByIssueDate(
+            final int year, final int month, final int day,
+            final int yearEnd, final int monthEnd, final int dayEnd) {
+        long initialDate = DateUtils.dateToMillis(year, month, day);
+        long finalDate = DateUtils.dateToMillis(yearEnd, monthEnd, dayEnd);
+
+        mCurrentSubscription = mOrderRepository
+                .query(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
+                        .byIssueDate(initialDate, finalDate)
+                        .orderByCustomerName())
+                .map(this::toChartData)
+                .observeOn(mainThread())
+                .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
+                .subscribe(createOrderChartDataListSubscriber());
     }
 
     @Override public void onDestroyView() {

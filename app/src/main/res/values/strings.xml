@@ -123,6 +123,8 @@
     <string name="dashboard_no_orders">Seus pedidos são representados em gráfico aqui</string>
     <string name="dashboard_chart_label">Todos Pedidos realizados</string>
     <string name="dashboard_chart_center_text">Pedidos\nPor Cliente</string>
+    <string name="dashboard_filter_by_issue_date_start_title">Data inicial</string>
+    <string name="dashboard_filter_by_issue_date_end_title">Data final</string>
 
     <!-- Order List strings -->
     <string name="order_list_example_order_number">Nº 200852</string>

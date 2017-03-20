@@ -91,12 +91,15 @@ dependencies {
     compile 'com.stepstone.stepper:material-stepper:3.2.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.code-troopers.betterpickers:library:3.1.0'
+    compile 'com.borax12.materialdaterangepicker:library:1.9'
 
     // Chart
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
 
     // Phone number parsing, formatting, and validating
     compile 'com.googlecode.libphonenumber:libphonenumber:8.3.3'
+
+    compile 'net.danlew:android.joda:2.9.7'
 }
 
 retrolambda {
