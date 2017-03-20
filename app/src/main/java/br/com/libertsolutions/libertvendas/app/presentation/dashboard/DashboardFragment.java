@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
-import br.com.libertsolutions.libertvendas.app.data.order.OrderedOrdersBySalesmanAndCompanySpecification;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
@@ -176,8 +175,8 @@ public class DashboardFragment extends BaseFragment
     private void loadOrderedOrders() {
         if (getLoggedUser() != null) {
             mCurrentSubscription = mOrderRepository
-                    .query(new OrderedOrdersBySalesmanAndCompanySpecification(
-                            getSalesmanId(), getCompanyId()))
+                    .query(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
+                            .orderByCustomerName())
                     .map(this::toChartData)
                     .observeOn(mainThread())
                     .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
