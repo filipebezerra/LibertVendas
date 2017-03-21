@@ -123,8 +123,6 @@
     <string name="dashboard_no_orders">Seus pedidos são representados em gráfico aqui</string>
     <string name="dashboard_chart_label">Todos Pedidos realizados</string>
     <string name="dashboard_chart_center_text">Pedidos\nPor Cliente</string>
-    <string name="dashboard_filter_by_issue_date_start_title">Data inicial</string>
-    <string name="dashboard_filter_by_issue_date_end_title">Data final</string>
 
     <!-- Order List strings -->
     <string name="order_list_example_order_number">Nº 200852</string>
@@ -286,6 +284,11 @@
 
     <!-- Orders Report screen -->
     <string name="orders_report_text_no_order_number">Sem número</string>
+    <string name="dialog_orders_report_filter_status_title">Status</string>
+    <string name="dialog_orders_report_filter_status_all">Todos</string>
+    <string name="dialog_orders_report_filter_status_pending">Pendentes</string>
+    <string name="dialog_orders_report_filter_status_sent">Enviados</string>
+    <string name="dialog_orders_report_filter_issue_date_title">Emitido entre</string>
 
     <!-- Common strings -->
     <string name="all_done">Pronto</string>
@@ -316,5 +319,10 @@
     <string name="all_unknown_error_saving_form">
         Desculpe, houve um erro desconhecido e o cadastro não foi salvo. Por favor tente novamente!
     </string>
+    <string name="all_apply_filter">Aplicar filtros</string>
+    <string name="all_filters_title">Filtros</string>
+    <string name="all_and"><![CDATA[&]]></string>
+    <string name="all_issue_date_initial">Data inicial</string>
+    <string name="all_issue_date_final">Data final</string>
 
 </resources>

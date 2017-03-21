@@ -314,10 +314,8 @@ public class DashboardFragment extends BaseFragment
                 getYear(mInitialDateFilter), getMonth(mInitialDateFilter), getDay(mInitialDateFilter),
                 getYear(mFinalDateFilter), getMonth(mFinalDateFilter), getDay(mFinalDateFilter));
 
-        datePickerDialog.setStartTitle(
-                getString(R.string.dashboard_filter_by_issue_date_start_title));
-        datePickerDialog.setEndTitle(
-                getString(R.string.dashboard_filter_by_issue_date_end_title));
+        datePickerDialog.setStartTitle(getString(R.string.all_issue_date_initial));
+        datePickerDialog.setEndTitle(getString(R.string.all_issue_date_final));
         datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
     }
 

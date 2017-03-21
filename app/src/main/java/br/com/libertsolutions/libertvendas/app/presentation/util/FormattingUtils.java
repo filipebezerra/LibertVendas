@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import org.joda.time.LocalDate;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.BR_REGION_CODE;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_FORMAT;
@@ -89,5 +90,9 @@ public class FormattingUtils {
 
     public static String formatAsDate(Calendar date) {
         return sDateFormatter.format(date.getTime());
+    }
+
+    public static String formatAsDate(LocalDate localDate) {
+        return sDateFormatter.format(localDate.toDate());
     }
 }

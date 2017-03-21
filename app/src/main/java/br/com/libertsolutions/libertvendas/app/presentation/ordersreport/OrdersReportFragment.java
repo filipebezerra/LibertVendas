@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.presentation.ordersreport;
 
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -13,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
@@ -21,25 +24,44 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderform.SavedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.borax12.materialdaterangepicker.date.DatePickerDialog;
+import com.borax12.materialdaterangepicker.date.DatePickerDialog.OnDateSetListener;
+import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.LocalDate;
 import rx.Subscriber;
 import rx.Subscription;
 import timber.log.Timber;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
+import static android.view.MotionEvent.ACTION_UP;
+import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_issue_date_final;
+import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_issue_date_initial;
+import static br.com.libertsolutions.libertvendas.app.R.id.radio_group_status;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getYear;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.toLocalDate;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
+import static butterknife.ButterKnife.findById;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
  * @author Filipe Bezerra
  */
-public class OrdersReportFragment extends BaseFragment implements OnRefreshListener {
+public class OrdersReportFragment extends BaseFragment
+        implements OnRefreshListener, OnDateSetListener {
 
     public static final String TAG = OrdersReportFragment.class.getName();
 
@@ -52,6 +74,21 @@ public class OrdersReportFragment extends BaseFragment implements OnRefreshListe
     private OnGlobalLayoutListener mRecyclerViewLayoutListener = null;
 
     private LoggedUser mLoggedUser;
+
+    private MaterialDialog mFiltersDialog;
+
+    private LocalDate mInitialDateFilter;
+
+    private LocalDate mFinalDateFilter;
+
+    @OrdersReportFragment.StatusFilter private int mStatusFilter;
+
+    @Retention(SOURCE)
+    @IntDef({STATUS_FILTER_ALL, STATUS_FILTER_PENDING, STATUS_FILTER_SENT})
+    private @interface StatusFilter {}
+    private static final int STATUS_FILTER_ALL = 0;
+    private static final int STATUS_FILTER_PENDING = 1;
+    private static final int STATUS_FILTER_SENT = 2;
 
     @BindView(R.id.swipe_container_all_pull_refresh) protected SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recycler_view_orders_report) protected RecyclerView mRecyclerViewOrders;
@@ -88,7 +125,7 @@ public class OrdersReportFragment extends BaseFragment implements OnRefreshListe
     @Override public void onViewCreated(
             final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadOrders();
+        loadOrdersByDefault();
     }
 
     @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -97,6 +134,7 @@ public class OrdersReportFragment extends BaseFragment implements OnRefreshListe
 
     @Override public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == R.id.action_all_filter) {
+            showFiltersDialog();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -104,18 +142,18 @@ public class OrdersReportFragment extends BaseFragment implements OnRefreshListe
     }
 
     @Override public void onRefresh() {
-        loadOrders();
+        loadOrdersByDefault();
     }
 
     @OnClick(R.id.button_all_retry) void onButtonRetryClicked() {
         mLinearLayoutErrorState.setVisibility(View.GONE);
-        loadOrders();
+        loadOrdersByDefault();
     }
 
     @Subscribe(sticky = true) public void onLoggedInUserEvent(LoggedInUserEvent event) {
         if (mLoggedUser != null && !mLoggedUser.equals(event.getUser())) {
             mLoggedUser = event.getUser();
-            loadOrders();
+            loadOrdersByDefault();
         }
     }
 
@@ -132,10 +170,21 @@ public class OrdersReportFragment extends BaseFragment implements OnRefreshListe
         }
     }
 
-    private void loadOrders() {
+    @Override public void onDateSet(final DatePickerDialog view,
+            final int year, final int monthOfYear, final int dayOfMonth,
+            final int yearEnd, final int monthOfYearEnd, final int dayOfMonthEnd) {
+        setInitialIssueDateFilter(year, monthOfYear, dayOfMonth);
+        setFinalIssueDateFilter(yearEnd, monthOfYearEnd, dayOfMonthEnd);
+    }
+
+    private void loadOrdersByDefault() {
+        loadOrders(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
+                .orderByIssueDate());
+    }
+
+    private void loadOrders(OrdersByUserSpecification specification) {
         mCurrentSubscription = mOrderRepository
-                .query(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
-                        .orderByIssueDate())
+                .query(specification)
                 .observeOn(mainThread())
                 .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
                 .subscribe(createOrderListSubscriber());
@@ -220,6 +269,112 @@ public class OrdersReportFragment extends BaseFragment implements OnRefreshListe
                 eventBus().register(this);
             }
         }
+    }
+
+    private void showFiltersDialog() {
+        resetFilterValues();
+
+        mFiltersDialog = new MaterialDialog.Builder(getContext())
+                .title(R.string.all_filters_title)
+                .customView(R.layout.dialog_orders_report_filter, false)
+                .positiveText(R.string.all_apply_filter)
+                .onPositive((dialog, which) -> applyFilters())
+                .show();
+
+        setUpFiltersTouchListener();
+        setUpFiltersCheckedChangeListener();
+    }
+
+    private void resetFilterValues() {
+        mInitialDateFilter = null;
+        mFinalDateFilter = null;
+        mStatusFilter = STATUS_FILTER_ALL;
+    }
+
+    private void setUpFiltersTouchListener() {
+        findById(mFiltersDialog.getCustomView(), edit_text_issue_date_initial)
+                .setOnTouchListener((v, e) -> {
+                    if (e.getAction() == ACTION_UP) {
+                        showFilterByIssueDateDialog();
+                        return false;
+                    }
+                    return true;
+                });
+
+        findById(mFiltersDialog.getCustomView(), edit_text_issue_date_final)
+                .setOnTouchListener((v, e) -> {
+                    if (e.getAction() == ACTION_UP) {
+                        showFilterByIssueDateDialog();
+                        return false;
+                    }
+                    return true;
+                });
+    }
+
+    private void setUpFiltersCheckedChangeListener() {
+        ButterKnife.<RadioGroup>findById(mFiltersDialog.getCustomView(), radio_group_status)
+                .setOnCheckedChangeListener((group, checkedId) -> {
+                    switch (checkedId) {
+                        case R.id.radio_button_status_all: {
+                            mStatusFilter = STATUS_FILTER_ALL;
+                            break;
+                        }
+                        case R.id.radio_button_status_pending: {
+                            mStatusFilter = STATUS_FILTER_PENDING;
+                            break;
+                        }
+                        case R.id.radio_button_status_sent: {
+                            mStatusFilter = STATUS_FILTER_SENT;
+                            break;
+                        }
+                    }
+                });
+    }
+
+    private void applyFilters() {
+        OrdersByUserSpecification specification = new OrdersByUserSpecification(
+                getSalesmanId(), getCompanyId());
+
+        if (mInitialDateFilter != null && mFinalDateFilter != null) {
+            long initialDate = DateUtils.dateToMillis(mInitialDateFilter);
+            long finalDate = DateUtils.dateToMillis(mFinalDateFilter);
+            specification.byIssueDate(initialDate, finalDate);
+        }
+
+        switch (mStatusFilter) {
+            case STATUS_FILTER_PENDING: {
+                specification.byStatusCreatedOrModified();
+                break;
+            }
+            case STATUS_FILTER_SENT: {
+                specification.byStatusSynced();
+                break;
+            }
+        }
+
+        loadOrders(specification);
+    }
+
+    private void showFilterByIssueDateDialog() {
+        LocalDate localDate = LocalDate.now();
+        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this,
+                getYear(localDate), getMonth(localDate), getDay(localDate));
+
+        datePickerDialog.setStartTitle(getString(R.string.all_issue_date_initial));
+        datePickerDialog.setEndTitle(getString(R.string.all_issue_date_final));
+        datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
+    }
+
+    private void setInitialIssueDateFilter(final int year, final int month, final int day) {
+        mInitialDateFilter = toLocalDate(year, month, day);
+        EditText editText = findById(mFiltersDialog.getCustomView(), edit_text_issue_date_initial);
+        editText.setText(formatAsDate(mInitialDateFilter));
+    }
+
+    private void setFinalIssueDateFilter(final int year, final int month, final int day) {
+        mFinalDateFilter = toLocalDate(year, month, day);
+        EditText editText = findById(mFiltersDialog.getCustomView(), edit_text_issue_date_final);
+        editText.setText(formatAsDate(mFinalDateFilter));
     }
 
     @Override public void onDestroyView() {

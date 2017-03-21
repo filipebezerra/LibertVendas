@@ -14,6 +14,7 @@ import static br.com.libertsolutions.libertvendas.app.domain.entity.OrderEntity.
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_CANCELLED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_CREATED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_MODIFIED;
+import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_SYNCED;
 import static io.realm.Sort.ASCENDING;
 import static io.realm.Sort.DESCENDING;
 
@@ -38,6 +39,8 @@ public class OrdersByUserSpecification implements RealmResultsSpecification<Orde
 
     private boolean mByStatusCreatedOrModified = false;
 
+    private boolean mByStatusSynced = false;
+
     public OrdersByUserSpecification(final int salesmanId, final int companyId) {
         mSalesmanId = salesmanId;
         mCompanyId = companyId;
@@ -60,6 +63,11 @@ public class OrdersByUserSpecification implements RealmResultsSpecification<Orde
         return this;
     }
 
+    public OrdersByUserSpecification byStatusSynced() {
+        mByStatusSynced = true;
+        return this;
+    }
+
     public OrdersByUserSpecification orderByIssueDate() {
         mOrderedByIssueDate = true;
         mOrderedByCustomerName = false;
@@ -78,6 +86,8 @@ public class OrdersByUserSpecification implements RealmResultsSpecification<Orde
         ifByStatusNotCancelled(query);
 
         ifByStatusCreatedOrModified(query);
+
+        ifByStatusSynced(query);
 
         ifByIssueDate(query);
 
@@ -106,6 +116,12 @@ public class OrdersByUserSpecification implements RealmResultsSpecification<Orde
                     .or()
                     .equalTo(STATUS, STATUS_MODIFIED)
                     .endGroup();
+        }
+    }
+
+    private void ifByStatusSynced(RealmQuery<OrderEntity> query) {
+        if (mByStatusSynced) {
+            query.equalTo(STATUS, STATUS_SYNCED);
         }
     }
 

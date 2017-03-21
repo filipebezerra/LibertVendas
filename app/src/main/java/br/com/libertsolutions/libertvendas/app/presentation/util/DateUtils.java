@@ -62,6 +62,16 @@ public class DateUtils {
     }
 
     /**
+     * Gets the milliseconds of the date without time zone {@link LocalDate}.
+     *
+     * @param localDate the date
+     * @return the milliseconds
+     */
+    public static long dateToMillis(final LocalDate localDate) {
+        return localDate.toDate().getTime();
+    }
+
+    /**
      * Gets the year from {@link LocalDate)}.
      *
      * @param localDate Date without time zone
