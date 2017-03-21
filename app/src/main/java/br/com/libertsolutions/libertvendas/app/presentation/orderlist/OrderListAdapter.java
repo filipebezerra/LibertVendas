@@ -27,6 +27,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.order_list_templa
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_order_total;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
 
 /**
  * @author Filipe Bezerra
@@ -69,9 +70,9 @@ class OrderListAdapter extends RecyclerView.Adapter<OrderListViewHolder>
 
         holder.textViewCustomerName.setText(order.getCustomer().getName());
 
+        final double totalItems = order.getTotalItems() - withDefaultValue(order.getDiscount(), 0);
         holder.textViewTotalOrder.setText(context.getString(
-                order_list_template_text_order_total,
-                formatAsCurrency(order.getTotalItems())));
+                order_list_template_text_order_total, formatAsCurrency(totalItems)));
 
         holder.textViewOrderDate.setText(context.getString(
                 order_list_template_text_order_date,
