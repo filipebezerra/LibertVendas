@@ -139,6 +139,7 @@
     <string name="order_list_template_text_order_date">Emissão %1$s</string>
     <string name="order_list_template_text_order_number">Nº %1$d</string>
     <string name="order_list_template_text_order_total">Total %1$s</string>
+    <string name="order_list_template_text_customer_name">Cliente %1$s</string>
     <string name="order_list_duplicate_item">Duplicar pedido</string>
 
     <!-- Customer List strings -->
@@ -282,6 +283,9 @@
 
     <!-- View Order screen -->
     <string name="title_activity_view_order">Visualizando pedido</string>
+
+    <!-- Orders Report screen -->
+    <string name="orders_report_text_no_order_number">Sem número</string>
 
     <!-- Common strings -->
     <string name="all_done">Pronto</string>
