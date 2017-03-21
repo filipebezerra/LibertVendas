@@ -49,9 +49,9 @@ public class OrdersReportFragment extends BaseFragment implements OnRefreshListe
 
     private OrdersReportAdapter mOrdersReportAdapter;
 
-    protected OnGlobalLayoutListener mRecyclerViewLayoutListener = null;
+    private OnGlobalLayoutListener mRecyclerViewLayoutListener = null;
 
-    protected LoggedUser mLoggedUser;
+    private LoggedUser mLoggedUser;
 
     @BindView(R.id.swipe_container_all_pull_refresh) protected SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recycler_view_orders_report) protected RecyclerView mRecyclerViewOrders;

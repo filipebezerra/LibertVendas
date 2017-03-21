@@ -16,6 +16,7 @@ import static br.com.libertsolutions.libertvendas.app.R.color.color_order_is_pen
 import static br.com.libertsolutions.libertvendas.app.R.color.color_order_was_cancelled;
 import static br.com.libertsolutions.libertvendas.app.R.color.color_order_was_synced;
 import static br.com.libertsolutions.libertvendas.app.R.layout.list_item_order_report;
+import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_customer_name;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_order_date;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_order_number;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_order_total;
@@ -56,7 +57,9 @@ class OrdersReportAdapter extends RecyclerView.Adapter<OrdersReportViewHolder> {
                     .setText(context.getString(orders_report_text_no_order_number));
         }
 
-        holder.textViewCustomerName.setText(order.getCustomer().getName());
+        holder.textViewCustomerName
+                .setText(context.getString(order_list_template_text_customer_name,
+                        order.getCustomer().getName()));
 
         final double totalItems = order.getTotalItems() - withDefaultValue(order.getDiscount(), 0);
         holder.textViewTotalOrder
