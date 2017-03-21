@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Customer {
 
+    private Integer id;
+
     @Expose
     @SerializedName("idCliente")
     private Integer customerId;
@@ -85,6 +87,15 @@ public class Customer {
     private String lastChangeTime;
 
     private Integer status;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Customer withId(final Integer id) {
+        this.id = id;
+        return this;
+    }
 
     public Integer getCustomerId() {
         return customerId;
@@ -276,22 +287,17 @@ public class Customer {
 
         Customer customer = (Customer) o;
 
-        if (getCustomerId() != null ? !getCustomerId().equals(customer.getCustomerId())
-                : customer.getCustomerId() != null) {
-            return false;
-        }
         return getCpfOrCnpj().equals(customer.getCpfOrCnpj());
     }
 
     @Override public int hashCode() {
-        int result = getCustomerId() != null ? getCustomerId().hashCode() : 0;
-        result = 31 * result + getCpfOrCnpj().hashCode();
-        return result;
+        return getCpfOrCnpj().hashCode();
     }
 
     @Override public String toString() {
         final StringBuilder sb = new StringBuilder("Customer{");
-        sb.append("customerId=").append(customerId);
+        sb.append("id=").append(id);
+        sb.append(", customerId=").append(customerId);
         sb.append(", code='").append(code).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", fantasyName='").append(fantasyName).append('\'');

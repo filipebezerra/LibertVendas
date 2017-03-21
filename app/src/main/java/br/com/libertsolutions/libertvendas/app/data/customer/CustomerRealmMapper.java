@@ -13,6 +13,7 @@ public class CustomerRealmMapper extends RealmMapper<Customer, CustomerEntity> {
 
     @Override public CustomerEntity toEntity(final Customer object) {
         return new CustomerEntity()
+                .withId(object.getId())
                 .withCustomerId(object.getCustomerId())
                 .withCode(object.getCode())
                 .withName(object.getName())
@@ -37,6 +38,7 @@ public class CustomerRealmMapper extends RealmMapper<Customer, CustomerEntity> {
 
     @Override public Customer toViewObject(final CustomerEntity entity) {
         return new Customer()
+                .withId(entity.getId())
                 .withCustomerId(entity.getCustomerId())
                 .withCode(entity.getCode())
                 .withName(entity.getName())

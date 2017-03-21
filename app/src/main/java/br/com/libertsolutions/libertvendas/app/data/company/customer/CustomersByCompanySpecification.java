@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static br.com.libertsolutions.libertvendas.app.domain.entity.CompanyCustomerEntity.Fields.COMPANY_ID;
-import static br.com.libertsolutions.libertvendas.app.domain.entity.CustomerEntity.Fields.CUSTOMER_ID;
+import static br.com.libertsolutions.libertvendas.app.domain.entity.CustomerEntity.Fields.ID;
 import static br.com.libertsolutions.libertvendas.app.domain.entity.CustomerEntity.Fields.NAME;
 import static io.realm.Sort.ASCENDING;
 
@@ -37,7 +37,7 @@ public class CustomersByCompanySpecification
         }
 
         return realm.where(CustomerEntity.class)
-                .in(CUSTOMER_ID, customerIds.toArray(new Integer [] {customerIds.size()}))
+                .in(ID, customerIds.toArray(new Integer [] {customerIds.size()}))
                 .findAllSorted(NAME, ASCENDING);
     }
 }

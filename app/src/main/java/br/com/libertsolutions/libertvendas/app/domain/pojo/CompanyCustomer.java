@@ -18,7 +18,7 @@ public class CompanyCustomer {
     }
 
     public static CompanyCustomer from(final Company company, final Customer customer) {
-        return new CompanyCustomer(null, company.getCompanyId(), customer.getCustomerId());
+        return new CompanyCustomer(null, company.getCompanyId(), customer.getId());
     }
 
     public static CompanyCustomer of(

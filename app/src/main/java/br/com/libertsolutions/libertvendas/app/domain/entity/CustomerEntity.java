@@ -17,7 +17,7 @@ public class CustomerEntity implements RealmModel {
 
     public static final class Fields {
 
-        public static final String CUSTOMER_ID = "customerId";
+        public static final String ID = "id";
 
         public static final String STATUS = "status";
 
@@ -25,6 +25,8 @@ public class CustomerEntity implements RealmModel {
     }
 
     @PrimaryKey
+    private Integer id;
+
     private Integer customerId;
 
     private String code;
@@ -68,16 +70,25 @@ public class CustomerEntity implements RealmModel {
 
     private Integer status;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public CustomerEntity withId(final Integer id) {
+        if (id == null || id == 0) {
+            this.id = autoIncrementor(getClass(), Fields.ID).getNextIdFromModel();
+        } else {
+            this.id = id;
+        }
+        return this;
+    }
+
     public Integer getCustomerId() {
         return customerId;
     }
 
     public CustomerEntity withCustomerId(final Integer customerId) {
-        if (customerId == null || customerId == 0) {
-            this.customerId = autoIncrementor(getClass(), Fields.CUSTOMER_ID).getNextIdFromModel();
-        } else {
-            this.customerId = customerId;
-        }
+        this.customerId = customerId;
         return this;
     }
 
