@@ -130,13 +130,13 @@
     <string name="order_list_example_order_number">Nº 200852</string>
     <string name="order_list_example_customer_name">Cliente Gustavo Costa Alves</string>
     <string name="order_list_example_total_order">Total R$ 204.89</string>
-    <string name="order_list_example_order_date">Data 14/09/2016</string>
+    <string name="order_list_example_order_date">Emissão 14/09/2016</string>
     <string name="order_list_no_orders">Seus pedidos são listados aqui</string>
     <string name="order_list_all_orders_fragment_title">Todos pedidos</string>
     <string name="order_list_pending_orders_fragment_title">Pedidos não enviados</string>
     <string name="order_list_fragment_title">Seus pedidos</string>
     <string name="order_list_search_hint">Use o nome do cliente</string>
-    <string name="order_list_template_text_order_date">Data %1$s</string>
+    <string name="order_list_template_text_order_date">Emissão %1$s</string>
     <string name="order_list_template_text_order_number">Nº %1$d</string>
     <string name="order_list_template_text_order_total">Total %1$s</string>
     <string name="order_list_duplicate_item">Duplicar pedido</string>
