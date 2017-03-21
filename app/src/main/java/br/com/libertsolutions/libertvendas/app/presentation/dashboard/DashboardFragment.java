@@ -176,6 +176,7 @@ public class DashboardFragment extends BaseFragment
         if (getLoggedUser() != null) {
             mCurrentSubscription = mOrderRepository
                     .query(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
+                            .byStatusNotCancelled()
                             .orderByCustomerName())
                     .map(this::toChartData)
                     .observeOn(mainThread())
@@ -329,6 +330,7 @@ public class DashboardFragment extends BaseFragment
 
         mCurrentSubscription = mOrderRepository
                 .query(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
+                        .byStatusNotCancelled()
                         .byIssueDate(initialDate, finalDate)
                         .orderByCustomerName())
                 .map(this::toChartData)

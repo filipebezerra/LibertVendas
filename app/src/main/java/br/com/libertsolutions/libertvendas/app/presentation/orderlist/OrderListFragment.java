@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
-import br.com.libertsolutions.libertvendas.app.data.order.OrdersBySalesmanAndCompanySpecification;
+import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
@@ -200,9 +200,16 @@ public class OrderListFragment extends BaseFragment
     }
 
     private void loadOrders() {
+        OrdersByUserSpecification specification
+                = new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
+                .orderByIssueDate();
+
+        if (isShowOnlyPendingOrders()) {
+            specification.byStatusCreatedOrModified();
+        }
+
         mCurrentSubscription = mOrderRepository
-                .query(new OrdersBySalesmanAndCompanySpecification(
-                        getSalesmanId(), getCompanyId(), isShowOnlyPendingOrders()))
+                .query(specification)
                 .observeOn(mainThread())
                 .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
                 .subscribe(createOrderListSubscriber());
