@@ -52,7 +52,9 @@ import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtil
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getYear;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.toLocalDate;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
 import static butterknife.ButterKnife.findById;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
@@ -229,6 +231,7 @@ public class OrdersReportFragment extends BaseFragment
         mRecyclerViewOrders.setAdapter(null);
         mRecyclerViewOrders.setVisibility(View.GONE);
         mLinearLayoutEmptyState.setVisibility(View.VISIBLE);
+        setTitle(getString(R.string.main_drawer_item_orders_report));
     }
 
     private void handleLoadOrdersError(Throwable e) {
@@ -240,6 +243,7 @@ public class OrdersReportFragment extends BaseFragment
 
     private void showOrders(List<Order> orders) {
         if (!orders.isEmpty()) {
+            setTitleWithTotalOrders(orders);
             mRecyclerViewOrders.setVisibility(View.VISIBLE);
             mRecyclerViewOrders.setAdapter(
                     mOrdersReportAdapter = new OrdersReportAdapter(orders));
@@ -254,6 +258,14 @@ public class OrdersReportFragment extends BaseFragment
                 eventBus().register(this);
             }
         }
+    }
+
+    private void setTitleWithTotalOrders(List<Order> orders) {
+        double total = 0;
+        for (Order order : orders) {
+            total += order.getTotalItems() - withDefaultValue(order.getDiscount(), 0);
+        }
+        setTitle(getString(R.string.orders_report_total_title, formatAsCurrency(total)));
     }
 
     private void onRecyclerViewFinishLoading() {

@@ -289,6 +289,7 @@
     <string name="dialog_orders_report_filter_status_pending">Pendentes</string>
     <string name="dialog_orders_report_filter_status_sent">Enviados</string>
     <string name="dialog_orders_report_filter_issue_date_title">Emitido entre</string>
+    <string name="orders_report_total_title">Total %1$s</string>
 
     <!-- Common strings -->
     <string name="all_done">Pronto</string>

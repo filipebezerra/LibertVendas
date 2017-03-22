@@ -70,4 +70,8 @@ public abstract class BaseFragment extends Fragment {
     protected ConnectivityHelper connectivity() {
         return mHostActivity.connectivity();
     }
+
+    protected void setTitle(String title) {
+        mHostActivity.setTitle(title);
+    }
 }
