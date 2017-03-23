@@ -24,4 +24,6 @@ public interface SettingsRepository {
     Observable<LoggedUser> getLoggedUser();
 
     Settings getSettings();
+
+    void setAutoSyncOrders(boolean isEnabled);
 }

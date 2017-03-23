@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v4.util.Pair;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
+import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Company;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Salesman;
@@ -105,6 +106,13 @@ public class SettingsRepositoryImpl implements SettingsRepository {
     @Override public Settings getSettings() {
         return Settings.create(getServerAddress(), getAuthKey(), getAutomaticallySyncOrders(),
                 getSyncPeriodicityAsInt());
+    }
+
+    @Override public void setAutoSyncOrders(final boolean isEnabled) {
+        mPreferences.edit()
+                .putBoolean(mContext.getString(
+                        R.string.settings_automatically_sync_orders_preference_key), isEnabled)
+                .apply();
     }
 
     private Observable<String> getStringAsObservable(String value) {

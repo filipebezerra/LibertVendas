@@ -266,10 +266,10 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
                 .withIcon(VectorDrawableCompat
                         .create(getResources(), R.drawable.main_drawer_auto_sync, getTheme()))
                 .withSelectedIconColorRes(R.color.color_primary)
-                .withChecked(true)
+                .withChecked(settings().getSettings().isAutomaticallySyncOrders())
                 .withSelectable(false)
                 .withOnCheckedChangeListener((drawerItem, buttonView, isChecked) -> {
-                    //mPresenter.handleAutoSyncChanged(isChecked))
+                    settings().setAutoSyncOrders(isChecked);
                 })
         ;
 
