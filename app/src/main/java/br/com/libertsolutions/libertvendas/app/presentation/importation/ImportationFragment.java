@@ -15,6 +15,7 @@ import br.com.libertsolutions.libertvendas.app.data.company.pricetable.CompanyPr
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodRepository;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRepository;
+import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.City;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Company;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.CompanyCustomer;
@@ -299,6 +300,7 @@ public class ImportationFragment extends BaseFragment {
     private void incrementAndCheckImportantionCounter() {
         if (mImportationCompletedCounter.incrementAndGet() == mImportationTotalCounter.get()) {
             settings().setInitialFlowDone();
+            SyncTaskService.schedule(getContext());
             new MaterialDialog.Builder(getContext())
                     .title(R.string.importation_completed)
                     .content(R.string.importation_completed_message)
