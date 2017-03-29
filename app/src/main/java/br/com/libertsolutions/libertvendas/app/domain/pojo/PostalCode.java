@@ -17,7 +17,7 @@ public class PostalCode {
     public String cityName;
 
     @Expose
-    @SerializedName("endereco")
+    @SerializedName("logradouro")
     public String address;
 
     @Expose
