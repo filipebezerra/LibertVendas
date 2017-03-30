@@ -8,7 +8,6 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.Preference.OnPreferenceChangeListener;
 import android.support.v7.preference.Preference.OnPreferenceClickListener;
 import android.support.v7.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompatDividers;
 
+import static android.text.TextUtils.isEmpty;
 import static br.com.libertsolutions.libertvendas.app.R.string.settings_auth_key_preference_key;
 import static br.com.libertsolutions.libertvendas.app.R.string.settings_automatically_sync_orders_preference_key;
 import static br.com.libertsolutions.libertvendas.app.R.string.settings_server_address_preference_key;
@@ -30,6 +30,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.settings_sync_per
 import static br.com.libertsolutions.libertvendas.app.R.xml.settings;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
+import static br.com.libertsolutions.libertvendas.app.presentation.settings.CompletedSettingsEvent.newEvent;
 
 /**
  * @author Filipe Bezerra
@@ -39,6 +40,8 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
     public static final String TAG = SettingsFragment.class.getName();
 
     private static final String ARG_IN_INITIAL_FLOW = TAG + "arg.inInitialFlow";
+
+    public static final int RESULT_AUTO_SYNC_ORDERS_CHANGED = 2;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -84,7 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
 
     @Override public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == R.id.action_all_done) {
-            provideEventBus().post(CompletedSettingsEvent.newEvent());
+            provideEventBus().post(newEvent());
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -106,10 +109,10 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
     @Override public void onViewCreated(
             final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        bindSettingValueToSummary(findPreference(mServerAddressPreferenceKey));
-        bindSettingValueToSummary(findPreference(mAuthKeyPreferenceKey));
-        bindSettingValueToSummary(findPreference(mSyncPeriodicityPreferenceKey));
-        bindSettingValueToSummary(findPreference(mSyncOrdersAutomaticallyKey));
+        initializeSettingValueToSummary(findPreference(mServerAddressPreferenceKey));
+        initializeSettingValueToSummary(findPreference(mAuthKeyPreferenceKey));
+        initializeSettingValueToSummary(findPreference(mSyncPeriodicityPreferenceKey));
+        initializeSettingValueToSummary(findPreference(mSyncOrdersAutomaticallyKey));
     }
 
     @Override public void onDestroyView() {
@@ -117,10 +120,13 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
         super.onDestroyView();
     }
 
-    private void bindSettingValueToSummary(Preference preference) {
+    private void initializeSettingValueToSummary(Preference preference) {
         preference.setOnPreferenceChangeListener(mPreferenceChangeListener);
         preference.setOnPreferenceClickListener(mPreferenceClickListener);
+        bindSettingValueToSummary(preference);
+    }
 
+    private void bindSettingValueToSummary(Preference preference) {
         Object value;
         if (preference instanceof SwitchPreference) {
             value = PreferenceManager.getDefaultSharedPreferences(preference.getContext())
@@ -130,29 +136,39 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
                     .getString(preference.getKey(), "");
         }
 
-        mPreferenceChangeListener.onPreferenceChange(preference, value);
+        setPreferenceSummary(preference, value);
     }
 
     private boolean handlePreferenceChanged(Preference preference, Object newValue) {
-        if (preference instanceof EditTextPreference) {
-            final String stringValue = newValue.toString();
-            if (!TextUtils.isEmpty(stringValue)) {
-                if (preference.getKey()
-                        .equals(getString(settings_sync_periodicity_preference_key))) {
-                    preference.setSummary(
-                            getString(settings_sync_periodicity_preference_summary, stringValue));
+        setPreferenceSummary(preference, newValue);
 
-                    SyncTaskService.schedule(getContext(), Integer.valueOf(newValue.toString()));
-                } else {
-                    preference.setSummary(stringValue);
-                }
-            }
+        if (preference.getKey().equals(mSyncPeriodicityPreferenceKey)) {
+            SyncTaskService.schedule(getContext(), Integer.valueOf(newValue.toString()));
+        }
+
+        else if (preference.getKey().equals(mSyncOrdersAutomaticallyKey)) {
+            getActivity().setResult(RESULT_AUTO_SYNC_ORDERS_CHANGED);
         }
 
         if (isOptionsMenuEnabled()) {
             getActivity().supportInvalidateOptionsMenu();
         }
         return true;
+    }
+
+    private void setPreferenceSummary(Preference preference, Object value) {
+        if (preference instanceof EditTextPreference) {
+            final String stringValue = value.toString();
+            if (!isEmpty(stringValue)) {
+                if (preference.getKey()
+                        .equals(getString(settings_sync_periodicity_preference_key))) {
+                    preference.setSummary(
+                            getString(settings_sync_periodicity_preference_summary, stringValue));
+                } else {
+                    preference.setSummary(stringValue);
+                }
+            }
+        }
     }
 
     private boolean handlePreferenceClicked(Preference preference) {

@@ -24,6 +24,8 @@ public class Navigator {
 
     public static final int REQUEST_SELECT_CITY = 0x2;
 
+    public static final int REQUEST_SETTINGS = 0x3;
+
     private final BaseActivity mActivity;
 
     Navigator(final BaseActivity activity) {
@@ -82,7 +84,8 @@ public class Navigator {
 
     public void toSettings() {
         ActivityCompat
-                .startActivity(mActivity, new Intent(mActivity, SettingsActivity.class), null);
+                .startActivityForResult(mActivity,
+                        new Intent(mActivity, SettingsActivity.class), REQUEST_SETTINGS, null);
     }
 
     public void toAddCustomer() {

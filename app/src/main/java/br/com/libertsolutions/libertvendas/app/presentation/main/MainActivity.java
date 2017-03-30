@@ -10,7 +10,6 @@ import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Company;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseActivity;
-import br.com.libertsolutions.libertvendas.app.presentation.base.Navigator;
 import br.com.libertsolutions.libertvendas.app.presentation.customerlist.CustomerListFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.dashboard.DashboardFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.login.CompletedLoginEvent;
@@ -40,7 +39,10 @@ import java.util.List;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+import static br.com.libertsolutions.libertvendas.app.presentation.base.Navigator.REQUEST_INITIAL_FLOW;
+import static br.com.libertsolutions.libertvendas.app.presentation.base.Navigator.REQUEST_SETTINGS;
 import static br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent.logged;
+import static br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsFragment.RESULT_AUTO_SYNC_ORDERS_CHANGED;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils.dpToPx;
 import static com.amulyakhare.textdrawable.util.ColorGenerator.MATERIAL;
 
@@ -180,11 +182,19 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     @Override protected void onActivityResult(
             final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
-            case Navigator.REQUEST_INITIAL_FLOW: {
+            case REQUEST_INITIAL_FLOW: {
                 if (resultCode == RESULT_OK) {
                     loadLoggedUser();
                 } else {
                     finish();
+                }
+                break;
+            }
+            case REQUEST_SETTINGS: {
+                if (resultCode == RESULT_AUTO_SYNC_ORDERS_CHANGED) {
+                    mAutoSyncDrawerItem
+                            .withChecked(settings().getSettings().isAutomaticallySyncOrders());
+                    mDrawer.updateItem(mAutoSyncDrawerItem);
                 }
                 break;
             }
@@ -268,9 +278,8 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
                 .withSelectedIconColorRes(R.color.color_primary)
                 .withChecked(settings().getSettings().isAutomaticallySyncOrders())
                 .withSelectable(false)
-                .withOnCheckedChangeListener((drawerItem, buttonView, isChecked) -> {
-                    settings().setAutoSyncOrders(isChecked);
-                })
+                .withOnCheckedChangeListener((drawerItem, buttonView, isChecked) ->
+                        settings().setAutoSyncOrders(isChecked))
         ;
 
         mSettingsDrawerItem = new SecondaryDrawerItem()
