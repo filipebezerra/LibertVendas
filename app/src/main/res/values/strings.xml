@@ -54,7 +54,7 @@
         Sincronizar pedido automaticamente
     </string>
     <string name="settings_automatically_sync_orders_preference_summary">
-        A sincronizaçao será executada automaticamente após cada pedido salvo
+        Se os pedidos deverão ser sincronizados automaticamente ou manualmente
     </string>
 
     <string name="settings_sync_periodicity_preference_key" translatable="false">

@@ -28,10 +28,9 @@ import static br.com.libertsolutions.libertvendas.app.R.string.settings_sync_per
 public class SettingsRepositoryImpl implements SettingsRepository {
 
     private static final String KEY_INITIAL_FLOW = "pref.initialFlow";
-
     private static final String KEY_LOGGED_USER = "pref.loggedUser";
-
     private static final String KEY_DEFAULT_COMPANY = "pref.defaultCompany";
+    private static final String KEY_RUNNING_SYNC_PERIOD = "pref.runningSyncPeriod";
 
     private final Context mContext;
 
@@ -112,6 +111,16 @@ public class SettingsRepositoryImpl implements SettingsRepository {
         mPreferences.edit()
                 .putBoolean(mContext.getString(
                         R.string.settings_automatically_sync_orders_preference_key), isEnabled)
+                .apply();
+    }
+
+    @Override public boolean isRunningSyncWith(final long period) {
+        return mPreferences.getLong(KEY_RUNNING_SYNC_PERIOD, 0) == period;
+    }
+
+    @Override public void setRunningSyncWith(final long syncPeriod) {
+        mPreferences.edit()
+                .putLong(KEY_RUNNING_SYNC_PERIOD, syncPeriod)
                 .apply();
     }
 

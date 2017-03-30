@@ -300,7 +300,7 @@ public class ImportationFragment extends BaseFragment {
     private void incrementAndCheckImportantionCounter() {
         if (mImportationCompletedCounter.incrementAndGet() == mImportationTotalCounter.get()) {
             settings().setInitialFlowDone();
-            SyncTaskService.schedule(getContext());
+            SyncTaskService.schedule(getContext(), settings().getSettings().getSyncPeriodicity());
             new MaterialDialog.Builder(getContext())
                     .title(R.string.importation_completed)
                     .content(R.string.importation_completed_message)

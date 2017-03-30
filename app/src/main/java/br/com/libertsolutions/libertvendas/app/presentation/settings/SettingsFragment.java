@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.settings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v14.preference.SwitchPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.Preference.OnPreferenceChangeListener;
@@ -15,12 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import br.com.libertsolutions.libertvendas.app.R;
+import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompatDividers;
 
 import static br.com.libertsolutions.libertvendas.app.R.string.settings_auth_key_preference_key;
+import static br.com.libertsolutions.libertvendas.app.R.string.settings_automatically_sync_orders_preference_key;
 import static br.com.libertsolutions.libertvendas.app.R.string.settings_server_address_preference_key;
 import static br.com.libertsolutions.libertvendas.app.R.string.settings_sync_periodicity_preference_key;
 import static br.com.libertsolutions.libertvendas.app.R.string.settings_sync_periodicity_preference_summary;
@@ -56,16 +59,13 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
     private Unbinder mUnbinder;
 
     @BindString(settings_server_address_preference_key) String mServerAddressPreferenceKey;
-
     @BindString(settings_auth_key_preference_key) String mAuthKeyPreferenceKey;
-
     @BindString(settings_sync_periodicity_preference_key) String mSyncPeriodicityPreferenceKey;
+    @BindString(settings_automatically_sync_orders_preference_key) String mSyncOrdersAutomaticallyKey;
 
     @Override public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            setHasOptionsMenu(getArguments().getBoolean(ARG_IN_INITIAL_FLOW, false));
-        }
+        setHasOptionsMenu(isOptionsMenuEnabled());
     }
 
     @Override public void onCreatePreferencesFix(
@@ -109,6 +109,7 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
         bindSettingValueToSummary(findPreference(mServerAddressPreferenceKey));
         bindSettingValueToSummary(findPreference(mAuthKeyPreferenceKey));
         bindSettingValueToSummary(findPreference(mSyncPeriodicityPreferenceKey));
+        bindSettingValueToSummary(findPreference(mSyncOrdersAutomaticallyKey));
     }
 
     @Override public void onDestroyView() {
@@ -120,30 +121,38 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
         preference.setOnPreferenceChangeListener(mPreferenceChangeListener);
         preference.setOnPreferenceClickListener(mPreferenceClickListener);
 
-        mPreferenceChangeListener.onPreferenceChange(preference,
-                PreferenceManager.getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+        Object value;
+        if (preference instanceof SwitchPreference) {
+            value = PreferenceManager.getDefaultSharedPreferences(preference.getContext())
+                    .getBoolean(preference.getKey(), false);
+        } else {
+            value = PreferenceManager.getDefaultSharedPreferences(preference.getContext())
+                    .getString(preference.getKey(), "");
+        }
+
+        mPreferenceChangeListener.onPreferenceChange(preference, value);
     }
 
     private boolean handlePreferenceChanged(Preference preference, Object newValue) {
         if (preference instanceof EditTextPreference) {
             final String stringValue = newValue.toString();
             if (!TextUtils.isEmpty(stringValue)) {
-                ((EditTextPreference) preference).setText(stringValue);
-
                 if (preference.getKey()
                         .equals(getString(settings_sync_periodicity_preference_key))) {
                     preference.setSummary(
                             getString(settings_sync_periodicity_preference_summary, stringValue));
+
+                    SyncTaskService.schedule(getContext(), Integer.valueOf(newValue.toString()));
                 } else {
                     preference.setSummary(stringValue);
                 }
             }
         }
 
-        getActivity().supportInvalidateOptionsMenu();
-
-        return false;
+        if (isOptionsMenuEnabled()) {
+            getActivity().supportInvalidateOptionsMenu();
+        }
+        return true;
     }
 
     private boolean handlePreferenceClicked(Preference preference) {
@@ -151,5 +160,10 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
             preference.setPersistent(true);
         }
         return true;
+    }
+
+    private boolean isOptionsMenuEnabled() {
+        return getArguments() != null &&
+                getArguments().getBoolean(ARG_IN_INITIAL_FLOW, false);
     }
 }

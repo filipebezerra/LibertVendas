@@ -25,5 +25,9 @@ public interface SettingsRepository {
 
     Settings getSettings();
 
-    void setAutoSyncOrders(boolean isEnabled);
+    void setAutoSyncOrders(final boolean isEnabled);
+
+    boolean isRunningSyncWith(final long period);
+
+    void setRunningSyncWith(final long syncPeriod);
 }
