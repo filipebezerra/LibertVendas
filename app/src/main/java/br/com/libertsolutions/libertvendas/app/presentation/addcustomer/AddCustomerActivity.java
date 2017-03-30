@@ -14,6 +14,7 @@ import br.com.libertsolutions.libertvendas.app.data.city.StateRepository;
 import br.com.libertsolutions.libertvendas.app.data.company.customer.CompanyCustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
 import br.com.libertsolutions.libertvendas.app.domain.enumeration.TypeOfPerson;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.City;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Company;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.CompanyCustomer;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Customer;
@@ -453,7 +454,6 @@ public class AddCustomerActivity extends BaseActivity {
     private void showPostalCodeInfo(PostalCode postalCode) {
         hideProgressDialog();
         mInputLayoutDistrict.getEditText().setText(postalCode.district);
-        mInputLayoutCity.getEditText().setText(postalCode.cityName);
         mInputLayoutAddress.getEditText().setText(postalCode.address);
         mInputLayoutPostalCode.getEditText().setText(postalCode.postalCode);
 
@@ -475,7 +475,12 @@ public class AddCustomerActivity extends BaseActivity {
     private void subscribeToLoadCityByName(String name) {
         mCurrentSubscription = mCityRepository.findFirst(new CityByNameSpecification(name))
                 .observeOn(mainThread())
-                .subscribe(mCurrentCustomer::withCity, (e) -> handleLoadCityByNameError(e, name));
+                .subscribe(this::showCity, (e) -> handleLoadCityByNameError(e, name));
+    }
+
+    private void showCity(final City city) {
+        mCurrentCustomer.withCity(city);
+        mInputLayoutCity.getEditText().setText(city.getName());
     }
 
     private void handleLoadCityByNameError(Throwable e, final String name) {
