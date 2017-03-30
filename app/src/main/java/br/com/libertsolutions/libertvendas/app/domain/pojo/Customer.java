@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Customer {
 
+    @Expose
+    @SerializedName("appKey")
     private Integer id;
 
     @Expose

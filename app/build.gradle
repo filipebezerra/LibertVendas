@@ -29,7 +29,7 @@ android {
 }
 
 ext {
-    support = '25.2.0'
+    support = '25.3.0'
     butterknife = '8.5.1'
     retrofit = '2.2.0'
     okhttp = '3.6.0'
@@ -58,7 +58,7 @@ dependencies {
     })
 
     // Play Services
-    compile 'com.google.android.gms:play-services-gcm:10.2.0'
+    compile 'com.google.android.gms:play-services-gcm:10.2.1'
 
     // View Injection
     compile "com.jakewharton:butterknife:${butterknife}"
@@ -89,7 +89,7 @@ dependencies {
     // Material
     compile 'com.gordonwong:material-sheet-fab:1.2.1'
     compile('com.mikepenz:materialdrawer:5.8.2@aar') { transitive = true }
-    compile 'com.afollestad.material-dialogs:core:0.9.4.1'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.2'
     compile 'com.github.arimorty:floatingsearchview:2.0.3'
     compile 'com.stepstone.stepper:material-stepper:3.2.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
