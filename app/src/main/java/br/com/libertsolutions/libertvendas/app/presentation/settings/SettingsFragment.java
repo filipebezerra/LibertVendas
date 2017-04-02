@@ -142,7 +142,8 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
     private boolean handlePreferenceChanged(Preference preference, Object newValue) {
         setPreferenceSummary(preference, newValue);
 
-        if (preference.getKey().equals(mSyncPeriodicityPreferenceKey)) {
+        if (preference.getKey().equals(mSyncPeriodicityPreferenceKey) &&
+                provideSettingsRepository().isInitialFlowDone()) {
             SyncTaskService.schedule(getContext(), Integer.valueOf(newValue.toString()));
         }
 
