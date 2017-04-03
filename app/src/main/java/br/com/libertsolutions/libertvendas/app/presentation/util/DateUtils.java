@@ -16,7 +16,7 @@ public class DateUtils {
      * @return the milliseconds
      */
     public static long getCurrentDateTimeInMillis() {
-        return DateTime.now() .getMillis();
+        return DateTime.now().getMillis();
     }
 
     /**

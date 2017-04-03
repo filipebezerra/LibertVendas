@@ -3,16 +3,17 @@ package br.com.libertsolutions.libertvendas.app.presentation.util;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.BR_REGION_CODE;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_FORMAT;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_TIME_FORMAT;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.PT_BR_DEFAULT_LOCALE;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.dateToMillis;
 import static com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.NATIONAL;
 import static com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance;
 import static java.text.NumberFormat.getCurrencyInstance;
@@ -31,12 +32,13 @@ public class FormattingUtils {
 
     private static final PhoneNumberUtil sPhoneFormatter = getInstance();
 
-    private static final NumberFormat sCurrencyFormatter = getCurrencyInstance(PT_BR_DEFAULT_LOCALE);
+    private static final NumberFormat sCurrencyFormatter
+            = getCurrencyInstance(PT_BR_DEFAULT_LOCALE);
 
     private static final NumberFormat sNumberFormatter = getNumberInstance(PT_BR_DEFAULT_LOCALE);
 
-    private static final DateFormat sDateFormatter
-            = new SimpleDateFormat(DATE_FORMAT, PT_BR_DEFAULT_LOCALE);
+    private static final DateTimeFormatter sDateFormatter
+            = DateTimeFormat.forPattern(DATE_TIME_FORMAT);
 
     static {
         sCurrencyFormatter.setMaximumFractionDigits(2);
@@ -83,16 +85,14 @@ public class FormattingUtils {
     }
 
     public static String formatAsDate(long dateInMillis) {
-        Calendar date = Calendar.getInstance();
-        date.setTimeInMillis(dateInMillis);
-        return formatAsDate(date);
+        return sDateFormatter.print(dateInMillis);
     }
 
     public static String formatAsDate(Calendar date) {
-        return sDateFormatter.format(date.getTime());
+        return formatAsDate(date.getTimeInMillis());
     }
 
     public static String formatAsDate(LocalDate localDate) {
-        return sDateFormatter.format(localDate.toDate());
+        return formatAsDate(dateToMillis(localDate));
     }
 }
