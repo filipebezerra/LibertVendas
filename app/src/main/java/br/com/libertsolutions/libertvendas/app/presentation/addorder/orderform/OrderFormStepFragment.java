@@ -113,7 +113,6 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
         eventBus().register(this);
         loadCurrentOrder();
         loadPaymentMethods();
-        setIssueDate(getCurrentDateTimeInMillis());
     }
 
     @Subscribe(priority = 2) public void onSelectedCustomer(SelectedCustomerEvent event) {
@@ -269,6 +268,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
                     .withSalesmanId(getLoggedUser().getSalesman().getSalesmanId())
                     .withCompanyId(getLoggedUser().getDefaultCompany().getCompanyId())
                     .withStatus(STATUS_CREATED);
+            setIssueDate(getCurrentDateTimeInMillis());
         }
     }
 
