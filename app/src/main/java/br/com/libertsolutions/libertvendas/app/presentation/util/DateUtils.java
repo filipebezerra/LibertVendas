@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 /**
  * @author Filipe Bezerra
@@ -73,6 +74,16 @@ public class DateUtils {
     }
 
     /**
+     * Gets the milliseconds of the date-time {@link DateTime}.
+     *
+     * @param dateTime the date-time
+     * @return the milliseconds
+     */
+    public static long dateTimeToMillis(final DateTime dateTime) {
+        return dateTime.getMillis();
+    }
+
+    /**
      * Gets the year from {@link LocalDate)}.
      *
      * @param localDate Date without time zone
@@ -113,5 +124,19 @@ public class DateUtils {
      */
     public static LocalDate toLocalDate(final int year, final int month, final int day) {
         return new LocalDate(year, month + 1, day);
+    }
+
+    /**
+     * Creates a new {@link DateTime} from year, month, day and the time {@link LocalTime}.
+     *
+     * @param year the year
+     * @param month the month of the year
+     * @param day the day of the month
+     * @param localTime the time
+     * @return the new date-time with time zone
+     */
+    public static DateTime toDateTime(
+            final int year, final int month, final int day, final LocalTime localTime) {
+        return toLocalDate(year, month, day).toDateTime(localTime);
     }
 }

@@ -24,7 +24,6 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderform.SavedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -36,7 +35,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import rx.Subscriber;
 import rx.Subscription;
 import timber.log.Timber;
@@ -48,10 +49,11 @@ import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_issue_date_
 import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_issue_date_initial;
 import static br.com.libertsolutions.libertvendas.app.R.id.radio_group_status;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.dateTimeToMillis;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getYear;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.toLocalDate;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.toDateTime;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
@@ -79,9 +81,9 @@ public class OrdersReportFragment extends BaseFragment
 
     private MaterialDialog mFiltersDialog;
 
-    private LocalDate mInitialDateFilter;
+    private DateTime mInitialDateFilter;
 
-    private LocalDate mFinalDateFilter;
+    private DateTime mFinalDateFilter;
 
     @OrdersReportFragment.StatusFilter private int mStatusFilter;
 
@@ -348,8 +350,8 @@ public class OrdersReportFragment extends BaseFragment
                 getSalesmanId(), getCompanyId());
 
         if (mInitialDateFilter != null && mFinalDateFilter != null) {
-            long initialDate = DateUtils.dateToMillis(mInitialDateFilter);
-            long finalDate = DateUtils.dateToMillis(mFinalDateFilter);
+            long initialDate = dateTimeToMillis(mInitialDateFilter);
+            long finalDate = dateTimeToMillis(mFinalDateFilter);
             specification.byIssueDate(initialDate, finalDate);
         }
 
@@ -378,13 +380,13 @@ public class OrdersReportFragment extends BaseFragment
     }
 
     private void setInitialIssueDateFilter(final int year, final int month, final int day) {
-        mInitialDateFilter = toLocalDate(year, month, day);
+        mInitialDateFilter = toDateTime(year, month, day, LocalTime.MIDNIGHT);
         EditText editText = findById(mFiltersDialog.getCustomView(), edit_text_issue_date_initial);
         editText.setText(formatAsDate(mInitialDateFilter));
     }
 
     private void setFinalIssueDateFilter(final int year, final int month, final int day) {
-        mFinalDateFilter = toLocalDate(year, month, day);
+        mFinalDateFilter = toDateTime(year, month, day, new LocalTime(23, 59, 59));
         EditText editText = findById(mFiltersDialog.getCustomView(), edit_text_issue_date_final);
         editText.setText(formatAsDate(mFinalDateFilter));
     }

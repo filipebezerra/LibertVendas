@@ -6,6 +6,7 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -103,5 +104,9 @@ public class FormattingUtils {
 
     public static String formatAsDate(LocalDate localDate) {
         return sDateFormatter.print(dateToMillis(localDate));
+    }
+
+    public static String formatAsDate(DateTime dateTime) {
+        return sDateFormatter.print(dateTime.getMillis());
     }
 }
