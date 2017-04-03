@@ -22,7 +22,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.order_list_templa
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_order_total;
 import static br.com.libertsolutions.libertvendas.app.R.string.orders_report_text_no_order_number;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDateTime;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
 
 /**
@@ -68,7 +68,7 @@ class OrdersReportAdapter extends RecyclerView.Adapter<OrdersReportViewHolder> {
 
         holder.textViewOrderDate
                 .setText(context.getString(order_list_template_text_order_date,
-                        formatAsDate(order.getIssueDate())));
+                        formatAsDateTime(order.getIssueDate())));
 
         int colorResource;
         switch (order.getStatus()) {

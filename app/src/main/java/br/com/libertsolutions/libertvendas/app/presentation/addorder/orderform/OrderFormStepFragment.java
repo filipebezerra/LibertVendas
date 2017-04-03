@@ -69,7 +69,7 @@ import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.ST
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderType.ORDER_TYPE_NORMAL;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getCurrentDateTimeInMillis;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDateTime;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.toDouble;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -247,7 +247,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
             }
 
             mInputLayoutIssueDate.getEditText()
-                    .setText(formatAsDate(mCurrentOrder.getIssueDate()));
+                    .setText(formatAsDateTime(mCurrentOrder.getIssueDate()));
             mInputLayoutCustomerName.getEditText()
                     .setText(mCurrentOrder.getCustomer().getName());
             mInputLayoutTotalItems.getEditText()
@@ -318,7 +318,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
 
     private void setIssueDate(final long issueDate) {
         mCurrentOrder.withIssueDate(issueDate);
-        mInputLayoutIssueDate.getEditText().setText(formatAsDate(issueDate));
+        mInputLayoutIssueDate.getEditText().setText(formatAsDateTime(issueDate));
     }
 
     private void setCustomer(final Customer customer) {

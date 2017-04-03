@@ -11,5 +11,7 @@ public class Constants {
 
     public static final Locale PT_BR_DEFAULT_LOCALE = new Locale("pt", "BR");
 
-    public static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm:ss";
+    public static final String DATE_FORMAT = "dd/MM/yyyy";
+
+    public static final String DATE_TIME_FORMAT = DATE_FORMAT + " HH:mm:ss";
 }

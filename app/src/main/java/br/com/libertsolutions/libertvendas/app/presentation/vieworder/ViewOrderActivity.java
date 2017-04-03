@@ -11,7 +11,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOr
 import butterknife.BindView;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDateTime;
 
 /**
  * @author Filipe Bezerra
@@ -39,7 +39,7 @@ public class ViewOrderActivity extends BaseActivity {
         SelectedOrderEvent event = eventBus().getStickyEvent(SelectedOrderEvent.class);
         if (event != null) {
             Order order = event.getOrder();
-            mEditTextIssueDate.setText(formatAsDate(order.getIssueDate()));
+            mEditTextIssueDate.setText(formatAsDateTime(order.getIssueDate()));
             mEditTextCustomerName.setText(order.getCustomer().getName());
             mEditTextTotalItems.setText(formatAsCurrency(order.getTotalItems()));
             mEditTextPaymentMethod.setText(order.getPaymentMethod().getDescription());

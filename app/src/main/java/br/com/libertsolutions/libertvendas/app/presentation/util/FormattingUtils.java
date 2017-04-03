@@ -11,6 +11,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.BR_REGION_CODE;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_FORMAT;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_TIME_FORMAT;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.PT_BR_DEFAULT_LOCALE;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.dateToMillis;
@@ -35,10 +36,14 @@ public class FormattingUtils {
     private static final NumberFormat sCurrencyFormatter
             = getCurrencyInstance(PT_BR_DEFAULT_LOCALE);
 
-    private static final NumberFormat sNumberFormatter = getNumberInstance(PT_BR_DEFAULT_LOCALE);
+    private static final NumberFormat sNumberFormatter
+            = getNumberInstance(PT_BR_DEFAULT_LOCALE);
+
+    private static final DateTimeFormatter sDateTimeFormatter
+            = DateTimeFormat.forPattern(DATE_TIME_FORMAT);
 
     private static final DateTimeFormatter sDateFormatter
-            = DateTimeFormat.forPattern(DATE_TIME_FORMAT);
+            = DateTimeFormat.forPattern(DATE_FORMAT);
 
     static {
         sCurrencyFormatter.setMaximumFractionDigits(2);
@@ -84,15 +89,19 @@ public class FormattingUtils {
         return sNumberFormatter.format(value);
     }
 
-    public static String formatAsDate(long dateInMillis) {
-        return sDateFormatter.print(dateInMillis);
+    public static String formatAsDateTime(long dateInMillis) {
+        return sDateTimeFormatter.print(dateInMillis);
     }
 
-    public static String formatAsDate(Calendar date) {
-        return formatAsDate(date.getTimeInMillis());
+    public static String formatAsDateTime(Calendar date) {
+        return formatAsDateTime(date.getTimeInMillis());
+    }
+
+    public static String formatAsDateTime(LocalDate localDate) {
+        return formatAsDateTime(dateToMillis(localDate));
     }
 
     public static String formatAsDate(LocalDate localDate) {
-        return formatAsDate(dateToMillis(localDate));
+        return sDateFormatter.print(dateToMillis(localDate));
     }
 }
