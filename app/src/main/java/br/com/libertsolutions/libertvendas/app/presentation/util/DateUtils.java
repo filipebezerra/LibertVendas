@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.util;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 /**
@@ -14,8 +15,8 @@ public class DateUtils {
      *
      * @return the milliseconds
      */
-    public static long getCurrentDateInMillis() {
-        return LocalDate.now().toDate().getTime();
+    public static long getCurrentDateTimeInMillis() {
+        return DateTime.now() .getMillis();
     }
 
     /**

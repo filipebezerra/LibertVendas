@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.Snackbar.Callback;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import br.com.libertsolutions.libertvendas.app.data.company.paymentmethod.PaymentMethodsByCompanySpecification;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
@@ -19,19 +18,17 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderItem;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PaymentMethod;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PriceTable;
-import br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderitems.AddedOrderItemsEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderitems.SelectedPriceTableEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.customerlist.SelectedCustomerEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.widget.MaterialSpinner;
 import butterknife.BindView;
 import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
-import butterknife.OnTouch;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
@@ -44,10 +41,8 @@ import timber.log.Timber;
 
 import static android.support.design.widget.Snackbar.LENGTH_LONG;
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
-import static android.view.MotionEvent.ACTION_UP;
 import static android.widget.AdapterView.INVALID_POSITION;
 import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_discount;
-import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_issue_date;
 import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_observation;
 import static br.com.libertsolutions.libertvendas.app.R.id.input_layout_customer_name;
 import static br.com.libertsolutions.libertvendas.app.R.id.input_layout_discount;
@@ -67,16 +62,12 @@ import static br.com.libertsolutions.libertvendas.app.R.string.order_form_discou
 import static br.com.libertsolutions.libertvendas.app.R.string.order_form_salesman_cant_apply_discount;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_form_saved_successfully;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_form_unknown_error_loading_payment_methods;
-import static br.com.libertsolutions.libertvendas.app.R.style.Widget_LibertApp_RadialTimePickerDialog;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providePaymentMethodRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_CREATED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_MODIFIED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderType.ORDER_TYPE_NORMAL;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getCurrentDateInMillis;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getYear;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getCurrentDateTimeInMillis;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.toDouble;
@@ -122,21 +113,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
         eventBus().register(this);
         loadCurrentOrder();
         loadPaymentMethods();
-        setIssueDate(getCurrentDateInMillis());
-    }
-
-    @OnTouch(edit_text_issue_date) boolean onEditTextIssueDateTouched(MotionEvent e) {
-        if (e.getAction() == ACTION_UP) {
-            new CalendarDatePickerDialogFragment()
-                    .setOnDateSetListener((dialog, year, month, day) ->
-                            setIssueDate(dialog.getSelectedDay().getDateInMillis()))
-                    .setPreselectedDate(
-                            getIssueYear(), getIssueMonth(), getIssueDay())
-                    .setThemeCustom(Widget_LibertApp_RadialTimePickerDialog)
-                    .show(getChildFragmentManager(), "DatePickerDialog");
-            return false;
-        }
-        return true;
+        setIssueDate(getCurrentDateTimeInMillis());
     }
 
     @Subscribe(priority = 2) public void onSelectedCustomer(SelectedCustomerEvent event) {
@@ -337,18 +314,6 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
                 .positiveText(all_retry)
                 .onPositive((dialog, which) -> loadPaymentMethods())
                 .show();
-    }
-
-    private int getIssueYear() {
-        return getYear(mCurrentOrder.getIssueDate());
-    }
-
-    private int getIssueMonth() {
-        return getMonth(mCurrentOrder.getIssueDate());
-    }
-
-    private int getIssueDay() {
-        return getDay(mCurrentOrder.getIssueDate());
     }
 
     private void setIssueDate(final long issueDate) {
