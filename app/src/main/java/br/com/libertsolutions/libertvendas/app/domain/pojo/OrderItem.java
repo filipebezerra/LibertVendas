@@ -1,5 +1,7 @@
 package br.com.libertsolutions.libertvendas.app.domain.pojo;
 
+import br.com.libertsolutions.libertvendas.app.domain.dto.OrderItemDto;
+
 /**
  * @author Filipe Bezerra
  */
@@ -121,5 +123,15 @@ public class OrderItem {
         sb.append(", lastChangeTime='").append(lastChangeTime).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public OrderItemDto createPostOrderItem() {
+        return new OrderItemDto(
+                getId(),
+                getItem().getProduct().getProductId(),
+                getQuantity(),
+                getSubTotal(),
+                getItem().getSalesPrice()
+        );
     }
 }

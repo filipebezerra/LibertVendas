@@ -1,5 +1,9 @@
 package br.com.libertsolutions.libertvendas.app.domain.pojo;
 
+import br.com.libertsolutions.libertvendas.app.domain.dto.OrderDto;
+import br.com.libertsolutions.libertvendas.app.domain.dto.OrderItemDto;
+import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -227,5 +231,24 @@ public class Order {
                 .withSalesmanId(getSalesmanId())
                 .withCompanyId(getCompanyId())
                 .withStatus(OrderStatus.STATUS_CREATED);
+    }
+
+    public OrderDto createPostOrder() {
+        List<OrderItemDto> items = new ArrayList<>();
+        for (OrderItem item : getItems()) {
+            items.add(item.createPostOrderItem());
+        }
+
+        return new OrderDto(
+                getId(),
+                getType(),
+                FormattingUtils.formatAsISODateTime(getIssueDate()),
+                getDiscount() != null ? getDiscount() : 0,
+                getObservation(),
+                getCustomer().getCustomerId(),
+                getPaymentMethod().getPaymentMethodId(),
+                getPriceTable().getPriceTableId(),
+                items
+        );
     }
 }

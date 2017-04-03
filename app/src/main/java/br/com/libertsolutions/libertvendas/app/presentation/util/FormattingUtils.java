@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.BR_REGION_CODE;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_FORMAT;
@@ -90,8 +91,8 @@ public class FormattingUtils {
         return sNumberFormatter.format(value);
     }
 
-    public static String formatAsDateTime(long dateInMillis) {
-        return sDateTimeFormatter.print(dateInMillis);
+    public static String formatAsDateTime(long dateTimeInMillis) {
+        return sDateTimeFormatter.print(dateTimeInMillis);
     }
 
     public static String formatAsDateTime(Calendar date) {
@@ -108,5 +109,9 @@ public class FormattingUtils {
 
     public static String formatAsDate(DateTime dateTime) {
         return sDateFormatter.print(dateTime.getMillis());
+    }
+
+    public static String formatAsISODateTime(long dateTimeInMillis) {
+        return ISODateTimeFormat.dateTime().print(dateTimeInMillis);
     }
 }

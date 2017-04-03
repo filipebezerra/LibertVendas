@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.data;
 
 import br.com.libertsolutions.libertvendas.app.data.city.CityApi;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerApi;
+import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodApi;
 import br.com.libertsolutions.libertvendas.app.data.postalcode.PostalCodeApi;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableApi;
@@ -38,5 +39,9 @@ public class RemoteDataInjector {
 
     public static PostalCodeApi providePostalCodeApi() {
         return provideRetrofit().create(PostalCodeApi.class);
+    }
+
+    public static OrderApi provideOrderApi() {
+        return provideRetrofit().create(OrderApi.class);
     }
 }

@@ -6,22 +6,33 @@ import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomersByCompanySpecification;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerApi;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
+import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
+import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
+import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
+import br.com.libertsolutions.libertvendas.app.domain.dto.OrderDto;
+import br.com.libertsolutions.libertvendas.app.domain.dto.OrderItemDto;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Customer;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.CustomerStatus;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderItem;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import retrofit2.Response;
 import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCustomerRepository;
+import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideCustomerApi;
+import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideOrderApi;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
 import static java.util.Collections.emptyList;
 
@@ -132,6 +143,7 @@ public class SyncTaskService extends GcmTaskService {
                     return GcmNetworkManager.RESULT_RESCHEDULE;
                 } catch (RuntimeException e) {
                     Timber.e(e, "Unknown error while syncing new customers");
+                    return GcmNetworkManager.RESULT_RESCHEDULE;
                 }
             }
         }
@@ -159,43 +171,64 @@ public class SyncTaskService extends GcmTaskService {
                 return GcmNetworkManager.RESULT_RESCHEDULE;
             } catch (RuntimeException e) {
                 Timber.e(e, "Unknown error while syncing modified customers");
+                return GcmNetworkManager.RESULT_RESCHEDULE;
             }
         }
 
-        /*
-        Integer salesmanId = loggedUser.getSalesman().getSalesmanId();
-        String salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
+        final int salesmanId = loggedUser.getSalesman().getSalesmanId();
+        final String salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
 
-        OrderRepository orderRepository = providerOrderRepository();
-        OrderApi orderApi = provideOrderApi();
+        final OrderRepository orderRepository = providerOrderRepository();
+        final OrderApi orderApi = provideOrderApi();
 
-        List<Order> ordersWithStatusCreatedOrModified = orderRepository
+        List<Order> createdOrModifiedOrders = orderRepository
                 .query(new OrdersByUserSpecification(salesmanId, companyId)
                         .byStatusCreatedOrModified())
                 .toBlocking()
                 .firstOrDefault(Collections.emptyList());
 
-        if (!ordersWithStatusCreatedOrModified.isEmpty()) {
-            for (Order newOrder : ordersWithStatusCreatedOrModified) {
+        if (!createdOrModifiedOrders.isEmpty()) {
+            for (Order order : createdOrModifiedOrders) {
                 try {
+                    OrderDto postOrder = order.createPostOrder();
+
                     Response<OrderDto> response = orderApi
-                            .post(companyCnpj, salesmanCpfOrCnpj, null)
+                            .createOrder(companyCnpj, salesmanCpfOrCnpj, postOrder)
                             .execute();
 
                     if (response.isSuccessful()) {
-                        OrderDto orderFromServer = response.body();
+                        OrderDto syncedOrder = response.body();
+
+                        for (OrderItemDto syncedOrderItem : syncedOrder.items) {
+                            for (OrderItem item : order.getItems()) {
+                                if (item.getId().compareTo(syncedOrderItem.id) == 0) {
+                                    item
+                                            .withOrderItemId(syncedOrderItem.orderItemId)
+                                            .withLastChangeTime(syncedOrderItem.lastChangeTime);
+                                    break;
+                                }
+                            }
+                        }
+
+                        order
+                                .withOrderId(syncedOrder.orderId)
+                                .withLastChangeTime(syncedOrder.lastChangeTime)
+                                .withStatus(OrderStatus.STATUS_SYNCED);
 
                         orderRepository
-                                .save(newOrder)
+                                .save(order)
                                 .toBlocking()
                                 .first();
                     }
                 } catch (IOException e) {
-
+                    Timber.e(e, "Server failure while syncing orders");
+                    return GcmNetworkManager.RESULT_RESCHEDULE;
+                } catch (RuntimeException e) {
+                    Timber.e(e, "Unknown error while syncing orders");
+                    return GcmNetworkManager.RESULT_RESCHEDULE;
                 }
             }
         }
-        */
 
         return GcmNetworkManager.RESULT_SUCCESS;
     }
