@@ -175,6 +175,11 @@ public class SyncTaskService extends GcmTaskService {
             }
         }
 
+        if (!provideSettingsRepository().getSettings().isAutomaticallySyncOrders()) {
+            Timber.i("Orders are not enabled to sync automatically");
+            return GcmNetworkManager.RESULT_SUCCESS;
+        }
+
         final int salesmanId = loggedUser.getSalesman().getSalesmanId();
         final String salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
 
