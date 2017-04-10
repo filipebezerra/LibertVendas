@@ -6,22 +6,27 @@ import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.company.customer.CompanyCustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomerByCompanySpecification;
 import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomersByCompanySpecification;
+import br.com.libertsolutions.libertvendas.app.data.company.paymentmethod.CompanyPaymentMethodRepository;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerApi;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
+import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodByIdSpecification;
+import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodRepository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.domain.dto.OrderDto;
 import br.com.libertsolutions.libertvendas.app.domain.dto.OrderItemDto;
 import br.com.libertsolutions.libertvendas.app.domain.dto.ServerStatus;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.CompanyCustomer;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.CompanyPaymentMethod;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Customer;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.CustomerStatus;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderItem;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.PaymentMethod;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.PeriodicTask;
@@ -35,10 +40,13 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCompanyCustomerRepository;
+import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCompanyPaymentMethodRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCustomerRepository;
+import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providePaymentMethodRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideCustomerApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideOrderApi;
+import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePaymentMethodApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSyncApi;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
 import static java.util.Collections.emptyList;
@@ -133,6 +141,7 @@ public class SyncTaskService extends GcmTaskService {
 
         final String lastSyncTime = settingsRepository.getLastSyncTime();
 
+        //region sending created customers
         final List<Customer> createdCustomers = customerRepository
                 .query(new CustomersByCompanySpecification(companyId)
                         .byStatus(CustomerStatus.STATUS_CREATED))
@@ -165,7 +174,9 @@ public class SyncTaskService extends GcmTaskService {
                 }
             }
         }
+        //endregion
 
+        //region sending modified customers
         final List<Customer> modifiedCustomers = customerRepository
                 .query(new CustomersByCompanySpecification(companyId)
                         .byStatus(CustomerStatus.STATUS_MODIFIED))
@@ -196,7 +207,9 @@ public class SyncTaskService extends GcmTaskService {
                 return GcmNetworkManager.RESULT_RESCHEDULE;
             }
         }
+        //endregion
 
+        //region sending orders
         if (settingsRepository.getSettings().isAutomaticallySyncOrders()) {
             final int salesmanId = loggedUser.getSalesman().getSalesmanId();
             final String salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
@@ -257,7 +270,9 @@ public class SyncTaskService extends GcmTaskService {
         } else {
             Timber.i("Orders are not enabled to sync automatically");
         }
+        //endregion
 
+        //region getting customer updates
         try {
             Response<List<Customer>> response = customerApi
                     .getUpdates(companyCnpj, lastSyncTime)
@@ -293,7 +308,7 @@ public class SyncTaskService extends GcmTaskService {
 
                         CompanyCustomer companyCustomer = CompanyCustomer
                                 .from(loggedUser.getDefaultCompany(), newCustomer);
-                        
+
                         companyCustomerRepository
                                 .save(companyCustomer)
                                 .toBlocking()
@@ -306,7 +321,54 @@ public class SyncTaskService extends GcmTaskService {
         } catch (IOException e) {
             Timber.e(e, "Server failure while getting customer updates");
         }
+        //endregion
 
+        //region getting payment method updates
+        try {
+            Response<List<PaymentMethod>> response = providePaymentMethodApi()
+                    .getUpdates(companyCnpj, lastSyncTime)
+                    .execute();
+
+            if (response.isSuccessful()) {
+                final List<PaymentMethod> updatedPaymentMethods = response.body();
+
+                PaymentMethodRepository paymentMethodRepository
+                        = providePaymentMethodRepository();
+
+                CompanyPaymentMethodRepository companyPaymentMethodRepository
+                        = provideCompanyPaymentMethodRepository();
+
+                for (PaymentMethod paymentMethod : updatedPaymentMethods) {
+                    Integer paymentMethodId = paymentMethod.getPaymentMethodId();
+                    PaymentMethod result = paymentMethodRepository
+                            .findFirst(new PaymentMethodByIdSpecification(paymentMethodId))
+                            .toBlocking()
+                            .single();
+
+                    PaymentMethod newPaymentMethod = paymentMethodRepository
+                            .save(paymentMethod)
+                            .toBlocking()
+                            .single();
+
+                    if (result == null) {
+                        CompanyPaymentMethod companyPaymentMethod = CompanyPaymentMethod
+                                .from(loggedUser.getDefaultCompany(), newPaymentMethod);
+
+                        companyPaymentMethodRepository
+                                .save(companyPaymentMethod)
+                                .toBlocking()
+                                .single();
+                    }
+                }
+            } else {
+                Timber.i("Unsuccessful getting payment method updates. %s", response.message());
+            }
+        } catch (IOException e) {
+            Timber.e(e, "Server failure while getting payment method updates");
+        }
+        //endregion
+
+        //region updating last sync time
         try {
             final Response<ServerStatus> response = provideSyncApi()
                     .getServerStatus()
@@ -318,6 +380,7 @@ public class SyncTaskService extends GcmTaskService {
         } catch (IOException e) {
             Timber.e(e, "Server failure while getting server status");
         }
+        //endregion
 
         return GcmNetworkManager.RESULT_SUCCESS;
     }
