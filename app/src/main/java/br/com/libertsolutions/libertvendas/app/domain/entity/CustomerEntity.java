@@ -19,6 +19,8 @@ public class CustomerEntity implements RealmModel {
 
         public static final String ID = "id";
 
+        public static final String ID_CUSTOMER = "customerId";
+
         public static final String STATUS = "status";
 
         public static final String NAME = "name";

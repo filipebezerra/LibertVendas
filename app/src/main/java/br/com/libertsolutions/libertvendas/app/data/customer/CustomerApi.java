@@ -23,4 +23,7 @@ public interface CustomerApi {
     @PATCH("api/cliente/patch")
     Call<List<Customer>> updateCustomers(
             @Query("cnpj") String companyCnpj, @Body List<Customer> customers);
+
+    @GET("api/cliente/get") Call<List<Customer>> getUpdates(
+            @Query("cnpj") String cnpj, @Query("ultimaAtualizacao") String lastUpdateTime);
 }
