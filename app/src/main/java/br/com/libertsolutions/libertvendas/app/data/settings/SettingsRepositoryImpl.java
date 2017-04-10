@@ -31,6 +31,7 @@ public class SettingsRepositoryImpl implements SettingsRepository {
     private static final String KEY_LOGGED_USER = "pref.loggedUser";
     private static final String KEY_DEFAULT_COMPANY = "pref.defaultCompany";
     private static final String KEY_RUNNING_SYNC_PERIOD = "pref.runningSyncPeriod";
+    private static final String KEY_LAST_SYNC_TIME = "pref.lastSyncTime";
 
     private final Context mContext;
 
@@ -122,6 +123,16 @@ public class SettingsRepositoryImpl implements SettingsRepository {
         mPreferences.edit()
                 .putLong(KEY_RUNNING_SYNC_PERIOD, syncPeriod)
                 .apply();
+    }
+
+    @Override public void setLastSyncTime(final String lastSyncTime) {
+        mPreferences.edit()
+                .putString(KEY_LAST_SYNC_TIME, lastSyncTime)
+                .apply();
+    }
+
+    @Override public String getLastSyncTime() {
+        return mPreferences.getString(KEY_LAST_SYNC_TIME, null);
     }
 
     private Observable<String> getStringAsObservable(String value) {

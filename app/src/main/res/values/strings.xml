@@ -113,6 +113,7 @@
     <string name="importation_completed_message">
         Seus cadastros foram importados com sucesso. Vamos prosseguir!
     </string>
+    <string name="importation_getting_server_status">Estamos concluindo a importação…</string>
 
     <!-- Dashboard strings -->
     <string name="dashboard_fragment_title">Início</string>

@@ -16,6 +16,7 @@ import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodRepository;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRepository;
 import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
+import br.com.libertsolutions.libertvendas.app.domain.dto.ServerStatus;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.City;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Company;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.CompanyCustomer;
@@ -31,15 +32,16 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dd.CircularProgressButton;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.greenrobot.eventbus.Subscribe;
+import retrofit2.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -54,10 +56,12 @@ import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.pr
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideCustomerApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePaymentMethodApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePriceTableApi;
+import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSyncApi;
 import static com.dd.CircularProgressButton.ERROR_STATE_PROGRESS;
 import static com.dd.CircularProgressButton.IDLE_STATE_PROGRESS;
 import static com.dd.CircularProgressButton.INDETERMINATE_STATE_PROGRESS;
 import static com.dd.CircularProgressButton.SUCCESS_STATE_PROGRESS;
+import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
  * @author Filipe Bezerra
@@ -87,6 +91,8 @@ public class ImportationFragment extends BaseFragment {
     private AtomicInteger mImportationTotalCounter = new AtomicInteger(1);
 
     private AtomicInteger mImportationCompletedCounter = new AtomicInteger();
+
+    private MaterialDialog progressDialog;
 
     @BindView(R.id.recycler_view_importation_companies) RecyclerView mRecyclerView;
 
@@ -144,7 +150,7 @@ public class ImportationFragment extends BaseFragment {
         provideCityApi().get()
                 .filter(cities -> !cities.isEmpty())
                 .flatMap(mCityRepository::save)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(mainThread())
                 .subscribe(
                         new Subscriber<List<City>>() {
                             @Override public void onStart() {
@@ -204,7 +210,7 @@ public class ImportationFragment extends BaseFragment {
                         importPriceTable(company)
                 )
                 .lastOrDefault(Collections.emptyList())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(mainThread())
                 .subscribe(
                         new Subscriber<Object>() {
                             @Override public void onStart() {
@@ -299,21 +305,93 @@ public class ImportationFragment extends BaseFragment {
 
     private void incrementAndCheckImportantionCounter() {
         if (mImportationCompletedCounter.incrementAndGet() == mImportationTotalCounter.get()) {
-            settings().setInitialFlowDone();
-            SyncTaskService.schedule(getContext(), settings().getSettings().getSyncPeriodicity());
-            new MaterialDialog.Builder(getContext())
-                    .title(R.string.importation_completed)
-                    .content(R.string.importation_completed_message)
-                    .positiveText(android.R.string.ok)
-                    .onPositive((dialog, which) ->
-                            eventBus().post(CompletedImportationEvent.newEvent()))
-                    .show();
+            getServerStatus();
         }
     }
 
+    private void getServerStatus() {
+        Subscription subscription = provideSyncApi()
+                .serverStatus()
+                .observeOn(mainThread())
+                .subscribe(createServerStatusSubscriber());
+        mCompositeSubscription.add(subscription);
+    }
+
+    private Subscriber<ServerStatus> createServerStatusSubscriber() {
+        return new Subscriber<ServerStatus>() {
+            @Override public void onStart() {
+                showProgressDialog(R.string.importation_getting_server_status);
+            }
+
+            @Override public void onError(final Throwable e) {
+                handleServerStatusError(e);
+            }
+
+            @Override public void onNext(final ServerStatus serverStatus) {
+                settings().setLastSyncTime(serverStatus.currentTime);
+            }
+
+            @Override public void onCompleted() {
+                completeInitialFlowDone();
+            }
+        };
+    }
+
+    private void showProgressDialog(int titleRes) {
+        progressDialog = new MaterialDialog.Builder(getContext())
+                .progress(true, 0)
+                .progressIndeterminateStyle(true)
+                .title(titleRes)
+                .content(R.string.all_please_wait)
+                .cancelable(false)
+                .canceledOnTouchOutside(false)
+                .show();
+    }
+
+    private void handleServerStatusError(Throwable e) {
+        hideProgressDialog();
+        Timber.e(e, "Could not get server status");
+
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext())
+                .neutralText(android.R.string.ok);
+
+        if (e instanceof HttpException) {
+            builder.content(R.string.all_server_error_message);
+        } else if (e instanceof IOException) {
+            builder.content(R.string.all_network_error_message);
+        } else {
+            builder.content(R.string.all_unknown_error_message);
+        }
+
+        builder
+                .positiveText(R.string.all_retry)
+                .onPositive((dialog, which) -> getServerStatus())
+                .negativeText(android.R.string.cancel)
+                .onNegative((dialog, which) -> getActivity().finish())
+                .show();
+    }
+
+    private void hideProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private void completeInitialFlowDone() {
+        settings().setInitialFlowDone();
+        SyncTaskService.schedule(getContext(), settings().getSettings().getSyncPeriodicity());
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.importation_completed)
+                .content(R.string.importation_completed_message)
+                .positiveText(android.R.string.ok)
+                .onPositive((dialog, which) ->
+                        eventBus().post(CompletedImportationEvent.newEvent()))
+                .show();
+    }
+
     @Override public void onDestroyView() {
-        super.onDestroyView();
         eventBus().unregister(this);
         mCompositeSubscription.unsubscribe();
+        super.onDestroyView();
     }
 }

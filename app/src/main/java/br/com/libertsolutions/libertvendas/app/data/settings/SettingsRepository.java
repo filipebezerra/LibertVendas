@@ -30,4 +30,8 @@ public interface SettingsRepository {
     boolean isRunningSyncWith(final long period);
 
     void setRunningSyncWith(final long syncPeriod);
+
+    void setLastSyncTime(String lastUpdateTime);
+
+    String getLastSyncTime();
 }
