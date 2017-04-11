@@ -30,7 +30,9 @@ import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableItemRea
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRealmMapper;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRealmRepository;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRepository;
-import br.com.libertsolutions.libertvendas.app.data.pricetable.ProductRealmMapper;
+import br.com.libertsolutions.libertvendas.app.data.product.ProductRealmMapper;
+import br.com.libertsolutions.libertvendas.app.data.product.ProductRealmRepository;
+import br.com.libertsolutions.libertvendas.app.data.product.ProductRepository;
 import br.com.libertsolutions.libertvendas.app.data.repository.Mapper;
 import br.com.libertsolutions.libertvendas.app.domain.entity.CityEntity;
 import br.com.libertsolutions.libertvendas.app.domain.entity.CompanyCustomerEntity;
@@ -204,5 +206,9 @@ public class LocalDataInjector {
 
     public static OrderRepository providerOrderRepository() {
         return new OrderRealmRepository();
+    }
+
+    public static ProductRepository provideProductRepository() {
+        return new ProductRealmRepository();
     }
 }

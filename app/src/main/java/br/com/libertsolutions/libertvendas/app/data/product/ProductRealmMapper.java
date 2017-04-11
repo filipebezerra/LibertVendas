@@ -1,4 +1,4 @@
-package br.com.libertsolutions.libertvendas.app.data.pricetable;
+package br.com.libertsolutions.libertvendas.app.data.product;
 
 import br.com.libertsolutions.libertvendas.app.data.realm.RealmMapper;
 import br.com.libertsolutions.libertvendas.app.domain.entity.ProductEntity;

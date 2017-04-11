@@ -6,6 +6,7 @@ import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodApi;
 import br.com.libertsolutions.libertvendas.app.data.postalcode.PostalCodeApi;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableApi;
+import br.com.libertsolutions.libertvendas.app.data.product.ProductApi;
 import br.com.libertsolutions.libertvendas.app.data.salesman.SalesmanApi;
 import br.com.libertsolutions.libertvendas.app.data.sync.SyncApi;
 
@@ -48,5 +49,9 @@ public class RemoteDataInjector {
 
     public static SyncApi provideSyncApi() {
         return provideRetrofit().create(SyncApi.class);
+    }
+
+    public static ProductApi provideProductApi() {
+        return provideRetrofit().create(ProductApi.class);
     }
 }

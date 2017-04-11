@@ -14,6 +14,7 @@ import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodRepository;
+import br.com.libertsolutions.libertvendas.app.data.product.ProductRepository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.domain.dto.OrderDto;
 import br.com.libertsolutions.libertvendas.app.domain.dto.OrderItemDto;
@@ -27,6 +28,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderItem;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PaymentMethod;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.Product;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.PeriodicTask;
@@ -43,10 +45,12 @@ import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.pro
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCompanyPaymentMethodRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCustomerRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providePaymentMethodRepository;
+import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideProductRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideCustomerApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideOrderApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePaymentMethodApi;
+import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideProductApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSyncApi;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
 import static java.util.Collections.emptyList;
@@ -365,6 +369,31 @@ public class SyncTaskService extends GcmTaskService {
             }
         } catch (IOException e) {
             Timber.e(e, "Server failure while getting payment method updates");
+        }
+        //endregion
+
+        //region getting product updates
+        try {
+            Response<List<Product>> response = provideProductApi()
+                    .getUpdates(companyCnpj, lastSyncTime)
+                    .execute();
+
+            if (response.isSuccessful()) {
+                final List<Product> updatedProducts = response.body();
+
+                ProductRepository productRepository = provideProductRepository();
+
+                for (Product product : updatedProducts) {
+                    productRepository
+                            .save(product)
+                            .toBlocking()
+                            .single();
+                }
+            } else {
+                Timber.i("Unsuccessful getting product updates. %s", response.message());
+            }
+        } catch (IOException e) {
+            Timber.e(e, "Server failure while getting product updates");
         }
         //endregion
 
