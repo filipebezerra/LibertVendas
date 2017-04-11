@@ -292,38 +292,40 @@ public class SyncTaskService extends GcmTaskService {
             if (response.isSuccessful()) {
                 final List<Customer> updatedCustomers = response.body();
 
-                final CompanyCustomerRepository companyCustomerRepository
-                        = provideCompanyCustomerRepository();
+                if (!updatedCustomers.isEmpty()) {
+                    final CompanyCustomerRepository companyCustomerRepository
+                            = provideCompanyCustomerRepository();
 
-                for (final Customer customer : updatedCustomers) {
-                    final Integer customerId = customer.getCustomerId();
-                    final Customer existingCustomer = customerRepository
-                            .findFirst(new CustomerByIdSpecification(customerId))
-                            .toBlocking()
-                            .single();
-
-                    if (existingCustomer != null) {
-                        customer
-                                .withId(existingCustomer.getId())
-                                .withStatus(existingCustomer.getStatus());
-
-                        customerRepository
-                                .save(customer)
+                    for (final Customer customer : updatedCustomers) {
+                        final Integer customerId = customer.getCustomerId();
+                        final Customer existingCustomer = customerRepository
+                                .findFirst(new CustomerByIdSpecification(customerId))
                                 .toBlocking()
-                                .single();
-                    } else {
-                        final Customer savedCustomer = customerRepository
-                                .save(customer)
-                                .toBlocking()
-                                .single();
+                                .singleOrDefault(null);
 
-                        final CompanyCustomer newCompanyCustomer = CompanyCustomer
-                                .from(loggedUser.getDefaultCompany(), savedCustomer);
+                        if (existingCustomer != null) {
+                            customer
+                                    .withId(existingCustomer.getId())
+                                    .withStatus(existingCustomer.getStatus());
 
-                        companyCustomerRepository
-                                .save(newCompanyCustomer)
-                                .toBlocking()
-                                .single();
+                            customerRepository
+                                    .save(customer)
+                                    .toBlocking()
+                                    .single();
+                        } else {
+                            final Customer savedCustomer = customerRepository
+                                    .save(customer)
+                                    .toBlocking()
+                                    .single();
+
+                            final CompanyCustomer newCompanyCustomer = CompanyCustomer
+                                    .from(loggedUser.getDefaultCompany(), savedCustomer);
+
+                            companyCustomerRepository
+                                    .save(newCompanyCustomer)
+                                    .toBlocking()
+                                    .single();
+                        }
                     }
                 }
             } else {
@@ -341,7 +343,6 @@ public class SyncTaskService extends GcmTaskService {
         //region getting orders updates
         try {
             final OrderApi orderApi = provideOrderApi();
-            final OrderRepository orderRepository = providerOrderRepository();
             final String salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
 
             final Response<List<OrderDto>> response = orderApi
@@ -351,24 +352,28 @@ public class SyncTaskService extends GcmTaskService {
             if (response.isSuccessful()) {
                 final List<OrderDto> updatedOrders = response.body();
 
-                for (final OrderDto order : updatedOrders) {
-                    final int orderId = order.orderId;
-                    final Order existingOrder = orderRepository
-                            .findFirst(new OrderByIdSpecification(orderId))
-                            .toBlocking()
-                            .single();
+                if (!updatedOrders.isEmpty()) {
+                    final OrderRepository orderRepository = providerOrderRepository();
 
-                    if (existingOrder != null) {
-                        if (order.status == 3) {
-                            existingOrder.withStatus(OrderStatus.STATUS_CANCELLED);
-                        }
-                        existingOrder
-                                .withLastChangeTime(order.lastChangeTime);
-
-                        orderRepository
-                                .save(existingOrder)
+                    for (final OrderDto order : updatedOrders) {
+                        final int orderId = order.orderId;
+                        final Order existingOrder = orderRepository
+                                .findFirst(new OrderByIdSpecification(orderId))
                                 .toBlocking()
-                                .single();
+                                .singleOrDefault(null);
+
+                        if (existingOrder != null) {
+                            if (order.status == 3) {
+                                existingOrder.withStatus(OrderStatus.STATUS_CANCELLED);
+                            }
+                            existingOrder
+                                    .withLastChangeTime(order.lastChangeTime);
+
+                            orderRepository
+                                    .save(existingOrder)
+                                    .toBlocking()
+                                    .single();
+                        }
                     }
                 }
             } else {
@@ -392,32 +397,34 @@ public class SyncTaskService extends GcmTaskService {
             if (response.isSuccessful()) {
                 final List<PaymentMethod> updatedPaymentMethods = response.body();
 
-                final PaymentMethodRepository paymentMethodRepository
-                        = providePaymentMethodRepository();
+                if (!updatedPaymentMethods.isEmpty()) {
+                    final PaymentMethodRepository paymentMethodRepository
+                            = providePaymentMethodRepository();
+                    final CompanyPaymentMethodRepository companyPaymentMethodRepository
+                            = provideCompanyPaymentMethodRepository();
 
-                final CompanyPaymentMethodRepository companyPaymentMethodRepository
-                        = provideCompanyPaymentMethodRepository();
+                    for (final PaymentMethod paymentMethod : updatedPaymentMethods) {
+                        final Integer paymentMethodId = paymentMethod.getPaymentMethodId();
+                        final PaymentMethod existingPaymentMethod = paymentMethodRepository
+                                .findFirst(new PaymentMethodByIdSpecification(paymentMethodId))
+                                .toBlocking()
+                                .singleOrDefault(null);
 
-                for (final PaymentMethod paymentMethod : updatedPaymentMethods) {
-                    final Integer paymentMethodId = paymentMethod.getPaymentMethodId();
-                    final PaymentMethod existingPaymentMethod = paymentMethodRepository
-                            .findFirst(new PaymentMethodByIdSpecification(paymentMethodId))
-                            .toBlocking()
-                            .single();
-
-                    final PaymentMethod savedPaymentMethod = paymentMethodRepository
-                            .save(paymentMethod)
-                            .toBlocking()
-                            .single();
-
-                    if (existingPaymentMethod == null) {
-                        final CompanyPaymentMethod newCompanyPaymentMethod = CompanyPaymentMethod
-                                .from(loggedUser.getDefaultCompany(), savedPaymentMethod);
-
-                        companyPaymentMethodRepository
-                                .save(newCompanyPaymentMethod)
+                        final PaymentMethod savedPaymentMethod = paymentMethodRepository
+                                .save(paymentMethod)
                                 .toBlocking()
                                 .single();
+
+                        if (existingPaymentMethod == null) {
+                            final CompanyPaymentMethod newCompanyPaymentMethod
+                                    = CompanyPaymentMethod
+                                    .from(loggedUser.getDefaultCompany(), savedPaymentMethod);
+
+                            companyPaymentMethodRepository
+                                    .save(newCompanyPaymentMethod)
+                                    .toBlocking()
+                                    .single();
+                        }
                     }
                 }
             } else {
@@ -441,31 +448,32 @@ public class SyncTaskService extends GcmTaskService {
             if (response.isSuccessful()) {
                 final List<PriceTable> updatedPriceTables = response.body();
 
-                final PriceTableRepository priceTableRepository = providePriceTableRepository();
+                if (!updatedPriceTables.isEmpty()) {
+                    final PriceTableRepository priceTableRepository = providePriceTableRepository();
+                    final CompanyPriceTableRepository companyPriceTableRepository
+                            = provideCompanyPriceTableRepository();
 
-                final CompanyPriceTableRepository companyPriceTableRepository
-                        = provideCompanyPriceTableRepository();
+                    for (final PriceTable priceTable : updatedPriceTables) {
+                        final Integer priceTableId = priceTable.getPriceTableId();
+                        final PriceTable existingPriceTable = priceTableRepository
+                                .findFirst(new PriceTableByIdSpecification(priceTableId))
+                                .toBlocking()
+                                .singleOrDefault(null);
 
-                for (final PriceTable priceTable : updatedPriceTables) {
-                    final Integer priceTableId = priceTable.getPriceTableId();
-                    final PriceTable existingPriceTable = priceTableRepository
-                            .findFirst(new PriceTableByIdSpecification(priceTableId))
-                            .toBlocking()
-                            .single();
-
-                    final PriceTable savedPriceTable = priceTableRepository
-                            .save(priceTable)
-                            .toBlocking()
-                            .single();
-
-                    if (existingPriceTable == null) {
-                        final CompanyPriceTable newCompanyPriceTable = CompanyPriceTable
-                                .from(loggedUser.getDefaultCompany(), savedPriceTable);
-
-                        companyPriceTableRepository
-                                .save(newCompanyPriceTable)
+                        final PriceTable savedPriceTable = priceTableRepository
+                                .save(priceTable)
                                 .toBlocking()
                                 .single();
+
+                        if (existingPriceTable == null) {
+                            final CompanyPriceTable newCompanyPriceTable = CompanyPriceTable
+                                    .from(loggedUser.getDefaultCompany(), savedPriceTable);
+
+                            companyPriceTableRepository
+                                    .save(newCompanyPriceTable)
+                                    .toBlocking()
+                                    .single();
+                        }
                     }
                 }
             } else {
@@ -489,13 +497,15 @@ public class SyncTaskService extends GcmTaskService {
             if (response.isSuccessful()) {
                 final List<Product> updatedProducts = response.body();
 
-                final ProductRepository productRepository = provideProductRepository();
+                if (!updatedProducts.isEmpty()) {
+                    final ProductRepository productRepository = provideProductRepository();
 
-                for (final Product product : updatedProducts) {
-                    productRepository
-                            .save(product)
-                            .toBlocking()
-                            .single();
+                    for (final Product product : updatedProducts) {
+                        productRepository
+                                .save(product)
+                                .toBlocking()
+                                .single();
+                    }
                 }
             } else {
                 Timber.i("Unsuccessful getting product updates. %s", response.message());
