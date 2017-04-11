@@ -21,6 +21,8 @@ public class OrderEntity implements RealmModel {
 
         public static final String ID = "id";
 
+        public static final String ORDER_ID = "orderId";
+
         public static final String ISSUE_DATE = "issueDate";
 
         public static final String STATUS = "status";

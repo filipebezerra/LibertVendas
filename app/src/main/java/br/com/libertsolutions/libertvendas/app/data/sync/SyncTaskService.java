@@ -11,6 +11,7 @@ import br.com.libertsolutions.libertvendas.app.data.customer.CustomerApi;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
+import br.com.libertsolutions.libertvendas.app.data.order.OrderByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodByIdSpecification;
@@ -333,6 +334,51 @@ public class SyncTaskService extends GcmTaskService {
             return GcmNetworkManager.RESULT_RESCHEDULE;
         } catch (RuntimeException e) {
             Timber.e(e, "Unknown error while getting customer updates");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        }
+        //endregion
+
+        //region getting orders updates
+        try {
+            final OrderApi orderApi = provideOrderApi();
+            final OrderRepository orderRepository = providerOrderRepository();
+            final String salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
+
+            final Response<List<OrderDto>> response = orderApi
+                    .getUpdates(companyCnpj, salesmanCpfOrCnpj, lastSyncTime)
+                    .execute();
+
+            if (response.isSuccessful()) {
+                final List<OrderDto> updatedOrders = response.body();
+
+                for (final OrderDto order : updatedOrders) {
+                    final int orderId = order.orderId;
+                    final Order existingOrder = orderRepository
+                            .findFirst(new OrderByIdSpecification(orderId))
+                            .toBlocking()
+                            .single();
+
+                    if (existingOrder != null) {
+                        if (order.status == 3) {
+                            existingOrder.withStatus(OrderStatus.STATUS_CANCELLED);
+                        }
+                        existingOrder
+                                .withLastChangeTime(order.lastChangeTime);
+
+                        orderRepository
+                                .save(existingOrder)
+                                .toBlocking()
+                                .single();
+                    }
+                }
+            } else {
+                Timber.i("Unsuccessful getting order updates. %s", response.message());
+            }
+        } catch (IOException e) {
+            Timber.e(e, "Server failure while getting order updates");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        } catch (RuntimeException e) {
+            Timber.e(e, "Unknown error while getting order updates");
             return GcmNetworkManager.RESULT_RESCHEDULE;
         }
         //endregion

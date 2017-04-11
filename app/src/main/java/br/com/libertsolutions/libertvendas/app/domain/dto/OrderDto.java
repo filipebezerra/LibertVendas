@@ -53,6 +53,10 @@ public class OrderDto {
     @Expose
     public String lastChangeTime;
 
+    @SerializedName("status")
+    @Expose
+    public int status;
+
     public OrderDto(
             final int id, final int type, final String issueDate, final double discount,
             final String observation,
