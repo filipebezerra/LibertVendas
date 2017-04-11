@@ -1,4 +1,4 @@
-package br.com.libertsolutions.libertvendas.app.data.company.customer;
+package br.com.libertsolutions.libertvendas.app.data.customer;
 
 import br.com.libertsolutions.libertvendas.app.data.realm.RealmSingleSpecification;
 import br.com.libertsolutions.libertvendas.app.domain.entity.CustomerEntity;

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.company.customer.CompanyCustomerRepository;
-import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomerByIdSpecification;
+import br.com.libertsolutions.libertvendas.app.data.customer.CustomerByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomersByCompanySpecification;
 import br.com.libertsolutions.libertvendas.app.data.company.paymentmethod.CompanyPaymentMethodRepository;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerApi;
