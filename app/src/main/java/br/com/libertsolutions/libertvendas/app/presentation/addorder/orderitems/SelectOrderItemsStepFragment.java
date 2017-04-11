@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import br.com.libertsolutions.libertvendas.app.data.company.pricetable.PriceTableByIdSpecification;
+import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Customer;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;

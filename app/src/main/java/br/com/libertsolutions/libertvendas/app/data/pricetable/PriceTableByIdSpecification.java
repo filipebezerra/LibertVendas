@@ -1,4 +1,4 @@
-package br.com.libertsolutions.libertvendas.app.data.company.pricetable;
+package br.com.libertsolutions.libertvendas.app.data.pricetable;
 
 import br.com.libertsolutions.libertvendas.app.data.realm.RealmSingleSpecification;
 import br.com.libertsolutions.libertvendas.app.domain.entity.PriceTableEntity;

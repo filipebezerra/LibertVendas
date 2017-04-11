@@ -4,16 +4,19 @@ import android.content.Context;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import br.com.libertsolutions.libertvendas.app.data.company.customer.CompanyCustomerRepository;
-import br.com.libertsolutions.libertvendas.app.data.customer.CustomerByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomersByCompanySpecification;
 import br.com.libertsolutions.libertvendas.app.data.company.paymentmethod.CompanyPaymentMethodRepository;
+import br.com.libertsolutions.libertvendas.app.data.company.pricetable.CompanyPriceTableRepository;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerApi;
+import br.com.libertsolutions.libertvendas.app.data.customer.CustomerByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodRepository;
+import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableByIdSpecification;
+import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRepository;
 import br.com.libertsolutions.libertvendas.app.data.product.ProductRepository;
 import br.com.libertsolutions.libertvendas.app.data.settings.SettingsRepository;
 import br.com.libertsolutions.libertvendas.app.domain.dto.OrderDto;
@@ -21,6 +24,7 @@ import br.com.libertsolutions.libertvendas.app.domain.dto.OrderItemDto;
 import br.com.libertsolutions.libertvendas.app.domain.dto.ServerStatus;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.CompanyCustomer;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.CompanyPaymentMethod;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.CompanyPriceTable;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Customer;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.CustomerStatus;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
@@ -28,6 +32,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderItem;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PaymentMethod;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.PriceTable;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Product;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
@@ -43,13 +48,16 @@ import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCompanyCustomerRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCompanyPaymentMethodRepository;
+import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCompanyPriceTableRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCustomerRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providePaymentMethodRepository;
+import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providePriceTableRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideProductRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideCustomerApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideOrderApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePaymentMethodApi;
+import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePriceTableApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideProductApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSyncApi;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
@@ -369,6 +377,50 @@ public class SyncTaskService extends GcmTaskService {
             }
         } catch (IOException e) {
             Timber.e(e, "Server failure while getting payment method updates");
+        }
+        //endregion
+
+        //region getting price table updates
+        try {
+            final Response<List<PriceTable>> response = providePriceTableApi()
+                    .getUpdates(companyCnpj, lastSyncTime)
+                    .execute();
+
+            if (response.isSuccessful()) {
+                final List<PriceTable> updatedPriceTables = response.body();
+
+                final PriceTableRepository priceTableRepository = providePriceTableRepository();
+
+                final CompanyPriceTableRepository companyPriceTableRepository
+                        = provideCompanyPriceTableRepository();
+
+                for (final PriceTable priceTable : updatedPriceTables) {
+                    final Integer priceTableId = priceTable.getPriceTableId();
+                    final PriceTable existingPriceTable = priceTableRepository
+                            .findFirst(new PriceTableByIdSpecification(priceTableId))
+                            .toBlocking()
+                            .single();
+
+                    final PriceTable savedPriceTable = priceTableRepository
+                            .save(priceTable)
+                            .toBlocking()
+                            .single();
+
+                    if (existingPriceTable == null) {
+                        final CompanyPriceTable newCompanyPriceTable = CompanyPriceTable
+                                .from(loggedUser.getDefaultCompany(), savedPriceTable);
+
+                        companyPriceTableRepository
+                                .save(newCompanyPriceTable)
+                                .toBlocking()
+                                .single();
+                    }
+                }
+            } else {
+                Timber.i("Unsuccessful getting price table updates. %s", response.message());
+            }
+        } catch (IOException e) {
+            Timber.e(e, "Server failure while getting price table updates");
         }
         //endregion
 
