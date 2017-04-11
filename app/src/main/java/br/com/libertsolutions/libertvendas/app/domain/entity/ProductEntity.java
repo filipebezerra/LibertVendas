@@ -11,11 +11,6 @@ import io.realm.annotations.Required;
 @RealmClass
 public class ProductEntity implements RealmModel {
 
-    public static final class Fields {
-
-        public static final String PRODUCT_ID = "productId";
-    }
-
     @PrimaryKey
     private Integer productId;
 

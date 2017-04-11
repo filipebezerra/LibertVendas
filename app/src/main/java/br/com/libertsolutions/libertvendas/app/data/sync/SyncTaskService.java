@@ -68,8 +68,6 @@ import static java.util.Collections.emptyList;
  */
 public class SyncTaskService extends GcmTaskService {
 
-    private SettingsRepository settingsRepository;
-
     public static boolean schedule(@NonNull Context context, @IntRange(from = 0) int periodInMinutes) {
         try {
             final long syncPeriodInSeconds = TimeUnit.MINUTES.toSeconds(periodInMinutes);
@@ -132,7 +130,7 @@ public class SyncTaskService extends GcmTaskService {
     @Override public int onRunTask(final TaskParams taskParams) {
         Timber.d("running sync service");
 
-        settingsRepository = provideSettingsRepository();
+        final SettingsRepository settingsRepository = provideSettingsRepository();
 
         if (!settingsRepository.isUserLoggedIn()) {
             Timber.i("No user logged, sync will be cancelled");
@@ -286,43 +284,43 @@ public class SyncTaskService extends GcmTaskService {
 
         //region getting customer updates
         try {
-            Response<List<Customer>> response = customerApi
+            final Response<List<Customer>> response = customerApi
                     .getUpdates(companyCnpj, lastSyncTime)
                     .execute();
 
             if (response.isSuccessful()) {
                 final List<Customer> updatedCustomers = response.body();
 
-                CompanyCustomerRepository companyCustomerRepository
+                final CompanyCustomerRepository companyCustomerRepository
                         = provideCompanyCustomerRepository();
 
-                for (Customer customer : updatedCustomers) {
-                    Integer customerId = customer.getCustomerId();
-                    Customer result = customerRepository
+                for (final Customer customer : updatedCustomers) {
+                    final Integer customerId = customer.getCustomerId();
+                    final Customer existingCustomer = customerRepository
                             .findFirst(new CustomerByIdSpecification(customerId))
                             .toBlocking()
                             .single();
 
-                    if (result != null) {
+                    if (existingCustomer != null) {
                         customer
-                                .withId(result.getId())
-                                .withStatus(result.getStatus());
+                                .withId(existingCustomer.getId())
+                                .withStatus(existingCustomer.getStatus());
 
                         customerRepository
                                 .save(customer)
                                 .toBlocking()
                                 .single();
                     } else {
-                        final Customer newCustomer = customerRepository
+                        final Customer savedCustomer = customerRepository
                                 .save(customer)
                                 .toBlocking()
                                 .single();
 
-                        CompanyCustomer companyCustomer = CompanyCustomer
-                                .from(loggedUser.getDefaultCompany(), newCustomer);
+                        final CompanyCustomer newCompanyCustomer = CompanyCustomer
+                                .from(loggedUser.getDefaultCompany(), savedCustomer);
 
                         companyCustomerRepository
-                                .save(companyCustomer)
+                                .save(newCompanyCustomer)
                                 .toBlocking()
                                 .single();
                     }
@@ -332,42 +330,46 @@ public class SyncTaskService extends GcmTaskService {
             }
         } catch (IOException e) {
             Timber.e(e, "Server failure while getting customer updates");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        } catch (RuntimeException e) {
+            Timber.e(e, "Unknown error while getting customer updates");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
         }
         //endregion
 
         //region getting payment method updates
         try {
-            Response<List<PaymentMethod>> response = providePaymentMethodApi()
+            final Response<List<PaymentMethod>> response = providePaymentMethodApi()
                     .getUpdates(companyCnpj, lastSyncTime)
                     .execute();
 
             if (response.isSuccessful()) {
                 final List<PaymentMethod> updatedPaymentMethods = response.body();
 
-                PaymentMethodRepository paymentMethodRepository
+                final PaymentMethodRepository paymentMethodRepository
                         = providePaymentMethodRepository();
 
-                CompanyPaymentMethodRepository companyPaymentMethodRepository
+                final CompanyPaymentMethodRepository companyPaymentMethodRepository
                         = provideCompanyPaymentMethodRepository();
 
-                for (PaymentMethod paymentMethod : updatedPaymentMethods) {
-                    Integer paymentMethodId = paymentMethod.getPaymentMethodId();
-                    PaymentMethod result = paymentMethodRepository
+                for (final PaymentMethod paymentMethod : updatedPaymentMethods) {
+                    final Integer paymentMethodId = paymentMethod.getPaymentMethodId();
+                    final PaymentMethod existingPaymentMethod = paymentMethodRepository
                             .findFirst(new PaymentMethodByIdSpecification(paymentMethodId))
                             .toBlocking()
                             .single();
 
-                    PaymentMethod newPaymentMethod = paymentMethodRepository
+                    final PaymentMethod savedPaymentMethod = paymentMethodRepository
                             .save(paymentMethod)
                             .toBlocking()
                             .single();
 
-                    if (result == null) {
-                        CompanyPaymentMethod companyPaymentMethod = CompanyPaymentMethod
-                                .from(loggedUser.getDefaultCompany(), newPaymentMethod);
+                    if (existingPaymentMethod == null) {
+                        final CompanyPaymentMethod newCompanyPaymentMethod = CompanyPaymentMethod
+                                .from(loggedUser.getDefaultCompany(), savedPaymentMethod);
 
                         companyPaymentMethodRepository
-                                .save(companyPaymentMethod)
+                                .save(newCompanyPaymentMethod)
                                 .toBlocking()
                                 .single();
                     }
@@ -377,6 +379,10 @@ public class SyncTaskService extends GcmTaskService {
             }
         } catch (IOException e) {
             Timber.e(e, "Server failure while getting payment method updates");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        } catch (RuntimeException e) {
+            Timber.e(e, "Unknown error while getting payment method updates");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
         }
         //endregion
 
@@ -421,21 +427,25 @@ public class SyncTaskService extends GcmTaskService {
             }
         } catch (IOException e) {
             Timber.e(e, "Server failure while getting price table updates");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        } catch (RuntimeException e) {
+            Timber.e(e, "Unknown error while getting price table updates");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
         }
         //endregion
 
         //region getting product updates
         try {
-            Response<List<Product>> response = provideProductApi()
+            final Response<List<Product>> response = provideProductApi()
                     .getUpdates(companyCnpj, lastSyncTime)
                     .execute();
 
             if (response.isSuccessful()) {
                 final List<Product> updatedProducts = response.body();
 
-                ProductRepository productRepository = provideProductRepository();
+                final ProductRepository productRepository = provideProductRepository();
 
-                for (Product product : updatedProducts) {
+                for (final Product product : updatedProducts) {
                     productRepository
                             .save(product)
                             .toBlocking()
@@ -446,6 +456,10 @@ public class SyncTaskService extends GcmTaskService {
             }
         } catch (IOException e) {
             Timber.e(e, "Server failure while getting product updates");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        } catch (RuntimeException e) {
+            Timber.e(e, "Unknown error while getting product updates");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
         }
         //endregion
 
@@ -460,6 +474,10 @@ public class SyncTaskService extends GcmTaskService {
             }
         } catch (IOException e) {
             Timber.e(e, "Server failure while getting server status");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        } catch (RuntimeException e) {
+            Timber.e(e, "Unknown error while getting server status");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
         }
         //endregion
 
