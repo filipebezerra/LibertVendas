@@ -4,7 +4,7 @@ import br.com.libertsolutions.libertvendas.app.data.realm.RealmSingleSpecificati
 import br.com.libertsolutions.libertvendas.app.domain.entity.CustomerEntity;
 import io.realm.Realm;
 
-import static br.com.libertsolutions.libertvendas.app.domain.entity.CustomerEntity.Fields.ID_CUSTOMER;
+import static br.com.libertsolutions.libertvendas.app.domain.entity.CustomerEntity.Fields.CUSTOMER_ID;
 
 /**
  * @author Filipe Bezerra
@@ -20,7 +20,7 @@ public class CustomerByIdSpecification
 
     @Override public CustomerEntity toSingle(final Realm realm) {
         return realm.where(CustomerEntity.class)
-                .equalTo(ID_CUSTOMER, customerId)
+                .equalTo(CUSTOMER_ID, customerId)
                 .findFirst();
     }
 }

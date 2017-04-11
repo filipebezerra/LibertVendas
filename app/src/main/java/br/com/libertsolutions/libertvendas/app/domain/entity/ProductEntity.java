@@ -13,7 +13,7 @@ public class ProductEntity implements RealmModel {
 
     public static final class Fields {
 
-        public static final String ID_PRODUCT = "productId";
+        public static final String PRODUCT_ID = "productId";
     }
 
     @PrimaryKey
