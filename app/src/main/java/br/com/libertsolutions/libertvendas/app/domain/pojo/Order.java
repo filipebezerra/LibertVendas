@@ -6,6 +6,8 @@ import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils
 import java.util.ArrayList;
 import java.util.List;
 
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getCurrentDateTimeInMillis;
+
 /**
  * @author Filipe Bezerra
  */
@@ -221,7 +223,7 @@ public class Order {
     public Order copy() {
         return new Order()
                 .withType(getType())
-                .withIssueDate(getIssueDate())
+                .withIssueDate(getCurrentDateTimeInMillis())
                 .withDiscount(getDiscount())
                 .withObservation(getObservation())
                 .withCustomer(getCustomer())
