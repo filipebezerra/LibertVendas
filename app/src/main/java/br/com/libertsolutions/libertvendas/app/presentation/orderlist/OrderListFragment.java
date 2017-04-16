@@ -314,6 +314,7 @@ public class OrderListFragment extends BaseFragment
             actionModeHelper.reset();
         }
         swipeRefreshLayout.setRefreshing(true);
+        fastItemAdapter.clear();
         recyclerViewOrders.setAdapter(null);
         recyclerViewOrders.setVisibility(View.GONE);
         mLinearLayoutEmptyState.setVisibility(View.VISIBLE);
@@ -359,18 +360,6 @@ public class OrderListFragment extends BaseFragment
                     .getViewTreeObserver()
                     .removeOnGlobalLayoutListener(recyclerViewLayoutListener);
             recyclerViewLayoutListener = null;
-
-/*
-            if (recyclerViewItemTouchListener != null) {
-                recyclerViewOrders.removeOnItemTouchListener(recyclerViewItemTouchListener);
-                recyclerViewItemTouchListener = null;
-            }
-
-            recyclerViewOrders.addOnItemTouchListener(
-                    recyclerViewItemTouchListener
-                            = new OnItemTouchListener(getContext(), recyclerViewOrders, this));
-*/
-
             getActivity().invalidateOptionsMenu();
             swipeRefreshLayout.setRefreshing(false);
             mLinearLayoutEmptyState.setVisibility(View.GONE);
