@@ -21,6 +21,7 @@ import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecificat
 import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderform.SavedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
@@ -40,6 +41,7 @@ import timber.log.Timber;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.duplicateOrder;
+import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.selectOrder;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -125,7 +127,7 @@ public class OrderListFragment extends BaseFragment
                     return res != null ? res : false;
                 })
                 .withOnClickListener((v, adapter, item, position) -> {
-                    /*if (!actionModeHelper.isActive()) {
+                    if (!actionModeHelper.isActive()) {
                         final Order selectedOrder = fastItemAdapter.getAdapterItem(position)
                                 .getOrder();
 
@@ -139,7 +141,7 @@ public class OrderListFragment extends BaseFragment
                                 navigate().toAddOrder();
                             }
                         }
-                    }*/
+                    }
 
                     if (actionModeHelper.isActive()) {
                         actionModeHelper.getActionMode().invalidate();
@@ -210,22 +212,6 @@ public class OrderListFragment extends BaseFragment
     @Override public void onRefresh() {
         loadOrders();
     }
-
-/*
-    @Override public void onSingleTapUp(final View view, final int position) {
-        Order selectedOrder = mOrderListAdapter.getOrder(position);
-        if (selectedOrder != null) {
-            eventBus().postSticky(selectOrder(selectedOrder));
-
-            if (selectedOrder.getStatus() == OrderStatus.STATUS_SYNCED ||
-                    selectedOrder.getStatus() == OrderStatus.STATUS_CANCELLED) {
-                navigate().toViewOrder();
-            } else {
-                navigate().toAddOrder();
-            }
-        }
-    }
-*/
 
     @OnClick(R.id.button_all_retry) void onButtonRetryClicked() {
         mLinearLayoutErrorState.setVisibility(View.GONE);
