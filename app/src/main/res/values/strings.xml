@@ -236,9 +236,10 @@
     <!-- Add Order screen -->
     <string name="add_order_title">Novo pedido</string>
     <string name="add_order_editing_title">Editando pedido</string>
+    <string name="add_order_duplicating_title">Duplicando pedido</string>
     <string name="add_order_select_customer_step">Selecione o cliente</string>
     <string name="add_order_select_items_step">Adicione os itens</string>
-    <string name="add_order_form_step">Finalizando pedido</string>
+    <string name="add_order_form_step">Finalizando</string>
     <string name="add_order_button_back_text">Anterior</string>
     <string name="add_order_button_next_text">Próximo</string>
     <string name="add_order_button_complete_text">Finalizar</string>

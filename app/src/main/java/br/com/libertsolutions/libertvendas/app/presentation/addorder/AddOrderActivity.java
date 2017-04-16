@@ -32,7 +32,12 @@ public class AddOrderActivity extends BaseStepperActivity {
         SelectedOrderEvent event = eventBus().getStickyEvent(SelectedOrderEvent.class);
         if (event != null) {
             mSelectedOrder = event.getOrder();
-            getSupportActionBar().setTitle(R.string.add_order_editing_title);
+
+            if (event.isDuplicateOrder()) {
+                getSupportActionBar().setTitle(R.string.add_order_duplicating_title);
+            } else {
+                getSupportActionBar().setTitle(R.string.add_order_editing_title);
+            }
             mStepperLayout.setCurrentStepPosition(mStepperAdapter.getCount() - 1);
         }
     }
