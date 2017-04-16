@@ -12,6 +12,7 @@ import br.com.libertsolutions.libertvendas.app.data.customer.CustomerByIdSpecifi
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderByIdSpecification;
+import br.com.libertsolutions.libertvendas.app.data.order.OrderRealmRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodByIdSpecification;
@@ -35,8 +36,10 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PaymentMethod;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PriceTable;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Product;
+import br.com.libertsolutions.libertvendas.app.presentation.orderlist.SyncOrdersEvent;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
+import com.google.android.gms.gcm.OneoffTask;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
@@ -54,13 +57,13 @@ import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.pro
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providePaymentMethodRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providePriceTableRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideProductRepository;
-import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideCustomerApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideOrderApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePaymentMethodApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePriceTableApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideProductApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSyncApi;
+import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
 import static java.util.Collections.emptyList;
 
@@ -68,6 +71,14 @@ import static java.util.Collections.emptyList;
  * @author Filipe Bezerra
  */
 public class SyncTaskService extends GcmTaskService {
+
+    private OrderApi orderApi;
+
+    private OrderRepository orderRepository;
+
+    private String companyCnpj;
+
+    private String salesmanCpfOrCnpj;
 
     public static boolean schedule(@NonNull Context context, @IntRange(from = 0) int periodInMinutes) {
         try {
@@ -79,7 +90,7 @@ public class SyncTaskService extends GcmTaskService {
                 return false;
             }
 
-            PeriodicTask periodic = new PeriodicTask.Builder()
+            PeriodicTask periodicTask = new PeriodicTask.Builder()
                     .setService(SyncTaskService.class)
                     //repeat every 'n' minutes (default 30 minutes)
                     .setPeriod(syncPeriodInSeconds)
@@ -96,13 +107,42 @@ public class SyncTaskService extends GcmTaskService {
                     .build();
             GcmNetworkManager
                     .getInstance(context.getApplicationContext())
-                    .schedule(periodic);
+                    .schedule(periodicTask);
 
             provideSettingsRepository().setRunningSyncWith(syncPeriodInSeconds);
             Timber.v("sync service scheduled with period of %d minutes", periodInMinutes);
             return true;
         } catch (Exception e) {
             Timber.e(e, "scheduling sync service failed");
+            return false;
+        }
+    }
+
+    public static boolean scheduleSingleSync(@NonNull Context context) {
+        try {
+            OneoffTask oneoffTask = new OneoffTask.Builder()
+                    .setService(SyncTaskService.class)
+                    //tag that is unique to this task (can be used to cancel task)
+                    .setTag(SyncTaskService.class.getSimpleName())
+                    //whether the task persists after device reboot
+                    .setPersisted(true)
+                    //if another task with same tag is already scheduled, replace it with this task
+                    .setUpdateCurrent(true)
+                    //set required network state, this line is optional
+                    .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
+                    //request that charging must be connected, this line is optional
+                    .setRequiresCharging(false)
+                    //executed between 0 - 10s from now
+                    .setExecutionWindow(0, 10)
+                    .build();
+            GcmNetworkManager
+                    .getInstance(context.getApplicationContext())
+                    .schedule(oneoffTask);
+
+            Timber.v("single sync service scheduled within next 10 seconds");
+            return true;
+        } catch (Exception e) {
+            Timber.e(e, "scheduling single sync service failed");
             return false;
         }
     }
@@ -123,9 +163,7 @@ public class SyncTaskService extends GcmTaskService {
 
     @Override public void onInitializeTasks() {
         Timber.d("initializing sync service");
-        SyncTaskService.cancelAll(this);
-        SyncTaskService.schedule(this,
-                provideSettingsRepository().getSettings().getSyncPeriodicity());
+        restartFullSync();
     }
 
     @Override public int onRunTask(final TaskParams taskParams) {
@@ -145,7 +183,20 @@ public class SyncTaskService extends GcmTaskService {
                 .single();
 
         final int companyId = loggedUser.getDefaultCompany().getCompanyId();
-        final String companyCnpj = loggedUser.getDefaultCompany().getCnpj();
+        companyCnpj = loggedUser.getDefaultCompany().getCnpj();
+        salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
+
+        SyncOrdersEvent syncOrdersEvent = provideEventBus().getStickyEvent(SyncOrdersEvent.class);
+        if (syncOrdersEvent != null) {
+            boolean successful = syncOrders(syncOrdersEvent.getOrders());
+            if (successful) {
+                provideEventBus().removeStickyEvent(SyncOrdersEvent.class);
+                restartFullSync();
+                return GcmNetworkManager.RESULT_SUCCESS;
+            } else {
+                return GcmNetworkManager.RESULT_RESCHEDULE;
+            }
+        }
 
         final CustomerRepository customerRepository = provideCustomerRepository();
         final CustomerApi customerApi = provideCustomerApi();
@@ -223,61 +274,16 @@ public class SyncTaskService extends GcmTaskService {
         //region sending orders
         if (settingsRepository.getSettings().isAutomaticallySyncOrders()) {
             final int salesmanId = loggedUser.getSalesman().getSalesmanId();
-            final String salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
 
-            final OrderRepository orderRepository = providerOrderRepository();
-            final OrderApi orderApi = provideOrderApi();
-
-            List<Order> createdOrModifiedOrders = orderRepository
+            final List<Order> createdOrModifiedOrders = getOrderRepository()
                     .query(new OrdersByUserSpecification(salesmanId, companyId)
                             .byStatusCreatedOrModified())
                     .toBlocking()
                     .firstOrDefault(Collections.emptyList());
 
-            if (!createdOrModifiedOrders.isEmpty()) {
-                for (Order order : createdOrModifiedOrders) {
-                    try {
-                        OrderDto postOrder = order.createPostOrder();
-
-                        Response<OrderDto> response = orderApi
-                                .createOrder(companyCnpj, salesmanCpfOrCnpj, postOrder)
-                                .execute();
-
-                        if (response.isSuccessful()) {
-                            OrderDto syncedOrder = response.body();
-
-                            for (OrderItemDto syncedOrderItem : syncedOrder.items) {
-                                for (OrderItem item : order.getItems()) {
-                                    if (item.getId().compareTo(syncedOrderItem.id) == 0) {
-                                        item
-                                                .withOrderItemId(syncedOrderItem.orderItemId)
-                                                .withLastChangeTime(syncedOrderItem.lastChangeTime);
-                                        break;
-                                    }
-                                }
-                            }
-
-                            order
-                                    .withOrderId(syncedOrder.orderId)
-                                    .withLastChangeTime(syncedOrder.lastChangeTime)
-                                    .withStatus(OrderStatus.STATUS_SYNCED);
-
-                            orderRepository
-                                    .save(order)
-                                    .toBlocking()
-                                    .first();
-                        } else {
-                            Timber.i("Unsuccessful orders sync. %s", response.message());
-                        }
-                    } catch (IOException e) {
-                        Timber.e(e, "Server failure while syncing orders");
-                        return GcmNetworkManager.RESULT_RESCHEDULE;
-                    } catch (RuntimeException e) {
-                        Timber.e(e, "Unknown error while syncing orders");
-                        return GcmNetworkManager.RESULT_RESCHEDULE;
-                    }
-                }
-            }
+            boolean successful = syncOrders(createdOrModifiedOrders);
+            if (!successful)
+                return GcmNetworkManager.RESULT_RESCHEDULE;
         } else {
             Timber.i("Orders are not enabled to sync automatically");
         }
@@ -342,10 +348,7 @@ public class SyncTaskService extends GcmTaskService {
 
         //region getting orders updates
         try {
-            final OrderApi orderApi = provideOrderApi();
-            final String salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
-
-            final Response<List<OrderDto>> response = orderApi
+            final Response<List<OrderDto>> response = getOrderApi()
                     .getUpdates(companyCnpj, salesmanCpfOrCnpj, lastSyncTime)
                     .execute();
 
@@ -353,11 +356,9 @@ public class SyncTaskService extends GcmTaskService {
                 final List<OrderDto> updatedOrders = response.body();
 
                 if (!updatedOrders.isEmpty()) {
-                    final OrderRepository orderRepository = providerOrderRepository();
-
                     for (final OrderDto order : updatedOrders) {
                         final int orderId = order.orderId;
-                        final Order existingOrder = orderRepository
+                        final Order existingOrder = getOrderRepository()
                                 .findFirst(new OrderByIdSpecification(orderId))
                                 .toBlocking()
                                 .singleOrDefault(null);
@@ -369,7 +370,7 @@ public class SyncTaskService extends GcmTaskService {
                             existingOrder
                                     .withLastChangeTime(order.lastChangeTime);
 
-                            orderRepository
+                            getOrderRepository()
                                     .save(existingOrder)
                                     .toBlocking()
                                     .single();
@@ -538,5 +539,73 @@ public class SyncTaskService extends GcmTaskService {
         //endregion
 
         return GcmNetworkManager.RESULT_SUCCESS;
+    }
+
+    private boolean syncOrders(List<Order> orders) {
+        if (orders != null && !orders.isEmpty()) {
+            for (Order order : orders) {
+                try {
+                    final OrderDto postOrder = order.createPostOrder();
+
+                    final Response<OrderDto> response = getOrderApi()
+                            .createOrder(companyCnpj, salesmanCpfOrCnpj, postOrder)
+                            .execute();
+
+                    if (response.isSuccessful()) {
+                        OrderDto syncedOrder = response.body();
+
+                        for (OrderItemDto syncedOrderItem : syncedOrder.items) {
+                            for (OrderItem item : order.getItems()) {
+                                if (item.getId().compareTo(syncedOrderItem.id) == 0) {
+                                    item
+                                            .withOrderItemId(syncedOrderItem.orderItemId)
+                                            .withLastChangeTime(syncedOrderItem.lastChangeTime);
+                                    break;
+                                }
+                            }
+                        }
+
+                        order
+                                .withOrderId(syncedOrder.orderId)
+                                .withLastChangeTime(syncedOrder.lastChangeTime)
+                                .withStatus(OrderStatus.STATUS_SYNCED);
+
+                        getOrderRepository()
+                                .save(order)
+                                .toBlocking()
+                                .first();
+                    } else {
+                        Timber.i("Unsuccessful orders sync. %s", response.message());
+                    }
+                } catch (IOException e) {
+                    Timber.e(e, "Server failure while syncing orders");
+                    return false;
+                } catch (RuntimeException e) {
+                    Timber.e(e, "Unknown error while syncing orders");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private OrderApi getOrderApi() {
+        if (orderApi == null) {
+            orderApi = provideOrderApi();
+        }
+        return orderApi;
+    }
+
+    private OrderRepository getOrderRepository() {
+        if (orderRepository == null) {
+            orderRepository = new OrderRealmRepository();
+        }
+        return orderRepository;
+    }
+
+    private void restartFullSync() {
+        SyncTaskService.cancelAll(this);
+        SyncTaskService.schedule(this,
+                provideSettingsRepository().getSettings().getSyncPeriodicity());
     }
 }
