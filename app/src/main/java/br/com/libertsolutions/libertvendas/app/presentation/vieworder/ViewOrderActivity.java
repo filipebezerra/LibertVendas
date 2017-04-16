@@ -51,6 +51,8 @@ public class ViewOrderActivity extends BaseActivity {
             if (!TextUtils.isEmpty(order.getObservation())) {
                 mEditTextObservation.setText(order.getObservation());
             }
+
+            eventBus().removeStickyEvent(SelectedOrderEvent.class);
         }
     }
 }
