@@ -326,5 +326,6 @@
     <string name="all_and"><![CDATA[&]]></string>
     <string name="all_issue_date_initial">Data inicial</string>
     <string name="all_issue_date_final">Data final</string>
+    <string name="action_sync">Sincronizar</string>
 
 </resources>

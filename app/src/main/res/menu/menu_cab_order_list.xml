@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/action_sync"
+        android:title="@string/action_sync"
+        android:icon="@drawable/ic_sync_24dp"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_duplicate_order"
+        android:title="@string/order_list_duplicate_item"
+        android:icon="@drawable/ic_content_copy_24dp"
+        app:showAsAction="always"
+        />
+</menu>

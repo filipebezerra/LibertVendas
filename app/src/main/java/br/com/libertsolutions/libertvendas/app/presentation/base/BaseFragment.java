@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 public abstract class BaseFragment extends Fragment {
 
-    private BaseActivity mHostActivity;
+    private BaseActivity hostActivity;
 
     private Unbinder mUnbinder;
 
@@ -36,7 +36,7 @@ public abstract class BaseFragment extends Fragment {
     @Override public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mHostActivity = (BaseActivity) context;
+            hostActivity = (BaseActivity) context;
         } catch (ClassCastException e) {
             throw new IllegalStateException("Descendants of " + getClass().getName() +
                     " must be hosted by " + BaseActivity.class.getName());
@@ -56,22 +56,27 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected Navigator navigate() {
-        return mHostActivity.navigate();
+        return hostActivity.navigate();
     }
 
     protected SettingsRepository settings() {
-        return mHostActivity.settings();
+        return hostActivity.settings();
     }
 
     protected EventBus eventBus() {
-        return mHostActivity.eventBus();
+        return hostActivity.eventBus();
     }
 
     protected ConnectivityHelper connectivity() {
-        return mHostActivity.connectivity();
+        return hostActivity.connectivity();
     }
 
     protected void setTitle(String title) {
-        mHostActivity.setTitle(title);
+        hostActivity.setTitle(title);
     }
+
+    protected BaseActivity getHostActivity() {
+        return hostActivity;
+    }
+
 }

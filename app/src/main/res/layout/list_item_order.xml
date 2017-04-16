@@ -8,6 +8,8 @@
 
     <android.support.v7.widget.CardView
         style="@style/Widget.LibertApp.CardView"
+        android:clickable="false"
+        android:foreground="@null"
         >
 
         <RelativeLayout

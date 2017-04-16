@@ -32,4 +32,6 @@
     <item name="edit_text_customer_name" type="id" />
 
     <item name="recycler_view_customers" type="id" />
+    
+    <item name="order_item" type="id" />
 </resources>
