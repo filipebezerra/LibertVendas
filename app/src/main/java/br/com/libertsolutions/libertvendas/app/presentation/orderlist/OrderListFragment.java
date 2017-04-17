@@ -53,8 +53,6 @@ public class OrderListFragment extends BaseFragment
     private static final String ARG_SHOW_ONLY_PENDING_ORDERS
             = OrderListFragment.class.getName() + ".argShowOnlyPendingOrders";
 
-    private SearchView searchView;
-
     private OrderRepository orderRepository;
 
     private Subscription currentSubscription;
@@ -108,8 +106,9 @@ public class OrderListFragment extends BaseFragment
         fastItemAdapter.setHasStableIds(true);
         fastItemAdapter
                 .withFilterPredicate((item, constraint) ->
-                        item.getOrder()
-                                .getCustomer().getName().trim().toLowerCase().contains(constraint))
+                        !item.getOrder()
+                                .getCustomer().getName().trim().toLowerCase()
+                                .contains(constraint.toString().toLowerCase()))
                 .withSelectable(true)
                 .withMultiSelect(true)
                 .withSelectOnLongClick(true)
@@ -189,17 +188,16 @@ public class OrderListFragment extends BaseFragment
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_all_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint(getString(R.string.order_list_search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override public boolean onQueryTextSubmit(String query) {
+                fastItemAdapter.filter(query);
                 return false;
             }
 
-            @Override public boolean onQueryTextChange(String newText) {
-                if (fastItemAdapter.getItemCount() > 0) {
-                    fastItemAdapter.filter(newText.toLowerCase());
-                }
+            @Override public boolean onQueryTextChange(String query) {
+                fastItemAdapter.filter(query);
                 return true;
             }
         });
