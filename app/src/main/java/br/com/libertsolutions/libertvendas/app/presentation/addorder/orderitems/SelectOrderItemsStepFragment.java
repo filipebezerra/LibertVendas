@@ -4,12 +4,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRepository;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Customer;
@@ -58,24 +64,26 @@ import static rx.schedulers.Schedulers.io;
 public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
         SelectOrderItemsCallbacks {
 
-    private PriceTableRepository mPriceTableRepository;
+    private PriceTableRepository priceTableRepository;
 
-    private Subscription mCurrentSubscription;
+    private Subscription currentSubscription;
 
-    private SelectOrderItemsAdapter mSelectOrderItemsAdapter;
+    private SelectOrderItemsAdapter selectOrderItemsAdapter;
 
-    private OnGlobalLayoutListener mRecyclerViewLayoutListener = null;
+    private OnGlobalLayoutListener recyclerViewLayoutListener = null;
 
-    private LoggedUser mLoggedUser;
+    private LoggedUser loggedUser;
 
-    private Integer mCustomerDefaultPriceTable;
+    private Integer customerDefaultPriceTable;
 
-    private List<OrderItem> mOrderItems;
+    private List<OrderItem> orderItems;
 
-    private Order mSelectedOrder;
+    private Order selectedOrder;
 
-    @BindView(swipe_container_all_pull_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(recycler_view_order_items) RecyclerView mRecyclerViewOrderItems;
+    private SearchView searchView;
+
+    @BindView(swipe_container_all_pull_refresh) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(recycler_view_order_items) RecyclerView recyclerViewOrderItems;
 
     public static SelectOrderItemsStepFragment newInstance() {
         return new SelectOrderItemsStepFragment();
@@ -87,10 +95,11 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
 
     @Override public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         SelectedOrderEvent event = eventBus().getStickyEvent(SelectedOrderEvent.class);
         if (event != null) {
-            mSelectedOrder = event.getOrder();
+            selectedOrder = event.getOrder();
         }
     }
 
@@ -98,12 +107,12 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
             @Nullable final ViewGroup container, @Nullable final Bundle inState) {
         final View view = super.onCreateView(inflater, container, inState);
 
-        mRecyclerViewOrderItems.setHasFixedSize(true);
+        recyclerViewOrderItems.setHasFixedSize(true);
 
-        mSwipeRefreshLayout.setColorSchemeResources(colorPrimary);
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(white);
+        swipeRefreshLayout.setColorSchemeResources(colorPrimary);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(white);
 
-        mPriceTableRepository = providePriceTableRepository();
+        priceTableRepository = providePriceTableRepository();
 
         return view;
     }
@@ -114,14 +123,38 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
         loadProducts();
     }
 
+    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_all_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setQueryHint(getString(R.string.product_list_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override public boolean onQueryTextChange(String newText) {
+                if (selectOrderItemsAdapter != null) {
+                    selectOrderItemsAdapter.getFilter().filter(newText);
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override public void onPrepareOptionsMenu(final Menu menu) {
+        menu.findItem(R.id.action_all_search).setVisible(
+                selectOrderItemsAdapter != null && !selectOrderItemsAdapter.isEmptyList());
+    }
+
     @OnClick(button_all_retry) void onButtonRetryClicked() {
         mLinearLayoutErrorState.setVisibility(GONE);
         loadProducts();
     }
 
     @Subscribe(sticky = true) public void onLoggedInUser(LoggedInUserEvent event) {
-        if (mLoggedUser != null && !mLoggedUser.equals(event.getUser())) {
-            mLoggedUser = event.getUser();
+        if (loggedUser != null && !loggedUser.equals(event.getUser())) {
+            loggedUser = event.getUser();
             loadProducts();
         }
     }
@@ -129,7 +162,7 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
     @Subscribe(priority = 1) public void onSelectedCustomer(SelectedCustomerEvent event) {
         Customer customer = event.getCustomer();
         if (!isEmpty(customer.getDefaultPriceTable())) {
-            mCustomerDefaultPriceTable = valueOf(customer.getDefaultPriceTable());
+            customerDefaultPriceTable = valueOf(customer.getDefaultPriceTable());
             loadProducts();
         }
     }
@@ -138,7 +171,7 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
         final float quantity = orderItem.getQuantity() + 1;
         if (checkQuantity(quantity)) {
             orderItem.addQuantity(1);
-            mSelectOrderItemsAdapter.notifyItemChanged(position);
+            selectOrderItemsAdapter.notifyItemChanged(position);
         }
     }
 
@@ -147,7 +180,7 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
         final Float quantity = orderItem.getQuantity();
         if (quantity != null && quantity >= 1) {
             orderItem.removeOneFromQuantity();
-            mSelectOrderItemsAdapter.notifyItemChanged(position);
+            selectOrderItemsAdapter.notifyItemChanged(position);
         }
     }
 
@@ -155,11 +188,17 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
             final OrderItem orderItem, final float quantity, final int position) {
         if (checkQuantity(quantity)) {
             orderItem.withQuantity(quantity);
-            mSelectOrderItemsAdapter.notifyItemChanged(position);
+            selectOrderItemsAdapter.notifyItemChanged(position);
         }
     }
 
     @Override public VerificationError verifyStep() {
+        if (!isEmpty(searchView.getQuery())) {
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+            selectOrderItemsAdapter.getFilter().filter("");
+        }
+
         List<OrderItem> addedOrderItems = getAddedOrderItems();
         if (!addedOrderItems.isEmpty()) {
             eventBus().post(newEvent(addedOrderItems));
@@ -176,7 +215,7 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
     }
 
     private void loadProducts() {
-        mCurrentSubscription = mPriceTableRepository
+        currentSubscription = priceTableRepository
                 .findFirst(new PriceTableByIdSpecification(loadDefaultPriceTableId()))
                 .observeOn(mainThread())
                 .doOnNext(priceTable ->
@@ -186,26 +225,26 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
                 .flatMapIterable(item -> item)
                 .map(this::createOrderItem)
                 .observeOn(mainThread())
-                .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
+                .doOnUnsubscribe(() -> swipeRefreshLayout.setRefreshing(false))
                 .subscribe(createPriceTableItemSubscriber());
     }
 
     private int loadDefaultPriceTableId() {
-        if (mLoggedUser == null) {
-            mLoggedUser = eventBus().getStickyEvent(LoggedInUserEvent.class).getUser();
+        if (loggedUser == null) {
+            loggedUser = eventBus().getStickyEvent(LoggedInUserEvent.class).getUser();
         }
 
-        if (mCustomerDefaultPriceTable != null) {
-            return mCustomerDefaultPriceTable;
+        if (customerDefaultPriceTable != null) {
+            return customerDefaultPriceTable;
         }
 
-        return mLoggedUser.getDefaultCompany().getPriceTableId();
+        return loggedUser.getDefaultCompany().getPriceTableId();
     }
 
     private OrderItem createOrderItem(final PriceTableItem priceTableItem) {
         OrderItem orderItem = null;
-        if (mSelectedOrder != null) {
-            for (OrderItem item : mSelectedOrder.getItems()) {
+        if (selectedOrder != null) {
+            for (OrderItem item : selectedOrder.getItems()) {
                 if (item.getItem().equals(priceTableItem)) {
                     orderItem = new OrderItem()
                             .withItem(priceTableItem)
@@ -236,7 +275,7 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
             }
 
             @Override public void onNext(final OrderItem orderItem) {
-                mOrderItems.add(orderItem);
+                orderItems.add(orderItem);
             }
 
             @Override public void onCompleted() {
@@ -246,49 +285,50 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
     }
 
     private void startLoadingProducts() {
-        if (mOrderItems == null) {
-            mOrderItems = new ArrayList<>();
+        if (orderItems == null) {
+            orderItems = new ArrayList<>();
         } else {
-            mOrderItems.clear();
+            orderItems.clear();
         }
-        mSwipeRefreshLayout.setRefreshing(true);
-        mSelectOrderItemsAdapter = null;
-        mRecyclerViewOrderItems.setAdapter(null);
-        mRecyclerViewOrderItems.setVisibility(GONE);
+        swipeRefreshLayout.setRefreshing(true);
+        selectOrderItemsAdapter = null;
+        recyclerViewOrderItems.setAdapter(null);
+        recyclerViewOrderItems.setVisibility(GONE);
         mLinearLayoutEmptyState.setVisibility(VISIBLE);
         getActivity().invalidateOptionsMenu();
     }
 
     private void handleLoadProductsError(Throwable e) {
         Timber.e(e, "Could not load products");
-        mSwipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setRefreshing(false);
         mLinearLayoutErrorState.setVisibility(VISIBLE);
         mLinearLayoutEmptyState.setVisibility(GONE);
     }
 
     private void showOrderItems() {
-        if (!mOrderItems.isEmpty()) {
-            mRecyclerViewOrderItems.setVisibility(VISIBLE);
-            mRecyclerViewOrderItems.setAdapter(
-                    mSelectOrderItemsAdapter = new SelectOrderItemsAdapter(mOrderItems, this));
-            mRecyclerViewOrderItems
+        if (!orderItems.isEmpty()) {
+            recyclerViewOrderItems.setVisibility(VISIBLE);
+            recyclerViewOrderItems.setAdapter(
+                    selectOrderItemsAdapter = new SelectOrderItemsAdapter(orderItems, this));
+            recyclerViewOrderItems
                     .getViewTreeObserver()
                     .addOnGlobalLayoutListener(
-                            mRecyclerViewLayoutListener = this::onRecyclerViewFinishLoading);
+                            recyclerViewLayoutListener = this::onRecyclerViewFinishLoading);
         } else {
-            mSwipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
     private void onRecyclerViewFinishLoading() {
         if (getView() != null) {
-            mRecyclerViewOrderItems
+            recyclerViewOrderItems
                     .getViewTreeObserver()
-                    .removeOnGlobalLayoutListener(mRecyclerViewLayoutListener);
-            mRecyclerViewLayoutListener = null;
+                    .removeOnGlobalLayoutListener(recyclerViewLayoutListener);
+            recyclerViewLayoutListener = null;
 
-            mSwipeRefreshLayout.setRefreshing(false);
-            mSwipeRefreshLayout.setEnabled(false);
+            getActivity().invalidateOptionsMenu();
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setEnabled(false);
             mLinearLayoutEmptyState.setVisibility(GONE);
             if (!eventBus().isRegistered(this)) {
                 eventBus().register(this);
@@ -307,12 +347,12 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
     }
 
     private List<OrderItem> getAddedOrderItems() {
-        if (mOrderItems == null || mOrderItems.isEmpty()) {
+        if (orderItems == null || orderItems.isEmpty()) {
             return emptyList();
         }
 
         List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItem item : mOrderItems) {
+        for (OrderItem item : this.orderItems) {
             if (item.getQuantity() > 0) {
                 orderItems.add(item);
             }
@@ -321,8 +361,8 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
     }
 
     @Override public void onDestroyView() {
-        if (mCurrentSubscription != null && !mCurrentSubscription.isUnsubscribed()) {
-            mCurrentSubscription.unsubscribe();
+        if (currentSubscription != null && !currentSubscription.isUnsubscribed()) {
+            currentSubscription.unsubscribe();
         }
         eventBus().unregister(this);
         super.onDestroyView();
