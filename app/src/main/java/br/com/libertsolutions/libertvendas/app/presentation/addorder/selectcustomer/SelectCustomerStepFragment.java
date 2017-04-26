@@ -12,6 +12,7 @@ import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
+import static android.text.TextUtils.isEmpty;
 import static br.com.libertsolutions.libertvendas.app.R.string.select_customer_step_not_selected_error;
 import static br.com.libertsolutions.libertvendas.app.presentation.customerlist.SelectedCustomerEvent.selectCustomer;
 
@@ -53,6 +54,12 @@ public class SelectCustomerStepFragment extends CustomerListFragment implements 
     }
 
     @Override public VerificationError verifyStep() {
+        if (!isEmpty(mSearchView.getQuery())) {
+            mSearchView.setQuery("", false);
+            mSearchView.clearFocus();
+            mCustomerListAdapter.getFilter().filter("");
+        }
+
         return mSelectedCustomer == null ?
                 new VerificationError(getString(select_customer_step_not_selected_error)) :
                 null;
