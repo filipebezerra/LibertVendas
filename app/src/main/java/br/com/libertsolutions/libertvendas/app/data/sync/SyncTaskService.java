@@ -204,6 +204,7 @@ public class SyncTaskService extends GcmTaskService {
                 }
             } else {
                 restartFullSync();
+                return GcmNetworkManager.RESULT_SUCCESS;
             }
         }
         //endregion
