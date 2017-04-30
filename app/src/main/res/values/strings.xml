@@ -2,7 +2,6 @@
     <string name="app_name">Libert Vendas</string>
 
     <!-- Main strings -->
-    <string name="main_title">Libert Vendas</string>
     <string name="main_new_order_sheet_text">Novo pedido</string>
     <string name="main_new_customer_sheet_text">Novo cliente</string>
     <string name="main_drawer_item_dashboard">Início</string>

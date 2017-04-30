@@ -3,6 +3,12 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'realm-android'
 
+//noinspection GroovyAssignabilityCheck
+if (project.hasProperty("LibertVendas.signing")
+        && new File(project.property("LibertVendas.signing") + ".gradle").exists()) {
+    apply from: project.property("LibertVendas.signing") + ".gradle";
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -14,8 +20,14 @@ android {
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "LibertVendas-$versionName")
+        manifestPlaceholders = [applicationLabel: "@string/app_name"]
     }
     buildTypes {
+        debug {
+            applicationIdSuffix '.dev'
+            versionNameSuffix '-dev'
+            manifestPlaceholders = [applicationLabel: "Libert Dev"]
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
