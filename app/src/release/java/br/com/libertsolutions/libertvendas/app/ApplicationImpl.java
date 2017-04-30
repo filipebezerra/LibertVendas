@@ -1,5 +1,7 @@
 package br.com.libertsolutions.libertvendas.app;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import timber.log.Timber;
@@ -10,7 +12,7 @@ import timber.log.Timber;
 public class ApplicationImpl extends BaseApplication {
 
     @Override protected void initializeLogging() {
-        //TODO: Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
         Timber.plant(new ReleaseTree());
     }
 

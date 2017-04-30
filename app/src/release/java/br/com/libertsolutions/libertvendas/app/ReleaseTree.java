@@ -1,12 +1,13 @@
 package br.com.libertsolutions.libertvendas.app;
 
 import android.util.Log;
+import com.crashlytics.android.Crashlytics;
 import timber.log.Timber;
 
 /**
  * @author Filipe Bezerra
  */
-public class ReleaseTree extends Timber.Tree {
+class ReleaseTree extends Timber.Tree {
 
     private static final int MAX_LOG_LENGTH = 4000;
 
@@ -18,7 +19,7 @@ public class ReleaseTree extends Timber.Tree {
             final int priority, final String tag, final String message, final Throwable t) {
         if (isLoggable(tag, priority)) {
             if (priority == Log.ERROR && t != null) {
-                //TODO: Crashlytics.logException(t);
+                Crashlytics.logException(t);
             }
 
             if (message.length() < MAX_LOG_LENGTH) {
