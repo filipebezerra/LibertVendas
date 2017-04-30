@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/action_sync"
-        android:title="@string/action_sync"
+        android:title="@string/order_list_sync_items"
         android:icon="@drawable/ic_sync_24dp"
         app:showAsAction="always"
         />

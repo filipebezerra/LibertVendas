@@ -140,6 +140,7 @@
     <string name="order_list_template_text_order_total">Total %1$s</string>
     <string name="order_list_template_text_customer_name">Cliente %1$s</string>
     <string name="order_list_duplicate_item">Duplicar pedido</string>
+    <string name="order_list_sync_items">Sincronizar pedidos</string>
 
     <!-- Customer List strings -->
     <string name="customer_list_error_loading_customers">
@@ -327,6 +328,5 @@
     <string name="all_and"><![CDATA[&]]></string>
     <string name="all_issue_date_initial">Data inicial</string>
     <string name="all_issue_date_final">Data final</string>
-    <string name="action_sync">Sincronizar</string>
 
 </resources>

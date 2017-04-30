@@ -27,6 +27,10 @@ import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
 import butterknife.BindView;
 import butterknife.OnClick;
+import com.mikepenz.fastadapter.FastAdapter.OnClickListener;
+import com.mikepenz.fastadapter.FastAdapter.OnLongClickListener;
+import com.mikepenz.fastadapter.IItemAdapter.Predicate;
+import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.materialize.util.UIUtils;
@@ -39,7 +43,6 @@ import rx.Subscription;
 import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
-import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.duplicateOrder;
 import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.selectOrder;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
@@ -47,11 +50,10 @@ import static rx.android.schedulers.AndroidSchedulers.mainThread;
 /**
  * @author Filipe Bezerra
  */
-public class OrderListFragment extends BaseFragment
-        implements OnRefreshListener/*, OnItemClickListener*/ {
+public class OrderListFragment extends BaseFragment implements OnRefreshListener {
 
-    private static final String ARG_SHOW_ONLY_PENDING_ORDERS
-            = OrderListFragment.class.getName() + ".argShowOnlyPendingOrders";
+    private static final String ARG_SHOW_ONLY_PENDING_ORDERS =
+            OrderListFragment.class.getName() + ".argShowOnlyPendingOrders";
 
     private OrderRepository orderRepository;
 
@@ -61,14 +63,80 @@ public class OrderListFragment extends BaseFragment
 
     private ActionModeHelper actionModeHelper;
 
-//    private OrderListAdapter mOrderListAdapter;
+    private Predicate<OrderAdapterItem> filterPredicate = (item, constraint) ->
+            !item.getOrder().getCustomer().getName().trim().toLowerCase()
+                    .contains(constraint.toString().toLowerCase());
+
+    private OnClickListener<OrderAdapterItem> preClickListener = (v, a, item, position) -> {
+        if (actionModeHelper.isActive()) {
+            Set<OrderAdapterItem> selectedItems = fastItemAdapter.getSelectedItems();
+            OrderAdapterItem[] selectedItemsArray =
+                    selectedItems.toArray(new OrderAdapterItem[selectedItems.size()]);
+
+            Order firstOrder = selectedItemsArray[0].getOrder();
+            Order selectedOrder = item.getOrder();
+
+            if (!selectedOrder.isStatusEquals(firstOrder)) {
+                return true;
+            } else if (selectedOrder.isStatusSyncedOrCancelled()) {
+                if (selectedItems.contains(item) && selectedItems.size() == 1) {
+                    actionModeHelper.reset();
+                }
+                return true;
+            }
+        }
+
+        return actionModeHelper.onClick(item) != null;
+    };
+
+    private OnClickListener<OrderAdapterItem> clickListener = (v, a, i, position) -> {
+        if (!actionModeHelper.isActive()) {
+            final Order selectedOrder = fastItemAdapter.getAdapterItem(position)
+                    .getOrder();
+
+            if (selectedOrder != null) {
+                eventBus().postSticky(selectOrder(selectedOrder));
+
+                if (selectedOrder.getStatus() == OrderStatus.STATUS_SYNCED ||
+                        selectedOrder.getStatus() == OrderStatus.STATUS_CANCELLED) {
+                    navigate().toViewOrder();
+                } else {
+                    navigate().toAddOrder();
+                }
+            }
+        } else {
+            actionModeHelper.getActionMode().invalidate();
+        }
+
+        return false;
+    };
+
+    private OnLongClickListener<OrderAdapterItem> preLongClickListener = (v, d, i, position) -> {
+        ActionMode actionMode = actionModeHelper.onLongClick(getHostActivity(), position);
+
+        if (actionMode != null) {
+            //we want color our CAB
+            getHostActivity()
+                    .findViewById(R.id.action_mode_bar)
+                    .setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(getContext(),
+                            R.attr.colorPrimary, R.color.material_drawer_primary));
+        }
+
+        return actionMode != null;
+    };
+
+    private ISelectionListener<OrderAdapterItem> seleciontListener = (item, selected) -> {
+        if (actionModeHelper.isActive()) {
+            actionModeHelper.getActionMode().invalidate();
+        }
+    };
 
     protected OnGlobalLayoutListener recyclerViewLayoutListener = null;
 
     protected LoggedUser loggedUser;
 
-    @BindView(R.id.swipe_container_all_pull_refresh) protected SwipeRefreshLayout
-            swipeRefreshLayout;
+    @BindView(R.id.swipe_container_all_pull_refresh) protected SwipeRefreshLayout swipeRefreshLayout;
+
     @BindView(R.id.recycler_view_orders) protected RecyclerView recyclerViewOrders;
 
     public static OrderListFragment newInstance(boolean showOnlyPendingOrders) {
@@ -105,70 +173,15 @@ public class OrderListFragment extends BaseFragment
 
         fastItemAdapter.setHasStableIds(true);
         fastItemAdapter
-                .withFilterPredicate((item, constraint) ->
-                        !item.getOrder()
-                                .getCustomer().getName().trim().toLowerCase()
-                                .contains(constraint.toString().toLowerCase()))
+                .withFilterPredicate(filterPredicate)
                 .withSelectable(true)
                 .withMultiSelect(true)
                 .withSelectOnLongClick(true)
                 .withSavedInstanceState(inState)
-                .withOnPreClickListener((v, adapter, item, position) -> {
-                    /*final Order order = item.getOrder();
-                    if (order.getStatus() == OrderStatus.STATUS_SYNCED ||
-                            order.getStatus() == OrderStatus.STATUS_CANCELLED) {
-                        return true;
-                    }*/
-
-                    //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
-
-                    Boolean res = actionModeHelper.onClick(item);
-                    return res != null ? res : false;
-                })
-                .withOnClickListener((v, adapter, item, position) -> {
-                    if (!actionModeHelper.isActive()) {
-                        final Order selectedOrder = fastItemAdapter.getAdapterItem(position)
-                                .getOrder();
-
-                        if (selectedOrder != null) {
-                            eventBus().postSticky(selectOrder(selectedOrder));
-
-                            if (selectedOrder.getStatus() == OrderStatus.STATUS_SYNCED ||
-                                    selectedOrder.getStatus() == OrderStatus.STATUS_CANCELLED) {
-                                navigate().toViewOrder();
-                            } else {
-                                navigate().toAddOrder();
-                            }
-                        }
-                    }
-
-                    if (actionModeHelper.isActive()) {
-                        actionModeHelper.getActionMode().invalidate();
-                    }
-
-                    return false;
-                })
-                .withOnPreLongClickListener((v, adapter, item, position) -> {
-                    /*final Order order = item.getOrder();
-                    if (order.getStatus() == OrderStatus.STATUS_SYNCED ||
-                            order.getStatus() == OrderStatus.STATUS_CANCELLED) {
-                        return true;
-                    }*/
-
-                    ActionMode actionMode = actionModeHelper.onLongClick(getHostActivity(),
-                            position);
-
-                    if (actionMode != null) {
-                        //we want color our CAB
-                        getHostActivity()
-                                .findViewById(R.id.action_mode_bar)
-                                .setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(getContext(),
-                                        R.attr.colorPrimary, R.color.material_drawer_primary));
-                    }
-
-                    //if we have no actionMode we do not consume the event
-                    return actionMode != null;
-                });
+                .withOnPreClickListener(preClickListener)
+                .withOnClickListener(clickListener)
+                .withOnPreLongClickListener(preLongClickListener)
+                .withSelectionListener(seleciontListener);
 
         recyclerViewOrders.setHasFixedSize(true);
 
@@ -226,6 +239,7 @@ public class OrderListFragment extends BaseFragment
     @Subscribe(sticky = true) public void onSavedOrder(SavedOrderEvent event) {
         final Order order = event.getOrder();
         eventBus().removeStickyEvent(SavedOrderEvent.class);
+        //TODO: maybe reload the list, this is already accomplished by onLoggedInUserEvent, but the better way is to do that way
 /*
         if (mOrderListAdapter != null) {
             final int position = mOrderListAdapter.updateOrder(order);
@@ -375,13 +389,28 @@ public class OrderListFragment extends BaseFragment
         @Override public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
             final int selectionSize = fastItemAdapter.getSelectedItems().size();
             final MenuItem duplicateMenuItem = menu.findItem(R.id.action_duplicate_order);
-            if (selectionSize > 1 && duplicateMenuItem.isVisible()) {
+            if (selectionSize == 1) {
+                if (!duplicateMenuItem.isVisible()) {
+                    duplicateMenuItem.setVisible(true);
+                }
+
+                OrderAdapterItem[] orderAdapterItems =
+                        fastItemAdapter.getSelectedItems()
+                                .toArray(new OrderAdapterItem[selectionSize]);
+                Order firstOrder = orderAdapterItems[0].getOrder();
+                if (firstOrder.isStatusSyncedOrCancelled()) {
+                    MenuItem syncItemsMenuItem = menu.findItem(R.id.action_sync);
+                    if (syncItemsMenuItem.isVisible()) {
+                        syncItemsMenuItem.setVisible(false);
+                    }
+                }
+
+                return true;
+            } else if (selectionSize > 1 && duplicateMenuItem.isVisible()) {
                 duplicateMenuItem.setVisible(false);
                 return true;
-            } else if (selectionSize == 1 && !duplicateMenuItem.isVisible()) {
-                duplicateMenuItem.setVisible(true);
-                return true;
             }
+
             return false;
         }
 
@@ -393,7 +422,7 @@ public class OrderListFragment extends BaseFragment
                     for (OrderAdapterItem orderAdapterItem : selectedItems) {
                         orders.add(orderAdapterItem.getOrder());
                     }
-                    provideEventBus().postSticky(SyncOrdersEvent.just(orders));
+                    eventBus().postSticky(SyncOrdersEvent.just(orders));
                     SyncTaskService.scheduleSingleSync(getContext());
                     break;
                 }
