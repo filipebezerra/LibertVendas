@@ -199,6 +199,8 @@ public class SyncTaskService extends GcmTaskService {
                 } else {
                     return GcmNetworkManager.RESULT_RESCHEDULE;
                 }
+            } else {
+                restartFullSync();
             }
         }
 
