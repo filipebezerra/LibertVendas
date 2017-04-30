@@ -213,9 +213,9 @@ public class SyncTaskService extends GcmTaskService {
 
         final String lastSyncTime = settingsRepository.getLastSyncTime();
 
+        boolean notifyOrderUpdates = false;
         boolean notifyCustomerUpdates = false;
         boolean notifyProductUpdates = false;
-        boolean notifyOrderUpdates = false;
 
         //region sending created customers
         final List<Customer> createdCustomers = customerRepository
@@ -300,7 +300,7 @@ public class SyncTaskService extends GcmTaskService {
             Boolean successful = syncOrders(createdOrModifiedOrders);
             if (successful != null) {
                 if (successful) {
-                    provideEventBus().post(ordersSynced());
+                    notifyOrderUpdates = true;
                 } else {
                     return GcmNetworkManager.RESULT_RESCHEDULE;
                 }
@@ -398,6 +398,7 @@ public class SyncTaskService extends GcmTaskService {
                                     .single();
                         }
                     }
+                    notifyOrderUpdates = true;
                 }
             } else {
                 Timber.i("Unsuccessful getting order updates. %s", response.message());
@@ -562,6 +563,11 @@ public class SyncTaskService extends GcmTaskService {
         }
         //endregion
 
+        //region notifications
+        if (notifyOrderUpdates) {
+            provideEventBus().post(ordersSynced());
+        }
+
         if (notifyCustomerUpdates) {
             provideEventBus().post(customersSynced());
         }
@@ -569,6 +575,7 @@ public class SyncTaskService extends GcmTaskService {
         if (notifyProductUpdates) {
             provideEventBus().post(productsUpdated());
         }
+        //endregion
 
         return GcmNetworkManager.RESULT_SUCCESS;
     }
