@@ -10,11 +10,13 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Company;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Salesman;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.exception.ValidationError;
+import br.com.libertsolutions.libertvendas.app.presentation.util.AnswersEvents;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import java.io.IOException;
+import java.util.List;
 import retrofit2.HttpException;
 import rx.Observable;
 import rx.Subscriber;
@@ -24,12 +26,15 @@ import timber.log.Timber;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSalesmanApi;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser.create;
 import static br.com.libertsolutions.libertvendas.app.presentation.login.CompletedLoginEvent.newEvent;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.AnswersEvents.LOGIN_METHOD_CPF_CNPJ;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
  * @author Filipe Bezerra
  */
 public class LoginFragment extends BaseFragment {
+
+    private static final int ONE_PROFILE = 1;
 
     public static final String TAG = LoginFragment.class.getName();
 
@@ -108,6 +113,7 @@ public class LoginFragment extends BaseFragment {
     private void processLoginError(final Throwable e) {
         stopLogin();
         Timber.e(e, "Could not do login");
+        AnswersEvents.unsuccessfulLogin(LOGIN_METHOD_CPF_CNPJ);
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext())
                 .neutralText(android.R.string.ok);
@@ -136,12 +142,13 @@ public class LoginFragment extends BaseFragment {
     private void processLoginResult(Salesman salesman) {
         stopLogin();
 
-        if (salesman.getCompanies().size() > 1) {
+        final List<Company> companies = salesman.getCompanies();
+        if (companies.size() > ONE_PROFILE) {
             new MaterialDialog.Builder(getContext())
                     .title(R.string.login_select_default_company)
-                    .items(salesman.getCompanies())
+                    .items(companies)
                     .itemsCallbackSingleChoice(-1, (dialog, itemView, which, text) -> {
-                        saveLogin(salesman, salesman.getCompanies().get(which));
+                        saveLogin(salesman, companies.get(which), companies.size());
                         return true;
                     })
                     .alwaysCallSingleChoiceCallback()
@@ -149,11 +156,12 @@ public class LoginFragment extends BaseFragment {
             return;
         }
 
-        saveLogin(salesman, salesman.getCompanies().get(0));
+        saveLogin(salesman, companies.get(0), ONE_PROFILE);
     }
 
-    private void saveLogin(Salesman salesman, Company defaultCompany) {
+    private void saveLogin(Salesman salesman, Company defaultCompany, int numberOfProfiles) {
         settings().setLoggedUser(salesman, defaultCompany);
+        AnswersEvents.successfulLogin(LOGIN_METHOD_CPF_CNPJ, numberOfProfiles);
         eventBus().postSticky(newEvent(create(salesman, defaultCompany)));
     }
 
