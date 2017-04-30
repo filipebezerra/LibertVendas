@@ -141,6 +141,15 @@
     <string name="order_list_template_text_customer_name">Cliente %1$s</string>
     <string name="order_list_duplicate_item">Duplicar pedido</string>
     <string name="order_list_sync_items">Sincronizar pedidos</string>
+    <string name="order_list_multi_selection_only_for_same_status">
+        Pedidos com status diferentes não pode ser selecionados!
+    </string>
+    <string name="order_list_single_selection_to_duplicate_order">
+        Somente 1 pedido por vez pode ser duplicado!
+    </string>
+    <string name="order_list_will_update_after_sync">
+        Sua lista de pedidos será atualizada após a sincronização!
+    </string>
 
     <!-- Customer List strings -->
     <string name="customer_list_error_loading_customers">

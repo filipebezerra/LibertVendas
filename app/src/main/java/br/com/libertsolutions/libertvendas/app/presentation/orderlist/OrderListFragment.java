@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.orderlist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -77,10 +78,17 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
             Order selectedOrder = item.getOrder();
 
             if (!selectedOrder.isStatusEquals(firstOrder)) {
+                Snackbar.make(getView(), R.string.order_list_multi_selection_only_for_same_status,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
                 return true;
             } else if (selectedOrder.isStatusSyncedOrCancelled()) {
                 if (selectedItems.contains(item) && selectedItems.size() == 1) {
                     actionModeHelper.reset();
+                } else {
+                    Snackbar.make(getView(), R.string.order_list_single_selection_to_duplicate_order,
+                            Snackbar.LENGTH_SHORT)
+                            .show();
                 }
                 return true;
             }
@@ -424,6 +432,9 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
                     }
                     eventBus().postSticky(SyncOrdersEvent.just(orders));
                     SyncTaskService.scheduleSingleSync(getContext());
+                    Snackbar.make(getView(), R.string.order_list_will_update_after_sync,
+                            Snackbar.LENGTH_SHORT)
+                            .show();
                     break;
                 }
                 case R.id.action_duplicate_order: {
