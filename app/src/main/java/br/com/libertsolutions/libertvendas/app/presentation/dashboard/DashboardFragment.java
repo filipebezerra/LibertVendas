@@ -17,6 +17,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
+import br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderChartData;
@@ -137,6 +138,10 @@ public class DashboardFragment extends BaseFragment
 
     @Subscribe(sticky = true) public void onSavedOrder(SavedOrderEvent event) {
         loadOrderedOrders();
+    }
+
+    @Subscribe public void onOrdersSynced(OrdersSyncedEvent event) {
+        getActivity().runOnUiThread(this::loadOrderedOrders);
     }
 
     @OnClick(R.id.button_all_retry) void onButtonRetryClicked() {

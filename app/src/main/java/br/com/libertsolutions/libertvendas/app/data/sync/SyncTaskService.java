@@ -63,6 +63,7 @@ import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.pr
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePriceTableApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideProductApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSyncApi;
+import static br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent.ordersSynced;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
 import static java.util.Collections.emptyList;
@@ -188,13 +189,16 @@ public class SyncTaskService extends GcmTaskService {
 
         SyncOrdersEvent syncOrdersEvent = provideEventBus().getStickyEvent(SyncOrdersEvent.class);
         if (syncOrdersEvent != null) {
-            boolean successful = syncOrders(syncOrdersEvent.getOrders());
-            if (successful) {
-                provideEventBus().removeStickyEvent(SyncOrdersEvent.class);
-                restartFullSync();
-                return GcmNetworkManager.RESULT_SUCCESS;
-            } else {
-                return GcmNetworkManager.RESULT_RESCHEDULE;
+            Boolean successful = syncOrders(syncOrdersEvent.getOrders());
+            if (successful != null) {
+                if (successful) {
+                    provideEventBus().removeStickyEvent(SyncOrdersEvent.class);
+                    provideEventBus().post(ordersSynced());
+                    restartFullSync();
+                    return GcmNetworkManager.RESULT_SUCCESS;
+                } else {
+                    return GcmNetworkManager.RESULT_RESCHEDULE;
+                }
             }
         }
 
@@ -281,9 +285,14 @@ public class SyncTaskService extends GcmTaskService {
                     .toBlocking()
                     .firstOrDefault(Collections.emptyList());
 
-            boolean successful = syncOrders(createdOrModifiedOrders);
-            if (!successful)
-                return GcmNetworkManager.RESULT_RESCHEDULE;
+            Boolean successful = syncOrders(createdOrModifiedOrders);
+            if (successful != null) {
+                if (successful) {
+                    provideEventBus().post(ordersSynced());
+                } else {
+                    return GcmNetworkManager.RESULT_RESCHEDULE;
+                }
+            }
         } else {
             Timber.i("Orders are not enabled to sync automatically");
         }
@@ -541,7 +550,7 @@ public class SyncTaskService extends GcmTaskService {
         return GcmNetworkManager.RESULT_SUCCESS;
     }
 
-    private boolean syncOrders(List<Order> orders) {
+    private Boolean syncOrders(List<Order> orders) {
         if (orders != null && !orders.isEmpty()) {
             for (Order order : orders) {
                 try {
@@ -585,8 +594,9 @@ public class SyncTaskService extends GcmTaskService {
                     return false;
                 }
             }
-        }
-        return true;
+            return true;
+        } else
+            return null;
     }
 
     private OrderApi getOrderApi() {

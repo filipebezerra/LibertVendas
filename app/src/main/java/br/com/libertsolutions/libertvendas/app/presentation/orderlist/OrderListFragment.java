@@ -19,6 +19,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
+import br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent;
 import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
@@ -258,6 +259,10 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
             showOrders(new ArrayList<>(Collections.singletonList(order)));
         }
 */
+    }
+
+    @Subscribe public void onOrdersSynced(OrdersSyncedEvent event) {
+        getActivity().runOnUiThread(this::loadOrders);
     }
 
     private void loadOrders() {

@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
+import br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderform.SavedOrderEvent;
@@ -172,6 +173,10 @@ public class OrdersReportFragment extends BaseFragment
         } else {
             showOrders(new ArrayList<>(Collections.singletonList(order)));
         }
+    }
+
+    @Subscribe public void onOrdersSynced(OrdersSyncedEvent event) {
+        getActivity().runOnUiThread(this::loadOrdersByDefault);
     }
 
     @Override public void onDateSet(final DatePickerDialog view,
