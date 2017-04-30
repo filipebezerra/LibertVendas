@@ -277,8 +277,13 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
         currentSubscription = orderRepository
                 .query(specification)
                 .observeOn(mainThread())
-                .doOnUnsubscribe(() -> swipeRefreshLayout.setRefreshing(false))
+                .doOnUnsubscribe(this::stopLoadingOrders)
                 .subscribe(createOrderListSubscriber());
+    }
+
+    private void stopLoadingOrders() {
+        swipeRefreshLayout.setRefreshing(false);
+        mLinearLayoutEmptyState.setVisibility(View.GONE);
     }
 
     private int getSalesmanId() {

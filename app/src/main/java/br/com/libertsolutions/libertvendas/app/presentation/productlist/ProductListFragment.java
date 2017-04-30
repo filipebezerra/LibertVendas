@@ -140,8 +140,13 @@ public class ProductListFragment extends BaseFragment implements OnRefreshListen
                 .findFirst(new PriceTableByIdSpecification(loadDefaultPriceTableId()))
                 .map(PriceTable::getItems)
                 .observeOn(mainThread())
-                .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
+                .doOnUnsubscribe(this::stopLoadingProducts)
                 .subscribe(createPriceTableItemListSubscriber());
+    }
+
+    private void stopLoadingProducts() {
+        mSwipeRefreshLayout.setRefreshing(false);
+        mLinearLayoutEmptyState.setVisibility(View.GONE);
     }
 
     private int loadDefaultPriceTableId() {

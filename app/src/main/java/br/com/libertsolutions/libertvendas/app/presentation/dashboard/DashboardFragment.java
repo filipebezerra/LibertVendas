@@ -185,9 +185,14 @@ public class DashboardFragment extends BaseFragment
                             .orderByCustomerName())
                     .map(this::toChartData)
                     .observeOn(mainThread())
-                    .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
+                    .doOnUnsubscribe(this::stopLoadingOrderedOrders)
                     .subscribe(createOrderChartDataListSubscriber());
         }
+    }
+
+    private void stopLoadingOrderedOrders() {
+        mSwipeRefreshLayout.setRefreshing(false);
+        mLinearLayoutEmptyState.setVisibility(View.GONE);
     }
 
     private LoggedUser getLoggedUser() {
