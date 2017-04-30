@@ -17,6 +17,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRepository;
+import br.com.libertsolutions.libertvendas.app.data.sync.ProductsUpdatedEvent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PriceTable;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PriceTableItem;
@@ -128,6 +129,10 @@ public class ProductListFragment extends BaseFragment implements OnRefreshListen
             mLoggedUser = event.getUser();
             loadProducts();
         }
+    }
+
+    @Subscribe public void onProductsUpdated(ProductsUpdatedEvent event) {
+        getActivity().runOnUiThread(this::loadProducts);
     }
 
     private void loadProducts() {

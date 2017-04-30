@@ -65,6 +65,7 @@ import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.pr
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSyncApi;
 import static br.com.libertsolutions.libertvendas.app.data.sync.CustomersSyncedEvent.customersSynced;
 import static br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent.ordersSynced;
+import static br.com.libertsolutions.libertvendas.app.data.sync.ProductsUpdatedEvent.productsUpdated;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
 import static java.util.Collections.emptyList;
@@ -497,6 +498,7 @@ public class SyncTaskService extends GcmTaskService {
                                     .single();
                         }
                     }
+                    notifyProductUpdates = true;
                 }
             } else {
                 Timber.i("Unsuccessful getting price table updates. %s", response.message());
@@ -528,6 +530,7 @@ public class SyncTaskService extends GcmTaskService {
                                 .toBlocking()
                                 .single();
                     }
+                    notifyProductUpdates = true;
                 }
             } else {
                 Timber.i("Unsuccessful getting product updates. %s", response.message());
@@ -561,6 +564,10 @@ public class SyncTaskService extends GcmTaskService {
 
         if (notifyCustomerUpdates) {
             provideEventBus().post(customersSynced());
+        }
+
+        if (notifyProductUpdates) {
+            provideEventBus().post(productsUpdated());
         }
 
         return GcmNetworkManager.RESULT_SUCCESS;
