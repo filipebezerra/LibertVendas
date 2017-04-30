@@ -84,7 +84,7 @@ dependencies {
     })
 
     // Play Services
-    compile 'com.google.android.gms:play-services-gcm:10.2.1'
+    compile 'com.google.android.gms:play-services-gcm:10.2.4'
 
     // View Injection
     compile "com.jakewharton:butterknife:${butterknife}"
