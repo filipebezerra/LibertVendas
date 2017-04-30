@@ -27,10 +27,12 @@ android {
             applicationIdSuffix '.dev'
             versionNameSuffix '-dev'
             manifestPlaceholders = [applicationLabel: "Libert Dev"]
+            buildConfigField "long", "SCHEMA_VERSION", "1L"
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "long", "SCHEMA_VERSION", "1L"
         }
     }
     compileOptions {

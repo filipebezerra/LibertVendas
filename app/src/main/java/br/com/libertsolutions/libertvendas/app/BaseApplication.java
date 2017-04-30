@@ -14,7 +14,6 @@ public abstract class BaseApplication extends Application {
         super.onCreate();
         mInstance = this;
         initializeLogging();
-        initializePicasso();
         initializeRealm();
         initializeJodaTime();
     }
@@ -24,8 +23,6 @@ public abstract class BaseApplication extends Application {
     }
 
     protected abstract void initializeLogging();
-
-    protected abstract void initializePicasso();
 
     protected abstract void initializeRealm();
 

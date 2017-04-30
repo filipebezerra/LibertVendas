@@ -18,15 +18,12 @@ public class ApplicationImpl extends BaseApplication {
         });
     }
 
-    @Override protected void initializePicasso() {
-
-    }
-
     @Override protected void initializeRealm() {
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder()
-                .name("libertapp.realm")
+                .name("libertapp-dev.realm")
                 .deleteRealmIfMigrationNeeded()
+                .schemaVersion(BuildConfig.SCHEMA_VERSION)
                 .build();
         Realm.setDefaultConfiguration(configuration);
     }
