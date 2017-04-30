@@ -171,8 +171,13 @@ public class CustomerListFragment extends BaseFragment implements OnRefreshListe
         mCurrentSubscription = mCustomerRepository
                 .query(new CustomersByCompanySpecification(loadSelectedCompanyId()))
                 .observeOn(mainThread())
-                .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
+                .doOnUnsubscribe(this::stopLoadingCustomers)
                 .subscribe(createCustomerListSubscriber());
+    }
+
+    private void stopLoadingCustomers() {
+        mSwipeRefreshLayout.setRefreshing(false);
+        mLinearLayoutEmptyState.setVisibility(View.GONE);
     }
 
     private int loadSelectedCompanyId() {
