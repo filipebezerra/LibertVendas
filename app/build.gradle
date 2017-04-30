@@ -22,6 +22,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "LibertVendas-$versionName")
         manifestPlaceholders = [applicationLabel: "@string/app_name"]
+        resConfigs "pt-rBR"
     }
     buildTypes {
         debug {
@@ -31,7 +32,25 @@ android {
             buildConfigField "long", "SCHEMA_VERSION", "1L"
         }
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
+            proguardFile 'proguard-butterknife.pro'
+            proguardFile 'proguard-circular-progress-button.pro'
+            proguardFile 'proguard-crashlytics.pro'
+            proguardFile 'proguard-eventbus-3.pro'
+            proguardFile 'proguard-gson.pro'
+            proguardFile 'proguard-joda-time.pro'
+            proguardFile 'proguard-joda-time-android.pro'
+            proguardFile 'proguard-material-sheet-fab.pro'
+            proguardFile 'proguard-mpandroidchart.pro'
+            proguardFile 'proguard-okhttp3.pro'
+            proguardFile 'proguard-retrofit2.pro'
+            proguardFile 'proguard-retrolambda.pro'
+            proguardFile 'proguard-rx-java.pro'
+            proguardFile 'proguard-square-okio.pro'
+            proguardFile 'proguard-support-design.pro'
+            proguardFile 'proguard-support-v7-appcompat.pro'
+            proguardFile 'proguard-support-v7-cardview.pro'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "long", "SCHEMA_VERSION", "1L"
         }
