@@ -74,7 +74,7 @@ public class SelectCustomerStepFragment extends CustomerListFragment implements 
     }
 
     private void showSelectedCustomer() {
-        if (mSelectedCustomer != null) {
+        if (mSelectedCustomer != null && mCustomerListAdapter != null) {
             int itemPosition = mCustomerListAdapter.getItemPosition(mSelectedCustomer);
             if (itemPosition != -1) {
                 mRecyclerViewCustomers.scrollToPosition(itemPosition);
