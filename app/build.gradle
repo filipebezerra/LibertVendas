@@ -12,7 +12,6 @@ android {
         targetSdkVersion 25
         versionCode 25100
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "LibertVendas-$versionName")
     }
@@ -40,14 +39,6 @@ repositories {
 }
 
 dependencies {
-    // Android Testing
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
-    // JVM Testing
-    testCompile 'junit:junit:4.12'
-
     // Support library
     compile "com.android.support:appcompat-v7:${support}"
     compile "com.android.support:design:${support}"
