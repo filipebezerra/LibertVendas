@@ -18,6 +18,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomersByCompanySpecification;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
+import br.com.libertsolutions.libertvendas.app.data.sync.CustomersSyncedEvent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Customer;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.presentation.addcustomer.SavedCustomerEvent;
@@ -160,6 +161,10 @@ public class CustomerListFragment extends BaseFragment implements OnRefreshListe
         } else {
             showCustomers(new ArrayList<>(Collections.singleton(customer)));
         }
+    }
+
+    @Subscribe public void onCustomersSynced(CustomersSyncedEvent event) {
+        getActivity().runOnUiThread(this::loadCustomers);
     }
 
     private void loadCustomers() {

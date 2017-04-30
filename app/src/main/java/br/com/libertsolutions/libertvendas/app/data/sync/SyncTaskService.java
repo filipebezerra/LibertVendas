@@ -63,6 +63,7 @@ import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.pr
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePriceTableApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideProductApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSyncApi;
+import static br.com.libertsolutions.libertvendas.app.data.sync.CustomersSyncedEvent.customersSynced;
 import static br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent.ordersSynced;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
@@ -187,6 +188,7 @@ public class SyncTaskService extends GcmTaskService {
         companyCnpj = loggedUser.getDefaultCompany().getCnpj();
         salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
 
+        //region sending orders in manual sync fashion
         SyncOrdersEvent syncOrdersEvent = provideEventBus().getStickyEvent(SyncOrdersEvent.class);
         if (syncOrdersEvent != null) {
             Boolean successful = syncOrders(syncOrdersEvent.getOrders());
@@ -203,11 +205,16 @@ public class SyncTaskService extends GcmTaskService {
                 restartFullSync();
             }
         }
+        //endregion
 
         final CustomerRepository customerRepository = provideCustomerRepository();
         final CustomerApi customerApi = provideCustomerApi();
 
         final String lastSyncTime = settingsRepository.getLastSyncTime();
+
+        boolean notifyCustomerUpdates = false;
+        boolean notifyProductUpdates = false;
+        boolean notifyOrderUpdates = false;
 
         //region sending created customers
         final List<Customer> createdCustomers = customerRepository
@@ -241,6 +248,7 @@ public class SyncTaskService extends GcmTaskService {
                     return GcmNetworkManager.RESULT_RESCHEDULE;
                 }
             }
+            notifyCustomerUpdates = true;
         }
         //endregion
 
@@ -274,6 +282,7 @@ public class SyncTaskService extends GcmTaskService {
                 Timber.e(e, "Unknown error while syncing modified customers");
                 return GcmNetworkManager.RESULT_RESCHEDULE;
             }
+            notifyCustomerUpdates = true;
         }
         //endregion
 
@@ -344,6 +353,7 @@ public class SyncTaskService extends GcmTaskService {
                                     .single();
                         }
                     }
+                    notifyCustomerUpdates = true;
                 }
             } else {
                 Timber.i("Unsuccessful getting customer updates. %s", response.message());
@@ -548,6 +558,10 @@ public class SyncTaskService extends GcmTaskService {
             return GcmNetworkManager.RESULT_RESCHEDULE;
         }
         //endregion
+
+        if (notifyCustomerUpdates) {
+            provideEventBus().post(customersSynced());
+        }
 
         return GcmNetworkManager.RESULT_SUCCESS;
     }
