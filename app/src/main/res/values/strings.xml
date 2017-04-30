@@ -10,8 +10,9 @@
     <string name="main_drawer_item_orders">Seus pedidos</string>
     <string name="main_drawer_item_customers">Clientes conquistados</string>
     <string name="main_drawer_item_products">Produtos cadastrados</string>
-    <string name="main_drawer_item_auto_sync">Sinc. automática</string>
+    <string name="main_drawer_item_auto_sync_orders">Manter pedidos sincronizados</string>
     <string name="main_drawer_item_settings">Configurações</string>
+    <string name="main_drawer_item_desc_last_sync">Última sincronização em %1$s</string>
 
     <!-- Initial Flow strings -->
     <string name="initial_flow_title">Faça a configuração</string>

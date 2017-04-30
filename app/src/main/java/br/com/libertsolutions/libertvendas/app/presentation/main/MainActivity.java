@@ -39,12 +39,15 @@ import java.util.List;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+import static android.text.TextUtils.isEmpty;
 import static br.com.libertsolutions.libertvendas.app.presentation.base.Navigator.REQUEST_INITIAL_FLOW;
 import static br.com.libertsolutions.libertvendas.app.presentation.base.Navigator.REQUEST_SETTINGS;
 import static br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent.logged;
 import static br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsFragment.RESULT_AUTO_SYNC_ORDERS_CHANGED;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils.dpToPx;
 import static com.amulyakhare.textdrawable.util.ColorGenerator.MATERIAL;
+import static org.joda.time.LocalDateTime.parse;
+import static org.joda.time.format.DateTimeFormat.shortDateTime;
 
 /**
  * @author Filipe Bezerra
@@ -56,8 +59,9 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     private static final int DRAWER_ITEM_ORDERS = 3;
     private static final int DRAWER_ITEM_CUSTOMERS = 4;
     private static final int DRAWER_ITEM_PRODUCTS = 5;
-    private static final int DRAWER_ITEM_AUTO_SYNC = 6;
+    private static final int DRAWER_ITEM_AUTO_SYNC_ORDERS = 6;
     private static final int DRAWER_ITEM_SETTINGS = 7;
+    private static final int DRAWER_ITEM_LAST_SYNC = 8;
 
     private MaterialSheetFab<SheetFloatingActionButton> mMaterialSheetFab;
 
@@ -75,17 +79,22 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
 
     private PrimaryDrawerItem mProductsDrawerItem;
 
-    private SecondarySwitchDrawerItem mAutoSyncDrawerItem;
+    private SecondarySwitchDrawerItem mAutoSyncOrdersDrawerItem;
 
     private SecondaryDrawerItem mSettingsDrawerItem;
+
+    private SecondaryDrawerItem lastSyncDrawerItem;
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @BindView(R.id.fab_all_main_action) protected SheetFloatingActionButton mFloatingActionButton;
+
     @BindView(R.id.fab_sheet) protected CardView mFabSheet;
+
     @BindView(R.id.overlay) protected DimOverlayFrameLayout mFabOverlay;
 
     @BindColor(R.color.color_background_card) protected int mFabSheetColor;
+
     @BindColor(R.color.color_accent) protected int mAccentColor;
 
     @Override protected int provideContentViewResource() {
@@ -192,9 +201,7 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
             }
             case REQUEST_SETTINGS: {
                 if (resultCode == RESULT_AUTO_SYNC_ORDERS_CHANGED) {
-                    mAutoSyncDrawerItem
-                            .withChecked(settings().getSettings().isAutomaticallySyncOrders());
-                    mDrawer.updateItem(mAutoSyncDrawerItem);
+
                 }
                 break;
             }
@@ -230,86 +237,162 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     }
 
     private void initializeDrawer(final Bundle inState) {
-        mDashboardDrawerItem = new PrimaryDrawerItem()
-                .withIdentifier(DRAWER_ITEM_DASHBOARD)
-                .withName(R.string.main_drawer_item_dashboard)
-                .withIcon(VectorDrawableCompat
-                        .create(getResources(), R.drawable.main_drawer_home, getTheme()))
-                .withSelectedIconColorRes(R.color.color_primary)
-        ;
-
-        mOrdersReportDrawerItem = new PrimaryDrawerItem()
-                .withIdentifier(DRAWER_ITEM_ORDERS_REPORT)
-                .withName(R.string.main_drawer_item_orders_report)
-                .withIcon(VectorDrawableCompat
-                        .create(getResources(), R.drawable.main_drawer_orders_report, getTheme()))
-                .withSelectedIconColorRes(R.color.color_primary)
-        ;
-
-        mOrdersDrawerItem = new PrimaryDrawerItem()
-                .withIdentifier(DRAWER_ITEM_ORDERS)
-                .withName(R.string.main_drawer_item_orders)
-                .withIcon(VectorDrawableCompat
-                        .create(getResources(), R.drawable.main_drawer_orders, getTheme()))
-                .withSelectedIconColorRes(R.color.color_primary)
-        ;
-
-        mCustomersDrawerItem = new PrimaryDrawerItem()
-                .withIdentifier(DRAWER_ITEM_CUSTOMERS)
-                .withName(R.string.main_drawer_item_customers)
-                .withIcon(VectorDrawableCompat
-                        .create(getResources(), R.drawable.main_drawer_customers, getTheme()))
-                .withSelectedIconColorRes(R.color.color_primary)
-        ;
-
-        mProductsDrawerItem = new PrimaryDrawerItem()
-                .withIdentifier(DRAWER_ITEM_PRODUCTS)
-                .withName(R.string.main_drawer_item_products)
-                .withIcon(VectorDrawableCompat
-                        .create(getResources(), R.drawable.main_drawer_products, getTheme()))
-                .withSelectedIconColorRes(R.color.color_primary)
-        ;
-
-        mAutoSyncDrawerItem = new SecondarySwitchDrawerItem()
-                .withIdentifier(DRAWER_ITEM_AUTO_SYNC)
-                .withName(R.string.main_drawer_item_auto_sync)
-                .withIcon(VectorDrawableCompat
-                        .create(getResources(), R.drawable.main_drawer_auto_sync, getTheme()))
-                .withSelectedIconColorRes(R.color.color_primary)
-                .withChecked(settings().getSettings().isAutomaticallySyncOrders())
-                .withSelectable(false)
-                .withOnCheckedChangeListener((drawerItem, buttonView, isChecked) ->
-                        settings().setAutoSyncOrders(isChecked))
-        ;
-
-        mSettingsDrawerItem = new SecondaryDrawerItem()
-                .withIdentifier(DRAWER_ITEM_SETTINGS)
-                .withName(R.string.main_drawer_item_settings)
-                .withIcon(VectorDrawableCompat
-                        .create(getResources(), R.drawable.main_drawer_settings, getTheme()))
-                .withSelectable(false)
-        ;
-
         mDrawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(mToolbar)
                 .withAccountHeader(mAccountHeader)
                 .addDrawerItems(
-                        mDashboardDrawerItem,
-                        mOrdersReportDrawerItem,
-                        mOrdersDrawerItem,
-                        mCustomersDrawerItem,
-                        mProductsDrawerItem,
+                        createDashboardDrawerItem(),
+                        createOrdersReportDrawerItem(),
+                        createOrdersDrawerItem(),
+                        createCustomersDrawerItem(),
+                        createProductsDrawerItem(),
                         new DividerDrawerItem(),
-                        mAutoSyncDrawerItem,
-                        mSettingsDrawerItem
+                        createSettingsDrawerItem(),
+                        createAutoSyncOrdersDrawerItem(),
+                        createLastSyncDrawerItem()
                 )
                 .withSavedInstance(inState)
                 .withShowDrawerOnFirstLaunch(true)
                 .withOnDrawerItemClickListener(this)
+                .withOnDrawerListener(new Drawer.OnDrawerListener() {
+                    @Override public void onDrawerOpened(final View drawerView) {
+                        updateAutoSyncOrdersDrawerItem();
+                        updateLastSyncDrawerItem();
+                    }
+
+                    @Override public void onDrawerClosed(final View drawerView) {}
+
+                    @Override public void onDrawerSlide(final View drawerView,
+                            final float slideOffset) {}
+                })
                 .withSelectedItem(DRAWER_ITEM_DASHBOARD)
                 .withFireOnInitialOnClick(true)
                 .build();
+    }
+
+    private PrimaryDrawerItem createDashboardDrawerItem() {
+        if (mDashboardDrawerItem == null) {
+            mDashboardDrawerItem = new PrimaryDrawerItem()
+                    .withIdentifier(DRAWER_ITEM_DASHBOARD)
+                    .withName(R.string.main_drawer_item_dashboard)
+                    .withIcon(VectorDrawableCompat
+                            .create(getResources(), R.drawable.main_drawer_home, getTheme()))
+                    .withSelectedIconColorRes(R.color.color_primary);
+        }
+        return mDashboardDrawerItem;
+    }
+
+    private PrimaryDrawerItem createOrdersReportDrawerItem() {
+        if (mOrdersReportDrawerItem == null) {
+            mOrdersReportDrawerItem = new PrimaryDrawerItem()
+                    .withIdentifier(DRAWER_ITEM_ORDERS_REPORT)
+                    .withName(R.string.main_drawer_item_orders_report)
+                    .withIcon(VectorDrawableCompat
+                            .create(getResources(), R.drawable.main_drawer_orders_report,
+                                    getTheme()))
+                    .withSelectedIconColorRes(R.color.color_primary);
+        }
+        return mOrdersReportDrawerItem;
+    }
+
+    private PrimaryDrawerItem createOrdersDrawerItem() {
+        if (mOrdersDrawerItem == null) {
+            mOrdersDrawerItem = new PrimaryDrawerItem()
+                    .withIdentifier(DRAWER_ITEM_ORDERS)
+                    .withName(R.string.main_drawer_item_orders)
+                    .withIcon(VectorDrawableCompat
+                            .create(getResources(), R.drawable.main_drawer_orders, getTheme()))
+                    .withSelectedIconColorRes(R.color.color_primary);
+        }
+        return mOrdersDrawerItem;
+    }
+
+    private PrimaryDrawerItem createCustomersDrawerItem() {
+        if (mCustomersDrawerItem == null) {
+            mCustomersDrawerItem = new PrimaryDrawerItem()
+                    .withIdentifier(DRAWER_ITEM_CUSTOMERS)
+                    .withName(R.string.main_drawer_item_customers)
+                    .withIcon(VectorDrawableCompat
+                            .create(getResources(), R.drawable.main_drawer_customers, getTheme()))
+                    .withSelectedIconColorRes(R.color.color_primary);
+        }
+        return mCustomersDrawerItem;
+    }
+
+    private PrimaryDrawerItem createProductsDrawerItem() {
+        if (mProductsDrawerItem == null) {
+            mProductsDrawerItem = new PrimaryDrawerItem()
+                    .withIdentifier(DRAWER_ITEM_PRODUCTS)
+                    .withName(R.string.main_drawer_item_products)
+                    .withIcon(VectorDrawableCompat
+                            .create(getResources(), R.drawable.main_drawer_products, getTheme()))
+                    .withSelectedIconColorRes(R.color.color_primary);
+        }
+        return mProductsDrawerItem;
+    }
+
+    private SecondaryDrawerItem createSettingsDrawerItem() {
+        if (mSettingsDrawerItem == null) {
+            mSettingsDrawerItem = new SecondaryDrawerItem()
+                    .withIdentifier(DRAWER_ITEM_SETTINGS)
+                    .withName(R.string.main_drawer_item_settings)
+                    .withIcon(VectorDrawableCompat
+                            .create(getResources(), R.drawable.main_drawer_settings, getTheme()))
+                    .withSelectable(false);
+        }
+        return mSettingsDrawerItem;
+    }
+
+    private SecondarySwitchDrawerItem createAutoSyncOrdersDrawerItem() {
+        if (mAutoSyncOrdersDrawerItem == null) {
+            mAutoSyncOrdersDrawerItem = new SecondarySwitchDrawerItem()
+                    .withIdentifier(DRAWER_ITEM_AUTO_SYNC_ORDERS)
+                    .withName(R.string.main_drawer_item_auto_sync_orders)
+                    .withIcon(VectorDrawableCompat
+                            .create(getResources(), R.drawable.main_drawer_auto_sync, getTheme()))
+                    .withSelectedIconColorRes(R.color.color_primary)
+                    .withChecked(settings().getSettings().isAutomaticallySyncOrders())
+                    .withSelectable(false)
+                    .withOnCheckedChangeListener((drawerItem, buttonView, isChecked) ->
+                            settings().setAutoSyncOrders(isChecked));
+        }
+        return mAutoSyncOrdersDrawerItem;
+    }
+
+    private SecondaryDrawerItem createLastSyncDrawerItem() {
+        if (lastSyncDrawerItem == null) {
+            lastSyncDrawerItem = new SecondaryDrawerItem()
+                    .withIdentifier(DRAWER_ITEM_LAST_SYNC)
+                    .withDescription(getLastSyncDrawerItemDescription())
+                    .withSelectable(false);
+        }
+        return lastSyncDrawerItem;
+    }
+
+    private void updateLastSyncDrawerItem() {
+        String lastSyncDrawerItemDescription = getLastSyncDrawerItemDescription();
+        if (!lastSyncDrawerItem.getDescription().toString()
+                .equals(lastSyncDrawerItemDescription)) {
+            mDrawer.updateItem(lastSyncDrawerItem.withDescription(lastSyncDrawerItemDescription));
+        }
+    }
+
+    private String getLastSyncDrawerItemDescription() {
+        final String lastSyncTime = settings().getLastSyncTime();
+        if (!isEmpty(lastSyncTime)) {
+            return getString(R.string.main_drawer_item_desc_last_sync,
+                    shortDateTime().print(parse(lastSyncTime)));
+        } else {
+            return "";
+        }
+    }
+
+    private void updateAutoSyncOrdersDrawerItem() {
+        boolean isEnabled = settings().getSettings().isAutomaticallySyncOrders();
+        if (isEnabled != mAutoSyncOrdersDrawerItem.isChecked()) {
+            mDrawer.updateItem(mAutoSyncOrdersDrawerItem.withChecked(isEnabled));
+        }
     }
 
     private void loadLoggedUser() {
