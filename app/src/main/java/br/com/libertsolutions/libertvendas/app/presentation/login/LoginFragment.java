@@ -10,7 +10,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Company;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Salesman;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.exception.ValidationError;
-import br.com.libertsolutions.libertvendas.app.presentation.util.AnswersEvents;
+import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
@@ -26,7 +26,7 @@ import timber.log.Timber;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSalesmanApi;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser.create;
 import static br.com.libertsolutions.libertvendas.app.presentation.login.CompletedLoginEvent.newEvent;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.AnswersEvents.LOGIN_METHOD_CPF_CNPJ;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.LOGIN_METHOD_CPF_CNPJ;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -113,7 +113,7 @@ public class LoginFragment extends BaseFragment {
     private void processLoginError(final Throwable e) {
         stopLogin();
         Timber.e(e, "Could not do login");
-        AnswersEvents.unsuccessfulLogin(LOGIN_METHOD_CPF_CNPJ);
+        EventTracker.unsuccessfulLogin(LOGIN_METHOD_CPF_CNPJ);
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext())
                 .neutralText(android.R.string.ok);
@@ -161,7 +161,7 @@ public class LoginFragment extends BaseFragment {
 
     private void saveLogin(Salesman salesman, Company defaultCompany, int numberOfProfiles) {
         settings().setLoggedUser(salesman, defaultCompany);
-        AnswersEvents.successfulLogin(LOGIN_METHOD_CPF_CNPJ, numberOfProfiles);
+        EventTracker.successfulLogin(LOGIN_METHOD_CPF_CNPJ, numberOfProfiles);
         eventBus().postSticky(newEvent(create(salesman, defaultCompany)));
     }
 

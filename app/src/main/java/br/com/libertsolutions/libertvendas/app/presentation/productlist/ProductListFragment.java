@@ -23,6 +23,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.PriceTable;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PriceTableItem;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import butterknife.BindView;
 import butterknife.OnClick;
 import java.util.List;
@@ -32,6 +33,7 @@ import rx.Subscription;
 import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providePriceTableRepository;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.SEARCHED_PRODUCTS;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -98,6 +100,7 @@ public class ProductListFragment extends BaseFragment implements OnRefreshListen
         mSearchView.setQueryHint(getString(R.string.product_list_search_hint));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override public boolean onQueryTextSubmit(String query) {
+                EventTracker.search(SEARCHED_PRODUCTS, query);
                 return false;
             }
 

@@ -15,6 +15,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.dashboard.DashboardF
 import br.com.libertsolutions.libertvendas.app.presentation.login.CompletedLoginEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.orderlist.OrderListPageFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.productlist.ProductListFragment;
+import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import br.com.libertsolutions.libertvendas.app.presentation.widget.SheetFloatingActionButton;
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -45,6 +46,7 @@ import static br.com.libertsolutions.libertvendas.app.presentation.base.Navigato
 import static br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent.logged;
 import static br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsFragment.RESULT_AUTO_SYNC_ORDERS_CHANGED;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils.dpToPx;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_CHANGED_PROFILE;
 import static com.amulyakhare.textdrawable.util.ColorGenerator.MATERIAL;
 import static org.joda.time.LocalDateTime.parse;
 import static org.joda.time.format.DateTimeFormat.shortDateTime;
@@ -230,6 +232,7 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
                 .withCurrentProfileHiddenInList(true)
                 .withSelectionListEnabledForSingleProfile(false)
                 .withOnAccountHeaderListener((view, profile, current) -> {
+                    EventTracker.action(ACTION_CHANGED_PROFILE);
                     changeLoggedUser(profile);
                     return false;
                 })

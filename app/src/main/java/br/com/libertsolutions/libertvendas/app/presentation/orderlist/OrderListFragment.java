@@ -27,7 +27,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderform.SavedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.util.AnswersEvents;
+import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import butterknife.BindView;
 import butterknife.OnClick;
 import com.mikepenz.fastadapter.FastAdapter.OnClickListener;
@@ -48,8 +48,9 @@ import timber.log.Timber;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.duplicateOrder;
 import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.selectOrder;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.AnswersEvents.ACTION_DUPLICATE_ORDER;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.AnswersEvents.ACTION_MANUAL_SYNC;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_DUPLICATE_ORDER;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_MANUAL_SYNC;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.SEARCHED_ORDERS;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -217,6 +218,7 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
         searchView.setQueryHint(getString(R.string.order_list_search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override public boolean onQueryTextSubmit(String query) {
+                EventTracker.search(SEARCHED_ORDERS, query);
                 fastItemAdapter.filter(query);
                 return false;
             }
@@ -445,7 +447,7 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
                     }
                     eventBus().postSticky(SyncOrdersEvent.just(orders));
                     SyncTaskService.scheduleSingleSync(getContext());
-                    AnswersEvents.action(ACTION_MANUAL_SYNC);
+                    EventTracker.action(ACTION_MANUAL_SYNC);
                     Snackbar.make(getView(), R.string.order_list_will_update_after_sync,
                             Snackbar.LENGTH_SHORT)
                             .show();
@@ -456,7 +458,7 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
                     if (selectedItems != null && selectedItems.size() == 1) {
                         OrderAdapterItem orderAdapterItem = selectedItems.iterator().next();
                         eventBus().postSticky(duplicateOrder(orderAdapterItem.getOrder()));
-                        AnswersEvents.action(ACTION_DUPLICATE_ORDER);
+                        EventTracker.action(ACTION_DUPLICATE_ORDER);
                         navigate().toAddOrder();
                     }
                     break;

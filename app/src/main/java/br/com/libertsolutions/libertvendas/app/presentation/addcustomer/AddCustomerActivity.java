@@ -25,6 +25,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.base.BaseActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.citylist.SelectedCityEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.customerlist.SelectedCustomerEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import br.com.libertsolutions.libertvendas.app.presentation.widget.MaterialSpinner;
 import butterknife.BindView;
 import butterknife.OnItemSelected;
@@ -93,6 +94,8 @@ import static br.com.libertsolutions.libertvendas.app.domain.enumeration.TypeOfP
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.CompanyCustomer.from;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.CustomerStatus.STATUS_CREATED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.CustomerStatus.STATUS_MODIFIED;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_CEP_SEARCHED;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_SAVED_CUSTOMER;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.ValidationUtils.isValidEmail;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.ValidationUtils.isValidPhoneNumber;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.ValidationUtils.isValidPostalCode;
@@ -407,6 +410,7 @@ public class AddCustomerActivity extends BaseActivity {
     }
 
     private void subscribeToSearchPostalCode(String value) {
+        EventTracker.action(ACTION_CEP_SEARCHED);
         mCurrentSubscription = providePostalCodeApi().get(value)
                 .observeOn(mainThread())
                 .subscribe(createPostalCodeSubscriber());
@@ -594,6 +598,7 @@ public class AddCustomerActivity extends BaseActivity {
     }
 
     private void showSuccessSavingCustomer() {
+        EventTracker.action(ACTION_SAVED_CUSTOMER);
         hideProgressDialog();
         Snackbar.make(mCoordinatorLayoutContainer, add_customer_saved_successfully, LENGTH_LONG)
                 .addCallback(new Snackbar.Callback() {

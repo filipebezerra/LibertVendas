@@ -24,6 +24,7 @@ import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.customerlist.SelectedCustomerEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import br.com.libertsolutions.libertvendas.app.presentation.widget.MaterialSpinner;
 import butterknife.BindView;
 import butterknife.OnItemSelected;
@@ -68,6 +69,7 @@ import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.ST
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_MODIFIED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderType.ORDER_TYPE_NORMAL;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getCurrentDateTimeInMillis;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_SAVED_ORDER;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDateTime;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.toDouble;
@@ -225,6 +227,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
     }
 
     private void showSuccessSavingOrder(final StepperLayout.OnCompleteClickedCallback callback) {
+        EventTracker.action(ACTION_SAVED_ORDER);
         hideProgressDialog();
         Snackbar.make(getView(), order_form_saved_successfully, LENGTH_LONG)
                 .addCallback(new Callback() {

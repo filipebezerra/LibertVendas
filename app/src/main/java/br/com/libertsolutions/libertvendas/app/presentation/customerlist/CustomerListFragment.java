@@ -24,6 +24,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.presentation.addcustomer.SavedCustomerEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import br.com.libertsolutions.libertvendas.app.presentation.widget.recyclerview.OnItemClickListener;
 import br.com.libertsolutions.libertvendas.app.presentation.widget.recyclerview.OnItemTouchListener;
 import butterknife.BindView;
@@ -39,6 +40,7 @@ import timber.log.Timber;
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideCustomerRepository;
 import static br.com.libertsolutions.libertvendas.app.presentation.customerlist.SelectedCustomerEvent.selectCustomer;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.SEARCHED_CUSTOMERS;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -108,6 +110,7 @@ public class CustomerListFragment extends BaseFragment implements OnRefreshListe
         mSearchView.setQueryHint(getString(R.string.customer_list_search_hint));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override public boolean onQueryTextSubmit(String query) {
+                EventTracker.search(SEARCHED_CUSTOMERS, query);
                 return false;
             }
 

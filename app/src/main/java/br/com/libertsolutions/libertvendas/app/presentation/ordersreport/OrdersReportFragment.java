@@ -25,6 +25,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderform.SavedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -50,6 +51,7 @@ import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_issue_date_
 import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_issue_date_initial;
 import static br.com.libertsolutions.libertvendas.app.R.id.radio_group_status;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_FILTERED_ORDERS;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.dateTimeToMillis;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
@@ -376,6 +378,7 @@ public class OrdersReportFragment extends BaseFragment
             }
         }
 
+        EventTracker.action(ACTION_FILTERED_ORDERS);
         loadOrders(specification);
     }
 

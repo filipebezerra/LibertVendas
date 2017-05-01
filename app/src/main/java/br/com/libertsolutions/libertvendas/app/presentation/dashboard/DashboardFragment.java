@@ -24,6 +24,7 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderChartData;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderform.SavedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
+import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,6 +46,7 @@ import rx.Subscription;
 import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_FILTERED_GRAPH;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getYear;
@@ -122,6 +124,7 @@ public class DashboardFragment extends BaseFragment
             final int yearEnd, final int monthOfYearEnd, final int dayOfMonthEnd) {
         mInitialDateFilter = toLocalDate(year, monthOfYear, dayOfMonth);
         mFinalDateFilter = toLocalDate(yearEnd, monthOfYearEnd, dayOfMonthEnd);
+        EventTracker.action(ACTION_FILTERED_GRAPH);
         queryByIssueDate(year, monthOfYear, dayOfMonth, yearEnd, monthOfYearEnd, dayOfMonthEnd);
     }
 
