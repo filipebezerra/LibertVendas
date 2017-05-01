@@ -188,14 +188,8 @@ public class DashboardFragment extends BaseFragment
                             .orderByCustomerName())
                     .map(this::toChartData)
                     .observeOn(mainThread())
-                    .doOnUnsubscribe(this::stopLoadingOrderedOrders)
                     .subscribe(createOrderChartDataListSubscriber());
         }
-    }
-
-    private void stopLoadingOrderedOrders() {
-        mSwipeRefreshLayout.setRefreshing(false);
-        mLinearLayoutEmptyState.setVisibility(View.GONE);
     }
 
     private LoggedUser getLoggedUser() {
@@ -352,6 +346,10 @@ public class DashboardFragment extends BaseFragment
     @Override public void onDestroyView() {
         if (mCurrentSubscription != null && !mCurrentSubscription.isUnsubscribed()) {
             mCurrentSubscription.unsubscribe();
+        }
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mLinearLayoutEmptyState.setVisibility(View.GONE);
         }
         eventBus().unregister(this);
         super.onDestroyView();

@@ -197,13 +197,7 @@ public class OrdersReportFragment extends BaseFragment
         mCurrentSubscription = mOrderRepository
                 .query(specification)
                 .observeOn(mainThread())
-                .doOnUnsubscribe(this::stopLoadingOrders)
                 .subscribe(createOrderListSubscriber());
-    }
-
-    private void stopLoadingOrders() {
-        mSwipeRefreshLayout.setRefreshing(false);
-        mLinearLayoutEmptyState.setVisibility(View.GONE);
     }
 
     private int getSalesmanId() {
@@ -407,6 +401,10 @@ public class OrdersReportFragment extends BaseFragment
     @Override public void onDestroyView() {
         if (mCurrentSubscription != null && !mCurrentSubscription.isUnsubscribed()) {
             mCurrentSubscription.unsubscribe();
+        }
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mLinearLayoutEmptyState.setVisibility(View.GONE);
         }
         eventBus().unregister(this);
         super.onDestroyView();

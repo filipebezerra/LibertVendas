@@ -143,13 +143,7 @@ public class ProductListFragment extends BaseFragment implements OnRefreshListen
                 .findFirst(new PriceTableByIdSpecification(loadDefaultPriceTableId()))
                 .map(PriceTable::getItems)
                 .observeOn(mainThread())
-                .doOnUnsubscribe(this::stopLoadingProducts)
                 .subscribe(createPriceTableItemListSubscriber());
-    }
-
-    private void stopLoadingProducts() {
-        mSwipeRefreshLayout.setRefreshing(false);
-        mLinearLayoutEmptyState.setVisibility(View.GONE);
     }
 
     private int loadDefaultPriceTableId() {
@@ -226,6 +220,10 @@ public class ProductListFragment extends BaseFragment implements OnRefreshListen
     @Override public void onDestroyView() {
         if (mCurrentSubscription != null && !mCurrentSubscription.isUnsubscribed()) {
             mCurrentSubscription.unsubscribe();
+        }
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mLinearLayoutEmptyState.setVisibility(View.GONE);
         }
         eventBus().unregister(this);
         super.onDestroyView();
