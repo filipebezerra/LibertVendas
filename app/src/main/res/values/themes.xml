@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="LibertApp.Theme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="LibertApp.Theme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
         <item name="android:windowBackground">@color/color_window_background</item>
         <item name="textColorError">@color/color_error</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="LibertApp.Theme.NoActionBar">

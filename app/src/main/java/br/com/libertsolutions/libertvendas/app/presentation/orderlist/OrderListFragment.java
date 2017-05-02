@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app.presentation.orderlist;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -45,6 +46,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import timber.log.Timber;
 
+import static android.support.v4.content.ContextCompat.getColor;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.duplicateOrder;
 import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.selectOrder;
@@ -404,6 +406,10 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
     private class ActionBarCallback implements ActionMode.Callback {
 
         @Override public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getActivity().getWindow()
+                        .setStatusBarColor(getColor(getContext(), R.color.color_primary_dark));
+            }
             return true;
         }
 
