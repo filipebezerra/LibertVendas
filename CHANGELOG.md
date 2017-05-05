@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Versão 1.0.1 (05/05/2017)
+-----------------------
+* **CORREÇÃO** Layout da tela Seus Pedidos em modo de seleção dos pedidos.
+
+Versão 1.0 (01/05/2017)
+-----------------------
+* Lançamento inicial do app android Libert Vendas
+
 Beta 0.10.0 (03/02/2017)
 -----------------------
 * **NOVO** Gráficos dos pedidos por cliente
