@@ -17,8 +17,8 @@ android {
         applicationId "br.com.libertsolutions.libertvendas.app"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 25100
-        versionName "1.0"
+        versionCode 25101
+        versionName "1.0.1"
         vectorDrawables.useSupportLibrary = true
         setProperty("archivesBaseName", "LibertVendas-$versionName")
         manifestPlaceholders = [applicationLabel: "@string/app_name"]
