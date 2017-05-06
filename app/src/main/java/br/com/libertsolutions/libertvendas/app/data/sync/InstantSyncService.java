@@ -3,7 +3,6 @@ package br.com.libertsolutions.libertvendas.app.data.sync;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Debug;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerApi;
@@ -55,11 +54,6 @@ public class InstantSyncService extends IntentService {
 
     public InstantSyncService() {
         super(TAG);
-    }
-
-    @Override public void onCreate() {
-        super.onCreate();
-        Debug.waitForDebugger();
     }
 
     @Override protected void onHandleIntent(@Nullable final Intent intent) {
