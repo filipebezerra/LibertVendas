@@ -20,8 +20,8 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
+import br.com.libertsolutions.libertvendas.app.data.sync.InstantSyncService;
 import br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent;
-import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
@@ -46,6 +46,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import timber.log.Timber;
 
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.support.v4.content.ContextCompat.getColor;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.duplicateOrder;
@@ -86,7 +87,7 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
 
             if (!selectedOrder.isStatusEquals(firstOrder)) {
                 Snackbar.make(getView(), R.string.order_list_multi_selection_only_for_same_status,
-                        Snackbar.LENGTH_SHORT)
+                        LENGTH_SHORT)
                         .show();
                 return true;
             } else if (selectedOrder.isStatusSyncedOrCancelled()) {
@@ -94,7 +95,7 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
                     actionModeHelper.reset();
                 } else {
                     Snackbar.make(getView(), R.string.order_list_single_selection_to_duplicate_order,
-                            Snackbar.LENGTH_SHORT)
+                            LENGTH_SHORT)
                             .show();
                 }
                 return true;
@@ -269,7 +270,13 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
     }
 
     @Subscribe public void onOrdersSynced(OrdersSyncedEvent event) {
-        getActivity().runOnUiThread(this::loadOrders);
+        getActivity().runOnUiThread(() -> {
+            loadOrders();
+            if (event.isInstantly()) {
+                Snackbar.make(getView(), R.string.order_list_instant_sync_done, LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 
     private void loadOrders() {
@@ -450,11 +457,8 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
                         orders.add(orderAdapterItem.getOrder());
                     }
                     eventBus().postSticky(SyncOrdersEvent.just(orders));
-                    SyncTaskService.scheduleSingleSync(getContext());
+                    InstantSyncService.execute(getContext());
                     EventTracker.action(ACTION_MANUAL_SYNC);
-                    Snackbar.make(getView(), R.string.order_list_will_update_after_sync,
-                            Snackbar.LENGTH_SHORT)
-                            .show();
                     break;
                 }
                 case R.id.action_duplicate_order: {

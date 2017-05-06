@@ -147,8 +147,8 @@
     <string name="order_list_single_selection_to_duplicate_order">
         Somente 1 pedido por vez pode ser duplicado!
     </string>
-    <string name="order_list_will_update_after_sync">
-        Sua lista de pedidos será atualizada após a sincronização!
+    <string name="order_list_instant_sync_done">
+        Seus pedidos foram sincronizados com sucesso!
     </string>
 
     <!-- Customer List strings -->

@@ -5,9 +5,21 @@ package br.com.libertsolutions.libertvendas.app.data.sync;
  */
 public class OrdersSyncedEvent {
 
-    private OrdersSyncedEvent() {}
+    private final boolean instantly;
 
-    static OrdersSyncedEvent ordersSynced() {
-        return new OrdersSyncedEvent();
+    private OrdersSyncedEvent(final boolean instantly) {
+        this.instantly = instantly;
+    }
+
+    static OrdersSyncedEvent ordersSyncedBySchedule() {
+        return new OrdersSyncedEvent(false);
+    }
+
+    static OrdersSyncedEvent ordersInstantlySynced() {
+        return new OrdersSyncedEvent(true);
+    }
+
+    public boolean isInstantly() {
+        return instantly;
     }
 }

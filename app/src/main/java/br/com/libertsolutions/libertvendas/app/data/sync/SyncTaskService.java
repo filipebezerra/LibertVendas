@@ -12,7 +12,6 @@ import br.com.libertsolutions.libertvendas.app.data.customer.CustomerByIdSpecifi
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderByIdSpecification;
-import br.com.libertsolutions.libertvendas.app.data.order.OrderRealmRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodByIdSpecification;
@@ -36,10 +35,8 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PaymentMethod;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.PriceTable;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Product;
-import br.com.libertsolutions.libertvendas.app.presentation.orderlist.SyncOrdersEvent;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
-import com.google.android.gms.gcm.OneoffTask;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
@@ -57,6 +54,7 @@ import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.pro
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providePaymentMethodRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providePriceTableRepository;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.provideProductRepository;
+import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideCustomerApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideOrderApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePaymentMethodApi;
@@ -64,7 +62,7 @@ import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.pr
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideProductApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSyncApi;
 import static br.com.libertsolutions.libertvendas.app.data.sync.CustomersSyncedEvent.customersSynced;
-import static br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent.ordersSynced;
+import static br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent.ordersSyncedBySchedule;
 import static br.com.libertsolutions.libertvendas.app.data.sync.ProductsUpdatedEvent.productsUpdated;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideEventBus;
 import static br.com.libertsolutions.libertvendas.app.presentation.PresentationInjector.provideSettingsRepository;
@@ -121,35 +119,6 @@ public class SyncTaskService extends GcmTaskService {
         }
     }
 
-    public static boolean scheduleSingleSync(@NonNull Context context) {
-        try {
-            OneoffTask oneoffTask = new OneoffTask.Builder()
-                    .setService(SyncTaskService.class)
-                    //tag that is unique to this task (can be used to cancel task)
-                    .setTag(SyncTaskService.class.getSimpleName())
-                    //whether the task persists after device reboot
-                    .setPersisted(true)
-                    //if another task with same tag is already scheduled, replace it with this task
-                    .setUpdateCurrent(true)
-                    //set required network state, this line is optional
-                    .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
-                    //request that charging must be connected, this line is optional
-                    .setRequiresCharging(false)
-                    //executed between 0 - 10s from now
-                    .setExecutionWindow(0, 10)
-                    .build();
-            GcmNetworkManager
-                    .getInstance(context.getApplicationContext())
-                    .schedule(oneoffTask);
-
-            Timber.v("single sync service scheduled within next 10 seconds");
-            return true;
-        } catch (Exception e) {
-            Timber.e(e, "scheduling single sync service failed");
-            return false;
-        }
-    }
-
     public static boolean cancelAll(@NonNull Context context) {
         try {
             GcmNetworkManager
@@ -166,7 +135,9 @@ public class SyncTaskService extends GcmTaskService {
 
     @Override public void onInitializeTasks() {
         Timber.d("initializing sync service");
-        restartFullSync();
+        SyncTaskService.cancelAll(this);
+        int syncPeriodicity = provideSettingsRepository().getSettings().getSyncPeriodicity();
+        SyncTaskService.schedule(this, syncPeriodicity);
     }
 
     @Override public int onRunTask(final TaskParams taskParams) {
@@ -188,26 +159,6 @@ public class SyncTaskService extends GcmTaskService {
         final int companyId = loggedUser.getDefaultCompany().getCompanyId();
         companyCnpj = loggedUser.getDefaultCompany().getCnpj();
         salesmanCpfOrCnpj = loggedUser.getSalesman().getCpfOrCnpj();
-
-        //region sending orders in manual sync fashion
-        SyncOrdersEvent syncOrdersEvent = provideEventBus().getStickyEvent(SyncOrdersEvent.class);
-        if (syncOrdersEvent != null) {
-            Boolean successful = syncOrders(syncOrdersEvent.getOrders());
-            if (successful != null) {
-                if (successful) {
-                    provideEventBus().removeStickyEvent(SyncOrdersEvent.class);
-                    provideEventBus().post(ordersSynced());
-                    restartFullSync();
-                    return GcmNetworkManager.RESULT_SUCCESS;
-                } else {
-                    return GcmNetworkManager.RESULT_RESCHEDULE;
-                }
-            } else {
-                restartFullSync();
-                return GcmNetworkManager.RESULT_SUCCESS;
-            }
-        }
-        //endregion
 
         final CustomerRepository customerRepository = provideCustomerRepository();
         final CustomerApi customerApi = provideCustomerApi();
@@ -566,7 +517,7 @@ public class SyncTaskService extends GcmTaskService {
 
         //region notifications
         if (notifyOrderUpdates) {
-            provideEventBus().post(ordersSynced());
+            provideEventBus().post(ordersSyncedBySchedule());
         }
 
         if (notifyCustomerUpdates) {
@@ -639,14 +590,8 @@ public class SyncTaskService extends GcmTaskService {
 
     private OrderRepository getOrderRepository() {
         if (orderRepository == null) {
-            orderRepository = new OrderRealmRepository();
+            orderRepository = providerOrderRepository();
         }
         return orderRepository;
-    }
-
-    private void restartFullSync() {
-        SyncTaskService.cancelAll(this);
-        SyncTaskService.schedule(this,
-                provideSettingsRepository().getSettings().getSyncPeriodicity());
     }
 }

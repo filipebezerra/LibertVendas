@@ -111,6 +111,11 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".data.sync.InstantSyncService"
+            android:exported="false"
+            />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="88453d956cd483a917c0c313a6a47582a0853bcf"
