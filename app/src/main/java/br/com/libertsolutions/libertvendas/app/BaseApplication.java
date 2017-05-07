@@ -1,6 +1,8 @@
 package br.com.libertsolutions.libertvendas.app;
 
 import android.app.Application;
+import com.crashlytics.android.answers.Answers;
+import io.fabric.sdk.android.Fabric;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 /**
@@ -16,6 +18,7 @@ public abstract class BaseApplication extends Application {
         initializeLogging();
         initializeRealm();
         initializeJodaTime();
+        initializeAnswers();
     }
 
     public static BaseApplication getInstance() {
@@ -28,5 +31,9 @@ public abstract class BaseApplication extends Application {
 
     private void initializeJodaTime() {
         JodaTimeAndroid.init(this);
+    }
+
+    private void initializeAnswers() {
+        Fabric.with(this, new Answers());
     }
 }
