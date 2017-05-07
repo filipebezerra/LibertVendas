@@ -1,9 +1,14 @@
 Change Log
 ==========
 
+Versão 1.0.2 (06/05/2017)
+-----------------------
+* **CORREÇÃO** Pedidos de novos clientes não eram sincronizados manualmente
+* **MELHORIA** Sincronização manual dos pedidos está mais rápida
+
 Versão 1.0.1 (05/05/2017)
 -----------------------
-* **CORREÇÃO** Layout da tela Seus Pedidos em modo de seleção dos pedidos.
+* **CORREÇÃO** Layout da tela Seus Pedidos em modo de seleção dos pedidos
 
 Versão 1.0 (01/05/2017)
 -----------------------
