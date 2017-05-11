@@ -5,17 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import java.util.List;
 
-import static android.R.color.transparent;
 import static android.support.v4.content.ContextCompat.getColor;
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static android.view.LayoutInflater.from;
-import static br.com.libertsolutions.libertvendas.app.R.color.color_order_invoiced;
-import static br.com.libertsolutions.libertvendas.app.R.color.color_order_is_pending;
-import static br.com.libertsolutions.libertvendas.app.R.color.color_order_was_cancelled;
-import static br.com.libertsolutions.libertvendas.app.R.color.color_order_was_synced;
 import static br.com.libertsolutions.libertvendas.app.R.layout.list_item_order_report;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_customer_name;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_order_date;
@@ -25,6 +19,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.orders_report_tex
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDateTime;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.OrderUtils.getStatusColor;
 
 /**
  * @author Filipe Bezerra
@@ -71,29 +66,8 @@ class OrdersReportAdapter extends RecyclerView.Adapter<OrdersReportViewHolder> {
                 .setText(context.getString(order_list_template_text_order_date,
                         formatAsDateTime(order.getIssueDate())));
 
-        int colorResource;
-        switch (order.getStatus()) {
-            case OrderStatus.STATUS_CREATED:
-            case OrderStatus.STATUS_MODIFIED: {
-                colorResource = color_order_is_pending;
-                break;
-            }
-            case OrderStatus.STATUS_SYNCED: {
-                colorResource = color_order_was_synced;
-                break;
-            }
-            case OrderStatus.STATUS_CANCELLED: {
-                colorResource = color_order_was_cancelled;
-                break;
-            }
-            case OrderStatus.STATUS_INVOICED: {
-                colorResource = color_order_invoiced;
-                break;
-            }
-            default:
-                colorResource = transparent;
-        }
-        holder.viewOrderStatus.setBackgroundColor(getColor(context, colorResource));
+        holder.viewOrderStatus
+                .setBackgroundColor(getColor(context, getStatusColor(order.getStatus())));
     }
 
     @Override public int getItemCount() {

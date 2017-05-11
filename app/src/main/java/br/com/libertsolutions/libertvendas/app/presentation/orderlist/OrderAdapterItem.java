@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
@@ -19,9 +18,6 @@ import static android.R.color.transparent;
 import static android.support.v4.content.ContextCompat.getColor;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static br.com.libertsolutions.libertvendas.app.R.color.color_order_is_pending;
-import static br.com.libertsolutions.libertvendas.app.R.color.color_order_was_cancelled;
-import static br.com.libertsolutions.libertvendas.app.R.color.color_order_was_synced;
 import static br.com.libertsolutions.libertvendas.app.R.id.order_item;
 import static br.com.libertsolutions.libertvendas.app.R.id.text_view_customer_name;
 import static br.com.libertsolutions.libertvendas.app.R.id.text_view_order_date;
@@ -37,6 +33,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.orders_report_tex
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDateTime;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.OrderUtils.getStatusColor;
 
 /**
  * @author Filipe Bezerra
@@ -104,28 +101,8 @@ class OrderAdapterItem extends AbstractItem<OrderAdapterItem, OrderAdapterItem.V
 
         holder.viewOrderStatus.setVisibility(showStatusIndicator ? VISIBLE : GONE);
         if (showStatusIndicator) {
-            int colorResource;
-            switch (order.getStatus()) {
-                case OrderStatus.STATUS_CREATED:
-                case OrderStatus.STATUS_MODIFIED: {
-                    colorResource = color_order_is_pending;
-                    break;
-                }
-
-                case OrderStatus.STATUS_SYNCED: {
-                    colorResource = color_order_was_synced;
-                    break;
-                }
-
-                case OrderStatus.STATUS_CANCELLED: {
-                    colorResource = color_order_was_cancelled;
-                    break;
-                }
-
-                default:
-                    colorResource = transparent;
-            }
-            holder.viewOrderStatus.setBackgroundColor(getColor(context, colorResource));
+            holder.viewOrderStatus
+                    .setBackgroundColor(getColor(context, getStatusColor(order.getStatus())));
         }
 
         UIUtils.setBackground(holder.itemView, FastAdapterUIUtils.getSelectableBackground(context,
