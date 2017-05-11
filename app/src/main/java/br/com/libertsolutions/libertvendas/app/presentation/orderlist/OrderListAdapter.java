@@ -18,6 +18,7 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static android.view.LayoutInflater.from;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static br.com.libertsolutions.libertvendas.app.R.color.color_order_invoiced;
 import static br.com.libertsolutions.libertvendas.app.R.color.color_order_is_pending;
 import static br.com.libertsolutions.libertvendas.app.R.color.color_order_was_cancelled;
 import static br.com.libertsolutions.libertvendas.app.R.color.color_order_was_synced;
@@ -93,17 +94,18 @@ class OrderListAdapter extends RecyclerView.Adapter<OrderListViewHolder>
                     colorResource = color_order_is_pending;
                     break;
                 }
-
                 case OrderStatus.STATUS_SYNCED: {
                     colorResource = color_order_was_synced;
                     break;
                 }
-
                 case OrderStatus.STATUS_CANCELLED: {
                     colorResource = color_order_was_cancelled;
                     break;
                 }
-
+                case OrderStatus.STATUS_INVOICED: {
+                    colorResource = color_order_invoiced;
+                    break;
+                }
                 default:
                     colorResource = transparent;
             }

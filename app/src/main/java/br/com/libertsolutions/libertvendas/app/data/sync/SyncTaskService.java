@@ -61,6 +61,7 @@ import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.pr
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.providePriceTableApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideProductApi;
 import static br.com.libertsolutions.libertvendas.app.data.RemoteDataInjector.provideSyncApi;
+import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.CREATED_OR_MODIFIED;
 import static br.com.libertsolutions.libertvendas.app.data.sync.CustomersSyncedEvent.customersSynced;
 import static br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent.ordersSyncedBySchedule;
 import static br.com.libertsolutions.libertvendas.app.data.sync.ProductsUpdatedEvent.productsUpdated;
@@ -245,7 +246,7 @@ public class SyncTaskService extends GcmTaskService {
 
             final List<Order> createdOrModifiedOrders = getOrderRepository()
                     .query(new OrdersByUserSpecification(salesmanId, companyId)
-                            .byStatusCreatedOrModified())
+                            .byStatus(CREATED_OR_MODIFIED))
                     .toBlocking()
                     .firstOrDefault(Collections.emptyList());
 
@@ -338,8 +339,15 @@ public class SyncTaskService extends GcmTaskService {
                                 .singleOrDefault(null);
 
                         if (existingOrder != null) {
-                            if (order.status == 3) {
-                                existingOrder.withStatus(OrderStatus.STATUS_CANCELLED);
+                            switch (order.status) {
+                                case OrderStatus.STATUS_CANCELLED: {
+                                    existingOrder.withStatus(OrderStatus.STATUS_CANCELLED);
+                                    break;
+                                }
+                                case OrderStatus.STATUS_INVOICED: {
+                                    existingOrder.withStatus(OrderStatus.STATUS_INVOICED);
+                                    break;
+                                }
                             }
                             existingOrder
                                     .withLastChangeTime(order.lastChangeTime);

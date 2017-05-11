@@ -51,12 +51,15 @@ import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_issue_date_
 import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_issue_date_initial;
 import static br.com.libertsolutions.libertvendas.app.R.id.radio_group_status;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_FILTERED_ORDERS;
+import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.CREATED_OR_MODIFIED;
+import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.INVOICED;
+import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.SYNCED;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.dateTimeToMillis;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getYear;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.toDateTime;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_FILTERED_ORDERS;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
@@ -91,11 +94,12 @@ public class OrdersReportFragment extends BaseFragment
     @OrdersReportFragment.StatusFilter private int mStatusFilter;
 
     @Retention(SOURCE)
-    @IntDef({STATUS_FILTER_ALL, STATUS_FILTER_PENDING, STATUS_FILTER_SENT})
+    @IntDef({STATUS_FILTER_ALL, STATUS_FILTER_PENDING, STATUS_FILTER_SENT, STATUS_FILTER_INVOICED})
     private @interface StatusFilter {}
     private static final int STATUS_FILTER_ALL = 0;
     private static final int STATUS_FILTER_PENDING = 1;
     private static final int STATUS_FILTER_SENT = 2;
+    private static final int STATUS_FILTER_INVOICED = 3;
 
     @BindView(R.id.swipe_container_all_pull_refresh) protected SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recycler_view_orders_report) protected RecyclerView mRecyclerViewOrders;
@@ -347,6 +351,10 @@ public class OrdersReportFragment extends BaseFragment
                             mStatusFilter = STATUS_FILTER_SENT;
                             break;
                         }
+                        case R.id.radio_button_status_invoiced: {
+                            mStatusFilter = STATUS_FILTER_INVOICED;
+                            break;
+                        }
                     }
                 });
     }
@@ -363,11 +371,15 @@ public class OrdersReportFragment extends BaseFragment
 
         switch (mStatusFilter) {
             case STATUS_FILTER_PENDING: {
-                specification.byStatusCreatedOrModified();
+                specification.byStatus(CREATED_OR_MODIFIED);
                 break;
             }
             case STATUS_FILTER_SENT: {
-                specification.byStatusSynced();
+                specification.byStatus(SYNCED);
+                break;
+            }
+            case STATUS_FILTER_INVOICED: {
+                specification.byStatus(INVOICED);
                 break;
             }
         }

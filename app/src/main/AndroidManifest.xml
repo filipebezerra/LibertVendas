@@ -91,7 +91,6 @@
         <activity
             android:name=".presentation.vieworder.ViewOrderActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
-            android:label="@string/title_activity_view_order"
             android:parentActivityName=".presentation.main.MainActivity"
             android:theme="@style/LibertApp.Theme.NoActionBar"
             >

@@ -292,7 +292,10 @@
     <string name="order_form_saved_successfully">Pedido salvo com sucesso!</string>
 
     <!-- View Order screen -->
-    <string name="title_activity_view_order">Visualizando pedido</string>
+    <string name="title_activity_view_order">Pedido %1$d</string>
+    <string name="order_status_synced">Enviado</string>
+    <string name="order_status_cancelled">Cancelado</string>
+    <string name="order_status_invoiced">Faturado</string>
 
     <!-- Orders Report screen -->
     <string name="orders_report_text_no_order_number">Sem número</string>
@@ -301,6 +304,7 @@
     <string name="dialog_orders_report_filter_status_pending">Pendentes</string>
     <string name="dialog_orders_report_filter_status_sent">Enviados</string>
     <string name="dialog_orders_report_filter_issue_date_title">Emitido entre</string>
+    <string name="dialog_orders_report_filter_status_invoiced">Faturados</string>
     <string name="orders_report_total_title">Total %1$s</string>
 
     <!-- Common strings -->

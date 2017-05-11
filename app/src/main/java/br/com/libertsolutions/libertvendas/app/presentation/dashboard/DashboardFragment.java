@@ -24,8 +24,8 @@ import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderChartData;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderform.SavedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
-import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils;
+import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
 import butterknife.BindView;
 import butterknife.OnClick;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
@@ -46,11 +46,12 @@ import rx.Subscription;
 import timber.log.Timber;
 
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_FILTERED_GRAPH;
+import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.NOT_CANCELLED;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getYear;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.toLocalDate;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_FILTERED_GRAPH;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -184,7 +185,7 @@ public class DashboardFragment extends BaseFragment
         if (getLoggedUser() != null) {
             mCurrentSubscription = mOrderRepository
                     .query(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
-                            .byStatusNotCancelled()
+                            .byStatus(NOT_CANCELLED)
                             .orderByCustomerName())
                     .map(this::toChartData)
                     .observeOn(mainThread())
@@ -334,7 +335,7 @@ public class DashboardFragment extends BaseFragment
 
         mCurrentSubscription = mOrderRepository
                 .query(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
-                        .byStatusNotCancelled()
+                        .byStatus(NOT_CANCELLED)
                         .byIssueDate(initialDate, finalDate)
                         .orderByCustomerName())
                 .map(this::toChartData)

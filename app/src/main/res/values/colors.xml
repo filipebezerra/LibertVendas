@@ -26,5 +26,6 @@
 
     <color name="color_order_is_pending">#2196F3</color>
     <color name="color_order_was_synced">#4CAF50</color>
-    <color name="color_order_was_cancelled">#F44336</color>
+    <color name="color_order_was_cancelled">#777777</color>
+    <color name="color_order_invoiced">#d40d12</color>
 </resources>

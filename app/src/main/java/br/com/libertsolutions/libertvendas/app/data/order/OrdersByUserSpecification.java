@@ -13,6 +13,7 @@ import static br.com.libertsolutions.libertvendas.app.domain.entity.OrderEntity.
 import static br.com.libertsolutions.libertvendas.app.domain.entity.OrderEntity.Fields.STATUS;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_CANCELLED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_CREATED;
+import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_INVOICED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_MODIFIED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_SYNCED;
 import static io.realm.Sort.ASCENDING;
@@ -35,11 +36,7 @@ public class OrdersByUserSpecification implements RealmResultsSpecification<Orde
 
     private boolean mOrderedByCustomerName = false;
 
-    private boolean mByStatusNotCancelled = false;
-
-    private boolean mByStatusCreatedOrModified = false;
-
-    private boolean mByStatusSynced = false;
+    private int status = OrderStatusSpecificationFilter.NONE;
 
     public OrdersByUserSpecification(final int salesmanId, final int companyId) {
         mSalesmanId = salesmanId;
@@ -53,18 +50,8 @@ public class OrdersByUserSpecification implements RealmResultsSpecification<Orde
         return this;
     }
 
-    public OrdersByUserSpecification byStatusNotCancelled() {
-        mByStatusNotCancelled = true;
-        return this;
-    }
-
-    public OrdersByUserSpecification byStatusCreatedOrModified() {
-        mByStatusCreatedOrModified = true;
-        return this;
-    }
-
-    public OrdersByUserSpecification byStatusSynced() {
-        mByStatusSynced = true;
+    public OrdersByUserSpecification byStatus(@OrderStatusSpecificationFilter int status) {
+        this.status = status;
         return this;
     }
 
@@ -83,11 +70,28 @@ public class OrdersByUserSpecification implements RealmResultsSpecification<Orde
     @Override public RealmResults<OrderEntity> toRealmResults(final Realm realm) {
         RealmQuery<OrderEntity> query = createQuery(realm);
 
-        ifByStatusNotCancelled(query);
-
-        ifByStatusCreatedOrModified(query);
-
-        ifByStatusSynced(query);
+        switch (status) {
+            case OrderStatusSpecificationFilter.NOT_CANCELLED: {
+                query.not().equalTo(STATUS, STATUS_CANCELLED);
+                break;
+            }
+            case OrderStatusSpecificationFilter.CREATED_OR_MODIFIED: {
+                query.beginGroup()
+                        .equalTo(STATUS, STATUS_CREATED)
+                        .or()
+                        .equalTo(STATUS, STATUS_MODIFIED)
+                        .endGroup();
+                break;
+            }
+            case OrderStatusSpecificationFilter.SYNCED: {
+                query.equalTo(STATUS, STATUS_SYNCED);
+                break;
+            }
+            case OrderStatusSpecificationFilter.INVOICED: {
+                query.equalTo(STATUS, STATUS_INVOICED);
+                break;
+            }
+        }
 
         ifByIssueDate(query);
 
@@ -99,30 +103,6 @@ public class OrdersByUserSpecification implements RealmResultsSpecification<Orde
                 .where(OrderEntity.class)
                 .equalTo(SALESMAN_ID, mSalesmanId)
                 .equalTo(COMPANY_ID, mCompanyId);
-    }
-
-    private void ifByStatusNotCancelled(RealmQuery<OrderEntity> query) {
-        if (mByStatusNotCancelled) {
-            query
-                    .not()
-                    .equalTo(STATUS, STATUS_CANCELLED);
-        }
-    }
-
-    private void ifByStatusCreatedOrModified(RealmQuery<OrderEntity> query) {
-        if (mByStatusCreatedOrModified) {
-            query.beginGroup()
-                    .equalTo(STATUS, STATUS_CREATED)
-                    .or()
-                    .equalTo(STATUS, STATUS_MODIFIED)
-                    .endGroup();
-        }
-    }
-
-    private void ifByStatusSynced(RealmQuery<OrderEntity> query) {
-        if (mByStatusSynced) {
-            query.equalTo(STATUS, STATUS_SYNCED);
-        }
     }
 
     private void ifByIssueDate(RealmQuery<OrderEntity> query) {

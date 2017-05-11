@@ -43,6 +43,13 @@
             android:text="@string/dialog_orders_report_filter_status_sent"
             />
 
+        <RadioButton
+            android:id="@+id/radio_button_status_invoiced"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_orders_report_filter_status_invoiced"
+            />
+
     </RadioGroup>
 
     <TextView

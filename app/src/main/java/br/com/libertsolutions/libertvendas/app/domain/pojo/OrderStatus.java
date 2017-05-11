@@ -20,4 +20,5 @@ public @interface OrderStatus {
     int STATUS_MODIFIED = 1;
     int STATUS_SYNCED = 2;
     int STATUS_CANCELLED = 3;
+    int STATUS_INVOICED = 5;
 }

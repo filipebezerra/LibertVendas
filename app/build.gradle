@@ -157,5 +157,5 @@ dexcount {
     includeFieldCount = true
     includeTotalMethodCount = true
     orderByMethodCount = true
-    maxMethodCount = 64000
+    maxMethodCount = 65536
 }

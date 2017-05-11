@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
+import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseActivity;
 import br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent;
 import butterknife.BindView;
@@ -39,6 +40,25 @@ public class ViewOrderActivity extends BaseActivity {
         SelectedOrderEvent event = eventBus().getStickyEvent(SelectedOrderEvent.class);
         if (event != null) {
             Order order = event.getOrder();
+
+            getSupportActionBar().setTitle(getString(R.string.title_activity_view_order,
+                    order.getOrderId()));
+
+            switch (order.getStatus()) {
+                case OrderStatus.STATUS_SYNCED: {
+                    getSupportActionBar().setSubtitle(R.string.order_status_synced);
+                    break;
+                }
+                case OrderStatus.STATUS_CANCELLED: {
+                    getSupportActionBar().setSubtitle(R.string.order_status_cancelled);
+                    break;
+                }
+                case OrderStatus.STATUS_INVOICED: {
+                    getSupportActionBar().setSubtitle(R.string.order_status_invoiced);
+                    break;
+                }
+            }
+
             mEditTextIssueDate.setText(formatAsDateTime(order.getIssueDate()));
             mEditTextCustomerName.setText(order.getCustomer().getName());
             mEditTextTotalItems.setText(formatAsCurrency(order.getTotalItems()));

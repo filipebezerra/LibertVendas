@@ -24,7 +24,6 @@ import br.com.libertsolutions.libertvendas.app.data.sync.InstantSyncService;
 import br.com.libertsolutions.libertvendas.app.data.sync.OrdersSyncedEvent;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus;
 import br.com.libertsolutions.libertvendas.app.presentation.addorder.orderform.SavedOrderEvent;
 import br.com.libertsolutions.libertvendas.app.presentation.base.BaseFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.main.LoggedInUserEvent;
@@ -46,9 +45,11 @@ import rx.Subscriber;
 import rx.Subscription;
 import timber.log.Timber;
 
+import static android.support.design.widget.Snackbar.LENGTH_LONG;
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.support.v4.content.ContextCompat.getColor;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
+import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.CREATED_OR_MODIFIED;
 import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.duplicateOrder;
 import static br.com.libertsolutions.libertvendas.app.presentation.orderlist.SelectedOrderEvent.selectOrder;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_DUPLICATE_ORDER;
@@ -113,11 +114,10 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
             if (selectedOrder != null) {
                 eventBus().postSticky(selectOrder(selectedOrder));
 
-                if (selectedOrder.getStatus() == OrderStatus.STATUS_SYNCED ||
-                        selectedOrder.getStatus() == OrderStatus.STATUS_CANCELLED) {
-                    navigate().toViewOrder();
-                } else {
+                if (selectedOrder.isStatusCreatedOrModified()) {
                     navigate().toAddOrder();
+                } else {
+                    navigate().toViewOrder();
                 }
             }
         } else {
@@ -273,7 +273,7 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
         getActivity().runOnUiThread(() -> {
             loadOrders();
             if (event.isInstantly()) {
-                Snackbar.make(getView(), R.string.order_list_instant_sync_done, LENGTH_SHORT)
+                Snackbar.make(getView(), R.string.order_list_instant_sync_done, LENGTH_LONG)
                         .show();
             }
         });
@@ -285,7 +285,7 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
                 .orderByIssueDate();
 
         if (isShowOnlyPendingOrders()) {
-            specification.byStatusCreatedOrModified();
+            specification.byStatus(CREATED_OR_MODIFIED);
         }
 
         currentSubscription = orderRepository
