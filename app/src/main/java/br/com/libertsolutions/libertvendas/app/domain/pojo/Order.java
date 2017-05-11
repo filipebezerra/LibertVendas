@@ -178,13 +178,13 @@ public class Order {
         return status == OrderStatus.STATUS_CREATED || status == OrderStatus.STATUS_MODIFIED;
     }
 
-    public boolean isStatusSyncedOrCancelled() {
-        return status == OrderStatus.STATUS_SYNCED || status == OrderStatus.STATUS_CANCELLED;
+    public boolean isStatusNotCreatedAndModified() {
+        return status != OrderStatus.STATUS_CREATED && status != OrderStatus.STATUS_MODIFIED;
     }
 
     public boolean isStatusEquals(final Order order) {
         return isStatusCreatedOrModified() && order.isStatusCreatedOrModified() ||
-                isStatusSyncedOrCancelled() && order.isStatusSyncedOrCancelled();
+                isStatusNotCreatedAndModified() && order.isStatusNotCreatedAndModified();
     }
 
     @Override public boolean equals(final Object o) {

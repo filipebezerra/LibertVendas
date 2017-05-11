@@ -91,7 +91,7 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
                         LENGTH_SHORT)
                         .show();
                 return true;
-            } else if (selectedOrder.isStatusSyncedOrCancelled()) {
+            } else if (!selectedOrder.isStatusCreatedOrModified()) {
                 if (selectedItems.contains(item) && selectedItems.size() == 1) {
                     actionModeHelper.reset();
                 } else {
@@ -432,7 +432,7 @@ public class OrderListFragment extends BaseFragment implements OnRefreshListener
                         fastItemAdapter.getSelectedItems()
                                 .toArray(new OrderAdapterItem[selectionSize]);
                 Order firstOrder = orderAdapterItems[0].getOrder();
-                if (firstOrder.isStatusSyncedOrCancelled()) {
+                if (!firstOrder.isStatusCreatedOrModified()) {
                     MenuItem syncItemsMenuItem = menu.findItem(R.id.action_sync);
                     if (syncItemsMenuItem.isVisible()) {
                         syncItemsMenuItem.setVisible(false);
