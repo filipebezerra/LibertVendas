@@ -30,7 +30,8 @@ public class CustomerRealmMapper extends RealmMapper<Customer, CustomerEntity> {
                 .withAddressNumber(object.getAddressNumber())
                 .withAddressComplement(object.getAddressComplement())
                 .withDefaultPriceTable(object.getDefaultPriceTable())
-                .withCity(cityMapper().toEntity(object.getCity()))
+                .withCity(object.getCity() != null ?
+                        cityMapper().toEntity(object.getCity()) : null)
                 .withActive(object.isActive())
                 .withLastChangeTime(object.getLastChangeTime())
                 .withStatus(object.getStatus());
@@ -55,7 +56,8 @@ public class CustomerRealmMapper extends RealmMapper<Customer, CustomerEntity> {
                 .withAddressNumber(entity.getAddressNumber())
                 .withAddressComplement(entity.getAddressComplement())
                 .withDefaultPriceTable(entity.getDefaultPriceTable())
-                .withCity(cityMapper().toViewObject(entity.getCity()))
+                .withCity(entity.getCity() != null ?
+                        cityMapper().toViewObject(entity.getCity()) : null)
                 .withActive(entity.isActive())
                 .withLastChangeTime(entity.getLastChangeTime())
                 .withStatus(entity.getStatus());
