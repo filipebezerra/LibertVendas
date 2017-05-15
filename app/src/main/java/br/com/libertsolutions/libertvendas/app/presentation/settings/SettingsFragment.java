@@ -2,6 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.settings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v14.preference.SwitchPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
@@ -14,13 +15,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.sync.SyncTaskService;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompatDividers;
+import java.util.regex.Pattern;
 
+import static android.support.design.widget.Snackbar.LENGTH_LONG;
 import static android.text.TextUtils.isEmpty;
 import static br.com.libertsolutions.libertvendas.app.R.string.settings_auth_key_preference_key;
 import static br.com.libertsolutions.libertvendas.app.R.string.settings_automatically_sync_orders_preference_key;
@@ -140,8 +144,6 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
     }
 
     private boolean handlePreferenceChanged(Preference preference, Object newValue) {
-        setPreferenceSummary(preference, newValue);
-
         if (preference.getKey().equals(mSyncPeriodicityPreferenceKey) &&
                 provideSettingsRepository().isInitialFlowDone()) {
             SyncTaskService.schedule(getContext(), Integer.valueOf(newValue.toString()));
@@ -151,9 +153,42 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
             getActivity().setResult(RESULT_AUTO_SYNC_ORDERS_CHANGED);
         }
 
+        else if (preference.getKey().equals(mServerAddressPreferenceKey)) {
+            final String url = newValue.toString();
+            if (!URLUtil.isNetworkUrl(url)) {
+                Snackbar.make(getView(), R.string.settings_invalid_server_address_message,
+                        LENGTH_LONG).show();
+                return false;
+            } else if (Pattern.compile("api").matcher(url).find()) {
+                Snackbar.make(getView(), R.string.settings_invalid_server_address_with_path_api_message,
+                        LENGTH_LONG).show();
+                return false;
+            }
+        }
+
+        else if (preference.getKey().equals(mAuthKeyPreferenceKey)) {
+            final String authKey = newValue.toString();
+            if (Pattern.compile("\\s").matcher(authKey).find()) {
+                Snackbar.make(getView(), R.string.settings_invalid_auth_key_message,
+                        LENGTH_LONG).show();
+                return false;
+            }
+        }
+
+        else if (preference.getKey().equals(mSyncPeriodicityPreferenceKey)) {
+            final int periodicity = Integer.valueOf(newValue.toString());
+            if (periodicity == 0) {
+                Snackbar.make(getView(), R.string.settings_invalid_sync_periodicity_value_message,
+                        LENGTH_LONG).show();
+                return false;
+            }
+        }
+
         if (isOptionsMenuEnabled()) {
             getActivity().supportInvalidateOptionsMenu();
         }
+
+        setPreferenceSummary(preference, newValue);
         return true;
     }
 
