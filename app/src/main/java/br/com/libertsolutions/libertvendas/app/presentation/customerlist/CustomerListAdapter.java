@@ -72,7 +72,17 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListViewHo
         if (!isEmpty(customer.getFantasyName())) {
             holder.textViewFantasyName.setText(customer.getFantasyName());
         } else {
-            holder.textViewFantasyName.setText(context.getString(R.string.customer_list_text_no_fantasy_name));
+            holder.textViewFantasyName
+                    .setText(context.getString(R.string.customer_list_text_no_fantasy_name));
+        }
+
+        if (!isEmpty(customer.getCode())) {
+            holder.textViewCustomerCode
+                    .setText(context.getString(R.string.customer_list_template_customer_code,
+                            customer.getCode()));
+        } else {
+            holder.textViewCustomerCode
+                    .setText(context.getString(R.string.customer_list_text_no_customer_code));
         }
     }
 
@@ -126,8 +136,8 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListViewHo
         }
 
         @Override protected String[] filterValues(final Customer customer) {
-            return new String[] {
-                    customer.getName(), customer.getContact(), customer.getCpfOrCnpj()};
+            return new String[] { customer.getName(), customer.getContact(),
+                    customer.getCpfOrCnpj(), customer.getCode()};
         }
     }
 }

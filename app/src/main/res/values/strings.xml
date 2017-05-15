@@ -163,11 +163,14 @@
     <string name="customer_list_example_phone">(62) 3524 – 1936</string>
     <string name="customer_list_example_email">waldomiro.martins.braga@mail.com</string>
     <string name="customer_list_fragment_title">Seus clientes</string>
-    <string name="customer_list_search_hint">Use CPF, CNPJ, nome ou contato</string>
+    <string name="customer_list_search_hint">Use Código, CPF/CNPJ, nome ou contato</string>
     <string name="customer_list_template_text_phones">%1$s &#47; %2$s</string>
     <string name="customer_list_text_no_phone">Sem telefone</string>
     <string name="customer_list_text_no_email">Sem e-mail</string>
     <string name="customer_list_text_no_fantasy_name">Sem nome fantasia</string>
+    <string name="customer_list_example_customer_code">Cód. 00000401</string>
+    <string name="customer_list_template_customer_code">Cód. %1$s</string>
+    <string name="customer_list_text_no_customer_code">Sem código</string>
 
     <!-- Product List strings -->
     <string name="product_list_error_loading_products">
