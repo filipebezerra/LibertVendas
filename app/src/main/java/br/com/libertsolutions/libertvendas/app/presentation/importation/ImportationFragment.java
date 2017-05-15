@@ -371,13 +371,8 @@ public class ImportationFragment extends BaseFragment {
                 .show();
     }
 
-    private void hideProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
-
     private void completeInitialFlowDone() {
+        hideProgressDialog();
         settings().setInitialFlowDone();
         SyncTaskService.schedule(getContext(), settings().getSettings().getSyncPeriodicity());
         new MaterialDialog.Builder(getContext())
@@ -387,6 +382,12 @@ public class ImportationFragment extends BaseFragment {
                 .onPositive((dialog, which) ->
                         eventBus().post(CompletedImportationEvent.newEvent()))
                 .show();
+    }
+
+    private void hideProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     @Override public void onDestroyView() {
