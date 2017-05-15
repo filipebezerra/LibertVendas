@@ -121,6 +121,30 @@
                     />
 
                 <TextView
+                    android:id="@id/text_view_product_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/keyline_medium"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="@string/select_order_items_example_product_code"
+                    />
+
+                <TextView
+                    android:id="@id/text_view_product_barcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/keyline_medium"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="@string/select_order_items_example_product_barcode"
+                    />
+
+                <TextView
                     android:id="@id/text_view_product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

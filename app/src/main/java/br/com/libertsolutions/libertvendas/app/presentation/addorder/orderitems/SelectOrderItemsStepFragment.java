@@ -309,7 +309,8 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
         if (!orderItems.isEmpty()) {
             recyclerViewOrderItems.setVisibility(VISIBLE);
             recyclerViewOrderItems.setAdapter(
-                    selectOrderItemsAdapter = new SelectOrderItemsAdapter(orderItems, this));
+                    selectOrderItemsAdapter = new SelectOrderItemsAdapter(
+                            orderItems, this, getContext()));
             recyclerViewOrderItems
                     .getViewTreeObserver()
                     .addOnGlobalLayoutListener(

@@ -27,6 +27,8 @@
 
     <item name="text_view_product_name" type="id" />
     <item name="text_view_product_price" type="id" />
+    <item name="text_view_product_code" type="id" />
+    <item name="text_view_product_barcode" type="id" />
 
     <item name="input_layout_customer_name" type="id" />
     <item name="edit_text_customer_name" type="id" />

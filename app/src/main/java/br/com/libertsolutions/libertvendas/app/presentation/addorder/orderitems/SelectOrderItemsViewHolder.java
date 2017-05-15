@@ -29,6 +29,8 @@ class SelectOrderItemsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.text_view_product_name) TextView textViewProductName;
     @BindView(R.id.text_view_product_price) TextView textViewProductPrice;
     @BindView(R.id.text_view_item_total) TextView textViewItemTotal;
+    @BindView(R.id.text_view_product_code) TextView textViewProductCode;
+    @BindView(R.id.text_view_product_barcode) TextView textViewProductBarcode;
 
     private final SelectOrderItemsCallbacks mItemsCallbacks;
 

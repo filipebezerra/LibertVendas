@@ -270,6 +270,13 @@
     <string name="select_order_items_no_items">Os itens do pedido são listados aqui</string>
     <string name="select_order_items_no_order_items">É necessário adicionar itens ao pedido!</string>
     <string name="select_order_items_invalid_quantity">Quantidade inválida!</string>
+    <string name="select_order_items_example_product_code">Cód. PA00096</string>
+    <string name="select_order_items_example_product_barcode">Cód. Barras 7898910451325</string>
+
+    <string name="select_order_items_template_product_price">Preço %1$s</string>
+    <string name="select_order_items_template_item_total">Total %1$s</string>
+    <string name="select_order_items_template_product_code">Cód. %1$s</string>
+    <string name="select_order_items_template_product_barcode">Cód. Barras %1$s</string>
 
     <!-- Order Form screen -->
     <string name="order_form_issue_date_hint">Data de emissão</string>
