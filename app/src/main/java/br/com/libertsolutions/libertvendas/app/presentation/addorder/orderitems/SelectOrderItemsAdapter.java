@@ -97,7 +97,8 @@ class SelectOrderItemsAdapter extends RecyclerView.Adapter<SelectOrderItemsViewH
 
         @Override protected String[] filterValues(final OrderItem orderItem) {
             final Product product = orderItem.getItem().getProduct();
-            return new String[] { product.getDescription(), product.getBarCode() };
+            return new String[] { product.getDescription(), product.getBarCode(),
+                    product.getCode(), product.getBarCode() };
         }
     }
 }

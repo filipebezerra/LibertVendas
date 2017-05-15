@@ -127,7 +127,7 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
         inflater.inflate(R.menu.menu_search, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_all_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setQueryHint(getString(R.string.product_list_search_hint));
+        searchView.setQueryHint(getString(R.string.select_order_items_search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override public boolean onQueryTextSubmit(String query) {
                 return false;
