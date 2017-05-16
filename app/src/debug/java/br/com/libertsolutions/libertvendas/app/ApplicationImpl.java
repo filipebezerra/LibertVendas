@@ -18,6 +18,10 @@ public class ApplicationImpl extends BaseApplication {
         });
     }
 
+    @Override protected void initializeFabric() {
+        // Fabric it's not enabled in debug build variant
+    }
+
     @Override protected void initializeRealm() {
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder()
