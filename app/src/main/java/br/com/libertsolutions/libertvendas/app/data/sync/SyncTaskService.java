@@ -8,7 +8,7 @@ import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomersBy
 import br.com.libertsolutions.libertvendas.app.data.company.paymentmethod.CompanyPaymentMethodRepository;
 import br.com.libertsolutions.libertvendas.app.data.company.pricetable.CompanyPriceTableRepository;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerApi;
-import br.com.libertsolutions.libertvendas.app.data.customer.CustomerByIdSpecification;
+import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomerByCustomerIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderByIdSpecification;
@@ -279,7 +279,8 @@ public class SyncTaskService extends GcmTaskService {
                     for (final Customer customer : updatedCustomers) {
                         final Integer customerId = customer.getCustomerId();
                         final Customer existingCustomer = customerRepository
-                                .findFirst(new CustomerByIdSpecification(customerId))
+                                .findFirst(new CustomerByCustomerIdSpecification(
+                                        customerId, companyId))
                                 .toBlocking()
                                 .singleOrDefault(null);
 
