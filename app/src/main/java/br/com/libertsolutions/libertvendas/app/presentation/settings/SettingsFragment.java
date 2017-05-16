@@ -144,16 +144,7 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
     }
 
     private boolean handlePreferenceChanged(Preference preference, Object newValue) {
-        if (preference.getKey().equals(mSyncPeriodicityPreferenceKey) &&
-                provideSettingsRepository().isInitialFlowDone()) {
-            SyncTaskService.schedule(getContext(), Integer.valueOf(newValue.toString()));
-        }
-
-        else if (preference.getKey().equals(mSyncOrdersAutomaticallyKey)) {
-            getActivity().setResult(RESULT_AUTO_SYNC_ORDERS_CHANGED);
-        }
-
-        else if (preference.getKey().equals(mServerAddressPreferenceKey)) {
+        if (preference.getKey().equals(mServerAddressPreferenceKey)) {
             final String url = newValue.toString();
             if (!URLUtil.isNetworkUrl(url)) {
                 Snackbar.make(getView(), R.string.settings_invalid_server_address_message,
@@ -175,12 +166,18 @@ public class SettingsFragment extends PreferenceFragmentCompatDividers {
             }
         }
 
+        else if (preference.getKey().equals(mSyncOrdersAutomaticallyKey)) {
+            getActivity().setResult(RESULT_AUTO_SYNC_ORDERS_CHANGED);
+        }
+
         else if (preference.getKey().equals(mSyncPeriodicityPreferenceKey)) {
             final int periodicity = Integer.valueOf(newValue.toString());
             if (periodicity == 0) {
                 Snackbar.make(getView(), R.string.settings_invalid_sync_periodicity_value_message,
                         LENGTH_LONG).show();
                 return false;
+            } else if (provideSettingsRepository().isInitialFlowDone()) {
+                SyncTaskService.schedule(getContext(), Integer.valueOf(newValue.toString()));
             }
         }
 
