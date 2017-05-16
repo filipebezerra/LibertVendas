@@ -4,7 +4,7 @@
 
 Aplicativo móvel de Força de vendas para Android da empresa Libert Solutions.
 
-[Baixe o app](https://github.com/filipebezerra/LibertVendas/releases/download/v1.0.2/LibertVendas-1.0.2-release.apk)
+[Baixe o app](https://github.com/filipebezerra/LibertVendas/releases/download/v1.0.3/LibertVendas-1.0.3-release.apk)
 
 # Capturas de tela
 <img src="art/drawer_menu.jpg" alt="phone image" width="200px" />

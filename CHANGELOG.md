@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Versão 1.0.3 (15/05/2017)
+-----------------------
+* **NOVO** Pedidos faturados podem ser visualizados no relatório e na listagem de pedidos
+* **CORREÇÃO** Importação dos clientes sem vínculo com cidade/estado
+* **MELHORIA** Código do produto e código de barras podem ser visualizados na listagem de itens do pedido
+* **MELHORIA** Código do cliente pode ser visualizado na listagem de clientes
+* **MELHORIA** As configurações alteradas pelo usuário são devidamente validadas
+
 Versão 1.0.2 (06/05/2017)
 -----------------------
 * **CORREÇÃO** Pedidos de novos clientes não eram sincronizados manualmente
