@@ -8,13 +8,13 @@ import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomersBy
 import br.com.libertsolutions.libertvendas.app.data.company.paymentmethod.CompanyPaymentMethodRepository;
 import br.com.libertsolutions.libertvendas.app.data.company.pricetable.CompanyPriceTableRepository;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerApi;
-import br.com.libertsolutions.libertvendas.app.data.company.customer.CustomerByCustomerIdSpecification;
+import br.com.libertsolutions.libertvendas.app.data.customer.CustomerByCustomerIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.customer.CustomerRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
-import br.com.libertsolutions.libertvendas.app.data.company.paymentmethod.PaymentMethodByIdSpecification;
+import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodRepository;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRepository;
@@ -279,8 +279,7 @@ public class SyncTaskService extends GcmTaskService {
                     for (final Customer customer : updatedCustomers) {
                         final Integer customerId = customer.getCustomerId();
                         final Customer existingCustomer = customerRepository
-                                .findFirst(new CustomerByCustomerIdSpecification(
-                                        customerId, companyId))
+                                .findFirst(new CustomerByCustomerIdSpecification(customerId))
                                 .toBlocking()
                                 .singleOrDefault(null);
 
@@ -391,8 +390,7 @@ public class SyncTaskService extends GcmTaskService {
                     for (final PaymentMethod paymentMethod : updatedPaymentMethods) {
                         final Integer paymentMethodId = paymentMethod.getPaymentMethodId();
                         final PaymentMethod existingPaymentMethod = paymentMethodRepository
-                                .findFirst(new PaymentMethodByIdSpecification(
-                                        paymentMethodId, companyId))
+                                .findFirst(new PaymentMethodByIdSpecification(paymentMethodId))
                                 .toBlocking()
                                 .singleOrDefault(null);
 
