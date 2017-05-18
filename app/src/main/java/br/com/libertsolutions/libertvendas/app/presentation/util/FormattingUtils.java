@@ -13,6 +13,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.BR_REGION_CODE;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.CURRENCY_SCALE;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_FORMAT;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_TIME_FORMAT;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.PT_BR_DEFAULT_LOCALE;
@@ -48,8 +49,8 @@ public class FormattingUtils {
             = DateTimeFormat.forPattern(DATE_FORMAT);
 
     static {
-        sCurrencyFormatter.setMaximumFractionDigits(2);
-        sCurrencyFormatter.setMinimumFractionDigits(2);
+        sCurrencyFormatter.setMaximumFractionDigits(CURRENCY_SCALE);
+        sCurrencyFormatter.setMinimumFractionDigits(CURRENCY_SCALE);
     }
 
     public static String formatCpforCnpj(String value) {

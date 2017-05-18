@@ -2,6 +2,8 @@ package br.com.libertsolutions.libertvendas.app.domain.pojo;
 
 import br.com.libertsolutions.libertvendas.app.domain.dto.OrderItemDto;
 
+import static br.com.libertsolutions.libertvendas.app.presentation.util.CurrencyUtils.round;
+
 /**
  * @author Filipe Bezerra
  */
@@ -79,7 +81,7 @@ public class OrderItem {
     }
 
     public Double getSubTotal() {
-        return subTotal;
+        return round(subTotal);
     }
 
     public OrderItem withSubTotal(final Double subTotal) {
