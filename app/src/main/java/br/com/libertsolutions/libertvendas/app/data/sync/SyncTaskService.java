@@ -14,7 +14,7 @@ import br.com.libertsolutions.libertvendas.app.data.order.OrderApi;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.order.OrdersByUserSpecification;
-import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodByIdSpecification;
+import br.com.libertsolutions.libertvendas.app.data.company.paymentmethod.PaymentMethodByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodRepository;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRepository;
@@ -391,7 +391,8 @@ public class SyncTaskService extends GcmTaskService {
                     for (final PaymentMethod paymentMethod : updatedPaymentMethods) {
                         final Integer paymentMethodId = paymentMethod.getPaymentMethodId();
                         final PaymentMethod existingPaymentMethod = paymentMethodRepository
-                                .findFirst(new PaymentMethodByIdSpecification(paymentMethodId))
+                                .findFirst(new PaymentMethodByIdSpecification(
+                                        paymentMethodId, companyId))
                                 .toBlocking()
                                 .singleOrDefault(null);
 
