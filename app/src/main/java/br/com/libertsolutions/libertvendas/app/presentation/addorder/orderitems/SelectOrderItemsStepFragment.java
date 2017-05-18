@@ -161,7 +161,8 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
 
     @Subscribe(priority = 1) public void onSelectedCustomer(SelectedCustomerEvent event) {
         Customer customer = event.getCustomer();
-        if (!isEmpty(customer.getDefaultPriceTable())) {
+        if (!isEmpty(customer.getDefaultPriceTable()) &&
+                !isEmpty(customer.getDefaultPriceTable().trim())) {
             customerDefaultPriceTable = valueOf(customer.getDefaultPriceTable());
             loadProducts();
         }
