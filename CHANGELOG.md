@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Versão 1.0.4 (20/05/2017)
+-----------------------
+* **CORREÇÃO** Totalização dos itens do pedido quando é usado o filtro do produto ( [#87](https://github.com/filipebezerra/LibertVendas/issues/87) )
+* **CORREÇÃO** Arredondamento do subtotal dos itens na sincronização do pedido ( [#88](https://github.com/filipebezerra/LibertVendas/issues/88) )
+* **CORREÇÃO** Sincronização de novos cadastros (Formas de pagamento, clientes e tabelas de preço) ( [#78](https://github.com/filipebezerra/LibertVendas/issues/78) )
+* **CORREÇÃO** Campo tabela de preço padrão do cliente é ignorado quando possuir espaços em branco ( [#84](https://github.com/filipebezerra/LibertVendas/issues/84) )
+
 Versão 1.0.3 (15/05/2017)
 -----------------------
 * **NOVO** Pedidos faturados podem ser visualizados no relatório e na listagem de pedidos
