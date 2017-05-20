@@ -33,7 +33,10 @@ import butterknife.OnClick;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import org.greenrobot.eventbus.Subscribe;
 import rx.Subscriber;
 import rx.Subscription;
@@ -77,6 +80,8 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
     private Integer customerDefaultPriceTable;
 
     private List<OrderItem> orderItems;
+
+    private Set<OrderItem> selectedOrderItems;
 
     private Order selectedOrder;
 
@@ -173,6 +178,7 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
         if (checkQuantity(quantity)) {
             orderItem.addQuantity(1);
             selectOrderItemsAdapter.notifyItemChanged(position);
+            selectedOrderItems.add(orderItem);
         }
     }
 
@@ -182,6 +188,8 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
         if (quantity != null && quantity >= 1) {
             orderItem.removeOneFromQuantity();
             selectOrderItemsAdapter.notifyItemChanged(position);
+            if (orderItem.getQuantity() == 0)
+                selectedOrderItems.remove(orderItem);
         }
     }
 
@@ -190,6 +198,10 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
         if (checkQuantity(quantity)) {
             orderItem.withQuantity(quantity);
             selectOrderItemsAdapter.notifyItemChanged(position);
+            if (orderItem.getQuantity() == 0)
+                selectedOrderItems.remove(orderItem);
+            else
+                selectedOrderItems.add(orderItem);
         }
     }
 
@@ -200,7 +212,7 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
             selectOrderItemsAdapter.getFilter().filter("");
         }
 
-        List<OrderItem> addedOrderItems = getAddedOrderItems();
+        List<OrderItem> addedOrderItems = getSelectedOrderItems();
         if (!addedOrderItems.isEmpty()) {
             eventBus().post(newEvent(addedOrderItems));
             return null;
@@ -243,25 +255,27 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
     }
 
     private OrderItem createOrderItem(final PriceTableItem priceTableItem) {
-        OrderItem orderItem = null;
+        OrderItem orderItem;
         if (selectedOrder != null) {
-            for (OrderItem item : selectedOrder.getItems()) {
+            for (final OrderItem item : selectedOrder.getItems()) {
                 if (item.getItem().equals(priceTableItem)) {
                     orderItem = new OrderItem()
+                            .withTempId(UUID.randomUUID().toString())
                             .withItem(priceTableItem)
                             .withQuantity(item.getQuantity());
-                    break;
+
+                    if (selectedOrderItems == null)
+                        selectedOrderItems = new LinkedHashSet<>();
+                    selectedOrderItems.add(orderItem);
+                    return orderItem;
                 }
             }
         }
 
-        if (orderItem == null) {
-            orderItem = new OrderItem()
-                    .withItem(priceTableItem)
-                    .withQuantity(0.0f)
-                    .withSubTotal(0.0d);
-        }
-
+        orderItem = new OrderItem()
+                .withTempId(UUID.randomUUID().toString())
+                .withItem(priceTableItem)
+                .withQuantity(0.0f);
         return orderItem;
     }
 
@@ -288,8 +302,10 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
     private void startLoadingProducts() {
         if (orderItems == null) {
             orderItems = new ArrayList<>();
+            selectedOrderItems = new LinkedHashSet<>();
         } else {
             orderItems.clear();
+            selectedOrderItems.clear();
         }
         swipeRefreshLayout.setRefreshing(true);
         selectOrderItemsAdapter = null;
@@ -348,13 +364,13 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
         return true;
     }
 
-    private List<OrderItem> getAddedOrderItems() {
-        if (orderItems == null || orderItems.isEmpty()) {
+    private List<OrderItem> getSelectedOrderItems() {
+        if (selectedOrderItems == null || selectedOrderItems.isEmpty()) {
             return emptyList();
         }
 
         List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItem item : this.orderItems) {
+        for (final OrderItem item : selectedOrderItems) {
             if (item.getQuantity() > 0) {
                 orderItems.add(item);
             }

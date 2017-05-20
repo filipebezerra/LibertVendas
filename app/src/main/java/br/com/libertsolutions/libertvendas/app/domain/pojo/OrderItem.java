@@ -21,6 +21,8 @@ public class OrderItem {
 
     private String lastChangeTime;
 
+    private String tempId;
+
     public Integer getId() {
         return id;
     }
@@ -98,6 +100,15 @@ public class OrderItem {
         return this;
     }
 
+    public String getTempId() {
+        return tempId;
+    }
+
+    public OrderItem withTempId(final String tempId) {
+        this.tempId = tempId;
+        return this;
+    }
+
     @Override public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -108,11 +119,12 @@ public class OrderItem {
 
         OrderItem item = (OrderItem) o;
 
-        return getId().equals(item.getId());
+        return getId() != null ?
+                getId().equals(item.getId()) : getTempId().equals(item.getTempId());
     }
 
     @Override public int hashCode() {
-        return getId().hashCode();
+        return getId() != null ? getId().hashCode() : getTempId().hashCode();
     }
 
     @Override public String toString() {
