@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Versão 1.0.5 (21/05/2017)
+-----------------------
+* **CORREÇÃO** Listagem de produtos não é recarregada após selecionar outro cliente ( [#91](https://github.com/filipebezerra/LibertVendas/issues/91) )
+* **CORREÇÃO** Crash na validação de desconto caso a forma de pagamento não tenha desconto ( [#92](https://github.com/filipebezerra/LibertVendas/issues/92) )
+* **CORREÇÃO** Não é possível aplicar desconto usando forma de pagamento que concede desconto ( [#93](https://github.com/filipebezerra/LibertVendas/issues/93) )
+
 Versão 1.0.4 (20/05/2017)
 -----------------------
 * **CORREÇÃO** Totalização dos itens do pedido quando é usado o filtro do produto ( [#87](https://github.com/filipebezerra/LibertVendas/issues/87) )
