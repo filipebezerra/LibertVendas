@@ -294,12 +294,15 @@
         Por favor tente novamente.
     </string>
     <string name="order_form_salesman_cant_apply_discount">
-        Você não está autorizado à conceder desconto!
+        Você não está autorizado à aplicar desconto!
     </string>
     <string name="order_form_discount_value_not_allowed">
-        Valor de desconto acima do permitido!
+        Desconto acima do permitido para esta forma de pagamento!
     </string>
     <string name="order_form_saved_successfully">Pedido salvo com sucesso!</string>
+    <string name="order_form_payment_method_with_no_discount">
+        Não há desconto para esta forma de pagamento!
+    </string>
 
     <!-- View Order screen -->
     <string name="title_activity_view_order">Pedido %1$d</string>

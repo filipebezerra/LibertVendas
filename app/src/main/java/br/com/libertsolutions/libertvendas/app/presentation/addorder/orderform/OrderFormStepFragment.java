@@ -7,7 +7,6 @@ import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.Snackbar.Callback;
 import android.support.design.widget.TextInputLayout;
-import android.text.TextUtils;
 import android.view.View;
 import br.com.libertsolutions.libertvendas.app.data.company.paymentmethod.PaymentMethodsByCompanySpecification;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
@@ -42,6 +41,7 @@ import timber.log.Timber;
 
 import static android.support.design.widget.Snackbar.LENGTH_LONG;
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
+import static android.text.TextUtils.isEmpty;
 import static android.widget.AdapterView.INVALID_POSITION;
 import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_discount;
 import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_observation;
@@ -60,6 +60,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.all_retry;
 import static br.com.libertsolutions.libertvendas.app.R.string.all_saving_message;
 import static br.com.libertsolutions.libertvendas.app.R.string.all_unknown_error_saving_form;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_form_discount_value_not_allowed;
+import static br.com.libertsolutions.libertvendas.app.R.string.order_form_payment_method_with_no_discount;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_form_salesman_cant_apply_discount;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_form_saved_successfully;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_form_unknown_error_loading_payment_methods;
@@ -261,7 +262,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
                         .setText(String.valueOf(mCurrentOrder.getDiscount()));
             }
 
-            if (!TextUtils.isEmpty(mCurrentOrder.getObservation())) {
+            if (!isEmpty(mCurrentOrder.getObservation())) {
                 mInputLayoutObservation.getEditText()
                         .setText(mCurrentOrder.getObservation());
             }
@@ -363,7 +364,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
     private boolean checkDiscountValue() {
         final String discountStr = mInputLayoutDiscount.getEditText().getText().toString();
 
-        if (TextUtils.isEmpty(discountStr)) {
+        if (isEmpty(discountStr)) {
             return true;
         }
 
@@ -389,7 +390,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
         final Float discountPercentage = paymentMethod.getDiscountPercentage();
 
         if (discountPercentage == 0) {
-            mInputLayoutDiscount.setError(getString(order_form_discount_value_not_allowed));
+            mInputLayoutDiscount.setError(getString(order_form_payment_method_with_no_discount));
             return false;
         }
 
