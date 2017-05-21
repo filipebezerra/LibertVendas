@@ -396,10 +396,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
 
         final Float discountPercentage = paymentMethod.getDiscountPercentage();
 
-        final String totalItemsStr = mInputLayoutTotalItems.getEditText().getText().toString();
-        final double totalItems = toDouble(totalItemsStr);
-
-        final double appliedDiscountPercentage = discount * 100 / totalItems;
+        final double appliedDiscountPercentage = discount * 100 / mCurrentOrder.getTotalItems();
 
         if (appliedDiscountPercentage > discountPercentage) {
             mInputLayoutDiscount.setError(getString(order_form_discount_value_not_allowed));
