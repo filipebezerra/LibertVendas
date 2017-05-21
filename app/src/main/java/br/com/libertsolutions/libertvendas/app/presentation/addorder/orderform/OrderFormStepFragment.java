@@ -387,12 +387,14 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
 
         PaymentMethod paymentMethod = mPaymentMethodsAdapter.getItem(selectedPaymentMethodPosition);
 
-        final Float discountPercentage = paymentMethod.getDiscountPercentage();
-
-        if (discountPercentage == 0) {
+        //noinspection ConstantConditions
+        if (paymentMethod.getDiscountPercentage() == null ||
+                paymentMethod.getDiscountPercentage() == 0) {
             mInputLayoutDiscount.setError(getString(order_form_payment_method_with_no_discount));
             return false;
         }
+
+        final Float discountPercentage = paymentMethod.getDiscountPercentage();
 
         final String totalItemsStr = mInputLayoutTotalItems.getEditText().getText().toString();
         final double totalItems = toDouble(totalItemsStr);
