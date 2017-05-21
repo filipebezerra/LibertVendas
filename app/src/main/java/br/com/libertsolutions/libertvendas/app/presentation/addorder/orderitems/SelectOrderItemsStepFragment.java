@@ -18,7 +18,6 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableByIdSpecification;
 import br.com.libertsolutions.libertvendas.app.data.pricetable.PriceTableRepository;
-import br.com.libertsolutions.libertvendas.app.domain.pojo.Customer;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.LoggedUser;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.OrderItem;
@@ -165,11 +164,18 @@ public class SelectOrderItemsStepFragment extends BaseFragment implements Step,
     }
 
     @Subscribe(priority = 1) public void onSelectedCustomer(SelectedCustomerEvent event) {
-        Customer customer = event.getCustomer();
-        if (!isEmpty(customer.getDefaultPriceTable()) &&
-                !isEmpty(customer.getDefaultPriceTable().trim())) {
-            customerDefaultPriceTable = valueOf(customer.getDefaultPriceTable());
-            loadProducts();
+        final String defaultPriceTable = event.getCustomer().getDefaultPriceTable();
+        if (!isEmpty(defaultPriceTable) && !isEmpty(defaultPriceTable.trim())) {
+            final Integer defaultPriceTableId = valueOf(defaultPriceTable.trim());
+            if (!defaultPriceTableId.equals(customerDefaultPriceTable)) {
+                customerDefaultPriceTable = defaultPriceTableId;
+                loadProducts();
+            }
+        } else {
+            if (customerDefaultPriceTable != null) {
+                customerDefaultPriceTable = null;
+                loadProducts();
+            }
         }
     }
 
