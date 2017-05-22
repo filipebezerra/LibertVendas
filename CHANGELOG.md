@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Versão 1.0.6 (22/05/2017)
+-----------------------
+* **MELHORIA** Vendedor pode conceder porcentagem de desconto e visualizar o total do pedido considerando o valor do desconto ( [#94](https://github.com/filipebezerra/LibertVendas/issues/94) )
+* **CORREÇÃO** Tratamento caso a tabela padrão cadastro da empresa esteja nulo  ( [#74](https://github.com/filipebezerra/LibertVendas/issues/74) )
+
 Versão 1.0.5 (21/05/2017)
 -----------------------
 * **CORREÇÃO** Listagem de produtos não é recarregada após selecionar outro cliente ( [#91](https://github.com/filipebezerra/LibertVendas/issues/91) )
