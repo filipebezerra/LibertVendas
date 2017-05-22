@@ -1,5 +1,6 @@
 package br.com.libertsolutions.libertvendas.app;
 
+import br.com.libertsolutions.libertvendas.app.data.realm.RealmMigrationImpl;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import io.fabric.sdk.android.Fabric;
@@ -25,6 +26,7 @@ public class ApplicationImpl extends BaseApplication {
         RealmConfiguration configuration = new RealmConfiguration.Builder()
                 .name("libertapp.realm")
                 .schemaVersion(BuildConfig.SCHEMA_VERSION)
+                .migration(new RealmMigrationImpl())
                 .build();
         Realm.setDefaultConfiguration(configuration);
     }
