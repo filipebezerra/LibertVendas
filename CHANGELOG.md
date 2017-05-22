@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Versão 1.0.8 (22/05/2017)
+-----------------------
+* **CORREÇÃO** Cálculo base do valor de desconto
+
 Versão 1.0.7 (22/05/2017)
 -----------------------
 * **CORREÇÃO** Migração do banco de dados após incluir o campo porcentagem desconto
