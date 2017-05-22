@@ -1,2 +1,2 @@
-# Application classes that will be serialized/deserialized over Gson
+# Internal classes must be kept
 -keep class br.com.libertsolutions.libertvendas.app.** { *; }
