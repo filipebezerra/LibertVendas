@@ -3,6 +3,8 @@ package br.com.libertsolutions.libertvendas.app.domain.pojo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
+
 /**
  * @author Filipe Bezerra
  */
@@ -52,7 +54,7 @@ public class Company {
     }
 
     public Integer getPriceTableId() {
-        return priceTableId;
+        return withDefaultValue(priceTableId, 0);
     }
 
     public Company withPriceTableId(final Integer priceTableId) {

@@ -118,6 +118,10 @@ public class NumberUtils {
         }
     }
 
+    public static int withDefaultValue(final Integer value, final int defaultValue) {
+        return (value != null) ? value : defaultValue;
+    }
+
     public static float withDefaultValue(final Float value, final float defaultValue) {
         return (value != null) ? value : defaultValue;
     }
