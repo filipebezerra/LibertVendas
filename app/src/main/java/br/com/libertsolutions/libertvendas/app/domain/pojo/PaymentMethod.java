@@ -3,6 +3,8 @@ package br.com.libertsolutions.libertvendas.app.domain.pojo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
+
 /**
  * @author Filipe Bezerra
  */
@@ -64,7 +66,7 @@ public class PaymentMethod {
     }
 
     public Float getDiscountPercentage() {
-        return discountPercentage;
+        return withDefaultValue(discountPercentage, 0);
     }
 
     public PaymentMethod withDiscountPercentage(final Float discountPercentage) {

@@ -126,6 +126,22 @@ public class NumberUtils {
         return (value != null) ? value : defaultValue;
     }
 
+    public static float toFloat(final String str) {
+        return toFloat(str, 0.0f);
+    }
+
+    public static float toFloat(final String str, final float defaultValue) {
+        if (str == null) {
+            return defaultValue;
+        }
+
+        try {
+            return Float.parseFloat(str);
+        } catch (final NumberFormatException nfe) {
+            return defaultValue;
+        }
+    }
+
     public static double toDouble(final String str) {
         return toDouble(str, 0.0d);
     }

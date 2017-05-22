@@ -285,9 +285,10 @@
     <string name="order_form_issue_date_hint">Data de emissão</string>
     <string name="order_form_customer_name_hint">Nome do cliente</string>
     <string name="order_form_total_items_hint">Total dos itens</string>
-    <string name="order_form_discount_hint">Desconto</string>
+    <string name="order_form_discount_percentage_hint">Porcentagem do desconto</string>
     <string name="order_form_payment_method_hint">Selecione a forma de pagamento</string>
-    <string name="order_form_payment_method_label">Forma de pagamento</string>
+    <string name="order_form_payment_method_label">Forma de pagamento (%1$s)</string>
+    <string name="order_form_no_discount">Sem desconto</string>
     <string name="order_form_observation_hint">Observação</string>
     <string name="order_form_unknown_error_loading_payment_methods">
         Desculpe, houve um erro desconhecido e a lista das formas de pagamento não pôde ser carregada.
@@ -303,6 +304,7 @@
     <string name="order_form_payment_method_with_no_discount">
         Não há desconto para esta forma de pagamento!
     </string>
+    <string name="order_form_total_order_hint">Total do pedido</string>
 
     <!-- View Order screen -->
     <string name="title_activity_view_order">Pedido %1$d</string>

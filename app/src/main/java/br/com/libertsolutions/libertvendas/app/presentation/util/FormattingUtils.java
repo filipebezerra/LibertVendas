@@ -16,12 +16,14 @@ import static br.com.libertsolutions.libertvendas.app.presentation.util.Constant
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.CURRENCY_SCALE;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_FORMAT;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_TIME_FORMAT;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.PERCENT_SCALE;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.PT_BR_DEFAULT_LOCALE;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.dateToMillis;
 import static com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.NATIONAL;
 import static com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance;
 import static java.text.NumberFormat.getCurrencyInstance;
 import static java.text.NumberFormat.getNumberInstance;
+import static java.text.NumberFormat.getPercentInstance;
 
 /**
  * @author Filipe Bezerra
@@ -42,6 +44,9 @@ public class FormattingUtils {
     private static final NumberFormat sNumberFormatter
             = getNumberInstance(PT_BR_DEFAULT_LOCALE);
 
+    private static final NumberFormat percentFormatter
+            = getPercentInstance(PT_BR_DEFAULT_LOCALE);
+
     private static final DateTimeFormatter sDateTimeFormatter
             = DateTimeFormat.forPattern(DATE_TIME_FORMAT);
 
@@ -49,8 +54,10 @@ public class FormattingUtils {
             = DateTimeFormat.forPattern(DATE_FORMAT);
 
     static {
-        sCurrencyFormatter.setMaximumFractionDigits(CURRENCY_SCALE);
         sCurrencyFormatter.setMinimumFractionDigits(CURRENCY_SCALE);
+        sCurrencyFormatter.setMaximumFractionDigits(CURRENCY_SCALE);
+        percentFormatter.setMinimumFractionDigits(PERCENT_SCALE);
+        percentFormatter.setMaximumFractionDigits(PERCENT_SCALE);
     }
 
     public static String formatCpforCnpj(String value) {
@@ -114,5 +121,17 @@ public class FormattingUtils {
 
     public static String formatAsISODateTime(long dateTimeInMillis) {
         return ISODateTimeFormat.dateTime().print(dateTimeInMillis);
+    }
+
+    /**
+     * Formata um valor numérico que não esteja como porcentual em um valor representativo de porcentagem.
+     *
+     * Este método não é apropriado para valores que estejam como porcentual, por exemplo: 0.45.
+     *
+     * @param notInPercentValue valor numérico
+     * @return valor representativo de porcentagem
+     */
+    public static String formatAsPercent(double notInPercentValue) {
+        return percentFormatter.format(notInPercentValue / 100);
     }
 }

@@ -52,7 +52,6 @@ import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtil
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getYear;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.toLocalDate;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_FILTERED_GRAPH;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -225,7 +224,7 @@ public class DashboardFragment extends BaseFragment
                 orderAmount = 0;
             }
 
-            orderAmount += order.getTotalItems() - withDefaultValue(order.getDiscount(), 0);
+            orderAmount += order.getTotalOrder();
 
             if (orders.indexOf(order) == orders.size() - 1) {
                 chartData.add(OrderChartData.create(name, orderAmount));

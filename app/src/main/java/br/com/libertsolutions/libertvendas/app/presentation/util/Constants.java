@@ -16,4 +16,6 @@ public class Constants {
     public static final String DATE_TIME_FORMAT = DATE_FORMAT + " HH:mm";
 
     public static final int CURRENCY_SCALE = 2;
+
+    public static final int PERCENT_SCALE = 2;
 }

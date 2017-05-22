@@ -47,6 +47,8 @@ public class OrderEntity implements RealmModel {
 
     private Double discount;
 
+    private Float discountPercentage;
+
     private String observation;
 
     private CustomerEntity customer;
@@ -114,6 +116,15 @@ public class OrderEntity implements RealmModel {
 
     public OrderEntity withDiscount(final Double discount) {
         this.discount = discount;
+        return this;
+    }
+
+    public Float getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    public OrderEntity withDiscountPercentage(final Float discountPercentage) {
+        this.discountPercentage = discountPercentage;
         return this;
     }
 

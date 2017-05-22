@@ -18,7 +18,6 @@ import static br.com.libertsolutions.libertvendas.app.R.string.order_list_templa
 import static br.com.libertsolutions.libertvendas.app.R.string.orders_report_text_no_order_number;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDateTime;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.OrderUtils.getStatusColor;
 
 /**
@@ -57,7 +56,7 @@ class OrdersReportAdapter extends RecyclerView.Adapter<OrdersReportViewHolder> {
                 .setText(context.getString(order_list_template_text_customer_name,
                         order.getCustomer().getName()));
 
-        final double totalItems = order.getTotalItems() - withDefaultValue(order.getDiscount(), 0);
+        final double totalItems = order.getTotalOrder();
         holder.textViewTotalOrder
                 .setText(context.getString(order_list_template_text_order_total,
                         formatAsCurrency(totalItems)));

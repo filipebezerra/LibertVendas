@@ -29,7 +29,7 @@ android {
             applicationIdSuffix '.dev'
             versionNameSuffix '-dev'
             manifestPlaceholders = [applicationLabel: "Libert Dev"]
-            buildConfigField "long", "SCHEMA_VERSION", "1L"
+            buildConfigField "long", "SCHEMA_VERSION", "2L"
         }
         release {
             shrinkResources true
@@ -52,7 +52,7 @@ android {
             proguardFile 'proguard-support-v7-appcompat.pro'
             proguardFile 'proguard-support-v7-cardview.pro'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "long", "SCHEMA_VERSION", "1L"
+            buildConfigField "long", "SCHEMA_VERSION", "2L"
         }
     }
     compileOptions {

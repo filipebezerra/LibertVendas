@@ -98,24 +98,6 @@
         <TableRow>
             <android.support.design.widget.TextInputLayout
                 style="@style/Widget.LibertApp.FormInputLayout"
-                android:id="@+id/input_layout_discount"
-                android:layout_marginLeft="@dimen/keyline_large"
-                android:layout_marginStart="@dimen/keyline_large"
-                android:layout_column="1"
-                >
-
-                <android.support.design.widget.TextInputEditText
-                    style="@style/Widget.LibertApp.NonEditableField"
-                    android:id="@+id/edit_text_discount"
-                    android:hint="@string/order_form_discount_hint"
-                    />
-
-            </android.support.design.widget.TextInputLayout>
-        </TableRow>
-
-        <TableRow>
-            <android.support.design.widget.TextInputLayout
-                style="@style/Widget.LibertApp.FormInputLayout"
                 android:id="@+id/input_layout_payment_method"
                 android:layout_marginLeft="@dimen/keyline_large"
                 android:layout_marginStart="@dimen/keyline_large"
@@ -126,6 +108,42 @@
                     style="@style/Widget.LibertApp.NonEditableField"
                     android:id="@+id/edit_text_payment_method"
                     android:hint="@string/order_form_payment_method_label"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </TableRow>
+
+        <TableRow>
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.LibertApp.FormInputLayout"
+                android:id="@+id/input_layout_discount_percentage"
+                android:layout_marginLeft="@dimen/keyline_large"
+                android:layout_marginStart="@dimen/keyline_large"
+                android:layout_column="1"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.LibertApp.NonEditableField"
+                    android:id="@+id/edit_text_discount_percentage"
+                    android:hint="@string/order_form_discount_percentage_hint"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </TableRow>
+
+        <TableRow>
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.LibertApp.FormInputLayout"
+                android:id="@+id/input_layout_total_order"
+                android:layout_marginLeft="@dimen/keyline_large"
+                android:layout_marginStart="@dimen/keyline_large"
+                android:layout_column="1"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.LibertApp.NonEditableField"
+                    android:id="@+id/edit_text_total_order"
+                    android:hint="@string/order_form_total_order_hint"
                     />
 
             </android.support.design.widget.TextInputLayout>

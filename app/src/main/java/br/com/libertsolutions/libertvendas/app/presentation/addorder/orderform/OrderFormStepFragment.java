@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.Snackbar.Callback;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
+import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.data.company.paymentmethod.PaymentMethodsByCompanySpecification;
 import br.com.libertsolutions.libertvendas.app.data.order.OrderRepository;
 import br.com.libertsolutions.libertvendas.app.data.paymentmethod.PaymentMethodRepository;
@@ -43,13 +44,14 @@ import static android.support.design.widget.Snackbar.LENGTH_LONG;
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.text.TextUtils.isEmpty;
 import static android.widget.AdapterView.INVALID_POSITION;
-import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_discount;
+import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_discount_percentage;
 import static br.com.libertsolutions.libertvendas.app.R.id.edit_text_observation;
 import static br.com.libertsolutions.libertvendas.app.R.id.input_layout_customer_name;
-import static br.com.libertsolutions.libertvendas.app.R.id.input_layout_discount;
+import static br.com.libertsolutions.libertvendas.app.R.id.input_layout_discount_percentage;
 import static br.com.libertsolutions.libertvendas.app.R.id.input_layout_issue_date;
 import static br.com.libertsolutions.libertvendas.app.R.id.input_layout_observation;
 import static br.com.libertsolutions.libertvendas.app.R.id.input_layout_total_items;
+import static br.com.libertsolutions.libertvendas.app.R.id.input_layout_total_order;
 import static br.com.libertsolutions.libertvendas.app.R.id.spinner_payment_method;
 import static br.com.libertsolutions.libertvendas.app.R.layout.fragment_order_form;
 import static br.com.libertsolutions.libertvendas.app.R.string.all_correct_fields_error;
@@ -69,11 +71,15 @@ import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.pro
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_CREATED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderStatus.STATUS_MODIFIED;
 import static br.com.libertsolutions.libertvendas.app.domain.pojo.OrderType.ORDER_TYPE_NORMAL;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.CurrencyUtils.round;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getCurrentDateTimeInMillis;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_SAVED_ORDER;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDateTime;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsPercent;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.toDouble;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.toFloat;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -99,7 +105,8 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
     @BindView(input_layout_customer_name) TextInputLayout mInputLayoutCustomerName;
     @BindView(spinner_payment_method) MaterialSpinner mSpinnerPaymentMethods;
     @BindView(input_layout_total_items) TextInputLayout mInputLayoutTotalItems;
-    @BindView(input_layout_discount) TextInputLayout mInputLayoutDiscount;
+    @BindView(input_layout_discount_percentage) TextInputLayout mInputLayoutDiscountPercentage;
+    @BindView(input_layout_total_order) TextInputLayout mInputLayoutTotalOrder;
     @BindView(input_layout_observation) TextInputLayout mInputLayoutObservation;
 
     public static OrderFormStepFragment newInstance() {
@@ -124,14 +131,16 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
 
     @Subscribe public void onAddedOrderItems(AddedOrderItemsEvent event) {
         setOrderItems(event.getOrderItems());
+        calculateDiscount();
     }
 
     @Subscribe public void onSelectedPriceTable(SelectedPriceTableEvent event) {
         setPriceTable(event.getPriceTable());
     }
 
-    @OnTextChanged(edit_text_discount) void onEditTextDiscountChanged(CharSequence text) {
-        setDiscount(text.toString());
+    @OnTextChanged(edit_text_discount_percentage) void onEditTextDiscountChanged(CharSequence text) {
+        setDiscountPercentage(text.toString());
+        calculateDiscount();
     }
 
     @OnItemSelected(spinner_payment_method) void onSpinnerPaymentMethodItemSelected(int position) {
@@ -141,6 +150,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
             final PaymentMethod paymentMethod = mPaymentMethodsAdapter.getItem(position);
             if (paymentMethod != null) {
                 setPaymentMethod(paymentMethod);
+                setPaymentMethodFloatingLabelText(paymentMethod.getDiscountPercentage());
             }
         }
     }
@@ -256,11 +266,10 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
                     .setText(mCurrentOrder.getCustomer().getName());
             mInputLayoutTotalItems.getEditText()
                     .setText(formatAsCurrency(mCurrentOrder.getTotalItems()));
-
-            if (mCurrentOrder.getDiscount() != null) {
-                mInputLayoutDiscount.getEditText()
-                        .setText(String.valueOf(mCurrentOrder.getDiscount()));
-            }
+            mInputLayoutDiscountPercentage.getEditText()
+                    .setText(String.valueOf(mCurrentOrder.getDiscountPercentage()));
+            mInputLayoutTotalOrder.getEditText()
+                    .setText(formatAsCurrency(mCurrentOrder.getTotalOrder()));
 
             if (!isEmpty(mCurrentOrder.getObservation())) {
                 mInputLayoutObservation.getEditText()
@@ -340,16 +349,37 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
         mCurrentOrder.withPriceTable(priceTable);
     }
 
-    private void setDiscount(final String discountStr) {
-        mCurrentOrder.withDiscount(toDouble(discountStr));
+    private void setDiscountPercentage(final String discountStr) {
+        mCurrentOrder.withDiscountPercentage(toFloat(discountStr));
+    }
+
+    private void calculateDiscount() {
+        final float discountPercentage = mCurrentOrder.getDiscountPercentage();
+        final double discount = round(discountPercentage * 100 / mCurrentOrder.getTotalItems());
+
+        mCurrentOrder.withDiscount(discount);
+        mInputLayoutTotalOrder.getEditText()
+                .setText(formatAsCurrency(mCurrentOrder.getTotalOrder()));
     }
 
     private void setPaymentMethod(final PaymentMethod paymentMethod) {
         mCurrentOrder.withPaymentMethod(paymentMethod);
     }
 
+    private void setPaymentMethodFloatingLabelText(final Float discountPercentage) {
+        if (withDefaultValue(discountPercentage, 0) == 0) {
+            mSpinnerPaymentMethods.setFloatingLabelText(
+                    getString(R.string.order_form_payment_method_label,
+                            getString(R.string.order_form_no_discount)));
+        } else {
+            mSpinnerPaymentMethods.setFloatingLabelText(
+                    getString(R.string.order_form_payment_method_label,
+                            formatAsPercent(discountPercentage)));
+        }
+    }
+
     private void clearInputErrors() {
-        mInputLayoutDiscount.setError(null);
+        mInputLayoutDiscountPercentage.setError(null);
         mSpinnerPaymentMethods.setError(null);
     }
 
@@ -362,20 +392,21 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
     }
 
     private boolean checkDiscountValue() {
-        final String discountStr = mInputLayoutDiscount.getEditText().getText().toString();
+        final String discountPercentageStr
+                = mInputLayoutDiscountPercentage.getEditText().getText().toString();
 
-        if (isEmpty(discountStr)) {
+        if (isEmpty(discountPercentageStr)) {
             return true;
         }
 
-        final double discount = toDouble(discountStr);
+        final double discountPercentage = toDouble(discountPercentageStr);
 
-        if (discount == 0) {
+        if (discountPercentage == 0) {
             return true;
         }
 
         if (!getLoggedUser().getSalesman().getCanApplyDiscount()) {
-            mInputLayoutDiscount.setError(getString(order_form_salesman_cant_apply_discount));
+            mInputLayoutDiscountPercentage.setError(getString(order_form_salesman_cant_apply_discount));
             return false;
         }
 
@@ -388,18 +419,13 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
         PaymentMethod paymentMethod = mPaymentMethodsAdapter.getItem(selectedPaymentMethodPosition);
 
         //noinspection ConstantConditions
-        if (paymentMethod.getDiscountPercentage() == null ||
-                paymentMethod.getDiscountPercentage() == 0) {
-            mInputLayoutDiscount.setError(getString(order_form_payment_method_with_no_discount));
+        if (paymentMethod.getDiscountPercentage() == 0) {
+            mInputLayoutDiscountPercentage.setError(getString(order_form_payment_method_with_no_discount));
             return false;
         }
 
-        final Float discountPercentage = paymentMethod.getDiscountPercentage();
-
-        final double appliedDiscountPercentage = discount * 100 / mCurrentOrder.getTotalItems();
-
-        if (appliedDiscountPercentage > discountPercentage) {
-            mInputLayoutDiscount.setError(getString(order_form_discount_value_not_allowed));
+        if (discountPercentage > paymentMethod.getDiscountPercentage()) {
+            mInputLayoutDiscountPercentage.setError(getString(order_form_discount_value_not_allowed));
             return false;
         }
 

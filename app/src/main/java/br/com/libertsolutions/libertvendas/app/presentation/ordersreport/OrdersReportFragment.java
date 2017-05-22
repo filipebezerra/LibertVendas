@@ -62,7 +62,6 @@ import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtil
 import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_FILTERED_ORDERS;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
 import static butterknife.ButterKnife.findById;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
@@ -275,7 +274,7 @@ public class OrdersReportFragment extends BaseFragment
     private void setTitleWithTotalOrders(List<Order> orders) {
         double total = 0;
         for (Order order : orders) {
-            total += order.getTotalItems() - withDefaultValue(order.getDiscount(), 0);
+            total += order.getTotalOrder();
         }
         setTitle(getString(R.string.orders_report_total_title, formatAsCurrency(total)));
     }

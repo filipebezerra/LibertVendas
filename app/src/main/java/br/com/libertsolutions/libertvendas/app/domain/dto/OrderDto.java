@@ -25,6 +25,10 @@ public class OrderDto {
     @Expose
     public double discount;
 
+    @SerializedName("perDesc")
+    @Expose
+    public float discountPercentage;
+
     @SerializedName("observacao")
     @Expose
     public String observation;
@@ -58,14 +62,21 @@ public class OrderDto {
     public int status;
 
     public OrderDto(
-            final int id, final int type, final String issueDate, final double discount,
+            final int id,
+            final int type,
+            final String issueDate,
+            final double discount,
+            final float discountPercentage,
             final String observation,
-            final int customerId, final int paymentMethodId, final int priceTableId,
+            final int customerId,
+            final int paymentMethodId,
+            final int priceTableId,
             final List<OrderItemDto> items) {
         this.id = id;
         this.type = type;
         this.issueDate = issueDate;
         this.discount = discount;
+        this.discountPercentage = discountPercentage;
         this.observation = observation;
         this.customerId = customerId;
         this.paymentMethodId = paymentMethodId;

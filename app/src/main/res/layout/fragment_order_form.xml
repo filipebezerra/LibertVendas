@@ -95,26 +95,6 @@
         </TableRow>
 
         <TableRow>
-            <android.support.design.widget.TextInputLayout
-                style="@style/Widget.LibertApp.FormInputLayout"
-                android:id="@+id/input_layout_discount"
-                android:layout_marginLeft="@dimen/keyline_large"
-                android:layout_marginStart="@dimen/keyline_large"
-                android:layout_column="1"
-                >
-
-                <android.support.design.widget.TextInputEditText
-                    style="@style/Widget.LibertApp.EditableField"
-                    android:id="@+id/edit_text_discount"
-                    android:hint="@string/order_form_discount_hint"
-                    android:inputType="numberDecimal"
-                    android:imeOptions="actionNext"
-                    />
-
-            </android.support.design.widget.TextInputLayout>
-        </TableRow>
-
-        <TableRow>
             <br.com.libertsolutions.libertvendas.app.presentation.widget.MaterialSpinner
                 style="@style/Widget.LibertApp.Spinner"
                 android:id="@+id/spinner_payment_method"
@@ -124,8 +104,45 @@
                 android:layout_marginEnd="@dimen/keyline_small"
                 android:layout_column="1"
                 app:ms_hint="@string/order_form_payment_method_hint"
-                app:ms_floatingLabelText="@string/order_form_payment_method_label"
                 />
+        </TableRow>
+
+        <TableRow>
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.LibertApp.FormInputLayout"
+                android:id="@+id/input_layout_discount_percentage"
+                android:layout_marginLeft="@dimen/keyline_large"
+                android:layout_marginStart="@dimen/keyline_large"
+                android:layout_column="1"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.LibertApp.EditableField"
+                    android:id="@+id/edit_text_discount_percentage"
+                    android:hint="@string/order_form_discount_percentage_hint"
+                    android:inputType="numberDecimal"
+                    android:imeOptions="actionNext"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </TableRow>
+
+        <TableRow>
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.LibertApp.FormInputLayout"
+                android:id="@+id/input_layout_total_order"
+                android:layout_marginLeft="@dimen/keyline_large"
+                android:layout_marginStart="@dimen/keyline_large"
+                android:layout_column="1"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/Widget.LibertApp.NonEditableField"
+                    android:id="@+id/edit_text_total_order"
+                    android:hint="@string/order_form_total_order_hint"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
         </TableRow>
 
         <TableRow>
@@ -154,6 +171,7 @@
 
             </android.support.design.widget.TextInputLayout>
         </TableRow>
+
     </TableLayout>
 
 </android.support.v4.widget.NestedScrollView>

@@ -2,11 +2,12 @@ package br.com.libertsolutions.libertvendas.app.domain.pojo;
 
 import br.com.libertsolutions.libertvendas.app.domain.dto.OrderDto;
 import br.com.libertsolutions.libertvendas.app.domain.dto.OrderItemDto;
-import br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils;
 import java.util.ArrayList;
 import java.util.List;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getCurrentDateTimeInMillis;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsISODateTime;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.withDefaultValue;
 
 /**
  * @author Filipe Bezerra
@@ -22,6 +23,8 @@ public class Order {
     private Long issueDate;
 
     private Double discount;
+
+    private Float discountPercentage;
 
     private String observation;
 
@@ -78,11 +81,20 @@ public class Order {
     }
 
     public Double getDiscount() {
-        return discount;
+        return withDefaultValue(discount, 0);
     }
 
     public Order withDiscount(final Double discount) {
         this.discount = discount;
+        return this;
+    }
+
+    public Float getDiscountPercentage() {
+        return withDefaultValue(discountPercentage, 0);
+    }
+
+    public Order withDiscountPercentage(final Float discountPercentage) {
+        this.discountPercentage = discountPercentage;
         return this;
     }
 
@@ -136,6 +148,10 @@ public class Order {
         for (OrderItem item : getItems())
             totalItems += item.getSubTotal();
         return totalItems;
+    }
+
+    public double getTotalOrder() {
+        return getTotalItems() - getDiscount();
     }
 
     public String getLastChangeTime() {
@@ -220,6 +236,7 @@ public class Order {
         sb.append(", type=").append(type);
         sb.append(", issueDate=").append(issueDate);
         sb.append(", discount=").append(discount);
+        sb.append(", discountPercentage=").append(discountPercentage);
         sb.append(", observation='").append(observation).append('\'');
         sb.append(", customer=").append(customer);
         sb.append(", paymentMethod=").append(paymentMethod);
@@ -238,6 +255,7 @@ public class Order {
                 .withType(getType())
                 .withIssueDate(getCurrentDateTimeInMillis())
                 .withDiscount(getDiscount())
+                .withDiscountPercentage(getDiscountPercentage())
                 .withObservation(getObservation())
                 .withCustomer(getCustomer())
                 .withPaymentMethod(getPaymentMethod())
@@ -257,8 +275,9 @@ public class Order {
         return new OrderDto(
                 getId(),
                 getType(),
-                FormattingUtils.formatAsISODateTime(getIssueDate()),
-                getDiscount() != null ? getDiscount() : 0,
+                formatAsISODateTime(getIssueDate()),
+                getDiscount(),
+                getDiscountPercentage(),
                 getObservation(),
                 getCustomer().getCustomerId(),
                 getPaymentMethod().getPaymentMethodId(),
