@@ -153,7 +153,7 @@
 
     <!-- Customer List strings -->
     <string name="customer_list_error_loading_customers">
-        Desculpe, houve uma falha quando tentamos carregar os dados de seus clientes.
+        Desculpe, houve uma falha quando tentamos carregar os dados de seus pedidos.
         Por favor tente novamente!
     </string>
     <string name="customer_list_no_customers">Seus clientes são listados aqui</string>
@@ -188,7 +188,7 @@
 
     <!-- Orders Report strings -->
     <string name="orders_report_list_error_loading_report">
-        Desculpe, houve uma falha quando tentamos carregar os dados de seus clientes.
+        Desculpe, houve uma falha quando tentamos carregar os dados do relatório de pedidos.
         Por favor tente novamente!
     </string>
     <string name="orders_report_fragment_title">Relatório pedidos</string>
