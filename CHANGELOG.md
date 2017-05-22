@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Versão 1.0.7 (22/05/2017)
+-----------------------
+* **CORREÇÃO** Migração do banco de dados após incluir o campo porcentagem desconto
+
 Versão 1.0.6 (22/05/2017)
 -----------------------
 * **MELHORIA** Vendedor pode conceder porcentagem de desconto e visualizar o total do pedido considerando o valor do desconto ( [#94](https://github.com/filipebezerra/LibertVendas/issues/94) )
