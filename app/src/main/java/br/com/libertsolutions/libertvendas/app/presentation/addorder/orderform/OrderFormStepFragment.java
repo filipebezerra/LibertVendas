@@ -355,7 +355,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
 
     private void calculateDiscount() {
         final float discountPercentage = mCurrentOrder.getDiscountPercentage();
-        final double discount = round(discountPercentage * 100 / mCurrentOrder.getTotalItems());
+        final double discount = round(mCurrentOrder.getTotalItems() * discountPercentage / 100);
 
         mCurrentOrder.withDiscount(discount);
         mInputLayoutTotalOrder.getEditText()
