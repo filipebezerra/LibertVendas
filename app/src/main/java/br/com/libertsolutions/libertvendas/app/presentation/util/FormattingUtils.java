@@ -13,12 +13,12 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.BR_REGION_CODE;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.CURRENCY_SCALE;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_FORMAT;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.DATE_TIME_FORMAT;
-import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.PERCENT_SCALE;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.DATE_FORMAT;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.DATE_TIME_FORMAT;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.PT_BR_DEFAULT_LOCALE;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.dateToMillis;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.CURRENCY_SCALE;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.PERCENT_SCALE;
 import static com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat.NATIONAL;
 import static com.google.i18n.phonenumbers.PhoneNumberUtil.getInstance;
 import static java.text.NumberFormat.getCurrencyInstance;

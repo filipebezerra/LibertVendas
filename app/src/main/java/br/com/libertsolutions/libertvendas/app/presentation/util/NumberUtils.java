@@ -5,6 +5,10 @@ package br.com.libertsolutions.libertvendas.app.presentation.util;
  */
 public class NumberUtils {
 
+    public static final int CURRENCY_SCALE = 2;
+
+    public static final int PERCENT_SCALE = 2;
+
     private NumberUtils() {/* No constructor */}
 
     public static boolean isNumber(String str) {

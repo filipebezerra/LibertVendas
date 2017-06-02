@@ -11,6 +11,10 @@ public class DateUtils {
 
     public static final LocalTime BEFORE_MIDNIGHT = new LocalTime(23, 59, 59);
 
+    public static final String DATE_FORMAT = "dd/MM/yyyy";
+
+    public static final String DATE_TIME_FORMAT = DATE_FORMAT + " HH:mm";
+
     private DateUtils() {}
 
     /**

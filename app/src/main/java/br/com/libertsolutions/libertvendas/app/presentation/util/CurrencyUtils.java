@@ -2,7 +2,7 @@ package br.com.libertsolutions.libertvendas.app.presentation.util;
 
 import java.math.BigDecimal;
 
-import static br.com.libertsolutions.libertvendas.app.presentation.util.Constants.CURRENCY_SCALE;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.NumberUtils.CURRENCY_SCALE;
 import static java.math.BigDecimal.ROUND_HALF_UP;
 
 /**
