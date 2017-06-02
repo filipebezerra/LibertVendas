@@ -39,7 +39,6 @@ import java.util.List;
 import org.greenrobot.eventbus.Subscribe;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 import rx.Subscriber;
 import rx.Subscription;
 import timber.log.Timber;
@@ -54,6 +53,7 @@ import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.pro
 import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.CREATED_OR_MODIFIED;
 import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.INVOICED;
 import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.SYNCED;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.BEFORE_MIDNIGHT;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.dateTimeToMillis;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
@@ -64,6 +64,7 @@ import static br.com.libertsolutions.libertvendas.app.presentation.util.Formatti
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDate;
 import static butterknife.ButterKnife.findById;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static org.joda.time.LocalTime.MIDNIGHT;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
@@ -398,13 +399,13 @@ public class OrdersReportFragment extends BaseFragment
     }
 
     private void setInitialIssueDateFilter(final int year, final int month, final int day) {
-        mInitialDateFilter = toDateTime(year, month, day, LocalTime.MIDNIGHT);
+        mInitialDateFilter = toDateTime(year, month, day, MIDNIGHT);
         EditText editText = findById(mFiltersDialog.getCustomView(), edit_text_issue_date_initial);
         editText.setText(formatAsDate(mInitialDateFilter));
     }
 
     private void setFinalIssueDateFilter(final int year, final int month, final int day) {
-        mFinalDateFilter = toDateTime(year, month, day, new LocalTime(23, 59, 59));
+        mFinalDateFilter = toDateTime(year, month, day, BEFORE_MIDNIGHT);
         EditText editText = findById(mFiltersDialog.getCustomView(), edit_text_issue_date_final);
         editText.setText(formatAsDate(mFinalDateFilter));
     }

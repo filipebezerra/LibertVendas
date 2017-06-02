@@ -9,6 +9,8 @@ import org.joda.time.LocalTime;
  */
 public class DateUtils {
 
+    public static final LocalTime BEFORE_MIDNIGHT = new LocalTime(23, 59, 59);
+
     private DateUtils() {}
 
     /**
@@ -94,6 +96,16 @@ public class DateUtils {
     }
 
     /**
+     * Gets the year from {@link DateTime)}.
+     *
+     * @param dateTime Date and time
+     * @return the year
+     */
+    public static int getYear(final DateTime dateTime) {
+        return dateTime.getYear();
+    }
+
+    /**
      * Gets the month of the year from {@link LocalDate)}.
      * Important: Month value is 0-based. e.g., 0 for January
      *
@@ -105,6 +117,17 @@ public class DateUtils {
     }
 
     /**
+     * Gets the month of the year from {@link DateTime)}.
+     * Important: Month value is 0-based. e.g., 0 for January
+     *
+     * @param dateTime Date and time
+     * @return the month of the year
+     */
+    public static int getMonth(final DateTime dateTime) {
+        return dateTime.getMonthOfYear() - 1;
+    }
+
+    /**
      * Gets the day of year from {@link LocalDate)}.
      *
      * @param localDate Date without time zone
@@ -112,6 +135,16 @@ public class DateUtils {
      */
     public static int getDay(final LocalDate localDate) {
         return localDate.getDayOfMonth();
+    }
+
+    /**
+     * Gets the day of year from {@link DateTime)}.
+     *
+     * @param dateTime Date and time
+     * @return the day of year
+     */
+    public static int getDay(final DateTime dateTime) {
+        return dateTime.getDayOfMonth();
     }
 
     /**
