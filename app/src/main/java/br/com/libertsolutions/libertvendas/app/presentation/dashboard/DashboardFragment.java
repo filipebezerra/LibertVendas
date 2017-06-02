@@ -58,7 +58,7 @@ import static rx.android.schedulers.AndroidSchedulers.mainThread;
  * @author Filipe Bezerra
  */
 public class DashboardFragment extends BaseFragment
-        implements SwipeRefreshLayout.OnRefreshListener, DatePickerDialog.OnDateSetListener {
+        implements DatePickerDialog.OnDateSetListener {
 
     public static final String TAG = DashboardFragment.class.getName();
 
@@ -94,7 +94,7 @@ public class DashboardFragment extends BaseFragment
             @Nullable final ViewGroup container, @Nullable final Bundle inState) {
         View view = super.onCreateView(inflater, container, inState);
 
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setEnabled(false);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
 
@@ -126,10 +126,6 @@ public class DashboardFragment extends BaseFragment
         mFinalDateFilter = toLocalDate(yearEnd, monthOfYearEnd, dayOfMonthEnd);
         EventTracker.action(ACTION_FILTERED_GRAPH);
         queryByIssueDate(year, monthOfYear, dayOfMonth, yearEnd, monthOfYearEnd, dayOfMonthEnd);
-    }
-
-    @Override public void onRefresh() {
-        loadOrderedOrders();
     }
 
     @Subscribe(sticky = true) public void onLoggedInUserEvent(LoggedInUserEvent event) {
