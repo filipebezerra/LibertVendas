@@ -36,6 +36,8 @@ import java.util.List;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+import static android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED;
+import static android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED;
 import static android.text.TextUtils.isEmpty;
 import static br.com.libertsolutions.libertvendas.app.presentation.base.Navigator.REQUEST_INITIAL_FLOW;
 import static br.com.libertsolutions.libertvendas.app.presentation.base.Navigator.REQUEST_SETTINGS;
@@ -85,6 +87,8 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
 
     private BottomSheetDialog bottomSheetDialog;
+
+    private BottomSheetBehavior<View> bottomSheetBehavior;
 
     @Override protected int provideContentViewResource() {
         return R.layout.activity_main;
@@ -148,14 +152,13 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     }
 
     @OnClick(R.id.fab_all_main_action) void onFabClicked() {
+        bottomSheetBehavior.setState(STATE_EXPANDED);
         bottomSheetDialog.show();
     }
 
     @Override public void onBackPressed() {
         if (drawer.isDrawerOpen()) {
             drawer.closeDrawer();
-        } else if (bottomSheetDialog.isShowing()) {
-            bottomSheetDialog.dismiss();
         } else {
             super.onBackPressed();
         }
@@ -200,23 +203,23 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     }
 
     private void initBottomSheet() {
-        final View bottomSheetDialogView =
-                getLayoutInflater().inflate(R.layout.view_bottom_sheet, null);
+        final View bottomSheetView = getLayoutInflater().inflate(R.layout.view_bottom_sheet, null);
         bottomSheetDialog = new BottomSheetDialog(this);
-        bottomSheetDialog.setContentView(bottomSheetDialogView);
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(
-                (View) bottomSheetDialogView.getParent());
-        bottomSheetBehavior.setHideable(false);
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.setCancelable(true);
+        bottomSheetDialog.setOnDismissListener(dialog ->
+                bottomSheetBehavior.setState(STATE_COLLAPSED));
+        bottomSheetBehavior = BottomSheetBehavior.from((View) bottomSheetView.getParent());
 
-        findById(bottomSheetDialogView, R.id.main_new_order)
+        findById(bottomSheetView, R.id.main_new_order)
                 .setOnClickListener(v -> {
-                    bottomSheetDialog.dismiss();
                     navigate().toAddOrder();
-                });
-        findById(bottomSheetDialogView, R.id.main_new_customer)
-                .setOnClickListener(v -> {
                     bottomSheetDialog.dismiss();
+                });
+        findById(bottomSheetView, R.id.main_new_customer)
+                .setOnClickListener(v -> {
                     navigate().toAddCustomer();
+                    bottomSheetDialog.dismiss();
                 });
     }
 
