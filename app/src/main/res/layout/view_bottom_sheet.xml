@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/keyline_large"
+        android:layout_gravity="start"
+        android:text="@string/main_bottom_sheet_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+
+        <LinearLayout
+            android:id="@+id/main_new_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/keyline_large"
+            >
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/main_new_order"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingTop="@dimen/keyline_medium"
+                android:text="@string/main_new_order"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_new_customer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/keyline_large"
+            >
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/main_new_customer"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingTop="@dimen/keyline_medium"
+                android:text="@string/main_new_customer"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

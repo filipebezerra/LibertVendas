@@ -2,8 +2,9 @@
     <string name="app_name">Libert Vendas</string>
 
     <!-- Main strings -->
-    <string name="main_new_order_sheet_text">Novo pedido</string>
-    <string name="main_new_customer_sheet_text">Novo cliente</string>
+    <string name="main_bottom_sheet_title">Adicionar novo</string>
+    <string name="main_new_order">Pedido</string>
+    <string name="main_new_customer">Cliente</string>
     <string name="main_drawer_item_dashboard">Início</string>
     <string name="main_drawer_item_orders_report">Relatório pedidos</string>
     <string name="main_drawer_item_orders">Seus pedidos</string>

@@ -2,9 +2,10 @@ package br.com.libertsolutions.libertvendas.app.presentation.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import br.com.libertsolutions.libertvendas.app.R;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Company;
@@ -16,14 +17,9 @@ import br.com.libertsolutions.libertvendas.app.presentation.login.CompletedLogin
 import br.com.libertsolutions.libertvendas.app.presentation.orderlist.OrderListPageFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.productlist.ProductListFragment;
 import br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker;
-import br.com.libertsolutions.libertvendas.app.presentation.widget.SheetFloatingActionButton;
-import butterknife.BindColor;
-import butterknife.BindView;
 import butterknife.OnClick;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.TextDrawable.IShapeBuilder;
-import com.gordonwong.materialsheetfab.DimOverlayFrameLayout;
-import com.gordonwong.materialsheetfab.MaterialSheetFab;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -47,6 +43,7 @@ import static br.com.libertsolutions.libertvendas.app.presentation.main.LoggedIn
 import static br.com.libertsolutions.libertvendas.app.presentation.settings.SettingsFragment.RESULT_AUTO_SYNC_ORDERS_CHANGED;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.AndroidUtils.dpToPx;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.EventTracker.ACTION_CHANGED_PROFILE;
+import static butterknife.ButterKnife.findById;
 import static com.amulyakhare.textdrawable.util.ColorGenerator.MATERIAL;
 import static org.joda.time.LocalDateTime.parse;
 import static org.joda.time.format.DateTimeFormat.shortDateTime;
@@ -65,39 +62,29 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     private static final int DRAWER_ITEM_SETTINGS = 7;
     private static final int DRAWER_ITEM_LAST_SYNC = 8;
 
-    private MaterialSheetFab<SheetFloatingActionButton> mMaterialSheetFab;
+    private Drawer drawer;
 
-    private Drawer mDrawer;
+    private AccountHeader accountHeader;
 
-    private AccountHeader mAccountHeader;
+    private PrimaryDrawerItem dashboardDrawerItem;
 
-    private PrimaryDrawerItem mDashboardDrawerItem;
+    private PrimaryDrawerItem ordersReportDrawerItem;
 
-    private PrimaryDrawerItem mOrdersReportDrawerItem;
+    private PrimaryDrawerItem ordersDrawerItem;
 
-    private PrimaryDrawerItem mOrdersDrawerItem;
+    private PrimaryDrawerItem customersDrawerItem;
 
-    private PrimaryDrawerItem mCustomersDrawerItem;
+    private PrimaryDrawerItem productsDrawerItem;
 
-    private PrimaryDrawerItem mProductsDrawerItem;
+    private SecondarySwitchDrawerItem autoSyncOrdersDrawerItem;
 
-    private SecondarySwitchDrawerItem mAutoSyncOrdersDrawerItem;
-
-    private SecondaryDrawerItem mSettingsDrawerItem;
+    private SecondaryDrawerItem settingsDrawerItem;
 
     private SecondaryDrawerItem lastSyncDrawerItem;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeSubscription compositeSubscription = new CompositeSubscription();
 
-    @BindView(R.id.fab_all_main_action) protected SheetFloatingActionButton mFloatingActionButton;
-
-    @BindView(R.id.fab_sheet) protected CardView mFabSheet;
-
-    @BindView(R.id.overlay) protected DimOverlayFrameLayout mFabOverlay;
-
-    @BindColor(R.color.color_background_card) protected int mFabSheetColor;
-
-    @BindColor(R.color.color_accent) protected int mAccentColor;
+    private BottomSheetDialog bottomSheetDialog;
 
     @Override protected int provideContentViewResource() {
         return R.layout.activity_main;
@@ -107,9 +94,9 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
         navigateToInitialFlowIfNeed();
         super.onCreate(inState);
         setAsHomeActivity();
-        initializeFab();
-        initializeDrawerHeader(inState);
-        initializeDrawer(inState);
+        initBottomSheet();
+        initDrawerHeader(inState);
+        initDrawer(inState);
     }
 
     @Override protected void onStart() {
@@ -160,32 +147,26 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
         return false;
     }
 
-    @OnClick(R.id.main_new_order_sheet) void onNewOrderSheetClicked() {
-        mMaterialSheetFab.hideSheet();
-        navigate().toAddOrder();
-    }
-
-    @OnClick(R.id.main_new_customer_sheet) void onNewCustomerSheetClicked() {
-        mMaterialSheetFab.hideSheet();
-        navigate().toAddCustomer();
+    @OnClick(R.id.fab_all_main_action) void onFabClicked() {
+        bottomSheetDialog.show();
     }
 
     @Override public void onBackPressed() {
-        if (mDrawer.isDrawerOpen()) {
-            mDrawer.closeDrawer();
-        } else if (mMaterialSheetFab.isSheetVisible()) {
-            mMaterialSheetFab.hideSheet();
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else if (bottomSheetDialog.isShowing()) {
+            bottomSheetDialog.dismiss();
         } else {
             super.onBackPressed();
         }
     }
 
     @Override protected void onSaveInstanceState(Bundle outState) {
-        if (mDrawer != null) {
-            outState = mDrawer.saveInstanceState(outState);
+        if (drawer != null) {
+            outState = drawer.saveInstanceState(outState);
         }
-        if (mAccountHeader != null) {
-            outState = mAccountHeader.saveInstanceState(outState);
+        if (accountHeader != null) {
+            outState = accountHeader.saveInstanceState(outState);
         }
         super.onSaveInstanceState(outState);
     }
@@ -218,13 +199,29 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
         }
     }
 
-    private void initializeFab() {
-        mMaterialSheetFab = new MaterialSheetFab<>(
-                mFloatingActionButton, mFabSheet, mFabOverlay, mFabSheetColor, mAccentColor);
+    private void initBottomSheet() {
+        final View bottomSheetDialogView =
+                getLayoutInflater().inflate(R.layout.view_bottom_sheet, null);
+        bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(bottomSheetDialogView);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(
+                (View) bottomSheetDialogView.getParent());
+        bottomSheetBehavior.setHideable(false);
+
+        findById(bottomSheetDialogView, R.id.main_new_order)
+                .setOnClickListener(v -> {
+                    bottomSheetDialog.dismiss();
+                    navigate().toAddOrder();
+                });
+        findById(bottomSheetDialogView, R.id.main_new_customer)
+                .setOnClickListener(v -> {
+                    bottomSheetDialog.dismiss();
+                    navigate().toAddCustomer();
+                });
     }
 
-    private void initializeDrawerHeader(final Bundle inState) {
-        mAccountHeader = new AccountHeaderBuilder()
+    private void initDrawerHeader(final Bundle inState) {
+        accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.main_header_background)
                 .withSavedInstance(inState)
@@ -239,11 +236,11 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
                 .build();
     }
 
-    private void initializeDrawer(final Bundle inState) {
-        mDrawer = new DrawerBuilder()
+    private void initDrawer(final Bundle inState) {
+        drawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(mToolbar)
-                .withAccountHeader(mAccountHeader)
+                .withAccountHeader(accountHeader)
                 .addDrawerItems(
                         createDashboardDrawerItem(),
                         createOrdersReportDrawerItem(),
@@ -275,20 +272,20 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     }
 
     private PrimaryDrawerItem createDashboardDrawerItem() {
-        if (mDashboardDrawerItem == null) {
-            mDashboardDrawerItem = new PrimaryDrawerItem()
+        if (dashboardDrawerItem == null) {
+            dashboardDrawerItem = new PrimaryDrawerItem()
                     .withIdentifier(DRAWER_ITEM_DASHBOARD)
                     .withName(R.string.main_drawer_item_dashboard)
                     .withIcon(VectorDrawableCompat
                             .create(getResources(), R.drawable.main_drawer_home, getTheme()))
                     .withSelectedIconColorRes(R.color.color_primary);
         }
-        return mDashboardDrawerItem;
+        return dashboardDrawerItem;
     }
 
     private PrimaryDrawerItem createOrdersReportDrawerItem() {
-        if (mOrdersReportDrawerItem == null) {
-            mOrdersReportDrawerItem = new PrimaryDrawerItem()
+        if (ordersReportDrawerItem == null) {
+            ordersReportDrawerItem = new PrimaryDrawerItem()
                     .withIdentifier(DRAWER_ITEM_ORDERS_REPORT)
                     .withName(R.string.main_drawer_item_orders_report)
                     .withIcon(VectorDrawableCompat
@@ -296,60 +293,60 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
                                     getTheme()))
                     .withSelectedIconColorRes(R.color.color_primary);
         }
-        return mOrdersReportDrawerItem;
+        return ordersReportDrawerItem;
     }
 
     private PrimaryDrawerItem createOrdersDrawerItem() {
-        if (mOrdersDrawerItem == null) {
-            mOrdersDrawerItem = new PrimaryDrawerItem()
+        if (ordersDrawerItem == null) {
+            ordersDrawerItem = new PrimaryDrawerItem()
                     .withIdentifier(DRAWER_ITEM_ORDERS)
                     .withName(R.string.main_drawer_item_orders)
                     .withIcon(VectorDrawableCompat
                             .create(getResources(), R.drawable.main_drawer_orders, getTheme()))
                     .withSelectedIconColorRes(R.color.color_primary);
         }
-        return mOrdersDrawerItem;
+        return ordersDrawerItem;
     }
 
     private PrimaryDrawerItem createCustomersDrawerItem() {
-        if (mCustomersDrawerItem == null) {
-            mCustomersDrawerItem = new PrimaryDrawerItem()
+        if (customersDrawerItem == null) {
+            customersDrawerItem = new PrimaryDrawerItem()
                     .withIdentifier(DRAWER_ITEM_CUSTOMERS)
                     .withName(R.string.main_drawer_item_customers)
                     .withIcon(VectorDrawableCompat
                             .create(getResources(), R.drawable.main_drawer_customers, getTheme()))
                     .withSelectedIconColorRes(R.color.color_primary);
         }
-        return mCustomersDrawerItem;
+        return customersDrawerItem;
     }
 
     private PrimaryDrawerItem createProductsDrawerItem() {
-        if (mProductsDrawerItem == null) {
-            mProductsDrawerItem = new PrimaryDrawerItem()
+        if (productsDrawerItem == null) {
+            productsDrawerItem = new PrimaryDrawerItem()
                     .withIdentifier(DRAWER_ITEM_PRODUCTS)
                     .withName(R.string.main_drawer_item_products)
                     .withIcon(VectorDrawableCompat
                             .create(getResources(), R.drawable.main_drawer_products, getTheme()))
                     .withSelectedIconColorRes(R.color.color_primary);
         }
-        return mProductsDrawerItem;
+        return productsDrawerItem;
     }
 
     private SecondaryDrawerItem createSettingsDrawerItem() {
-        if (mSettingsDrawerItem == null) {
-            mSettingsDrawerItem = new SecondaryDrawerItem()
+        if (settingsDrawerItem == null) {
+            settingsDrawerItem = new SecondaryDrawerItem()
                     .withIdentifier(DRAWER_ITEM_SETTINGS)
                     .withName(R.string.main_drawer_item_settings)
                     .withIcon(VectorDrawableCompat
                             .create(getResources(), R.drawable.main_drawer_settings, getTheme()))
                     .withSelectable(false);
         }
-        return mSettingsDrawerItem;
+        return settingsDrawerItem;
     }
 
     private SecondarySwitchDrawerItem createAutoSyncOrdersDrawerItem() {
-        if (mAutoSyncOrdersDrawerItem == null) {
-            mAutoSyncOrdersDrawerItem = new SecondarySwitchDrawerItem()
+        if (autoSyncOrdersDrawerItem == null) {
+            autoSyncOrdersDrawerItem = new SecondarySwitchDrawerItem()
                     .withIdentifier(DRAWER_ITEM_AUTO_SYNC_ORDERS)
                     .withName(R.string.main_drawer_item_auto_sync_orders)
                     .withIcon(VectorDrawableCompat
@@ -360,7 +357,7 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
                     .withOnCheckedChangeListener((drawerItem, buttonView, isChecked) ->
                             settings().setAutoSyncOrders(isChecked));
         }
-        return mAutoSyncOrdersDrawerItem;
+        return autoSyncOrdersDrawerItem;
     }
 
     private SecondaryDrawerItem createLastSyncDrawerItem() {
@@ -377,7 +374,7 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
         String lastSyncDrawerItemDescription = getLastSyncDrawerItemDescription();
         if (!lastSyncDrawerItem.getDescription().toString()
                 .equals(lastSyncDrawerItemDescription)) {
-            mDrawer.updateItem(lastSyncDrawerItem.withDescription(lastSyncDrawerItemDescription));
+            drawer.updateItem(lastSyncDrawerItem.withDescription(lastSyncDrawerItemDescription));
         }
     }
 
@@ -393,8 +390,8 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
 
     private void updateAutoSyncOrdersDrawerItem() {
         boolean isEnabled = settings().getSettings().isAutomaticallySyncOrders();
-        if (isEnabled != mAutoSyncOrdersDrawerItem.isChecked()) {
-            mDrawer.updateItem(mAutoSyncOrdersDrawerItem.withChecked(isEnabled));
+        if (isEnabled != autoSyncOrdersDrawerItem.isChecked()) {
+            drawer.updateItem(autoSyncOrdersDrawerItem.withChecked(isEnabled));
         }
     }
 
@@ -408,7 +405,7 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
         } else {
             Subscription subscription = settings().getLoggedUser()
                     .subscribe(this::showLoggedUser);
-            mCompositeSubscription.add(subscription);
+            compositeSubscription.add(subscription);
         }
     }
 
@@ -461,8 +458,8 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     }
 
     private void setProfiles(final List<IProfile> profiles, final IProfile activeProfile) {
-        mAccountHeader.setProfiles(profiles);
-        mAccountHeader.setActiveProfile(activeProfile);
+        accountHeader.setProfiles(profiles);
+        accountHeader.setActiveProfile(activeProfile);
     }
 
     private void changeLoggedUser(IProfile profile) {
@@ -521,7 +518,7 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     }
 
     @Override protected void onDestroy() {
-        mCompositeSubscription.unsubscribe();
+        compositeSubscription.unsubscribe();
         super.onDestroy();
     }
 }

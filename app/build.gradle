@@ -116,7 +116,6 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.5.1'
 
     // Material design
-    compile 'com.gordonwong:material-sheet-fab:1.2.1'
     compile('com.mikepenz:materialdrawer:5.9.0@aar') {
         transitive = true
         exclude module: "fastadapter"

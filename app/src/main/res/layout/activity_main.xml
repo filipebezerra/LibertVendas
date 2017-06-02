@@ -27,6 +27,11 @@
 
     <include layout="@layout/view_fragment_container" />
 
-    <include layout="@layout/view_sheet_fab" />
+    <android.support.design.widget.FloatingActionButton
+        style="@style/Widget.LibertApp.FloatingActionButton"
+        android:id="@id/fab_all_main_action"
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@drawable/main_add_24dp"
+        />
 
 </android.support.design.widget.CoordinatorLayout>
