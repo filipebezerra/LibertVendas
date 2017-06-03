@@ -69,6 +69,7 @@ ext {
     butterknife = '8.5.1'
     retrofit = '2.2.0'
     okhttp = '3.7.0'
+    leakcanary = '1.5.1'
 }
 
 repositories {
@@ -145,6 +146,9 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+
+    debugCompile "com.squareup.leakcanary:leakcanary-android:${leakcanary}"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanary}"
 }
 
 retrolambda {

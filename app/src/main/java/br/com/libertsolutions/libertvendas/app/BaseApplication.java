@@ -1,6 +1,7 @@
 package br.com.libertsolutions.libertvendas.app;
 
 import android.app.Application;
+import com.squareup.leakcanary.LeakCanary;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 /**
@@ -13,19 +14,27 @@ public abstract class BaseApplication extends Application {
     @Override public void onCreate() {
         super.onCreate();
         mInstance = this;
-        initializeLogging();
-        initializeFabric();
-        initializeRealm();
-        initializeJodaTime();
+        initLeakCanary();
+        initLogging();
+        initFabric();
+        initRealm();
+        initJodaTime();
     }
 
-    protected abstract void initializeLogging();
+    private void initLeakCanary() {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        LeakCanary.install(this);
+    }
 
-    protected abstract void initializeFabric();
+    protected abstract void initLogging();
 
-    protected abstract void initializeRealm();
+    protected abstract void initFabric();
 
-    private void initializeJodaTime() {
+    protected abstract void initRealm();
+
+    private void initJodaTime() {
         JodaTimeAndroid.init(this);
     }
 

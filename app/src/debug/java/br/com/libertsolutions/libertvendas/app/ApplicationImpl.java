@@ -9,7 +9,7 @@ import timber.log.Timber;
  */
 public class ApplicationImpl extends BaseApplication {
 
-    @Override protected void initializeLogging() {
+    @Override protected void initLogging() {
         Timber.plant(new Timber.DebugTree() {
             @Override
             protected String createStackElementTag(final StackTraceElement element) {
@@ -18,11 +18,11 @@ public class ApplicationImpl extends BaseApplication {
         });
     }
 
-    @Override protected void initializeFabric() {
+    @Override protected void initFabric() {
         // Fabric it's not enabled in debug build variant
     }
 
-    @Override protected void initializeRealm() {
+    @Override protected void initRealm() {
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder()
                 .name("libertapp-dev.realm")
