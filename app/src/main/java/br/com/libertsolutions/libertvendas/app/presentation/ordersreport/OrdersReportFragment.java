@@ -51,6 +51,7 @@ import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpec
 import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.INVOICED;
 import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.SYNCED;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.BEFORE_MIDNIGHT;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.convertFromZeroBasedIndex;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.dateTimeToMillis;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
@@ -185,8 +186,8 @@ public class OrdersReportFragment extends BaseFragment
     @Override public void onDateSet(final DatePickerDialog view,
             final int year, final int monthOfYear, final int dayOfMonth,
             final int yearEnd, final int monthOfYearEnd, final int dayOfMonthEnd) {
-        setInitialIssueDateFilter(year, monthOfYear, dayOfMonth);
-        setFinalIssueDateFilter(yearEnd, monthOfYearEnd, dayOfMonthEnd);
+        setInitialIssueDateFilter(year, convertFromZeroBasedIndex(monthOfYear), dayOfMonth);
+        setFinalIssueDateFilter(yearEnd, convertFromZeroBasedIndex(monthOfYearEnd), dayOfMonthEnd);
     }
 
     private void loadOrdersByDefault() {
