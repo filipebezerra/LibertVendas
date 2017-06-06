@@ -15,7 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        tools:background="@color/color_order_sent_indicator"
+        android:background="@drawable/all_shape_order_status"
         />
 
     <TextView

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import br.com.libertsolutions.libertvendas.app.domain.pojo.Order;
 import java.util.List;
 
-import static android.support.v4.content.ContextCompat.getColor;
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static android.view.LayoutInflater.from;
 import static br.com.libertsolutions.libertvendas.app.R.layout.list_item_order_report;
@@ -16,6 +15,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.order_list_templa
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_order_number;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_order_total;
 import static br.com.libertsolutions.libertvendas.app.R.string.orders_report_text_no_order_number;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DrawableUtils.changeDrawableBackground;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDateTime;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.OrderUtils.getStatusColor;
@@ -65,8 +65,8 @@ class OrdersReportAdapter extends RecyclerView.Adapter<OrdersReportViewHolder> {
                 .setText(context.getString(order_list_template_text_order_date,
                         formatAsDateTime(order.getIssueDate())));
 
-        holder.viewOrderStatus
-                .setBackgroundColor(getColor(context, getStatusColor(order.getStatus())));
+        changeDrawableBackground(context, holder.viewOrderStatus.getBackground(),
+                getStatusColor(order.getStatus()));
     }
 
     @Override public int getItemCount() {

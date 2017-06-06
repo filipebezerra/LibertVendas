@@ -22,8 +22,6 @@
     <color name="color_text_black_87">#de000000</color>
     <color name="color_tab_indicator">#0D47A1</color>
 
-    <color name="color_order_sent_indicator">#4CAF50</color>
-
     <color name="color_order_is_pending">#2196F3</color>
     <color name="color_order_was_synced">#4CAF50</color>
     <color name="color_order_was_cancelled">#777777</color>

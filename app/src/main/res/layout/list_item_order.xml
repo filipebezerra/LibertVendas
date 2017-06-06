@@ -27,8 +27,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:visibility="gone"
+                android:background="@drawable/all_shape_order_status"
                 tools:visibility="visible"
-                tools:background="@color/color_order_sent_indicator"
                 />
 
             <TextView

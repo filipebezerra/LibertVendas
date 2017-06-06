@@ -14,8 +14,6 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.materialize.util.UIUtils;
 import java.util.List;
 
-import static android.R.color.transparent;
-import static android.support.v4.content.ContextCompat.getColor;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static br.com.libertsolutions.libertvendas.app.R.id.order_item;
@@ -30,6 +28,7 @@ import static br.com.libertsolutions.libertvendas.app.R.string.order_list_templa
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_order_number;
 import static br.com.libertsolutions.libertvendas.app.R.string.order_list_template_text_order_total;
 import static br.com.libertsolutions.libertvendas.app.R.string.orders_report_text_no_order_number;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DrawableUtils.changeDrawableBackground;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsCurrency;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.FormattingUtils.formatAsDateTime;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.OrderUtils.getStatusColor;
@@ -100,8 +99,8 @@ class OrderAdapterItem extends AbstractItem<OrderAdapterItem, OrderAdapterItem.V
 
         holder.viewOrderStatus.setVisibility(showStatusIndicator ? VISIBLE : GONE);
         if (showStatusIndicator) {
-            holder.viewOrderStatus
-                    .setBackgroundColor(getColor(context, getStatusColor(order.getStatus())));
+            changeDrawableBackground(context, holder.viewOrderStatus.getBackground(),
+                    getStatusColor(order.getStatus()));
         }
 
         UIUtils.setBackground(holder.itemView, FastAdapterUIUtils.getSelectableBackground(context,
@@ -114,8 +113,6 @@ class OrderAdapterItem extends AbstractItem<OrderAdapterItem, OrderAdapterItem.V
         holder.textViewCustomerName.setText(null);
         holder.textViewTotalOrder.setText(null);
         holder.textViewOrderDate.setText(null);
-        holder.viewOrderStatus
-                .setBackgroundColor(getColor(holder.itemView.getContext(), transparent));
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
