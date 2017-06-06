@@ -40,7 +40,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import timber.log.Timber;
 
-import static android.support.design.widget.Snackbar.LENGTH_LONG;
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.text.TextUtils.isEmpty;
 import static android.widget.AdapterView.INVALID_POSITION;
@@ -240,7 +239,7 @@ public class OrderFormStepFragment extends BaseFragment implements BlockingStep 
     private void showSuccessSavingOrder(final StepperLayout.OnCompleteClickedCallback callback) {
         EventTracker.action(ACTION_SAVED_ORDER);
         hideProgressDialog();
-        Snackbar.make(getView(), order_form_saved_successfully, LENGTH_LONG)
+        Snackbar.make(getView(), order_form_saved_successfully, LENGTH_SHORT)
                 .addCallback(new Callback() {
                     @Override public void onDismissed(final Snackbar snackbar, final int event) {
                         eventBus().postSticky(SavedOrderEvent.newEvent(mCurrentOrder));

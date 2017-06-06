@@ -42,7 +42,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import timber.log.Timber;
 
-import static android.support.design.widget.Snackbar.LENGTH_LONG;
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_NUMBER_FLAG_SIGNED;
 import static android.text.TextUtils.isEmpty;
@@ -600,7 +600,7 @@ public class AddCustomerActivity extends BaseActivity {
     private void showSuccessSavingCustomer() {
         EventTracker.action(ACTION_SAVED_CUSTOMER);
         hideProgressDialog();
-        Snackbar.make(mCoordinatorLayoutContainer, add_customer_saved_successfully, LENGTH_LONG)
+        Snackbar.make(mCoordinatorLayoutContainer, add_customer_saved_successfully, LENGTH_SHORT)
                 .addCallback(new Snackbar.Callback() {
                     @Override public void onDismissed(final Snackbar snackbar, final int event) {
                         eventBus().postSticky(SavedCustomerEvent.newEvent(mCurrentCustomer));
