@@ -160,7 +160,7 @@ public class DateUtils {
      * @return the new date without time zone
      */
     public static LocalDate toLocalDate(final int year, final int month, final int day) {
-        return new LocalDate(year, month + 1, day);
+        return new LocalDate(year, month, day);
     }
 
     /**
@@ -175,5 +175,9 @@ public class DateUtils {
     public static DateTime toDateTime(
             final int year, final int month, final int day, final LocalTime localTime) {
         return toLocalDate(year, month, day).toDateTime(localTime);
+    }
+
+    public static int convertFromZeroBasedIndex(final int month) {
+        return month + 1;
     }
 }
