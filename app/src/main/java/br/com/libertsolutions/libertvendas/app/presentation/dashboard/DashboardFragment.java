@@ -47,6 +47,7 @@ import timber.log.Timber;
 import static br.com.libertsolutions.libertvendas.app.data.LocalDataInjector.providerOrderRepository;
 import static br.com.libertsolutions.libertvendas.app.data.order.OrderStatusSpecificationFilter.NOT_CANCELLED;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.BEFORE_MIDNIGHT;
+import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.convertFromZeroBasedIndex;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.dateTimeToMillis;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getDay;
 import static br.com.libertsolutions.libertvendas.app.presentation.util.DateUtils.getMonth;
@@ -72,9 +73,9 @@ public class DashboardFragment extends BaseFragment
 
     private OnGlobalLayoutListener mPieChartLayoutListener = null;
 
-    private DateTime mInitialDateFilter = DateTime.now();
+    private DateTime mInitialDateFilter;
 
-    private DateTime mFinalDateFilter = DateTime.now();
+    private DateTime mFinalDateFilter;
 
     @BindView(R.id.swipe_container_all_pull_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.pie_chart_orders_by_customer) PieChart mPieChart;
@@ -124,10 +125,12 @@ public class DashboardFragment extends BaseFragment
     @Override public void onDateSet(final DatePickerDialog view,
             final int year, final int monthOfYear, final int dayOfMonth,
             final int yearEnd, final int monthOfYearEnd, final int dayOfMonthEnd) {
-        mInitialDateFilter = toDateTime(year, monthOfYear, dayOfMonth, MIDNIGHT);
-        mFinalDateFilter = toDateTime(yearEnd, monthOfYearEnd, dayOfMonthEnd, BEFORE_MIDNIGHT);
+        mInitialDateFilter = toDateTime(
+                year, convertFromZeroBasedIndex(monthOfYear), dayOfMonth, MIDNIGHT);
+        mFinalDateFilter = toDateTime(
+                yearEnd, convertFromZeroBasedIndex(monthOfYearEnd), dayOfMonthEnd, BEFORE_MIDNIGHT);
         EventTracker.action(ACTION_FILTERED_GRAPH);
-        queryByIssueDate();
+        loadOrderedOrders();
     }
 
     @Subscribe(sticky = true) public void onLoggedInUserEvent(LoggedInUserEvent event) {
@@ -180,12 +183,26 @@ public class DashboardFragment extends BaseFragment
 
     private void loadOrderedOrders() {
         if (getLoggedUser() != null) {
+            if (mInitialDateFilter == null || mFinalDateFilter == null) {
+                final DateTime now = DateTime.now();
+                final int year = now.getYear();
+                final int monthOfYear = now.getMonthOfYear();
+                final int dayOfMonth = now.getDayOfMonth();
+                mInitialDateFilter = toDateTime(year, monthOfYear, dayOfMonth, MIDNIGHT);
+                mFinalDateFilter = toDateTime(year, monthOfYear, dayOfMonth, BEFORE_MIDNIGHT);
+            }
+
+            long initialDate = dateTimeToMillis(mInitialDateFilter);
+            long finalDate = dateTimeToMillis(mFinalDateFilter);
+
             mCurrentSubscription = mOrderRepository
                     .query(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
                             .byStatus(NOT_CANCELLED)
+                            .byIssueDate(initialDate, finalDate)
                             .orderByCustomerName())
                     .map(this::toChartData)
                     .observeOn(mainThread())
+                    .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
                     .subscribe(createOrderChartDataListSubscriber());
         }
     }
@@ -322,21 +339,6 @@ public class DashboardFragment extends BaseFragment
         datePickerDialog.setStartTitle(getString(R.string.all_issue_date_initial));
         datePickerDialog.setEndTitle(getString(R.string.all_issue_date_final));
         datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
-    }
-
-    private void queryByIssueDate() {
-        long initialDate = dateTimeToMillis(mInitialDateFilter);
-        long finalDate = dateTimeToMillis(mFinalDateFilter);
-
-        mCurrentSubscription = mOrderRepository
-                .query(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
-                        .byStatus(NOT_CANCELLED)
-                        .byIssueDate(initialDate, finalDate)
-                        .orderByCustomerName())
-                .map(this::toChartData)
-                .observeOn(mainThread())
-                .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
-                .subscribe(createOrderChartDataListSubscriber());
     }
 
     @Override public void onDestroyView() {
