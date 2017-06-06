@@ -65,20 +65,20 @@ public class DashboardFragment extends BaseFragment
 
     public static final String TAG = DashboardFragment.class.getName();
 
-    private OrderRepository mOrderRepository;
+    private OrderRepository orderRepository;
 
-    private Subscription mCurrentSubscription;
+    private Subscription currentSubscription;
 
-    private LoggedUser mLoggedUser;
+    private LoggedUser loggedUser;
 
-    private OnGlobalLayoutListener mPieChartLayoutListener = null;
+    private OnGlobalLayoutListener pieChartLayoutListener = null;
 
-    private DateTime mInitialDateFilter;
+    private DateTime initialDateFilter;
 
-    private DateTime mFinalDateFilter;
+    private DateTime finalDateFilter;
 
-    @BindView(R.id.swipe_container_all_pull_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.pie_chart_orders_by_customer) PieChart mPieChart;
+    @BindView(R.id.swipe_container_all_pull_refresh) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.pie_chart_orders_by_customer) PieChart pieChart;
 
     public static DashboardFragment newInstance() {
         return new DashboardFragment();
@@ -97,13 +97,13 @@ public class DashboardFragment extends BaseFragment
             @Nullable final ViewGroup container, @Nullable final Bundle inState) {
         View view = super.onCreateView(inflater, container, inState);
 
-        mSwipeRefreshLayout.setEnabled(false);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
+        swipeRefreshLayout.setEnabled(false);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
 
         drawPieChart();
 
-        mOrderRepository = providerOrderRepository();
+        orderRepository = providerOrderRepository();
         eventBus().register(this);
 
         return view;
@@ -125,17 +125,17 @@ public class DashboardFragment extends BaseFragment
     @Override public void onDateSet(final DatePickerDialog view,
             final int year, final int monthOfYear, final int dayOfMonth,
             final int yearEnd, final int monthOfYearEnd, final int dayOfMonthEnd) {
-        mInitialDateFilter = toDateTime(
+        initialDateFilter = toDateTime(
                 year, convertFromZeroBasedIndex(monthOfYear), dayOfMonth, MIDNIGHT);
-        mFinalDateFilter = toDateTime(
+        finalDateFilter = toDateTime(
                 yearEnd, convertFromZeroBasedIndex(monthOfYearEnd), dayOfMonthEnd, BEFORE_MIDNIGHT);
         EventTracker.action(ACTION_FILTERED_GRAPH);
         loadOrderedOrders();
     }
 
     @Subscribe(sticky = true) public void onLoggedInUserEvent(LoggedInUserEvent event) {
-        if (mLoggedUser == null || !mLoggedUser.equals(event.getUser())) {
-            mLoggedUser = event.getUser();
+        if (loggedUser == null || !loggedUser.equals(event.getUser())) {
+            loggedUser = event.getUser();
             loadOrderedOrders();
         }
     }
@@ -154,20 +154,20 @@ public class DashboardFragment extends BaseFragment
     }
 
     private void drawPieChart() {
-        mPieChart.getDescription().setEnabled(false);
+        pieChart.getDescription().setEnabled(false);
 
         //Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
 
-        //mPieChart.setCenterTextTypeface(tf);
-        mPieChart.setCenterText(generateCenterText());
-        mPieChart.setCenterTextSize(10f);
-        //mPieChart.setCenterTextTypeface(tf);
+        //pieChart.setCenterTextTypeface(tf);
+        pieChart.setCenterText(generateCenterText());
+        pieChart.setCenterTextSize(10f);
+        //pieChart.setCenterTextTypeface(tf);
 
         // radius of the center hole in percent of maximum radius
-        mPieChart.setHoleRadius(45f);
-        mPieChart.setTransparentCircleRadius(50f);
+        pieChart.setHoleRadius(45f);
+        pieChart.setTransparentCircleRadius(50f);
 
-        Legend l = mPieChart.getLegend();
+        Legend l = pieChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
@@ -183,38 +183,38 @@ public class DashboardFragment extends BaseFragment
 
     private void loadOrderedOrders() {
         if (getLoggedUser() != null) {
-            if (mInitialDateFilter == null || mFinalDateFilter == null) {
+            if (initialDateFilter == null || finalDateFilter == null) {
                 final DateTime now = DateTime.now();
                 final int year = now.getYear();
                 final int monthOfYear = now.getMonthOfYear();
                 final int dayOfMonth = now.getDayOfMonth();
-                mInitialDateFilter = toDateTime(year, monthOfYear, dayOfMonth, MIDNIGHT);
-                mFinalDateFilter = toDateTime(year, monthOfYear, dayOfMonth, BEFORE_MIDNIGHT);
+                initialDateFilter = toDateTime(year, monthOfYear, dayOfMonth, MIDNIGHT);
+                finalDateFilter = toDateTime(year, monthOfYear, dayOfMonth, BEFORE_MIDNIGHT);
             }
 
-            long initialDate = dateTimeToMillis(mInitialDateFilter);
-            long finalDate = dateTimeToMillis(mFinalDateFilter);
+            long initialDate = dateTimeToMillis(initialDateFilter);
+            long finalDate = dateTimeToMillis(finalDateFilter);
 
-            mCurrentSubscription = mOrderRepository
+            currentSubscription = orderRepository
                     .query(new OrdersByUserSpecification(getSalesmanId(), getCompanyId())
                             .byStatus(NOT_CANCELLED)
                             .byIssueDate(initialDate, finalDate)
                             .orderByCustomerName())
                     .map(this::toChartData)
                     .observeOn(mainThread())
-                    .doOnUnsubscribe(() -> mSwipeRefreshLayout.setRefreshing(false))
+                    .doOnUnsubscribe(() -> swipeRefreshLayout.setRefreshing(false))
                     .subscribe(createOrderChartDataListSubscriber());
         }
     }
 
     private LoggedUser getLoggedUser() {
-        if (mLoggedUser == null) {
+        if (loggedUser == null) {
             LoggedInUserEvent event = eventBus().getStickyEvent(LoggedInUserEvent.class);
             if (event != null) {
-                mLoggedUser = event.getUser();
+                loggedUser = event.getUser();
             }
         }
-        return mLoggedUser;
+        return loggedUser;
     }
 
     private int getSalesmanId() {
@@ -268,27 +268,27 @@ public class DashboardFragment extends BaseFragment
     }
 
     private void startLoadingOrderedOrders() {
-        mSwipeRefreshLayout.setRefreshing(true);
-        mPieChart.setVisibility(View.GONE);
+        swipeRefreshLayout.setRefreshing(true);
+        pieChart.setVisibility(View.GONE);
         mLinearLayoutEmptyState.setVisibility(View.VISIBLE);
     }
 
     private void handleLoadOrderedOrdersError(Throwable e) {
         Timber.e(e, "Could not chart data");
-        mSwipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setRefreshing(false);
         mLinearLayoutErrorState.setVisibility(View.VISIBLE);
         mLinearLayoutEmptyState.setVisibility(View.GONE);
     }
 
     private void showOrderedOrders(List<OrderChartData> orders) {
         if (!orders.isEmpty()) {
-            mPieChart.setVisibility(View.VISIBLE);
-            mPieChart.getViewTreeObserver()
+            pieChart.setVisibility(View.VISIBLE);
+            pieChart.getViewTreeObserver()
                     .addOnGlobalLayoutListener(
-                            mPieChartLayoutListener = this::onPieChartFinishLoading);
+                            pieChartLayoutListener = this::onPieChartFinishLoading);
             convertToPieData(orders);
         } else {
-            mSwipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -315,26 +315,26 @@ public class DashboardFragment extends BaseFragment
     }
 
     private void showChartData(PieData pieData) {
-        mPieChart.setData(pieData);
-        mPieChart.setDrawEntryLabels(false);
-        mPieChart.invalidate();
+        pieChart.setData(pieData);
+        pieChart.setDrawEntryLabels(false);
+        pieChart.invalidate();
     }
 
     private void onPieChartFinishLoading() {
         if (getView() != null) {
-            mPieChart
+            pieChart
                     .getViewTreeObserver()
-                    .removeOnGlobalLayoutListener(mPieChartLayoutListener);
-            mPieChartLayoutListener = null;
-            mSwipeRefreshLayout.setRefreshing(false);
+                    .removeOnGlobalLayoutListener(pieChartLayoutListener);
+            pieChartLayoutListener = null;
+            swipeRefreshLayout.setRefreshing(false);
             mLinearLayoutEmptyState.setVisibility(View.GONE);
         }
     }
 
     private void showFilterDialog() {
         DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this,
-                getYear(mInitialDateFilter), getMonth(mInitialDateFilter), getDay(mInitialDateFilter),
-                getYear(mFinalDateFilter), getMonth(mFinalDateFilter), getDay(mFinalDateFilter));
+                getYear(initialDateFilter), getMonth(initialDateFilter), getDay(initialDateFilter),
+                getYear(finalDateFilter), getMonth(finalDateFilter), getDay(finalDateFilter));
 
         datePickerDialog.setStartTitle(getString(R.string.all_issue_date_initial));
         datePickerDialog.setEndTitle(getString(R.string.all_issue_date_final));
@@ -342,11 +342,11 @@ public class DashboardFragment extends BaseFragment
     }
 
     @Override public void onDestroyView() {
-        if (mCurrentSubscription != null && !mCurrentSubscription.isUnsubscribed()) {
-            mCurrentSubscription.unsubscribe();
+        if (currentSubscription != null && !currentSubscription.isUnsubscribed()) {
+            currentSubscription.unsubscribe();
         }
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
             mLinearLayoutEmptyState.setVisibility(View.GONE);
         }
         eventBus().unregister(this);
