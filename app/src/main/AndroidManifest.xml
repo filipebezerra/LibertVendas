@@ -59,6 +59,7 @@
             android:label="@string/add_customer_title"
             android:parentActivityName=".presentation.main.MainActivity"
             android:theme="@style/LibertApp.Theme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -80,6 +81,7 @@
             android:label="@string/add_order_title"
             android:parentActivityName=".presentation.main.MainActivity"
             android:theme="@style/LibertApp.Theme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
