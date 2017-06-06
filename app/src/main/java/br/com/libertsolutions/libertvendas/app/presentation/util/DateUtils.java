@@ -177,6 +177,13 @@ public class DateUtils {
         return toLocalDate(year, month, day).toDateTime(localTime);
     }
 
+    /**
+     * Takes a zero-based index {@link java.util.Calendar#MONTH} and increment 1 to make
+     * compatible with JodaTime APIs
+     *
+     * @param month an zero-based index value
+     * @return the value plus 1
+     */
     public static int convertFromZeroBasedIndex(final int month) {
         return month + 1;
     }
