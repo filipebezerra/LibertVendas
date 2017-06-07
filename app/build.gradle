@@ -26,12 +26,14 @@ android {
     }
     buildTypes {
         debug {
+            debuggable true
             applicationIdSuffix '.dev'
             versionNameSuffix '-dev'
             manifestPlaceholders = [applicationLabel: "Libert Dev"]
             buildConfigField "long", "SCHEMA_VERSION", "2L"
         }
         release {
+            debuggable false
             shrinkResources true
             minifyEnabled true
             proguardFile 'proguard-butterknife.pro'
@@ -62,13 +64,17 @@ android {
     dexOptions {
         jumboMode true
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 ext {
     support = '25.3.1'
     butterknife = '8.5.1'
-    retrofit = '2.2.0'
-    okhttp = '3.7.0'
+    retrofit = '2.3.0'
+    okhttp = '3.8.0'
     leakcanary = '1.5.1'
 }
 
