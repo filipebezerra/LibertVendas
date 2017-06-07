@@ -186,7 +186,7 @@ public class SyncTaskService extends GcmTaskService {
                             .createCustomer(companyCnpj, newCustomer)
                             .execute();
 
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful() && response.body() != null) {
                         customerRepository
                                 .save(response.body())
                                 .toBlocking()
@@ -222,10 +222,13 @@ public class SyncTaskService extends GcmTaskService {
                         .execute();
 
                 if (response.isSuccessful()) {
-                    customerRepository
-                            .save(response.body())
-                            .toBlocking()
-                            .single();
+                    final List<Customer> bodyList = response.body();
+                    if (bodyList != null && !bodyList.isEmpty()) {
+                        customerRepository
+                                .save(response.body())
+                                .toBlocking()
+                                .single();
+                    }
                 } else {
                     Timber.i("Unsuccessful update customer sync. %s", response.message());
                 }
@@ -272,7 +275,7 @@ public class SyncTaskService extends GcmTaskService {
             if (response.isSuccessful()) {
                 final List<Customer> updatedCustomers = response.body();
 
-                if (!updatedCustomers.isEmpty()) {
+                if (updatedCustomers != null && !updatedCustomers.isEmpty()) {
                     final CompanyCustomerRepository companyCustomerRepository
                             = provideCompanyCustomerRepository();
 
@@ -330,7 +333,7 @@ public class SyncTaskService extends GcmTaskService {
             if (response.isSuccessful()) {
                 final List<OrderDto> updatedOrders = response.body();
 
-                if (!updatedOrders.isEmpty()) {
+                if (updatedOrders != null && !updatedOrders.isEmpty()) {
                     for (final OrderDto order : updatedOrders) {
                         final int orderId = order.orderId;
                         final Order existingOrder = getOrderRepository()
@@ -381,7 +384,7 @@ public class SyncTaskService extends GcmTaskService {
             if (response.isSuccessful()) {
                 final List<PaymentMethod> updatedPaymentMethods = response.body();
 
-                if (!updatedPaymentMethods.isEmpty()) {
+                if (updatedPaymentMethods != null && !updatedPaymentMethods.isEmpty()) {
                     final PaymentMethodRepository paymentMethodRepository
                             = providePaymentMethodRepository();
                     final CompanyPaymentMethodRepository companyPaymentMethodRepository
@@ -432,7 +435,7 @@ public class SyncTaskService extends GcmTaskService {
             if (response.isSuccessful()) {
                 final List<PriceTable> updatedPriceTables = response.body();
 
-                if (!updatedPriceTables.isEmpty()) {
+                if (updatedPriceTables != null && !updatedPriceTables.isEmpty()) {
                     final PriceTableRepository priceTableRepository = providePriceTableRepository();
                     final CompanyPriceTableRepository companyPriceTableRepository
                             = provideCompanyPriceTableRepository();
@@ -482,7 +485,7 @@ public class SyncTaskService extends GcmTaskService {
             if (response.isSuccessful()) {
                 final List<Product> updatedProducts = response.body();
 
-                if (!updatedProducts.isEmpty()) {
+                if (updatedProducts!= null && !updatedProducts.isEmpty()) {
                     final ProductRepository productRepository = provideProductRepository();
 
                     for (final Product product : updatedProducts) {
@@ -512,7 +515,10 @@ public class SyncTaskService extends GcmTaskService {
                     .execute();
 
             if (response.isSuccessful()) {
-                settingsRepository.setLastSyncTime(response.body().currentTime);
+                final ServerStatus body = response.body();
+                if (body != null) {
+                    settingsRepository.setLastSyncTime(body.currentTime);
+                }
             }
         } catch (IOException e) {
             Timber.e(e, "Server failure while getting server status");
@@ -553,26 +559,28 @@ public class SyncTaskService extends GcmTaskService {
                     if (response.isSuccessful()) {
                         OrderDto syncedOrder = response.body();
 
-                        for (OrderItemDto syncedOrderItem : syncedOrder.items) {
-                            for (OrderItem item : order.getItems()) {
-                                if (item.getId().compareTo(syncedOrderItem.id) == 0) {
-                                    item
-                                            .withOrderItemId(syncedOrderItem.orderItemId)
-                                            .withLastChangeTime(syncedOrderItem.lastChangeTime);
-                                    break;
+                        if (syncedOrder != null) {
+                            for (OrderItemDto syncedOrderItem : syncedOrder.items) {
+                                for (OrderItem item : order.getItems()) {
+                                    if (item.getId().compareTo(syncedOrderItem.id) == 0) {
+                                        item
+                                                .withOrderItemId(syncedOrderItem.orderItemId)
+                                                .withLastChangeTime(syncedOrderItem.lastChangeTime);
+                                        break;
+                                    }
                                 }
                             }
+
+                            order
+                                    .withOrderId(syncedOrder.orderId)
+                                    .withLastChangeTime(syncedOrder.lastChangeTime)
+                                    .withStatus(OrderStatus.STATUS_SYNCED);
+
+                            getOrderRepository()
+                                    .save(order)
+                                    .toBlocking()
+                                    .first();
                         }
-
-                        order
-                                .withOrderId(syncedOrder.orderId)
-                                .withLastChangeTime(syncedOrder.lastChangeTime)
-                                .withStatus(OrderStatus.STATUS_SYNCED);
-
-                        getOrderRepository()
-                                .save(order)
-                                .toBlocking()
-                                .first();
                     } else {
                         Timber.i("Unsuccessful orders sync. %s", response.message());
                     }
