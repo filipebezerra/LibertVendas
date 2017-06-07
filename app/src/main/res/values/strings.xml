@@ -15,9 +15,9 @@
     <string name="main_drawer_item_desc_last_sync">Última sincronização em %1$s</string>
 
     <!-- Initial Flow strings -->
-    <string name="initial_flow_title">Faça a configuração</string>
+    <string name="initial_flow_title">Configure</string>
     <string name="initial_flow_login_title">Entre com seu usuário</string>
-    <string name="initial_flow_importation_title">Importe seus cadastros</string>
+    <string name="initial_flow_importation_title">Importando seus cadastros</string>
 
     <!-- Settings strings -->
     <string name="settings_title">Configurações</string>

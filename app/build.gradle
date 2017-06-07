@@ -153,6 +153,7 @@ dependencies {
         transitive = true;
     }
 
+    // Memory leak analyzer
     debugCompile "com.squareup.leakcanary:leakcanary-android:${leakcanary}"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanary}"
 }
