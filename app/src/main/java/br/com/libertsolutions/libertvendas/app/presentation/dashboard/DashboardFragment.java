@@ -268,9 +268,23 @@ public class DashboardFragment extends BaseFragment
     }
 
     private void startLoadingOrderedOrders() {
+        clearPieChart(false);
         swipeRefreshLayout.setRefreshing(true);
         pieChart.setVisibility(View.GONE);
         mLinearLayoutEmptyState.setVisibility(View.VISIBLE);
+    }
+
+    private void clearPieChart(final boolean setAsNull) {
+        if (pieChart != null) {
+            pieChart.clearAnimation();
+            if (!pieChart.isEmpty()) {
+                pieChart.clearValues();
+            }
+            pieChart.clear();
+            if (setAsNull) {
+                pieChart = null;
+            }
+        }
     }
 
     private void handleLoadOrderedOrdersError(Throwable e) {
@@ -349,6 +363,7 @@ public class DashboardFragment extends BaseFragment
             swipeRefreshLayout.setRefreshing(false);
             mLinearLayoutEmptyState.setVisibility(View.GONE);
         }
+        clearPieChart(true);
         eventBus().unregister(this);
         super.onDestroyView();
     }
