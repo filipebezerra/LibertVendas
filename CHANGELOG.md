@@ -7,7 +7,7 @@ Versão 1.0.9 (07/06/2017)
 * **CORREÇÃO** Consumo extremo de memória da visualização de gráfico dos pedidos
 * **MELHORIA** Gráfico dos pedidos agora por padrão mostra pedidos do dia corrente
 * **MELHORIA** Indicadores de status do pedido mais elegantes
-* **MELHORIA** Teclado agora aparece escondido na digitação de pedidos e clientes
+* **MELHORIA** Teclado agora aparece escondido por padrão na digitação de pedidos e clientes
 * **MELHORIA** Novo estilo de botões para incluir pedidos e clientes
 * **CORREÇÃO** Filtro por data na visualização de gráfico dos pedidos
 
