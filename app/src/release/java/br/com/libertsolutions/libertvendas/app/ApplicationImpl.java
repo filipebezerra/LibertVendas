@@ -13,15 +13,15 @@ import timber.log.Timber;
  */
 public class ApplicationImpl extends BaseApplication {
 
-    @Override protected void initializeLogging() {
+    @Override protected void initLogging() {
         Timber.plant(new ReleaseTree());
     }
 
-    @Override protected void initializeFabric() {
+    @Override protected void initFabric() {
         Fabric.with(this, new Crashlytics(), new Answers());
     }
 
-    @Override protected void initializeRealm() {
+    @Override protected void initRealm() {
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder()
                 .name("libertapp.realm")
