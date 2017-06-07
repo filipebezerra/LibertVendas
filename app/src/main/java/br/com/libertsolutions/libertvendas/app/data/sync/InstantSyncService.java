@@ -98,12 +98,19 @@ public class InstantSyncService extends IntentService {
         for (Order order : orders) {
             final Customer customer = order.getCustomer();
 
+            Customer syncedCustomer = null;
             if (customer.getStatus() == CustomerStatus.STATUS_CREATED) {
-                if (!syncNewCustomer(customer))
+                syncedCustomer = syncNewCustomer(customer);
+                if (syncedCustomer == null)
                     continue;
             } else if (customer.getStatus() == CustomerStatus.STATUS_MODIFIED) {
-                if (!syncModifiedCustomer(customer))
+                syncedCustomer = syncModifiedCustomer(customer);
+                if (syncedCustomer == null)
                     continue;
+            }
+
+            if (syncedCustomer != null) {
+                order.withCustomer(syncedCustomer);
             }
 
             try {
@@ -116,27 +123,29 @@ public class InstantSyncService extends IntentService {
                 if (response.isSuccessful()) {
                     OrderDto syncedOrder = response.body();
 
-                    for (OrderItemDto syncedOrderItem : syncedOrder.items) {
-                        for (OrderItem item : order.getItems()) {
-                            if (item.getId().compareTo(syncedOrderItem.id) == 0) {
-                                item
-                                        .withOrderItemId(syncedOrderItem.orderItemId)
-                                        .withLastChangeTime(syncedOrderItem.lastChangeTime);
-                                break;
+                    if (syncedOrder != null) {
+                        for (OrderItemDto syncedOrderItem : syncedOrder.items) {
+                            for (OrderItem item : order.getItems()) {
+                                if (item.getId().compareTo(syncedOrderItem.id) == 0) {
+                                    item
+                                            .withOrderItemId(syncedOrderItem.orderItemId)
+                                            .withLastChangeTime(syncedOrderItem.lastChangeTime);
+                                    break;
+                                }
                             }
                         }
+
+                        order
+                                .withOrderId(syncedOrder.orderId)
+                                .withLastChangeTime(syncedOrder.lastChangeTime)
+                                .withStatus(OrderStatus.STATUS_SYNCED);
+
+                        orderRepository
+                                .save(order)
+                                .toBlocking()
+                                .first();
+                        anyOrderSynced = true;
                     }
-
-                    order
-                            .withOrderId(syncedOrder.orderId)
-                            .withLastChangeTime(syncedOrder.lastChangeTime)
-                            .withStatus(OrderStatus.STATUS_SYNCED);
-
-                    orderRepository
-                            .save(order)
-                            .toBlocking()
-                            .first();
-                    anyOrderSynced = true;
                 } else {
                     Timber.e("Unsuccessful orders sync. %s", response.message());
                 }
@@ -149,54 +158,51 @@ public class InstantSyncService extends IntentService {
         return anyOrderSynced;
     }
 
-    private boolean syncNewCustomer(Customer newCustomer) {
+    private Customer syncNewCustomer(Customer newCustomer) {
         try {
             final Response<Customer> response = getCustomerApi()
                     .createCustomer(getCompanyCnpj(), newCustomer)
                     .execute();
 
-            if (response.isSuccessful()) {
-                getCustomerRepository()
+            if (response.isSuccessful() && response.body() != null) {
+                return getCustomerRepository()
                         .save(response.body())
                         .toBlocking()
                         .single();
-                return true;
             } else {
                 Timber.e("Unsuccessful new customer sync. %s", response.message());
-                return false;
             }
         } catch (IOException e) {
             Timber.e(e, "Server failure while syncing new customer");
-            return false;
         } catch (RuntimeException e) {
             Timber.e(e, "Unknown error while syncing new customer");
-            return false;
         }
+        return null;
     }
 
-    private boolean syncModifiedCustomer(Customer modifiedCustomer) {
+    private Customer syncModifiedCustomer(Customer modifiedCustomer) {
         try {
             Response<List<Customer>> response = getCustomerApi()
                     .updateCustomers(getCompanyCnpj(), singletonList(modifiedCustomer))
                     .execute();
 
             if (response.isSuccessful()) {
-                getCustomerRepository()
-                        .save(response.body())
-                        .toBlocking()
-                        .single();
-                return true;
+                final List<Customer> bodyList = response.body();
+                if (bodyList != null && !bodyList.isEmpty()) {
+                    return getCustomerRepository()
+                            .save(bodyList.get(0))
+                            .toBlocking()
+                            .single();
+                }
             } else {
                 Timber.i("Unsuccessful update customer sync. %s", response.message());
-                return false;
             }
         } catch (IOException e) {
             Timber.e(e, "Server failure while syncing modified customer");
-            return false;
         } catch (RuntimeException e) {
             Timber.e(e, "Unknown error while syncing modified customer");
-            return false;
         }
+        return null;
     }
 
     private LoggedUser getLoggedUser() {
